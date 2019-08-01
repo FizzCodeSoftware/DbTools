@@ -17,15 +17,12 @@
             var dd = new DatabaseDefinition();
 
             foreach (var tableName in GetTableNames())
-                dd.AddTable( GetTableDefinition(tableName, false));
+                dd.AddTable(GetTableDefinition(tableName, false));
 
             AddTableDocumentation(dd);
 
-            foreach (var table in dd.GetTables())
-                GetPrimaryKey(table);
-
-            var fks = new MsSqlForeignKeyReader(_executer);
-            fks.GetForeignKeys(dd);
+            new MsSqlPrimaryKeyReader(_executer).GetPrimaryKey(dd);
+            new MsSqlForeignKeyReader(_executer).GetForeignKeys(dd);
 
             return dd;
         }
@@ -54,6 +51,7 @@
 
             if (fullDefinition)
             {
+                new MsSqlPrimaryKeyReader(_executer).
                 GetPrimaryKey(sqlTable);
                 new MsSqlForeignKeyReader(_executer).GetForeignKeys(sqlTable, null);
                 AddTableDocumentation(sqlTable);
@@ -62,64 +60,6 @@
             AddColumnDocumentation(sqlTable);
 
             return sqlTable;
-        }
-
-        public void GetPrimaryKey(SqlTable table)
-        {
-            var reader = _executer.ExecuteQuery(GetKeySql(true, table.Name));
-            var pk = new PrimaryKey(table, null);
-            foreach (var row in reader.Rows)
-            {
-                if (row.GetAs<int>("index_column_id") == 1)
-                {
-                    pk = new PrimaryKey(table, row.GetAs<string>("index_name"));
-
-                    if (row.GetAs<byte>("type") == 1)
-                        pk.Clustered = true;
-
-                    table.Properties.Add(pk);
-                }
-
-                var column = table.Columns[row.GetAs<string>("column_name")];
-
-                if (row.GetAs<bool>("is_identity"))
-                    column.Properties.Add(new Identity(column));
-
-                var ascDesc = AscDesc.Asc;
-                if (row.GetAs<bool>("is_descending_key"))
-                    ascDesc = AscDesc.Desc;
-
-                var columnAndOrder = new ColumnAndOrder(column, ascDesc);
-
-                pk.SqlColumns.Add(columnAndOrder);
-            }
-        }
-
-        private string GetKeySql(bool isPrimaryKey, string tableName)
-        {
-            return $@"
-SELECT schema_name(tab.schema_id) schema_name, 
-    i.[name] index_name,
-    ic.index_column_id,
-    col.[name] as column_name, 
-    tab.[name] as table_name
-	, i.type-- 1 CLUSTERED, 2 NONCLUSTERED
-	, is_unique, is_primary_key, is_identity
-	, is_included_column, is_descending_key
-FROM sys.tables tab
-    INNER JOIN sys.indexes i
-        ON tab.object_id = i.object_id 
-    INNER JOIN sys.index_columns ic
-        ON ic.object_id = i.object_id
-        and ic.index_id = i.index_id
-    INNER JOIN sys.columns col
-        ON i.object_id = col.object_id
-        and col.column_id = ic.column_id
-WHERE is_primary_key = {(isPrimaryKey ? 1 : 0)}
-    AND tab.[name] = '{tableName}'
-ORDER BY schema_name(tab.schema_id),
-    i.[name],
-    ic.index_column_id";
         }
 
         public void AddColumnDocumentation(SqlTable table)
