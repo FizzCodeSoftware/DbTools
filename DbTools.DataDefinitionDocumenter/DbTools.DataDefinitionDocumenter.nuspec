@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>FizzCode.DbTools.DataDefinitionDocumenter</id>
+    <version>$version$</version>
+    <title>FizzCode.DbTools.DataDefinitionDocumenter</title>
+    <authors>FizzCode Ltd.</authors>
+    <owners>FizzCode Ltd.</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Database documentater for Fizzcode DbTools project</description>
+  </metadata>
+</package>

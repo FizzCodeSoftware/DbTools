@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>FizzCode.DbTools.DataDefinitionGenerator</id>
+    <version>$version$</version>
+    <title>FizzCode.DbTools.DataDefinitionGenerator</title>
+    <authors>FizzCode Ltd.</authors>
+    <owners>FizzCode Ltd.</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Database creation sql generator for Fizzcode DbTools project</description>
+  </metadata>
+</package>
