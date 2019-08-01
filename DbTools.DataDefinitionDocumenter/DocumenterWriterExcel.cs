@@ -1,6 +1,8 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using OfficeOpenXml;
 
     public class DocumenterWriterExcel : IDocumenterWriter
@@ -30,13 +32,13 @@
             {
                 uniqueName = name.Substring(0, 31);
                 var number = 1;
-                while (_sheetNames.ContainsValue(uniqueName.ToLower()))
+                while (_sheetNames.Any(i => i.Value.ToLower() == uniqueName.ToLower()))
                 {
                     uniqueName = name.Substring(0, 31 - number.ToString().Length) + number++.ToString();
                 }
             }
 
-            return uniqueName.ToLower();
+            return uniqueName;
         }
 
         public Sheet Sheet(string name)

@@ -38,8 +38,6 @@
                 DocumentTable(table);
             }
 
-            // Summary
-
             var content = DocumenterWriter.GetContent();
             var fileName = _databaseName?.Length == 0 ? "Database.xlsx" : _databaseName + ".xlsx";
             File.WriteAllBytes(fileName, content);

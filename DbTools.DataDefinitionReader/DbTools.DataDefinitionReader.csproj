@@ -44,6 +44,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Readers\SqlDefinitions\MsSqlTableReader.cs" />
+    <Compile Include="Readers\SqlDefinitions\MsSqlForeignKeyReader.cs" />
     <Compile Include="Readers\SqLiteDataDefinitionReader.cs" />
     <Compile Include="Readers\MsSqlDataDefinitionReader.cs" />
     <Compile Include="Readers\GenericDataDefinitionReader.cs" />
