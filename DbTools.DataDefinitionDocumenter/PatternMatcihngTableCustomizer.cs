@@ -76,6 +76,9 @@
 
         private bool IsRegex(string pattern)
         {
+            if (pattern == null)
+                return false;
+
             return pattern.Contains("*") || pattern.Contains("?") || pattern.Contains("#");
         }
     }
