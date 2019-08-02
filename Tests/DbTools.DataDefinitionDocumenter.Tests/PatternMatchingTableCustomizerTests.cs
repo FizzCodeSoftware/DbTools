@@ -10,7 +10,7 @@
         public void GetPatternMatching_StartsWith_Test()
         {
             var pm = new PatternMatchingTableCustomizer();
-            pm.AddPattern("A*", true, null, null);
+            pm.AddPattern("A*", null, true, null, null);
 
             Assert.IsTrue(pm.ShouldSkip("A"));
             Assert.IsTrue(pm.ShouldSkip("Aaa"));
@@ -24,7 +24,7 @@
         public void GetPatternMatching_Contains_Test()
         {
             var pm = new PatternMatchingTableCustomizer();
-            pm.AddPattern("*apple*", true, null, null);
+            pm.AddPattern("*apple*", null, true, null, null);
 
             Assert.IsTrue(pm.ShouldSkip("xapplex"));
             Assert.IsTrue(pm.ShouldSkip("apple"));
@@ -41,7 +41,7 @@
         public void GetPatternMatching_Dot_Test()
         {
             var pm = new PatternMatchingTableCustomizer();
-            pm.AddPattern("ap?le", true, null, null);
+            pm.AddPattern("ap?le", null, true, null, null);
 
             Assert.IsTrue(pm.ShouldSkip("apple"));
             Assert.IsTrue(pm.ShouldSkip("apxle"));

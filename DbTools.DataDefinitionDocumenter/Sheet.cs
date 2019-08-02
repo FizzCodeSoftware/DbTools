@@ -36,5 +36,15 @@
                 ExcelWorksheet.Cells[LastRow, LastColumn].Style.Fill.BackgroundColor.SetColor(backgroundColor.Value);
             }
         }
+
+        public void SetLink(string value, string link, Color? backgroundColor = null)
+        {
+            ExcelWorksheet.Cells[LastRow, LastColumn].Hyperlink = new ExcelHyperLink($"#{link}!A1", value);
+            if (backgroundColor.HasValue)
+            {
+                ExcelWorksheet.Cells[LastRow, LastColumn].Style.Fill.PatternType = ExcelFillStyle.Solid;
+                ExcelWorksheet.Cells[LastRow, LastColumn].Style.Fill.BackgroundColor.SetColor(backgroundColor.Value);
+            }
+        }
     }
 }

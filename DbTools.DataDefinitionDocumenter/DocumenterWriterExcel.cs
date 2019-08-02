@@ -94,5 +94,19 @@
         {
             return ExcelPackage.GetAsByteArray();
         }
+
+        public void WriteLink(string name, string targetName)
+        {
+            WriteLink((Color?)null, name, targetName);
+        }
+
+        public void WriteLink(Color? backgroundColor, string name, string targetName)
+        {
+            var sheetName = GetSheetName(name);
+            var targetSheetName = GetSheetName(targetName);
+
+            Sheet(sheetName, backgroundColor).SetLink(targetName, targetSheetName, backgroundColor);
+            Sheet(sheetName, backgroundColor).LastColumn++;
+        }
     }
 }

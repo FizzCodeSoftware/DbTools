@@ -2,6 +2,8 @@
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using FizzCode.DbTools.DataDefinition.Tests;
+    using System.IO;
+    using System.Configuration;
 
     [TestClass]
     public class DocumenterTests
@@ -47,6 +49,25 @@
 
                 return false;
             }
+        }
+
+        [TestMethod]
+        public void PatternMatchingTableCustomizerTest()
+        {
+            var path = ConfigurationManager.AppSettings["WorkingDirectory"];
+            using (var file =
+            new StreamWriter(path + "TestDatabaseFks.DbTools.Patterns.csv"))
+            {
+                file.WriteLine("Pattern;PatternExcept;ShouldSkipIfMatch;CategoryIfMatch;BackGroundColorIfMatch");
+                file.WriteLine("Parent;;0;Parent;606060");
+                file.WriteLine("Child;;1");
+                file.WriteLine("*ildC*;;0;TestCategory");
+            }
+
+            var db = new TestDatabaseFks();
+            var patternMatching = new PatternMatchingTableCustomizerFromCsv("TestDatabaseFks");
+            var documenter = new Documenter("TestDatabaseFks", patternMatching);
+            documenter.Document(db);
         }
     }
 }

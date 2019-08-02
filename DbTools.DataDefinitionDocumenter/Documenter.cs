@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Drawing;
     using System.IO;
     using System.Linq;
@@ -15,18 +16,22 @@
         private readonly string _databaseName;
         private readonly ITableCustomizer _tableCustomizer;
 
-        public Documenter(string databaseName = "", ITableCustomizer tableCustomizer = null) : this(new DocumenterWriterExcel(), databaseName, tableCustomizer)
+        private readonly string _fileName;
+
+        public Documenter(string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null) : this(new DocumenterWriterExcel(), fileName, databaseName, tableCustomizer)
         {
         }
 
-        public Documenter(IDocumenterWriter documenterWriter, string databaseName = "", ITableCustomizer tableCustomizer = null)
+        public Documenter(IDocumenterWriter documenterWriter, string fileName = null, string databaseName = "", ITableCustomizer tableCustomizer = null)
         {
             _databaseName = databaseName;
             DocumenterWriter = documenterWriter;
             _tableCustomizer = tableCustomizer ?? new EmptyTableCustomizer();
+            _fileName = fileName;
         }
 
         private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
+        private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
 
         private Color? GetColor(string tableName)
         {
@@ -46,31 +51,54 @@
 
             DocumenterWriter.WriteLine("All tables", "Category", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Description");
 
+            DocumenterWriter.WriteLine("Database", "Number of documented tables", databaseDefinition.GetTables().Count(t => !_tableCustomizer.ShouldSkip(t.Name)));
+            DocumenterWriter.WriteLine("Database", "Number of skpped tables", databaseDefinition.GetTables().Count(t => _tableCustomizer.ShouldSkip(t.Name)));
             DocumenterWriter.WriteLine("Database", "Number of tables", databaseDefinition.GetTables().Count);
 
             foreach (var table in databaseDefinition.GetTables())
             {
                 if (!_tableCustomizer.ShouldSkip(table.Name))
                     _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.Name), table));
+                else
+                    _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.Name), table));
             }
 
-            foreach (var tableKvp in _sqlTablesByCategory.OrderBy(kvp => kvp.Key))
+            foreach (var tableKvp in _sqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.Name))
             {
                 var category = tableKvp.Key;
                 var table = tableKvp.Value;
                 DocumenterWriter.WriteLine(GetColor(table.Name), table.Name, "Category", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Description");
                 DocumentTable(category, table);
+                DocumentTableDetails(category, table);
+            }
+
+            DocumenterWriter.WriteLine("Tables");
+
+            foreach (var tableKvp in _skippedSqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.Name))
+            {
+                var category = tableKvp.Key;
+                var table = tableKvp.Value;
+                DocumentTable(category, table);
             }
 
             var content = DocumenterWriter.GetContent();
-            var fileName = _databaseName?.Length == 0 ? "Database.xlsx" : _databaseName + ".xlsx";
-            File.WriteAllBytes(fileName, content);
+
+            var fileName = _fileName ?? (_databaseName?.Length == 0 ? "Database.xlsx" : _databaseName + ".xlsx");
+
+            var path = ConfigurationManager.AppSettings["WorkingDirectory"];
+
+            File.WriteAllBytes(path + fileName, content);
         }
 
         protected void DocumentTable(string category, SqlTable table)
         {
-            DocumenterWriter.WriteLine("Tables", category, table.Name, table.Columns.Count);
+            DocumenterWriter.Write(GetColor(table.Name), "Tables", category);
+            DocumenterWriter.WriteLink(GetColor(table.Name), "Tables", table.Name);
+            DocumenterWriter.WriteLine(GetColor(table.Name), "Tables", table.Columns.Count);
+        }
 
+        protected void DocumentTableDetails(string category, SqlTable table)
+        {
             var pks = table.Properties.OfType<PrimaryKey>().ToList();
 
             foreach (var column in table.Columns)

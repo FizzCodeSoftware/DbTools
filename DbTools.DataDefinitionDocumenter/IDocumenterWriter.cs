@@ -11,5 +11,8 @@ namespace FizzCode.DbTools.DataDefinitionDocumenter
         void WriteLine(Color? backgroundColor, string sheetName, params object[] content);
 
         byte[] GetContent();
+
+        void WriteLink(string sheetName, string targetSheetName);
+        void WriteLink(Color? backgroundColor, string sheetName, string targetSheetName);
     }
 }

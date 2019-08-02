@@ -7,7 +7,7 @@
     using FizzCode.DbTools.DataDefinitionDocumenter;
     using FizzCode.DbTools.DataDefinitionReader;
 
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {
@@ -16,15 +16,20 @@
             switch (command.ToLower())
             {
                 case "doc":
-                    Document(args[1], (SqlDialect)Enum.Parse(typeof(SqlDialect), args[2]));
-                    break;
+                    {
+                        string patternFileName = null;
+                        if (args.Length > 3)
+                            patternFileName = args[3];
+                        Document(args[1], (SqlDialect)Enum.Parse(typeof(SqlDialect), args[2]), patternFileName);
+                        break;
+                    }
                 default:
                     Console.WriteLine("Unknown command");
                     break;
             }
         }
 
-        public static void Document(string connectionString, SqlDialect sqlDialect)
+        public static void Document(string connectionString, SqlDialect sqlDialect, string patternFileName)
         {
             var connectionStringSettings = new ConnectionStringSettings();
             connectionStringSettings.ConnectionString = connectionString;
@@ -40,7 +45,12 @@
 
             var dd = ddlReader.GetDatabaseDefinition();
 
-            var documenter = new Documenter(databaseName);
+            ITableCustomizer customizer = null;
+
+            if (patternFileName != null)
+                customizer = new PatternMatchingTableCustomizerFromCsv(patternFileName);
+
+            var documenter = new Documenter(databaseName, customizer);
             documenter.Document(dd);
         }
     }

@@ -2,15 +2,17 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
+    using System.IO;
     using System.Text.RegularExpressions;
 
     public class PatternMatchingTableCustomizer : ITableCustomizer
     {
         protected List<PatternMatchingTableCustomizerItem> _patterns = new List<PatternMatchingTableCustomizerItem>();
 
-        public void AddPattern(string pattern, bool shouldSkip, string category, string backGroundColor)
+        public void AddPattern(string pattern, string patternExcept, bool shouldSkip, string category, string backGroundColor)
         {
-            _patterns.Add(new PatternMatchingTableCustomizerItem(pattern, shouldSkip, category, backGroundColor));
+            _patterns.Add(new PatternMatchingTableCustomizerItem(pattern, patternExcept, shouldSkip, category, backGroundColor));
         }
 
         public string BackGroundColor(string tableName)
@@ -31,41 +33,50 @@
             return item?.ShouldSkipIfMatch == true;
         }
 
-        public PatternMatchingTableCustomizerItem GetPatternMatching(string tableName)
+        private PatternMatchingTableCustomizerItem GetPatternMatching(string tableName)
         {
             PatternMatchingTableCustomizerItem matchingItem = null;
             foreach (var item in _patterns)
             {
-                var regexPattern= Regex.Escape(item.Pattern).Replace(@"\*", ".*").Replace(@"\?", ".").Replace("#", @"\d");
-                if (Regex.Match(tableName, regexPattern).Success)
+                if (IsRegex(item.Pattern))
                 {
-                    if (matchingItem == null)
-                        matchingItem = item;
-                    else
-                        throw new ApplicationException($"Multiple patterns are mathing for {tableName}.");
+                    var regexPattern = Regex.Escape(item.Pattern).Replace(@"\*", ".*").Replace(@"\?", ".").Replace("#", @"\d");
+                    if (Regex.Match(tableName, regexPattern).Success
+                        && ShouldNotSkipPatternExcept(item, tableName))
+                    {
+                        if (matchingItem == null)
+                            matchingItem = item;
+                        else
+                            throw new ApplicationException($"Multiple patterns are mathing for {tableName}.");
+                    }
+                }
+                else if (item.Pattern == tableName
+                    && ShouldNotSkipPatternExcept(item, tableName))
+                {
+                    matchingItem = item;
+                    break;
                 }
             }
 
             return matchingItem;
         }
-    }
 
-    public class PatternMatchingTableCustomizerItem
-    {
-        public PatternMatchingTableCustomizerItem(string pattern, bool shouldSkip, string category, string backGroundColor)
+        private bool ShouldNotSkipPatternExcept(PatternMatchingTableCustomizerItem item, string tableName)
         {
-            Pattern = pattern;
-            ShouldSkipIfMatch = shouldSkip;
-            CategoryIfMatch = category;
-            BackGroundColorIfMatch = backGroundColor;
+            if (IsRegex(item.PatternExcept))
+            {
+                var regexPatternExcept = Regex.Escape(item.PatternExcept).Replace(@"\*", ".*").Replace(@"\?", ".").Replace("#", @"\d");
+                return !Regex.Match(tableName, regexPatternExcept).Success;
+            }
+            else
+            {
+                return item.PatternExcept != tableName;
+            }
         }
 
-        public string Pattern { get; set; }
-
-        public bool ShouldSkipIfMatch { get; set; }
-
-        public string CategoryIfMatch { get; set; }
-
-        public string BackGroundColorIfMatch { get; set; }
+        private bool IsRegex(string pattern)
+        {
+            return pattern.Contains("*") || pattern.Contains("?") || pattern.Contains("#");
+        }
     }
 }
