@@ -52,7 +52,7 @@
             DocumenterWriter.WriteLine("All tables", "Category", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Description");
 
             DocumenterWriter.WriteLine("Database", "Number of documented tables", databaseDefinition.GetTables().Count(t => !_tableCustomizer.ShouldSkip(t.Name)));
-            DocumenterWriter.WriteLine("Database", "Number of skpped tables", databaseDefinition.GetTables().Count(t => _tableCustomizer.ShouldSkip(t.Name)));
+            DocumenterWriter.WriteLine("Database", "Number of skipped tables", databaseDefinition.GetTables().Count(t => _tableCustomizer.ShouldSkip(t.Name)));
             DocumenterWriter.WriteLine("Database", "Number of tables", databaseDefinition.GetTables().Count);
 
             foreach (var table in databaseDefinition.GetTables())
@@ -79,6 +79,20 @@
                 var category = tableKvp.Key;
                 var table = tableKvp.Value;
                 DocumentTable(category, table);
+            }
+
+            DocumenterWriter.WriteLine("Database");
+
+            foreach (var category in _sqlTablesByCategory.Select(kvp => kvp.Key).Distinct().OrderBy(x => x))
+            {
+                DocumenterWriter.WriteLine("Database", $"{category ?? "(No category)"}, number of documented tables", _sqlTablesByCategory.Count(kvp => kvp.Key == category));
+            }
+
+            DocumenterWriter.WriteLine("Database");
+
+            foreach (var category in _skippedSqlTablesByCategory.Select(kvp => kvp.Key).Distinct().OrderBy(x => x))
+            {
+                DocumenterWriter.WriteLine("Database", $"{category ?? "(No category)"}, number of skipped tables", _skippedSqlTablesByCategory.Count(kvp => kvp.Key == category));
             }
 
             var content = DocumenterWriter.GetContent();
