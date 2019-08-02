@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="DocumenterTests.cs" />
     <Compile Include="DocumenterWriterExcelTests.cs" />
+    <Compile Include="PatternMatchingTableCustomizerTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

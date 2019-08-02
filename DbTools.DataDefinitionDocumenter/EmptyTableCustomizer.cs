@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
+
     public class EmptyTableCustomizer : ITableCustomizer
     {
         public string BackGroundColor(string tableName)
