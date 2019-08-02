@@ -1,5 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
+    using System.Collections.Generic;
+    using System.Drawing;
     using System.IO;
     using System.Linq;
     using FizzCode.DbTools.DataDefinition;
@@ -11,31 +13,53 @@
         protected ISqlTypeMapper SqlTypeMapper { get; } = new GenericSqlTypeMapper();
 
         private readonly string _databaseName;
+        private readonly ITableCustomizer _tableCustomizer;
 
-        public Documenter(string databaseName = "") : this(new DocumenterWriterExcel(), databaseName)
+        public Documenter(string databaseName = "", ITableCustomizer tableCustomizer = null) : this(new DocumenterWriterExcel(), databaseName, tableCustomizer)
         {
         }
 
-        public Documenter(IDocumenterWriter documenterWriter, string databaseName = "")
+        public Documenter(IDocumenterWriter documenterWriter, string databaseName = "", ITableCustomizer tableCustomizer = null)
         {
             _databaseName = databaseName;
             DocumenterWriter = documenterWriter;
+            _tableCustomizer = tableCustomizer ?? new EmptyTableCustomizer();
+        }
+
+        private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
+
+        private Color? GetColor(string tableName)
+        {
+            var hexColor = _tableCustomizer.BackGroundColor(tableName);
+
+            if (hexColor == null)
+                return null;
+
+            return ColorTranslator.FromHtml(hexColor);
         }
 
         public void Document(DatabaseDefinition databaseDefinition)
         {
             DocumenterWriter.WriteLine("Database", "Database name", _databaseName);
 
-            DocumenterWriter.WriteLine("Tables", "Table Name", "Number of columns");
+            DocumenterWriter.WriteLine("Tables", "Category", "Table Name", "Number of columns");
 
-            DocumenterWriter.WriteLine("All tables", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Description");
+            DocumenterWriter.WriteLine("All tables", "Category", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Description");
 
             DocumenterWriter.WriteLine("Database", "Number of tables", databaseDefinition.GetTables().Count);
 
             foreach (var table in databaseDefinition.GetTables())
             {
-                DocumenterWriter.WriteLine(table.Name, "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Description");
-                DocumentTable(table);
+                if (!_tableCustomizer.ShouldSkip(table.Name))
+                    _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.Name), table));
+            }
+
+            foreach (var tableKvp in _sqlTablesByCategory.OrderBy(kvp => kvp.Key))
+            {
+                var category = tableKvp.Key;
+                var table = tableKvp.Value;
+                DocumenterWriter.WriteLine(GetColor(table.Name), table.Name, "Category", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Description");
+                DocumentTable(category, table);
             }
 
             var content = DocumenterWriter.GetContent();
@@ -43,9 +67,9 @@
             File.WriteAllBytes(fileName, content);
         }
 
-        protected void DocumentTable(SqlTable table)
+        protected void DocumentTable(string category, SqlTable table)
         {
-            DocumenterWriter.WriteLine("Tables", table.Name, table.Columns.Count);
+            DocumenterWriter.WriteLine("Tables", category, table.Name, table.Columns.Count);
 
             var pks = table.Properties.OfType<PrimaryKey>().ToList();
 
@@ -60,35 +84,35 @@
 
                 var isPk = pks.Any(pk => pk.SqlColumns.Any(cao => cao.SqlColumn == column.Value));
 
-                DocumenterWriter.Write(table.Name, table.Name, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
+                DocumenterWriter.Write(GetColor(table.Name), table.Name, category, table.Name, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
 
                 if (isPk)
-                    DocumenterWriter.Write(table.Name, true);
+                    DocumenterWriter.Write(GetColor(table.Name), table.Name, true);
                 else
-                    DocumenterWriter.Write(table.Name, "");
+                    DocumenterWriter.Write(GetColor(table.Name), table.Name, "");
 
                 var identity = column.Value.Properties.OfType<Identity>().FirstOrDefault();
 
                 if(identity != null)
-                    DocumenterWriter.Write(table.Name, $"IDENTITY ({identity.Seed}, {identity.Increment})");
+                    DocumenterWriter.Write(GetColor(table.Name), table.Name, $"IDENTITY ({identity.Seed}, {identity.Increment})");
                 else
-                    DocumenterWriter.Write(table.Name, "");
+                    DocumenterWriter.Write(GetColor(table.Name), table.Name, "");
 
-                DocumenterWriter.WriteLine(table.Name, description);
+                DocumenterWriter.WriteLine(GetColor(table.Name), table.Name, description.Trim());
 
-                DocumenterWriter.Write("All tables", table.Name, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
+                DocumenterWriter.Write(GetColor(table.Name), "All tables", category, table.Name, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
 
                 if (isPk)
-                    DocumenterWriter.Write("All tables", true);
+                    DocumenterWriter.Write(GetColor(table.Name), "All tables", true);
                 else
-                    DocumenterWriter.Write("All tables", "");
+                    DocumenterWriter.Write(GetColor(table.Name), "All tables", "");
 
                 if (identity != null)
-                    DocumenterWriter.Write("All tables", $"IDENTITY ({identity.Seed}, {identity.Increment})");
+                    DocumenterWriter.Write(GetColor(table.Name), "All tables", $"IDENTITY ({identity.Seed}, {identity.Increment})");
                 else
-                    DocumenterWriter.Write("All tables", "");
+                    DocumenterWriter.Write(GetColor(table.Name), "All tables", "");
 
-                DocumenterWriter.WriteLine("All tables", description);
+                DocumenterWriter.WriteLine(GetColor(table.Name), "All tables", description);
             }
 
             DocumenterWriter.WriteLine(table.Name);

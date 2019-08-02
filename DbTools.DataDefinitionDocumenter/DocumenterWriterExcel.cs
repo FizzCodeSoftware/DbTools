@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Drawing;
     using System.Linq;
     using OfficeOpenXml;
 
@@ -32,7 +33,7 @@
             {
                 uniqueName = name.Substring(0, 31);
                 var number = 1;
-                while (_sheetNames.Any(i => i.Value.ToLower() == uniqueName.ToLower()))
+                while (_sheetNames.Any(i => string.Equals(i.Value, uniqueName, StringComparison.OrdinalIgnoreCase)))
                 {
                     uniqueName = name.Substring(0, 31 - number.ToString().Length) + number++.ToString();
                 }
@@ -43,9 +44,14 @@
 
         public Sheet Sheet(string name)
         {
+            return Sheet(name, null);
+        }
+
+        public Sheet Sheet(string name, Color? backGroundColor)
+        {
             var sheetName = GetSheetName(name);
             if (!_sheets.ContainsKey(sheetName))
-                _sheets.Add(sheetName, new Sheet(ExcelPackage, sheetName));
+                _sheets.Add(sheetName, new Sheet(ExcelPackage, sheetName, backGroundColor));
 
             return _sheets[sheetName];
         }
@@ -59,14 +65,28 @@
             Sheet(sheetName).LastColumn = 1;
         }
 
+        public void WriteLine(Color? backgroundColor, string name, params object[] content)
+        {
+            var sheetName = GetSheetName(name);
+            Write(backgroundColor, sheetName, content);
+
+            Sheet(sheetName, backgroundColor).LastRow++;
+            Sheet(sheetName, backgroundColor).LastColumn = 1;
+        }
+
         public void Write(string name, params object[] content)
+        {
+            Write((Color?)null, name, content);
+        }
+
+        public void Write(Color? backgroundColor, string name, params object[] content)
         {
             var sheetName = GetSheetName(name);
 
             foreach (var value in content)
             {
-                Sheet(sheetName).SetValue(value);
-                Sheet(sheetName).LastColumn++;
+                Sheet(sheetName, backgroundColor).SetValue(value, backgroundColor);
+                Sheet(sheetName, backgroundColor).LastColumn++;
             }
         }
 

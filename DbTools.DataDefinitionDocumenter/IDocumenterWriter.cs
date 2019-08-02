@@ -1,16 +1,14 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
-{
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinitionGenerator;
-    using OfficeOpenXml;
+﻿using System.Drawing;
 
+namespace FizzCode.DbTools.DataDefinitionDocumenter
+{
     public interface IDocumenterWriter
     {
         void Write(string sheetName, params object[] content);
         void WriteLine(string sheetName, params object[] content);
+
+        void Write(Color? backgroundColor, string sheetName, params object[] content);
+        void WriteLine(Color? backgroundColor, string sheetName, params object[] content);
 
         byte[] GetContent();
     }
