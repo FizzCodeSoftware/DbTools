@@ -2,6 +2,9 @@
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using FizzCode.DbTools.DataDefinitionDocumenter;
+    using System.Configuration;
+    using System.IO;
+    using FizzCode.DbTools.DataDefinition.Tests;
 
     [TestClass]
     public class PatternMatchingTableCustomizerTests
@@ -51,6 +54,25 @@
             Assert.IsFalse(pm.ShouldSkip("appl"));
             Assert.IsFalse(pm.ShouldSkip("pple"));
             Assert.IsFalse(pm.ShouldSkip("xxx"));
+        }
+
+        [TestMethod]
+        public void PatternMatchingTableCustomizerFromCsvTest()
+        {
+            var path = ConfigurationManager.AppSettings["WorkingDirectory"];
+            using (var file =
+            new StreamWriter(path + "TestDatabaseFks.DbTools.Patterns.csv"))
+            {
+                file.WriteLine("Pattern;PatternExcept;ShouldSkipIfMatch;CategoryIfMatch;BackGroundColorIfMatch");
+                file.WriteLine("Parent;;0;Parent;606060");
+                file.WriteLine("Child;;1");
+                file.WriteLine("*ildC*;;0;TestCategory");
+            }
+
+            var db = new TestDatabaseFks();
+            var patternMatching = new PatternMatchingTableCustomizerFromCsv("TestDatabaseFks");
+            var documenter = new Documenter("TestDatabaseFks", patternMatching);
+            documenter.Document(db);
         }
     }
 }

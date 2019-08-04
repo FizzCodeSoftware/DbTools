@@ -47,7 +47,7 @@
         {
             DocumenterWriter.WriteLine("Database", "Database name", _databaseName);
 
-            DocumenterWriter.WriteLine("Tables", "Category", "Table Name", "Number of columns");
+            DocumenterWriter.WriteLine("Tables", "Category", "Table Name", "Number of columns", "Description");
 
             DocumenterWriter.WriteLine("All tables", "Category", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Description");
 
@@ -108,7 +108,13 @@
         {
             DocumenterWriter.Write(GetColor(table.Name), "Tables", category);
             DocumenterWriter.WriteLink(GetColor(table.Name), "Tables", table.Name);
-            DocumenterWriter.WriteLine(GetColor(table.Name), "Tables", table.Columns.Count);
+            DocumenterWriter.Write(GetColor(table.Name), "Tables", table.Columns.Count);
+
+            var tableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
+            if(tableDescription != null)
+                DocumenterWriter.Write(GetColor(table.Name), "Tables", tableDescription.Description);
+
+            DocumenterWriter.WriteLine("Tables");
         }
 
         protected void DocumentTableDetails(string category, SqlTable table)

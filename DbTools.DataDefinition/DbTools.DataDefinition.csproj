@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Column\Properties\SqlColumnDescription.cs" />
+    <Compile Include="Column\Properties\SqlTableDescription.cs" />
     <Compile Include="DatabaseDeclaration\NamingStrategiesDictionary.cs" />
     <Compile Include="DatabaseDeclaration\SqlColumnDeclarationHelper.cs" />
     <Compile Include="DatabaseDeclaration\SqlColumnDeclaration.cs" />

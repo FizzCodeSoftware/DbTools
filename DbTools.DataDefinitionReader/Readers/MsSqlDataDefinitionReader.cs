@@ -102,7 +102,6 @@ FROM
 
         public void AddTableDocumentation(SqlTable table)
         {
-
             var reader = _executer.ExecuteQuery(
             SqlGetTableDocumentation + $" AND t.name='{table.Name}");
 
