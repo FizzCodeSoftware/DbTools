@@ -16,12 +16,13 @@
         protected readonly SqlExecuter _executer;
 
         private List<Row> _queryResult;
+
         private List<Row> QueryResult {
             get
             {
                 if (_queryResult == null)
                 {
-                    var reader = _executer.ExecuteQuery($@"
+                    var reader = _executer.ExecuteQuery(@"
 SELECT TABLE_NAME, TABLE_SCHEMA, ORDINAL_POSITION, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE
        , IS_NULLABLE
 FROM INFORMATION_SCHEMA.COLUMNS
@@ -35,7 +36,6 @@ FROM INFORMATION_SCHEMA.COLUMNS
             }
         }
 
-        
         public SqlTable GetTableDefinition(string tableName)
         {
             var sqlTable = new SqlTable(tableName);

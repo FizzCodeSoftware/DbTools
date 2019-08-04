@@ -34,14 +34,12 @@
         }
 
         private MsSqlTableReader _tableReader;
+
         private MsSqlTableReader TableReader
         {
             get
             {
-                if (_tableReader == null)
-                    _tableReader = new MsSqlTableReader(_executer);
-
-                return _tableReader;
+                return _tableReader ?? (_tableReader = new MsSqlTableReader(_executer));
             }
         }
 
@@ -64,7 +62,7 @@
 
         public void AddColumnDocumentation(SqlTable table)
         {
-            var reader = _executer.ExecuteQuery($@"
+            var reader = _executer.ExecuteQuery(@"
 SELECT
     c.name ColumnName,
     p.value Property
@@ -74,8 +72,8 @@ FROM
     INNER JOIN sys.extended_properties p ON p.major_id = t.object_id AND p.minor_id = c.column_id AND p.class = 1
 WHERE
     SCHEMA_NAME(t.schema_id) = 'dbo'
-    AND t.name = '{table.Name}'
-    AND p.name = 'MS_Description'");
+    AND t.name = @TableName
+    AND p.name = 'MS_Description'", table.Name);
 
             foreach (var row in reader.Rows)
             {
@@ -84,7 +82,6 @@ WHERE
                 {
                     var description = row.GetAs<string>("Property");
                     var descriptionProperty = new SqlColumnDescription(column, description);
-                    
                     column.Properties.Add(descriptionProperty);
                 }
             }
@@ -103,7 +100,7 @@ FROM
         public void AddTableDocumentation(SqlTable table)
         {
             var reader = _executer.ExecuteQuery(
-            SqlGetTableDocumentation + $" AND t.name='{table.Name}");
+            SqlGetTableDocumentation + " AND t.name = @TableName", table.Name);
 
             foreach (var row in reader.Rows)
             {
@@ -116,7 +113,7 @@ FROM
 
         public void AddTableDocumentation(DatabaseDefinition dd)
         {
-            var reader = _executer.ExecuteQuery($@"
+            var reader = _executer.ExecuteQuery(@"
 SELECT
     t.name TableName, 
     p.value Property
@@ -129,7 +126,7 @@ FROM
 
             foreach (var row in reader.Rows)
             {
-                var table = dd.GetTables().FirstOrDefault(t => t.Name == row.GetAs<string>("TableName"));
+                var table = dd.GetTables().Find(t => t.Name == row.GetAs<string>("TableName"));
                 if (table != null)
                 {
                     var description = row.GetAs<string>("Property");

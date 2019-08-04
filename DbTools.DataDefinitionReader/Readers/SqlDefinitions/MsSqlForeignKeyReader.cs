@@ -21,12 +21,13 @@
         }
 
         private List<Row> _queryResult;
+
         private List<Row> QueryResult {
             get
             {
                 if (_queryResult == null)
                 {
-                    var reader = _executer.ExecuteQuery($@"
+                    var reader = _executer.ExecuteQuery(@"
 SELECT
      KCU1.CONSTRAINT_NAME AS FK_CONSTRAINT_NAME
     ,KCU1.TABLE_NAME AS FK_TABLE_NAME

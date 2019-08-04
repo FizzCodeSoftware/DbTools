@@ -9,13 +9,15 @@
             return $"[{name}]";
         }
 
+        // TODO paramter
         public override string CreateDatabase(string databaseName, bool shouldSkipIfExists)
         {
             return shouldSkipIfExists
-                ? $"IF NOT EXISTS(select * from sys.databases where name='{databaseName}')\r\n\tCREATE DATABASE {databaseName}"
-                : $"CREATE DATABASE {databaseName}";
+                ? $"IF NOT EXISTS(select * from sys.databases where name='{databaseName}')\r\n\tCREATE DATABASE {GuardKeywords(databaseName)}"
+                : $"CREATE DATABASE {GuardKeywords(databaseName)}";
         }
 
+        // TODO paramter
         public override string DropDatabaseIfExists(string databaseName)
         {
             return $"IF EXISTS(select * from sys.databases where name='{databaseName}')\r\n\t{DropDatabase(databaseName)}";

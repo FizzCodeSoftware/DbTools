@@ -15,6 +15,7 @@
         protected readonly SqlExecuter _executer;
 
         private List<Row> _queryResult;
+
         private List<Row> QueryResult {
             get
             {
@@ -33,7 +34,7 @@
         {
             foreach (var table in dd.GetTables())
                 GetPrimaryKey(table);
-        }   
+        }
 
         public void GetPrimaryKey(SqlTable table)
         {

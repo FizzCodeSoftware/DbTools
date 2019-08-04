@@ -11,8 +11,9 @@
         internal static string FKConstraint(ForeignKey fk, Func<string, string> guard)
         {
             var sb = new StringBuilder();
+
             sb.Append("CONSTRAINT ")
-                .Append(fk.Name)
+                .Append(guard(fk.Name))
                 .Append(" FOREIGN KEY ")
                 .Append("(")
                 .Append(string.Join(", \r\n", fk.ForeignKeyColumns.Select(fkc => $"{guard(fkc.ForeignKeyColumn.Name)}")))

@@ -20,10 +20,10 @@
         public abstract void CreateDatabase(bool shouldSkipIfExists);
         public abstract void DropDatabase();
         public abstract void DropDatabaseIfExists();
-        public abstract void ExecuteNonQuery(string query);
-        public abstract Reader ExecuteQuery(string query);
-        protected abstract void ExecuteNonQueryMaster(string query);
-        public abstract object ExecuteScalar(string query);
+        public abstract void ExecuteNonQuery(string query, params object[] paramValues);
+        public abstract Reader ExecuteQuery(string query, params object[] paramValues);
+        protected abstract void ExecuteNonQueryMaster(string query, params object[] paramValues);
+        public abstract object ExecuteScalar(string query, params object[] paramValues);
         protected abstract string ChangeInitialCatalog(string connectionString);
     }
 }

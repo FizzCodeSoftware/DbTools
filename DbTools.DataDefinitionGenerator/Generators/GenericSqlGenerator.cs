@@ -12,7 +12,7 @@
 
         public string DropDatabase(string databaseName)
         {
-            return $"DROP DATABASE {databaseName}";
+            return $"DROP DATABASE {GuardKeywords(databaseName)}";
         }
 
         public abstract string DropDatabaseIfExists(string databaseName);
@@ -68,9 +68,9 @@
             sb.Append("CREATE ")
                 .Append(clusteredPrefix)
                 .Append("INDEX ")
-                .Append(index.Name)
+                .Append(GuardKeywords(index.Name))
                 .Append(" ON ")
-                .AppendLine(index.SqlTable.Name)
+                .AppendLine(GuardKeywords(index.SqlTable.Name))
                 .AppendLine("(")
                 // todo: something is missing from here?
                 .AppendLine(")");
@@ -92,11 +92,11 @@
                 : null;
 
             sb.Append(", CONSTRAINT ")
-                .Append(pk.Name)
+                .Append(GuardKeywords(pk.Name))
                 .Append(" PRIMARY KEY ")
                 .AppendLine(clusteredPrefix)
                 .AppendLine("(")
-                .AppendLine(string.Join(", \r\n", pk.SqlColumns.Select(c => $"{c.SqlColumn.Name} {c.OrderAsKeyword}"))) // PK column list + asc desc
+                .AppendLine(string.Join(", \r\n", pk.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)} {c.OrderAsKeyword}"))) // PK column list + asc desc
                 .Append(")");
         }
 
@@ -124,7 +124,7 @@
                     .Append("ALTER TABLE ")
                     .Append(GuardKeywords(table.Name))
                     .Append(" CHECK CONSTRAINT ")
-                    .AppendLine(fk.Name);
+                    .AppendLine(GuardKeywords(fk.Name));
             }
 
             return sb.ToString();
@@ -150,7 +150,7 @@
 
         public string DropTable(SqlTable table)
         {
-            return $"DROP TABLE {table.Name}";
+            return $"DROP TABLE {GuardKeywords(table.Name)}";
         }
 
         protected string GenerateCreateColumn(SqlColumn column)
@@ -203,7 +203,7 @@
         {
             return $@"
 SELECT
-    CASE WHEN EXISTS((SELECT * FROM information_schema.tables WHERE table_name = '{table.Name}'))
+    CASE WHEN EXISTS((SELECT * FROM information_schema.tables WHERE table_name = @TableName))
         THEN 1
         ELSE 0
     END";
@@ -211,7 +211,7 @@ SELECT
 
         public string TableNotEmpty(SqlTable table)
         {
-            return $"SELECT COUNT(*) FROM (SELECT TOP 1 * FROM {table.Name}) t";
+            return $"SELECT COUNT(*) FROM (SELECT TOP 1 * FROM {GuardKeywords(table.Name)}) t";
         }
     }
 }

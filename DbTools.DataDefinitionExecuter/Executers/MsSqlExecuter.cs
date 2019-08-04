@@ -3,6 +3,7 @@
     using System;
     using System.Configuration;
     using System.Data.SqlClient;
+    using System.Text.RegularExpressions;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
     public class MsSqlExecuter : SqlExecuter
@@ -41,12 +42,28 @@
             return connection;
         }
 
-        public override void ExecuteNonQuery(string sql)
+        public SqlCommand PrepareSqlCommand(string sql, params object[] paramValues)
+        {
+            var command = new SqlCommand(sql);
+            var matches = Regex.Matches(sql, @"\B\@\w+");
+            var i = 0;
+
+            foreach (var paramValue in paramValues)
+            {
+                command.Parameters.AddWithValue(matches[i++].Value, paramValue);
+            }
+
+            return command;
+        }
+
+        public override void ExecuteNonQuery(string sql, params object[] paramValues)
         {
             var connection = OpenConnection();
             try
             {
-                new SqlCommand(sql, connection).ExecuteNonQuery();
+                var command = PrepareSqlCommand(sql, paramValues);
+                command.Connection = connection;
+                command.ExecuteNonQuery();
             }
             catch (SqlException ex)
             {
@@ -60,13 +77,17 @@
             }
         }
 
-        public override Reader ExecuteQuery(string sql)
+        public override Reader ExecuteQuery(string sql, params object[] paramValues)
         {
             var connection = OpenConnection();
             try
             {
                 var reader = new Reader();
-                using (var sqlReader = new SqlCommand(sql, connection).ExecuteReader())
+
+                var command = PrepareSqlCommand(sql, paramValues);
+                command.Connection = connection;
+
+                using (var sqlReader = command.ExecuteReader())
                 {
                     while (sqlReader.Read())
                     {
@@ -94,14 +115,16 @@
             }
         }
 
-        protected override void ExecuteNonQueryMaster(string query)
+        protected override void ExecuteNonQueryMaster(string sql, params object[] paramValues)
         {
             SqlConnection.ClearAllPools(); // force closing connections to normal database to be able to exetute DDLs.
 
             var connection = OpenConnectionMaster();
             try
             {
-                new SqlCommand(query, connection).ExecuteNonQuery();
+                var command = PrepareSqlCommand(sql, paramValues);
+                command.Connection = connection;
+                command.ExecuteNonQuery();
             }
             finally
             {
@@ -110,14 +133,16 @@
             }
         }
 
-        public override object ExecuteScalar(string sql)
+        public override object ExecuteScalar(string sql, params object[] paramValues)
         {
             object result;
 
             var connection = OpenConnection();
             try
             {
-                result = new SqlCommand(sql, connection).ExecuteScalar();
+                var command = PrepareSqlCommand(sql, paramValues);
+                command.Connection = connection;
+                result = command.ExecuteScalar();
             }
             catch (SqlException ex)
             {
