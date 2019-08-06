@@ -32,14 +32,13 @@
             if (createTables)
             {
                 foreach (var sqlTable in DatabaseDefinition.GetTables())
-                {
                     CreateTable(sqlTable);
-                }
 
                 foreach (var sqlTable in DatabaseDefinition.GetTables())
-                {
-                    CreateFKIndexConstraints(sqlTable);
-                }
+                    CreateForeignkeys(sqlTable);
+
+                foreach (var sqlTable in DatabaseDefinition.GetTables())
+                    CreateDbDescriptions(sqlTable);
             }
         }
 
@@ -49,11 +48,32 @@
             _executer.ExecuteNonQuery(sql);
         }
 
-        public void CreateFKIndexConstraints(SqlTable table)
+        public void CreateForeignkeys(SqlTable table)
         {
-            var sql = _executer.Generator.CreateForeignKey(table);
+            var sql = _executer.Generator.CreateForeignKeys(table);
             if (!string.IsNullOrEmpty(sql))
                 _executer.ExecuteNonQuery(sql);
+        }
+
+        public void CreateIndexes(SqlTable table)
+        {
+            var sql = _executer.Generator.CreateIndexes(table);
+            if (!string.IsNullOrEmpty(sql))
+                _executer.ExecuteNonQuery(sql);
+        }
+
+        public void CreateDbDescriptions(SqlTable table)
+        {
+            var sqlStatementWithParameters = _executer.Generator.CreateDbTableDescription(table);
+            if (sqlStatementWithParameters != null)
+                _executer.ExecuteNonQuery(sqlStatementWithParameters);
+
+            foreach (var column in table.Columns.Values)
+            {
+                sqlStatementWithParameters = _executer.Generator.CreateDbColumnDescription(column);
+                if (sqlStatementWithParameters != null)
+                    _executer.ExecuteNonQuery(sqlStatementWithParameters);
+            }
         }
 
         public void DropAllTables()

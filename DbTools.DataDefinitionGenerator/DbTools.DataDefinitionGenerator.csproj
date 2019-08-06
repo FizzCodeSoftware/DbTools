@@ -54,6 +54,7 @@
     <Compile Include="Generators\ForeignKeyGeneratorHelper.cs" />
     <Compile Include="Generators\SqLiteGenerator.cs" />
     <Compile Include="Generators\MsSqlGenerator.cs" />
+    <Compile Include="SqlStatementWithParams.cs" />
     <Compile Include="SqlTypeMapper\SqLiteTypeMapper.cs" />
     <Compile Include="SqlTypeMapper\MsSqTypeMapper.cs" />
     <Compile Include="SqlTypeMapper\GenericSqlTypeMapper.cs" />

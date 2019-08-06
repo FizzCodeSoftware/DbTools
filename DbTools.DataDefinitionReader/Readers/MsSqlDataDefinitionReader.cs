@@ -4,6 +4,7 @@
     using System.Linq;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
+    using FizzCode.DbTools.DataDefinitionGenerator;
 
     public class MsSqlDataDefinitionReader : GenericDataDefinitionReader
     {
@@ -62,7 +63,7 @@
 
         public void AddColumnDocumentation(SqlTable table)
         {
-            var reader = _executer.ExecuteQuery(@"
+            var reader = _executer.ExecuteQuery(new SqlStatementWithParameters(@"
 SELECT
     c.name ColumnName,
     p.value Property
@@ -73,7 +74,7 @@ FROM
 WHERE
     SCHEMA_NAME(t.schema_id) = 'dbo'
     AND t.name = @TableName
-    AND p.name = 'MS_Description'", table.Name);
+    AND p.name = 'MS_Description'", table.Name));
 
             foreach (var row in reader.Rows)
             {
@@ -99,8 +100,8 @@ FROM
 
         public void AddTableDocumentation(SqlTable table)
         {
-            var reader = _executer.ExecuteQuery(
-            SqlGetTableDocumentation + " AND t.name = @TableName", table.Name);
+            var reader = _executer.ExecuteQuery(new SqlStatementWithParameters(
+            SqlGetTableDocumentation + " AND t.name = @TableName", table.Name));
 
             foreach (var row in reader.Rows)
             {

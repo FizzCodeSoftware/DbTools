@@ -49,9 +49,22 @@
             return sb.ToString();
         }
 
-        public virtual string CreateDbDescription(SqlTable table)
+        public virtual SqlStatementWithParameters CreateDbColumnDescription(SqlColumn column)
         {
-            return "";
+            var sqlColumnDescription = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
+            if (sqlColumnDescription == null)
+                return null;
+
+            return new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName", column.Table.Name, sqlColumnDescription.Description);
+        }
+
+        public virtual SqlStatementWithParameters CreateDbTableDescription(SqlTable table)
+        {
+            var sqlTableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
+            if (sqlTableDescription == null)
+                return null;
+
+            return new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name = @TableName", sqlTableDescription.Description, table.Name);
         }
 
         public string CreateIndexes(SqlTable table)
@@ -105,7 +118,7 @@
                 .Append(")");
         }
 
-        public virtual string CreateForeignKey(SqlTable table)
+        public virtual string CreateForeignKeys(SqlTable table)
         {
             /* example: ALTER TABLE [dbo].[Dim_Currency]  WITH CHECK ADD  CONSTRAINT [FK_Dim_Currency_Dim_CurrencyGroup] FOREIGN KEY([Dim_CurrencyGroupId])
             REFERENCES[dbo].[Dim_CurrencyGroup]([Dim_CurrencyGroupId])

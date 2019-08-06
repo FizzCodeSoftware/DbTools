@@ -40,46 +40,44 @@
             DropDatabase();
         }
 
-        public SQLiteCommand PrepareSqlCommand(string sql, params object[] paramValues)
+        public SQLiteCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
         {
             var command = _connection.CreateCommand();
-            command.CommandText = sql;
-            var matches = Regex.Matches(sql, @"\B\@\w+");
-            var i = 0;
+            command.CommandText = sqlStatementWithParameters.Statement;
 
-            foreach (var paramValue in paramValues)
+            foreach (var parameters in sqlStatementWithParameters.Parameters)
             {
-                command.Parameters.AddWithValue(matches[i++].Value, paramValue);
+                command.Parameters.AddWithValue(parameters.Key, parameters.Value);
             }
 
             return command;
         }
 
         // TODO paramters
-        public override void ExecuteNonQuery(string sql, params object[] paramValues)
+        public override void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
             try
             {
-                using (var command = PrepareSqlCommand(sql, paramValues))
+                using (var command = PrepareSqlCommand(sqlStatementWithParameters))
                 {
                     command.ExecuteNonQuery();
                 }
             }
             catch (SQLiteException ex)
             {
-                var newEx = new Exception($"Sql fails:\r\n{sql}\r\n{ex.Message}", ex);
+                var newEx = new Exception($"Sql fails:\r\n{sqlStatementWithParameters.Statement}\r\n{ex.Message}", ex);
                 throw newEx;
             }
         }
 
         // TODO paramters
-        public override Reader ExecuteQuery(string sql, params object[] paramValues)
+        public override Reader ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
             try
             {
                 var reader = new Reader();
 
-                using (var sqlReader = PrepareSqlCommand(sql, paramValues).ExecuteReader())
+                using (var sqlReader = PrepareSqlCommand(sqlStatementWithParameters).ExecuteReader())
                 {
                     while (sqlReader.Read())
                     {
@@ -97,24 +95,24 @@
             }
             catch (SQLiteException ex)
             {
-                var newEx = new Exception($"Sql fails:\r\n{sql}\r\n{ex.Message}", ex);
+                var newEx = new Exception($"Sql fails:\r\n{sqlStatementWithParameters.Statement}\r\n{ex.Message}", ex);
                 throw newEx;
             }
         }
 
-        protected override void ExecuteNonQueryMaster(string sql, params object[] paramValues)
+        protected override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)
         {
-            using (var command = PrepareSqlCommand(sql, paramValues))
+            using (var command = PrepareSqlCommand(sqlStatementWithParameters))
             {
                 command.ExecuteNonQuery();
             }
         }
 
-        public override object ExecuteScalar(string sql, params object[] paramValues)
+        public override object ExecuteScalar(SqlStatementWithParameters sqlStatementWithParameters)
         {
             try
             {
-                using (var command = PrepareSqlCommand(sql, paramValues))
+                using (var command = PrepareSqlCommand(sqlStatementWithParameters))
                 {
                     var result = command.ExecuteScalar();
                     return result;
@@ -122,7 +120,7 @@
             }
             catch (SQLiteException ex)
             {
-                var newEx = new Exception($"Sql fails:\r\n{sql}\r\n{ex.Message}", ex);
+                var newEx = new Exception($"Sql fails:\r\n{sqlStatementWithParameters.Statement}\r\n{ex.Message}", ex);
                 throw newEx;
             }
         }

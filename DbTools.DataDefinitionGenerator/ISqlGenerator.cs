@@ -6,11 +6,12 @@
     {
         string CreateTable(SqlTable table);
 
-        string CreateForeignKey(SqlTable table);
+        string CreateForeignKeys(SqlTable table);
 
         string CreateIndexes(SqlTable table);
 
-        string CreateDbDescription(SqlTable table);
+        SqlStatementWithParameters CreateDbTableDescription(SqlTable table);
+        SqlStatementWithParameters CreateDbColumnDescription(SqlColumn column);
 
         string DropTable(SqlTable table);
 

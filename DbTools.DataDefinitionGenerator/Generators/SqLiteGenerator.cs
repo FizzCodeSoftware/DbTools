@@ -37,7 +37,7 @@
         }
 
         // SqLite does not support ALTER TABLE ... ADD CONSTRAINT
-        public override string CreateForeignKey(SqlTable table)
+        public override string CreateForeignKeys(SqlTable table)
         {
             return "";
         }

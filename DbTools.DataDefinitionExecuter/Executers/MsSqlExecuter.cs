@@ -42,32 +42,28 @@
             return connection;
         }
 
-        public SqlCommand PrepareSqlCommand(string sql, params object[] paramValues)
+        public SqlCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
         {
-            var command = new SqlCommand(sql);
-            var matches = Regex.Matches(sql, @"\B\@\w+");
-            var i = 0;
+            var command = new SqlCommand(sqlStatementWithParameters.Statement);
 
-            foreach (var paramValue in paramValues)
-            {
-                command.Parameters.AddWithValue(matches[i++].Value, paramValue);
-            }
+            foreach (var parameter in sqlStatementWithParameters.Parameters)
+                command.Parameters.AddWithValue(parameter.Key, parameter.Value);
 
             return command;
         }
 
-        public override void ExecuteNonQuery(string sql, params object[] paramValues)
+        public override void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
             var connection = OpenConnection();
             try
             {
-                var command = PrepareSqlCommand(sql, paramValues);
+                var command = PrepareSqlCommand(sqlStatementWithParameters);
                 command.Connection = connection;
                 command.ExecuteNonQuery();
             }
             catch (SqlException ex)
             {
-                var newEx = new Exception($"Sql fails:\r\n{sql}\r\n{ex.Message}", ex);
+                var newEx = new Exception($"Sql fails:\r\n{sqlStatementWithParameters.Statement}\r\n{ex.Message}", ex);
                 throw newEx;
             }
             finally
@@ -77,14 +73,14 @@
             }
         }
 
-        public override Reader ExecuteQuery(string sql, params object[] paramValues)
+        public override Reader ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
             var connection = OpenConnection();
             try
             {
                 var reader = new Reader();
 
-                var command = PrepareSqlCommand(sql, paramValues);
+                var command = PrepareSqlCommand(sqlStatementWithParameters);
                 command.Connection = connection;
 
                 using (var sqlReader = command.ExecuteReader())
@@ -105,7 +101,7 @@
             }
             catch (SqlException ex)
             {
-                var newEx = new Exception($"Sql fails:\r\n{sql}\r\n{ex.Message}", ex);
+                var newEx = new Exception($"Sql fails:\r\n{sqlStatementWithParameters.Statement}\r\n{ex.Message}", ex);
                 throw newEx;
             }
             finally
@@ -115,14 +111,14 @@
             }
         }
 
-        protected override void ExecuteNonQueryMaster(string sql, params object[] paramValues)
+        protected override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)
         {
             SqlConnection.ClearAllPools(); // force closing connections to normal database to be able to exetute DDLs.
 
             var connection = OpenConnectionMaster();
             try
             {
-                var command = PrepareSqlCommand(sql, paramValues);
+                var command = PrepareSqlCommand(sqlStatementWithParameters);
                 command.Connection = connection;
                 command.ExecuteNonQuery();
             }
@@ -133,20 +129,20 @@
             }
         }
 
-        public override object ExecuteScalar(string sql, params object[] paramValues)
+        public override object ExecuteScalar(SqlStatementWithParameters sqlStatementWithParameters)
         {
             object result;
 
             var connection = OpenConnection();
             try
             {
-                var command = PrepareSqlCommand(sql, paramValues);
+                var command = PrepareSqlCommand(sqlStatementWithParameters);
                 command.Connection = connection;
                 result = command.ExecuteScalar();
             }
             catch (SqlException ex)
             {
-                var newEx = new Exception($"Sql fails:\r\n{sql}\r\n{ex.Message}", ex);
+                var newEx = new Exception($"Sql fails:\r\n{sqlStatementWithParameters.Statement}\r\n{ex.Message}", ex);
                 throw newEx;
             }
             finally
