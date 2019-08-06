@@ -9,6 +9,9 @@
         string CreateForeignKey(SqlTable table);
 
         string CreateIndexes(SqlTable table);
+
+        string CreateDbDescription(SqlTable table);
+
         string DropTable(SqlTable table);
 
         string DropAllTables();

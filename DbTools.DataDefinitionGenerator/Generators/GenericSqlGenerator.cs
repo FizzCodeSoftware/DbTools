@@ -49,6 +49,11 @@
             return sb.ToString();
         }
 
+        public virtual string CreateDbDescription(SqlTable table)
+        {
+            return "";
+        }
+
         public string CreateIndexes(SqlTable table)
         {
             var sb = new StringBuilder();
