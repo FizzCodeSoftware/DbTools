@@ -49,7 +49,9 @@
             Assert.IsTrue(pm.ShouldSkip("apple"));
             Assert.IsTrue(pm.ShouldSkip("apxle"));
 
-            Assert.IsTrue(pm.ShouldSkip("The quick brown fox jumps over the lazy apXle dog"));
+            Assert.IsFalse(pm.ShouldSkip("The quick brown fox jumps over the lazy apXle dog"));
+
+            Assert.IsTrue(pm.ShouldSkip("apXle The quick brown fox jumps over the lazy dog"));
 
             Assert.IsFalse(pm.ShouldSkip("appl"));
             Assert.IsFalse(pm.ShouldSkip("pple"));
