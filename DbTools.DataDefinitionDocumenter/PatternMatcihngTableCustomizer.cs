@@ -40,14 +40,14 @@
             {
                 if (IsRegex(item.Pattern))
                 {
-                    var regexPattern = Regex.Escape(item.Pattern).Replace(@"\*", ".*").Replace(@"\?", ".").Replace("#", @"\d");
+                    var regexPattern = "^" + Regex.Escape(item.Pattern).Replace(@"\*", ".*").Replace(@"\?", ".").Replace("#", @"\d");
                     if (Regex.Match(tableName, regexPattern).Success
                         && ShouldNotSkipPatternExcept(item, tableName))
                     {
                         if (matchingItem == null)
                             matchingItem = item;
                         else
-                            throw new ApplicationException($"Multiple patterns are mathing for {tableName}.");
+                            throw new ApplicationException($"Multiple patterns are matching for {tableName}.");
                     }
                 }
                 else if (item.Pattern == tableName

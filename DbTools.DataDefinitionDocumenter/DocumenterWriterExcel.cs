@@ -92,6 +92,11 @@
 
         public byte[] GetContent()
         {
+            foreach (var ws in ExcelPackage.Workbook.Worksheets)
+            {
+                ws.Cells[ws.Dimension.Address].AutoFitColumns(0, 100);
+            }
+                
             return ExcelPackage.GetAsByteArray();
         }
 
