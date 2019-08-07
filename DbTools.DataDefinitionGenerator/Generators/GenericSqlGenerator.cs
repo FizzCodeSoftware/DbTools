@@ -55,7 +55,13 @@
             if (sqlColumnDescription == null)
                 return null;
 
-            return new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName", column.Table.Name, sqlColumnDescription.Description);
+            var sqlStatementWithParameters = new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
+
+            sqlStatementWithParameters.Parameters.Add("@Description", sqlColumnDescription.Description);
+            sqlStatementWithParameters.Parameters.Add("@TableName", column.Table.Name);
+            sqlStatementWithParameters.Parameters.Add("@ColumnName", column.Name);
+
+            return sqlStatementWithParameters;
         }
 
         public virtual SqlStatementWithParameters CreateDbTableDescription(SqlTable table)
@@ -64,7 +70,12 @@
             if (sqlTableDescription == null)
                 return null;
 
-            return new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name = @TableName", sqlTableDescription.Description, table.Name);
+            var sqlStatementWithParameters = new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name = @TableName");
+
+            sqlStatementWithParameters.Parameters.Add("@Description", sqlTableDescription.Description);
+            sqlStatementWithParameters.Parameters.Add("@TableName", table.Name);
+
+            return sqlStatementWithParameters;
         }
 
         public string CreateIndexes(SqlTable table)
@@ -90,7 +101,7 @@
                 .Append(" ON ")
                 .AppendLine(GuardKeywords(index.SqlTable.Name))
                 .AppendLine("(")
-                // todo: something is missing from here?
+                .AppendLine(string.Join(", \r\n", index.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)} {c.OrderAsKeyword}"))) // Index column list + asc desc
                 .AppendLine(")");
 
             return sb.ToString();

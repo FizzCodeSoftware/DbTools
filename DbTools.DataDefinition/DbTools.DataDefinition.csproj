@@ -39,6 +39,12 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DatabaseDeclaration\DelayedNamingTask\DelayedNamingIndex.cs" />
+    <Compile Include="DatabaseDeclaration\DelayedNamingTask\DelayedNamingForeignKey.cs" />
+    <Compile Include="DatabaseDeclaration\DelayedNamingTask\DelayedNamingForeignKeyColumn.cs" />
+    <Compile Include="DatabaseDeclaration\DelayedNamingTask\DelayedNamingPrimaryKey.cs" />
+    <Compile Include="DatabaseDeclaration\DelayedNamingTask\DelayedNamingTask.cs" />
+    <Compile Include="DatabaseDeclaration\DescriptionHelper.cs" />
     <Compile Include="Column\Properties\SqlColumnDescription.cs" />
     <Compile Include="Column\Properties\SqlTableDescription.cs" />
     <Compile Include="DatabaseDeclaration\NamingStrategiesDictionary.cs" />
@@ -68,7 +74,7 @@
     <Compile Include="Column\Properties\Identity.cs" />
     <Compile Include="Column\Properties\Index.cs" />
     <Compile Include="Column\Properties\IndexBase.cs" />
-    <Compile Include="Column\Properties\IndexHelper.cs" />
+    <Compile Include="DatabaseDeclaration\IndexHelper.cs" />
     <Compile Include="Column\Properties\PrimaryKey.cs" />
     <Compile Include="DatabaseDeclaration\PrimaryKeyHelper.cs" />
     <Compile Include="Column\Properties\SqlColumnCustomProperty.cs" />

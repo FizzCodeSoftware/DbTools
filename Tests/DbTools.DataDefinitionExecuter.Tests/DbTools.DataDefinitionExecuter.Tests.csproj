@@ -75,7 +75,7 @@
     <Compile Include="..\..\Global\AssemblyInfo.Global.cs">
       <Link>Properties\AssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="ForeignKeyCompositeTests.cs" />
+    <Compile Include="GenerateDatabaseTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

@@ -38,6 +38,9 @@
                     CreateForeignkeys(sqlTable);
 
                 foreach (var sqlTable in DatabaseDefinition.GetTables())
+                    CreateIndexes(sqlTable);
+
+                foreach (var sqlTable in DatabaseDefinition.GetTables())
                     CreateDbDescriptions(sqlTable);
             }
         }

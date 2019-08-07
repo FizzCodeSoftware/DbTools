@@ -53,7 +53,6 @@
             return command;
         }
 
-        // TODO paramters
         public override void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
             try
@@ -70,7 +69,6 @@
             }
         }
 
-        // TODO paramters
         public override Reader ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
             try
