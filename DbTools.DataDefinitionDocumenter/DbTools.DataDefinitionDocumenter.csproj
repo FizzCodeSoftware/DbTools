@@ -48,12 +48,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CsGenerator.cs" />
     <Compile Include="Documenter.cs" />
     <Compile Include="..\Global\AssemblyInfo.Global.cs">
       <Link>Properties\AssemblyInfo.Global.cs</Link>
     </Compile>
     <Compile Include="DocumenterWriterExcel.cs" />
     <Compile Include="EmptyTableCustomizer.cs" />
+    <Compile Include="ColumnCreationHelper.cs" />
     <Compile Include="IDocumenterWriter.cs" />
     <Compile Include="ITableCustomizer.cs" />
     <Compile Include="PatternMatchingTableCustomizerFromCsv.cs" />

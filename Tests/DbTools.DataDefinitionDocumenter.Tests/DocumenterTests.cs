@@ -48,5 +48,13 @@
                 return false;
             }
         }
+
+        [TestMethod]
+        public void GeneratorTest()
+        {
+            var db = new TestDatabaseFks();
+            var generator = new CsGenerator("TestDatabaseFks", "FizzCode.DbTools.DataDefinitionDocumenter.Tests", new TableCustomizer());
+            generator.Generate(db);
+        }
     }
 }

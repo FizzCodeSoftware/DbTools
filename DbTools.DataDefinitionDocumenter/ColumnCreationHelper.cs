@@ -1,0 +1,73 @@
+﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
+{
+    using System;
+    using System.Text;
+    using FizzCode.DbTools.DataDefinition;
+
+    public class ColumnCreationHelper
+    {
+        public static string GetColumnCreation(SqlColumn column)
+        {
+            var sb = new StringBuilder();
+            sb.Append("\t\t\t");
+            sb.Append(GetColumnCreationMethod(column));
+
+            // TODO: PKK, Identity etc.
+
+            sb.Append(";");
+
+            return sb.ToString();
+        }
+
+        public static string GetColumnCreationMethod(SqlColumn column)
+        {
+            switch (column.Type)
+            {
+                case SqlType.Boolean:
+                case SqlType.Byte:
+                    throw new NotImplementedException($"Implement SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
+                    
+                case SqlType.Int16:
+                    return $"AddInt16({column.Name})";
+                case SqlType.Int32:
+                    return $"AddInt32({column.Name})";
+                case SqlType.Int64:
+                    throw new NotImplementedException($"Implement SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
+
+                case SqlType.NVarchar:
+                    return $"AddNVarChar({column.Name}, {column.Length})";
+                case SqlType.Varchar:
+                    return $"AddVarChar({column.Name}, {column.Length}))";
+                case SqlType.NChar:
+                    return $"AddNChar({column.Name}, {column.Length}))";
+                case SqlType.Char:
+                    throw new NotImplementedException($"Implement SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
+
+                case SqlType.Date:
+                    return $"AddDate({column.Name})";
+
+                // TODO Datetime2 / offset?
+                case SqlType.DateTime:
+                    return $"AddDateTime({column.Name})";
+
+                case SqlType.Decimal:
+                    return "AddDecimal";
+                case SqlType.Double:
+                    throw new NotImplementedException($"Implement SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
+
+                /*case SqlType.Guid:
+                    return "UNIQUEIDENTIFIER";
+                case SqlType.Binary:
+                    return "BINARY";
+                case SqlType.VarBinary:
+                    return "VARBINARY";
+                case SqlType.Image :
+                    return "IMAGE";
+                case SqlType.NText:
+                    return "NTEXT";*/
+                default:
+                    throw new NotImplementedException($"Unmapped SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
+            }
+        }
+    }
+}

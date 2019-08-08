@@ -18,11 +18,11 @@
 
         private readonly string _fileName;
 
-        public Documenter(string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null) : this(new DocumenterWriterExcel(), fileName, databaseName, tableCustomizer)
+        public Documenter(string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null) : this(new DocumenterWriterExcel(), databaseName, tableCustomizer, fileName)
         {
         }
 
-        public Documenter(IDocumenterWriter documenterWriter, string fileName = null, string databaseName = "", ITableCustomizer tableCustomizer = null)
+        public Documenter(IDocumenterWriter documenterWriter, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null)
         {
             _databaseName = databaseName;
             DocumenterWriter = documenterWriter;
