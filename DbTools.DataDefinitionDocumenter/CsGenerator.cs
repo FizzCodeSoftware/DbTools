@@ -172,8 +172,13 @@
             sb.AppendLine("\t}");
             sb.AppendLine("}");
 
+            // TODO handle illegal chars
+            var categoryInPath = category;
+            if (categoryInPath == "?")
+                categoryInPath = "QuestionMark";
+
             var path = ConfigurationManager.AppSettings["WorkingDirectory"]
-                + _databaseName + "/" + category + "/" + table.Name + ".cs";
+                + _databaseName + "/" + categoryInPath + "/" + table.Name + ".cs";
 
             var fileInfo = new FileInfo(path);
             fileInfo.Directory.Create();

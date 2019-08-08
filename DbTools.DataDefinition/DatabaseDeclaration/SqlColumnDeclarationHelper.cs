@@ -20,6 +20,22 @@
             return column;
         }
 
+        public static SqlColumnDeclaration AddBoolean(this SqlTableDeclaration table, string name, bool isNullable = false)
+        {
+            var column = new SqlColumnDeclaration { Type = SqlType.Boolean, Name = name, IsNullable = isNullable };
+            column.Table = table;
+            table.Columns.Add(name, column);
+            return column;
+        }
+
+        public static SqlColumnDeclaration AddByte(this SqlTableDeclaration table, string name, bool isNullable = false)
+        {
+            var column = new SqlColumnDeclaration { Type = SqlType.Byte, Name = name, IsNullable = isNullable };
+            column.Table = table;
+            table.Columns.Add(name, column);
+            return column;
+        }
+
         public static SqlColumnDeclaration AddInt16(this SqlTableDeclaration table, string name, bool isNullable = false)
         {
             var column = new SqlColumnDeclaration { Type = SqlType.Int16, Name = name, IsNullable = isNullable };

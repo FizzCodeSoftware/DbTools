@@ -12,9 +12,14 @@
             sb.Append("\t\t\t");
             sb.Append(GetColumnCreationMethod(column));
 
+
+            if (column.IsNullable)
+                sb.Append(", true");
+
+            // TODO nullable
             // TODO: PKK, Identity etc.
 
-            sb.Append(";");
+            sb.Append(");");
 
             return sb.ToString();
         }
@@ -24,34 +29,34 @@
             switch (column.Type)
             {
                 case SqlType.Boolean:
+                    return $"AddBoolean({column.Name}";
                 case SqlType.Byte:
-                    throw new NotImplementedException($"Implement SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
-                    
+                    return $"AddByte({column.Name}";
                 case SqlType.Int16:
-                    return $"AddInt16({column.Name})";
+                    return $"AddInt16({column.Name}";
                 case SqlType.Int32:
-                    return $"AddInt32({column.Name})";
+                    return $"AddInt32({column.Name}";
                 case SqlType.Int64:
                     throw new NotImplementedException($"Implement SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
 
                 case SqlType.NVarchar:
-                    return $"AddNVarChar({column.Name}, {column.Length})";
+                    return $"AddNVarChar({column.Name}, {column.Length}";
                 case SqlType.Varchar:
-                    return $"AddVarChar({column.Name}, {column.Length}))";
+                    return $"AddVarChar({column.Name}, {column.Length})";
                 case SqlType.NChar:
-                    return $"AddNChar({column.Name}, {column.Length}))";
+                    return $"AddNChar({column.Name}, {column.Length})";
                 case SqlType.Char:
                     throw new NotImplementedException($"Implement SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
 
                 case SqlType.Date:
-                    return $"AddDate({column.Name})";
+                    return $"AddDate({column.Name}";
 
                 // TODO Datetime2 / offset?
                 case SqlType.DateTime:
-                    return $"AddDateTime({column.Name})";
+                    return $"AddDateTime({column.Name}";
 
                 case SqlType.Decimal:
-                    return "AddDecimal";
+                    return $"AddDecimal({column.Name}, {column.Length}, {column.Precision}";
                 case SqlType.Double:
                     throw new NotImplementedException($"Implement SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
 
