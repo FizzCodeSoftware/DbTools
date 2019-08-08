@@ -24,6 +24,7 @@
         Int64,
 
         Decimal,
+        Single,
         Double,
 
         Xml,

@@ -174,8 +174,13 @@
 
             // TODO handle illegal chars
             var categoryInPath = category;
-            if (categoryInPath == "?")
-                categoryInPath = "QuestionMark";
+            /*if (categoryInPath == "?")
+                categoryInPath = "QuestionMark";*/
+
+            if (string.IsNullOrEmpty(categoryInPath))
+                categoryInPath = "_no_category_";
+
+            categoryInPath = categoryInPath.Replace('?', '？');
 
             var path = ConfigurationManager.AppSettings["WorkingDirectory"]
                 + _databaseName + "/" + categoryInPath + "/" + table.Name + ".cs";

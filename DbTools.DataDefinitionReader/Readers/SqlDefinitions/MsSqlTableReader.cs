@@ -81,6 +81,8 @@ FROM INFORMATION_SCHEMA.COLUMNS
                     return SqlType.Date;
                 case "bit":
                     return SqlType.Boolean;
+                case "real":
+                    return SqlType.Single;
                 case "float":
                     return SqlType.Double;
                 case "xml":

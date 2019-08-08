@@ -29,40 +29,42 @@
             switch (column.Type)
             {
                 case SqlType.Boolean:
-                    return $"AddBoolean({column.Name}";
+                    return $"AddBoolean(\"{column.Name}\"";
                 case SqlType.Byte:
-                    return $"AddByte({column.Name}";
+                    return $"AddByte(\"{column.Name}\"";
                 case SqlType.Int16:
-                    return $"AddInt16({column.Name}";
+                    return $"AddInt16(\"{column.Name}\"";
                 case SqlType.Int32:
-                    return $"AddInt32({column.Name}";
+                    return $"AddInt32(\"{column.Name}\"";
                 case SqlType.Int64:
-                    throw new NotImplementedException($"Implement SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
+                    return $"AddInt64(\"{column.Name}\"";
 
                 case SqlType.NVarchar:
-                    return $"AddNVarChar({column.Name}, {column.Length}";
+                    return $"AddNVarChar(\"{column.Name}\", {column.Length}";
                 case SqlType.Varchar:
-                    return $"AddVarChar({column.Name}, {column.Length})";
+                    return $"AddVarChar(\"{column.Name}\", {column.Length})";
                 case SqlType.NChar:
-                    return $"AddNChar({column.Name}, {column.Length})";
+                    return $"AddNChar(\"{column.Name}\", {column.Length})";
                 case SqlType.Char:
                     throw new NotImplementedException($"Implement SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
 
                 case SqlType.Date:
-                    return $"AddDate({column.Name}";
+                    return $"AddDate(\"{column.Name}\"";
 
                 // TODO Datetime2 / offset?
                 case SqlType.DateTime:
-                    return $"AddDateTime({column.Name}";
+                    return $"AddDateTime(\"{column.Name}\"";
 
                 case SqlType.Decimal:
-                    return $"AddDecimal({column.Name}, {column.Length}, {column.Precision}";
+                    return $"AddDecimal(\"{column.Name}\", {column.Length}, {column.Precision}";
                 case SqlType.Double:
-                    throw new NotImplementedException($"Implement SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
+                    return $"AddDouble(\"{column.Name}\", {column.Length}";
 
-                /*case SqlType.Guid:
-                    return "UNIQUEIDENTIFIER";
-                case SqlType.Binary:
+                case SqlType.Image:
+                    return $"AddImage(\"{column.Name}\"";
+                case SqlType.Guid:
+                    return $"AddGuid(\"{column.Name}\"";
+                /*case SqlType.Binary:
                     return "BINARY";
                 case SqlType.VarBinary:
                     return "VARBINARY";
