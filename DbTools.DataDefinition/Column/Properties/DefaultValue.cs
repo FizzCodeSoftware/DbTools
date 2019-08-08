@@ -4,7 +4,7 @@
     {
         public object Value { get; }
 
-        public DefaultValue(SqlColumn sqlColumn, object value)
+        public DefaultValue(SqlColumn sqlColumn, string value)
             : base(sqlColumn)
         {
             Value = value;

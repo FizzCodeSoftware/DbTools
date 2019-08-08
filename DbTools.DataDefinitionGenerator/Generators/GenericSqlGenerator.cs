@@ -217,9 +217,9 @@
             var defaultValue = column.Properties.OfType<DefaultValue>().FirstOrDefault();
             if (defaultValue != null)
             {
-                sb.Append(" DEFAULT('")
+                sb.Append(" DEFAULT(")
                     .Append(defaultValue.Value)
-                    .Append("')");
+                    .Append(")");
             }
 
             if (column.IsNullable)

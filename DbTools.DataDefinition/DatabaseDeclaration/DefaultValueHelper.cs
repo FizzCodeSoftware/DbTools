@@ -2,7 +2,7 @@
 {
     public static class DefaultValueHelper
     {
-        public static SqlColumnDeclaration AddDefaultValue(this SqlColumnDeclaration column, object defaultValue)
+        public static SqlColumnDeclaration AddDefaultValue(this SqlColumnDeclaration column, string defaultValue)
         {
             column.Properties.Add(new DefaultValue(column, defaultValue));
 
