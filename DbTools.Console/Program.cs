@@ -26,9 +26,9 @@
                 case "gen":
                     {
                         string patternFileName = null;
-                        if (args.Length > 4)
-                            patternFileName = args[4];
-                        Generate(args[1], (SqlDialect)Enum.Parse(typeof(SqlDialect), args[2]), args[3], patternFileName);
+                        if (args.Length > 5)
+                            patternFileName = args[5];
+                        Generate(args[1], (SqlDialect)Enum.Parse(typeof(SqlDialect), args[2]), args[3], args[4], patternFileName);
                         break;
                     }
                 default:
@@ -65,17 +65,12 @@
             documenter.Document(dd);
         }
 
-        public static void Generate(string connectionString, SqlDialect sqlDialect, string @namespace, string patternFileName)
+        public static void Generate(string connectionString, SqlDialect sqlDialect, string @namespace, string newDatabaseName, string patternFileName)
         {
             var connectionStringSettings = new ConnectionStringSettings();
             connectionStringSettings.ConnectionString = connectionString;
 
             connectionStringSettings.ProviderName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect);
-
-            // TODO provider-specific ConnectionStringBuilder class
-            var builder = new SqlConnectionStringBuilder(connectionString);
-
-            var databaseName = builder.InitialCatalog;
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings);
 
@@ -86,7 +81,7 @@
             if (patternFileName != null)
                 customizer = new PatternMatchingTableCustomizerFromCsv(patternFileName);
 
-            var generator = new CsGenerator(databaseName, @namespace, customizer);
+            var generator = new CsGenerator(newDatabaseName, @namespace, customizer);
 
             generator.Generate(dd);
         }

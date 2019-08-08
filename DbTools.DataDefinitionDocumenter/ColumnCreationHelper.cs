@@ -9,7 +9,7 @@
         public static string GetColumnCreation(SqlColumn column)
         {
             var sb = new StringBuilder();
-            sb.Append("\t\t\t");
+            sb.Append("\t\t\ttable.");
             sb.Append(GetColumnCreationMethod(column));
 
 
@@ -42,9 +42,9 @@
                 case SqlType.NVarchar:
                     return $"AddNVarChar(\"{column.Name}\", {column.Length}";
                 case SqlType.Varchar:
-                    return $"AddVarChar(\"{column.Name}\", {column.Length})";
+                    return $"AddVarChar(\"{column.Name}\", {column.Length}";
                 case SqlType.NChar:
-                    return $"AddNChar(\"{column.Name}\", {column.Length})";
+                    return $"AddNChar(\"{column.Name}\", {column.Length}";
                 case SqlType.Char:
                     throw new NotImplementedException($"Implement SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
 

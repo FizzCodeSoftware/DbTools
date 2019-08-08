@@ -12,9 +12,25 @@
             return column;
         }
 
+        public static SqlColumnDeclaration AddVarChar(this SqlTableDeclaration table, string name, int length, bool isNullable = false)
+        {
+            var column = new SqlColumnDeclaration { Type = SqlType.Varchar, Name = name, Length = length, IsNullable = isNullable };
+            column.Table = table;
+            table.Columns.Add(name, column);
+            return column;
+        }
+
         public static SqlColumnDeclaration AddNChar(this SqlTableDeclaration table, string name, int length, bool isNullable = false)
         {
             var column = new SqlColumnDeclaration { Type = SqlType.NChar, Name = name, Length = length, IsNullable = isNullable };
+            column.Table = table;
+            table.Columns.Add(name, column);
+            return column;
+        }
+
+        public static SqlColumnDeclaration AddChar(this SqlTableDeclaration table, string name, int length, bool isNullable = false)
+        {
+            var column = new SqlColumnDeclaration { Type = SqlType.Char, Name = name, Length = length, IsNullable = isNullable };
             column.Table = table;
             table.Columns.Add(name, column);
             return column;
