@@ -49,7 +49,7 @@
 
             DocumenterWriter.WriteLine("Tables", "Category", "Table Name", "Number of columns", "Description");
 
-            DocumenterWriter.WriteLine("All tables", "Category", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Description");
+            DocumenterWriter.WriteLine("All tables", "Category", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
 
             DocumenterWriter.WriteLine("Database", "Number of documented tables", databaseDefinition.GetTables().Count(t => !_tableCustomizer.ShouldSkip(t.Name)));
             DocumenterWriter.WriteLine("Database", "Number of skipped tables", databaseDefinition.GetTables().Count(t => _tableCustomizer.ShouldSkip(t.Name)));
@@ -67,7 +67,7 @@
             {
                 var category = tableKvp.Key;
                 var table = tableKvp.Value;
-                DocumenterWriter.WriteLine(GetColor(table.Name), table.Name, "Category", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Description");
+                DocumenterWriter.WriteLine(GetColor(table.Name), table.Name, "Category", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
                 DocumentTable(category, table);
                 DocumentTableDetails(category, table);
             }
@@ -143,6 +143,13 @@
 
                 if(identity != null)
                     DocumenterWriter.Write(GetColor(table.Name), table.Name, $"IDENTITY ({identity.Seed}, {identity.Increment})");
+                else
+                    DocumenterWriter.Write(GetColor(table.Name), table.Name, "");
+
+                var defaultValue = column.Value.Properties.OfType<DefaultValue>().FirstOrDefault();
+
+                if (defaultValue != null)
+                    DocumenterWriter.Write(GetColor(table.Name), table.Name, defaultValue);
                 else
                     DocumenterWriter.Write(GetColor(table.Name), table.Name, "");
 

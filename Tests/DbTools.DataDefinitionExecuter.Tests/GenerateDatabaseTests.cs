@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter.Tests
 {
+    using System;
     using System.Configuration;
     using System.Linq;
     using FizzCode.DbTools.DataDefinition;
@@ -107,6 +108,24 @@
                 var table = new SqlTableDeclaration();
                 table.AddInt32("Id").SetPKIdentity().AddDescription("Id Column description");
                 table.AddNVarChar("Name", 100).AddDescription("Name Column description");
+                return table;
+            });
+        }
+
+        [TestMethod]
+        public void GenerateDatabase_DefaultValue()
+        {
+            GenerateDatabase(new DefaultValueTestDb(), "MsSql");
+        }
+
+        public class DefaultValueTestDb : DatabaseDeclaration
+        {
+            public static LazySqlTable Table = new LazySqlTable(() =>
+            {
+                var table = new SqlTableDeclaration();
+                table.AddInt32("Id").SetPKIdentity();
+                table.AddNVarChar("Name", 100).AddDefaultValue("apple");
+                table.AddDateTime("DateTime").AddDefaultValue(new DateTime(2019,8,7,13,59,57,357));
                 return table;
             });
         }

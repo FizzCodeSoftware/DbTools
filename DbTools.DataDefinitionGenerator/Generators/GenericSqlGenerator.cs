@@ -214,6 +214,14 @@
                     .Append(")");
             }
 
+            var defaultValue = column.Properties.OfType<DefaultValue>().FirstOrDefault();
+            if (defaultValue != null)
+            {
+                sb.Append(" DEFAULT('")
+                    .Append(defaultValue.Value)
+                    .Append("')");
+            }
+
             if (column.IsNullable)
                 sb.Append(" NULL");
             else

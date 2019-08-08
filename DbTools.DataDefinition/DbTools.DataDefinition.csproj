@@ -39,11 +39,13 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Column\Properties\DefaultValue.cs" />
     <Compile Include="DatabaseDeclaration\DelayedNamingTask\DelayedNamingIndex.cs" />
     <Compile Include="DatabaseDeclaration\DelayedNamingTask\DelayedNamingForeignKey.cs" />
     <Compile Include="DatabaseDeclaration\DelayedNamingTask\DelayedNamingForeignKeyColumn.cs" />
     <Compile Include="DatabaseDeclaration\DelayedNamingTask\DelayedNamingPrimaryKey.cs" />
     <Compile Include="DatabaseDeclaration\DelayedNamingTask\DelayedNamingTask.cs" />
+    <Compile Include="DatabaseDeclaration\DefaultValueHelper.cs" />
     <Compile Include="DatabaseDeclaration\DescriptionHelper.cs" />
     <Compile Include="Column\Properties\SqlColumnDescription.cs" />
     <Compile Include="Column\Properties\SqlTableDescription.cs" />
