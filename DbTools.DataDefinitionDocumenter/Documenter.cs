@@ -167,6 +167,7 @@
                 else
                     DocumenterWriter.Write(GetColor(table.Name), "All tables", "");
 
+                DocumenterWriter.WriteLine(GetColor(table.Name), "All tables", defaultValue);
                 DocumenterWriter.WriteLine(GetColor(table.Name), "All tables", description);
             }
 

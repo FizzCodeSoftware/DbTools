@@ -2,7 +2,7 @@
 {
     public class DefaultValue : SqlColumnProperty
     {
-        public object Value { get; }
+        public string Value { get; }
 
         public DefaultValue(SqlColumn sqlColumn, string value)
             : base(sqlColumn)
