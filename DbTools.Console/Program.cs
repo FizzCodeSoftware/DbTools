@@ -19,7 +19,7 @@
                     {
                         string patternFileName = null;
                         if (args.Length > 3)
-                            patternFileName = args[3];
+                            patternFileName = args[3].Trim();
                         Document(args[1], (SqlDialect)Enum.Parse(typeof(SqlDialect), args[2]), patternFileName);
                         break;
                     }
@@ -27,7 +27,7 @@
                     {
                         string patternFileName = null;
                         if (args.Length > 5)
-                            patternFileName = args[5];
+                            patternFileName = args[5].Trim();
                         Generate(args[1], (SqlDialect)Enum.Parse(typeof(SqlDialect), args[2]), args[3], args[4], patternFileName);
                         break;
                     }
@@ -39,10 +39,12 @@
 
         public static void Document(string connectionString, SqlDialect sqlDialect, string patternFileName, IDocumenterWriter documenterWriter = null)
         {
-            var connectionStringSettings = new ConnectionStringSettings();
-            connectionStringSettings.ConnectionString = connectionString;
+            var connectionStringSettings = new ConnectionStringSettings
+            {
+                ConnectionString = connectionString,
 
-            connectionStringSettings.ProviderName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect);
+                ProviderName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect)
+            };
 
             // TODO provider-specific ConnectionStringBuilder class
             var builder = new SqlConnectionStringBuilder(connectionString);
@@ -67,10 +69,12 @@
 
         public static void Generate(string connectionString, SqlDialect sqlDialect, string @namespace, string newDatabaseName, string patternFileName)
         {
-            var connectionStringSettings = new ConnectionStringSettings();
-            connectionStringSettings.ConnectionString = connectionString;
+            var connectionStringSettings = new ConnectionStringSettings
+            {
+                ConnectionString = connectionString,
 
-            connectionStringSettings.ProviderName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect);
+                ProviderName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect)
+            };
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings);
 
