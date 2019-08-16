@@ -2,7 +2,7 @@
 {
     public static class SqlColumnHelper
     {
-        public static SqlColumn AddNVarChar(this SqlTable table, string name, int length, bool isNullable = false)
+        public static SqlColumn AddNVarChar(this SqlTable table, string name, int? length, bool isNullable = false)
         {
             var column = new SqlColumn { Type = SqlType.NVarchar, Name = name, Length = length, IsNullable = isNullable };
             column.Table = table;
@@ -10,7 +10,7 @@
             return column;
         }
 
-        public static SqlColumn AddNChar(this SqlTable table, string name, int length, bool isNullable = false)
+        public static SqlColumn AddNChar(this SqlTable table, string name, int? length, bool isNullable = false)
         {
             var column = new SqlColumn { Type = SqlType.NChar, Name = name, Length = length, IsNullable = isNullable };
             column.Table = table;
@@ -49,7 +49,7 @@
             return column;
         }
 
-        public static SqlColumn AddDecimal(this SqlTable table, string name, int scale, int precision, bool isNullable = false)
+        public static SqlColumn AddDecimal(this SqlTable table, string name, int? scale, int? precision, bool isNullable = false)
         {
             var column = new SqlColumn { Type = SqlType.Decimal, Name = name, IsNullable = isNullable, Length = scale, Precision = precision };
             column.Table = table;
