@@ -87,25 +87,51 @@
                 .AppendLine("\t{");
 
 
+            var pks = table.Properties.OfType<PrimaryKey>().ToList();
+            if (pks.Count == 0)
+            {
+                sb.AppendLine("\t\t// no primary key");
+            }
+
             sb.Append("\t\tpublic static LazySqlTable ").Append(table.Name).AppendLine(" = new LazySqlTable(() =>")
                 .AppendLine("\t\t{")
                 .AppendLine("\t\t\tvar table = new SqlTableDeclaration();");
 
-            var pks = table.Properties.OfType<PrimaryKey>().ToList();
+            var pkColumns = table.Columns.Values
+                .Where(column => column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
+                .ToList();
 
-            foreach (var column in table.Columns.Values)
+            foreach (var column in pkColumns)
+            {
+                var line = ColumnCreationHelper.GetColumnCreation(column);
+                sb.Append(line);
+
+                var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
+                if (!string.IsNullOrEmpty(descriptionProperty?.Description))
+                {
+                    sb.Append(" // ").Append(descriptionProperty.Description);
+                }
+
+                sb.AppendLine();
+            }
+
+            var regularColumns = table.Columns.Values
+                .Where(x => !pkColumns.Contains(x)).ToList();
+
+            foreach (var column in regularColumns)
             {
                 // TODO Type as ISqlTypeMapper
 
+                var line = ColumnCreationHelper.GetColumnCreation(column);
+                sb.Append(line);
+
                 var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
-                var description = "";
-                if (descriptionProperty != null)
-                    description = descriptionProperty.Description;
+                if (!string.IsNullOrEmpty(descriptionProperty?.Description))
+                {
+                    sb.Append(" // ").Append(descriptionProperty.Description);
+                }
 
-                var isPk = pks.Any(pk => pk.SqlColumns.Any(cao => cao.SqlColumn == column));
-
-                sb.AppendLine(ColumnCreationHelper.GetColumnCreation(column));
-
+                sb.AppendLine();
                 // DocumenterWriter.Write(table.Name, category, table.Name, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
 
                 /*if (isPk)

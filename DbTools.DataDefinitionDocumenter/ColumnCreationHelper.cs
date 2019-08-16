@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using System;
+    using System.Linq;
     using System.Text;
     using FizzCode.DbTools.DataDefinition;
 
@@ -12,14 +13,24 @@
             sb.Append("\t\t\ttable.");
             sb.Append(GetColumnCreationMethod(column));
 
-
             if (column.IsNullable)
                 sb.Append(", true");
 
-            // TODO nullable
-            // TODO: PKK, Identity etc.
+            sb.Append(")");
 
-            sb.Append(");");
+            if (column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
+            {
+                if (column.Properties.OfType<Identity>().Any())
+                {
+                    sb.Append(".SetPKIdentity()");
+                }
+                else
+                {
+                    sb.Append(".SetPK()");
+                }
+            }
+
+            sb.Append(";");
 
             return sb.ToString();
         }
