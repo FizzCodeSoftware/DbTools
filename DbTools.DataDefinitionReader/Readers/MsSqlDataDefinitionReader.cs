@@ -17,7 +17,7 @@
         {
             var dd = new DatabaseDefinition();
 
-            foreach (var tableName in GetTableNames())
+            foreach (var tableName in GetSchemaAndTableNames())
                 dd.AddTable(GetTableDefinition(tableName, false));
 
             AddTableDocumentation(dd);
@@ -28,10 +28,13 @@
             return dd;
         }
 
-        public override List<string> GetTableNames()
+        public override List<SchemaAndTableName> GetSchemaAndTableNames()
         {
-            var reader = _executer.ExecuteQuery("SELECT name FROM sysobjects WHERE xtype = 'U'");
-            return reader.GetRows<string>().ToList();
+            var reader = _executer.ExecuteQuery(@"
+SELECT ss.name as 'schema', so.name FROM sys.objects so
+INNER JOIN sys.schemas ss ON ss.schema_id = so.schema_id
+WHERE type = 'U'");
+            return reader.GetRows<string, string>().Select((item) => new SchemaAndTableName(item.Item1, item.Item2)).ToList();
         }
 
         private MsSqlTableReader _tableReader;
@@ -72,9 +75,9 @@ FROM
     INNER JOIN sys.all_columns c ON c.object_id = t.object_id
     INNER JOIN sys.extended_properties p ON p.major_id = t.object_id AND p.minor_id = c.column_id AND p.class = 1
 WHERE
-    SCHEMA_NAME(t.schema_id) = 'dbo'
-    AND t.name = @TableName
-    AND p.name = 'MS_Description'", table.Name));
+    p.name = 'MS_Description'
+    AND SCHEMA_NAME(t.schema_id) = @SchemaName
+    AND t.name = @TableName", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName));
 
             foreach (var row in reader.Rows)
             {
@@ -95,13 +98,12 @@ SELECT
 FROM
     sys.tables AS t
     INNER JOIN sys.extended_properties AS p ON p.major_id = t.object_id AND p.minor_id = 0 AND p.class = 1
-    WHERE p.name = 'MS_Description'
-    AND SCHEMA_NAME(t.schema_id) = 'dbo'";
+    WHERE p.name = 'MS_Description'";
 
         public void AddTableDocumentation(SqlTable table)
         {
             var reader = _executer.ExecuteQuery(new SqlStatementWithParameters(
-            SqlGetTableDocumentation + " AND t.name = @TableName", table.Name));
+            SqlGetTableDocumentation + " AND SCHEMA_NAME(t.schema_id) = @SchemaNam AND t.name = @TableName", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName));
 
             foreach (var row in reader.Rows)
             {
@@ -127,7 +129,7 @@ FROM
 
             foreach (var row in reader.Rows)
             {
-                var table = dd.GetTables().Find(t => t.Name == row.GetAs<string>("TableName"));
+                var table = dd.GetTables().Find(t => t.SchemaAndTableName == row.GetAs<string>("TableName"));
                 if (table != null)
                 {
                     var description = row.GetAs<string>("Property");

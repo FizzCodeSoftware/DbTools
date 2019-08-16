@@ -40,7 +40,7 @@
             {
                 // HACK circular reference - DatabaseDeclaration is not set yet.
                 if (table.DatabaseDeclaration == null)
-                    table.SetLazyProperties(table.Name, lazyReferredTable.DatabaseDeclaration);
+                    table.SetLazyProperties(table.SchemaAndTableName, lazyReferredTable.DatabaseDeclaration);
 
                 var column = table.AddForeignKey(null, (SqlColumnDeclaration)pkColumn.SqlColumn, columnNamePrefix);
                 column.IsNullable = isNullable;
@@ -104,7 +104,7 @@
 
             // HACK circular reference - DatabaseDeclaration is not set yet.
             if (table.DatabaseDeclaration == null)
-                table.SetLazyProperties(table.Name, foreignKeyGroups[0].PKColumn.Table.DatabaseDeclaration);
+                table.SetLazyProperties(table.SchemaAndTableName, foreignKeyGroups[0].PKColumn.Table.DatabaseDeclaration);
 
             var fkNaming = table.DatabaseDeclaration.NamingStrategies.GetNamingStrategy<IForeignKeyNamingStrategy>();
             fkNaming.SetFKName(fk);

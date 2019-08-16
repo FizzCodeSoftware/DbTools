@@ -15,7 +15,7 @@
 
         public void Add(SqlTable table)
         {
-            byName.Add(table.Name, table);
+            byName.Add(table.SchemaAndTableName, table);
         }
 
         public void Clear()
@@ -43,7 +43,7 @@
         public bool Remove(SqlTable table)
         {
             _sorted.RemoveAt(_sorted.IndexOfValue(table));
-            return byName.Remove(table.Name);
+            return byName.Remove(table.SchemaAndTableName);
         }
 
         IEnumerator IEnumerable.GetEnumerator()

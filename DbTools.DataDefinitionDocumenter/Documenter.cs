@@ -33,9 +33,10 @@
         private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
         private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
 
-        private Color? GetColor(string tableName)
+        private Color? GetColor(SchemaAndTableName schemaAndTableName)
         {
-            var hexColor = _tableCustomizer.BackGroundColor(tableName);
+            // TODO coloring to incude schema
+            var hexColor = _tableCustomizer.BackGroundColor(schemaAndTableName.TableName);
 
             if (hexColor == null)
                 return null;
@@ -47,34 +48,34 @@
         {
             DocumenterWriter.WriteLine("Database", "Database name", _databaseName);
 
-            DocumenterWriter.WriteLine("Tables", "Category", "Table Name", "Number of columns", "Description");
+            DocumenterWriter.WriteLine("Tables", "Category", "Schema", "Table Name", "Number of columns", "Description");
 
-            DocumenterWriter.WriteLine("All tables", "Category", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
+            DocumenterWriter.WriteLine("All tables", "Category", "Schema", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
 
-            DocumenterWriter.WriteLine("Database", "Number of documented tables", databaseDefinition.GetTables().Count(t => !_tableCustomizer.ShouldSkip(t.Name)));
-            DocumenterWriter.WriteLine("Database", "Number of skipped tables", databaseDefinition.GetTables().Count(t => _tableCustomizer.ShouldSkip(t.Name)));
+            DocumenterWriter.WriteLine("Database", "Number of documented tables", databaseDefinition.GetTables().Count(t => !_tableCustomizer.ShouldSkip(t.SchemaAndTableName.TableName)));
+            DocumenterWriter.WriteLine("Database", "Number of skipped tables", databaseDefinition.GetTables().Count(t => _tableCustomizer.ShouldSkip(t.SchemaAndTableName.TableName)));
             DocumenterWriter.WriteLine("Database", "Number of tables", databaseDefinition.GetTables().Count);
 
             foreach (var table in databaseDefinition.GetTables())
             {
-                if (!_tableCustomizer.ShouldSkip(table.Name))
-                    _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.Name), table));
+                if (!_tableCustomizer.ShouldSkip(table.SchemaAndTableName.TableName))
+                    _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndTableName), table));
                 else
-                    _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.Name), table));
+                    _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndTableName), table));
             }
 
-            foreach (var tableKvp in _sqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.Name))
+            foreach (var tableKvp in _sqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName))
             {
                 var category = tableKvp.Key;
                 var table = tableKvp.Value;
-                DocumenterWriter.WriteLine(GetColor(table.Name), table.Name, "Category", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
+                DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, "Category", "Schema", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
                 DocumentTable(category, table);
                 DocumentTableDetails(category, table);
             }
 
             DocumenterWriter.WriteLine("Tables");
 
-            foreach (var tableKvp in _skippedSqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.Name))
+            foreach (var tableKvp in _skippedSqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName))
             {
                 var category = tableKvp.Key;
                 var table = tableKvp.Value;
@@ -106,13 +107,14 @@
 
         protected void DocumentTable(string category, SqlTable table)
         {
-            DocumenterWriter.Write(GetColor(table.Name), "Tables", category);
-            DocumenterWriter.WriteLink(GetColor(table.Name), "Tables", table.Name);
-            DocumenterWriter.Write(GetColor(table.Name), "Tables", table.Columns.Count);
+            DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", category);
+            DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", table.SchemaAndTableName.Schema);
+            DocumenterWriter.WriteLink(GetColor(table.SchemaAndTableName), "Tables", table.SchemaAndTableName.TableName);
+            DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", table.Columns.Count);
 
             var tableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
             if(tableDescription != null)
-                DocumenterWriter.Write(GetColor(table.Name), "Tables", tableDescription.Description);
+                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", tableDescription.Description);
 
             DocumenterWriter.WriteLine("Tables");
         }
@@ -132,78 +134,78 @@
 
                 var isPk = pks.Any(pk => pk.SqlColumns.Any(cao => cao.SqlColumn == column.Value));
 
-                DocumenterWriter.Write(GetColor(table.Name), table.Name, category, table.Name, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
+                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
 
                 if (isPk)
-                    DocumenterWriter.Write(GetColor(table.Name), table.Name, true);
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, true);
                 else
-                    DocumenterWriter.Write(GetColor(table.Name), table.Name, "");
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, "");
 
                 var identity = column.Value.Properties.OfType<Identity>().FirstOrDefault();
 
                 if(identity != null)
-                    DocumenterWriter.Write(GetColor(table.Name), table.Name, $"IDENTITY ({identity.Seed}, {identity.Increment})");
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, $"IDENTITY ({identity.Seed}, {identity.Increment})");
                 else
-                    DocumenterWriter.Write(GetColor(table.Name), table.Name, "");
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, "");
 
                 var defaultValue = column.Value.Properties.OfType<DefaultValue>().FirstOrDefault();
 
                 if (defaultValue != null)
-                    DocumenterWriter.Write(GetColor(table.Name), table.Name, defaultValue);
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, defaultValue);
                 else
-                    DocumenterWriter.Write(GetColor(table.Name), table.Name, "");
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, "");
 
-                DocumenterWriter.WriteLine(GetColor(table.Name), table.Name, description.Trim());
+                DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, description.Trim());
 
-                DocumenterWriter.Write(GetColor(table.Name), "All tables", category, table.Name, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
+                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All tables", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
 
                 if (isPk)
-                    DocumenterWriter.Write(GetColor(table.Name), "All tables", true);
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All tables", true);
                 else
-                    DocumenterWriter.Write(GetColor(table.Name), "All tables", "");
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All tables", "");
 
                 if (identity != null)
-                    DocumenterWriter.Write(GetColor(table.Name), "All tables", $"IDENTITY ({identity.Seed}, {identity.Increment})");
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All tables", $"IDENTITY ({identity.Seed}, {identity.Increment})");
                 else
-                    DocumenterWriter.Write(GetColor(table.Name), "All tables", "");
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All tables", "");
 
-                DocumenterWriter.WriteLine(GetColor(table.Name), "All tables", defaultValue);
-                DocumenterWriter.WriteLine(GetColor(table.Name), "All tables", description);
+                DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), "All tables", defaultValue);
+                DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), "All tables", description);
             }
 
-            DocumenterWriter.WriteLine(table.Name);
-            DocumenterWriter.WriteLine(table.Name, "Foreign keys");
+            DocumenterWriter.WriteLine(table.SchemaAndTableName);
+            DocumenterWriter.WriteLine(table.SchemaAndTableName, "Foreign keys");
 
             foreach (var fk in table.Properties.OfType<ForeignKey>())
             {
-                DocumenterWriter.Write(table.Name, fk.Name);
+                DocumenterWriter.Write(table.SchemaAndTableName, fk.Name);
                 foreach (var fkColumn in fk.ForeignKeyColumns)
-                    DocumenterWriter.Write(table.Name, fkColumn.ForeignKeyColumn.Name);
+                    DocumenterWriter.Write(table.SchemaAndTableName, fkColumn.ForeignKeyColumn.Name);
 
-                DocumenterWriter.Write(table.Name, "");
-                DocumenterWriter.Write(table.Name, fk.PrimaryKey.SqlTable.Name);
-                DocumenterWriter.Write(table.Name, "");
+                DocumenterWriter.Write(table.SchemaAndTableName, "");
+                DocumenterWriter.Write(table.SchemaAndTableName, fk.PrimaryKey.SqlTable.SchemaAndTableName);
+                DocumenterWriter.Write(table.SchemaAndTableName, "");
 
                 foreach (var fkColumn in fk.ForeignKeyColumns)
-                    DocumenterWriter.Write(table.Name, fkColumn.PrimaryKeyColumn.Name);
+                    DocumenterWriter.Write(table.SchemaAndTableName, fkColumn.PrimaryKeyColumn.Name);
             }
 
-            DocumenterWriter.WriteLine(table.Name);
-            DocumenterWriter.WriteLine(table.Name, "Indexes");
+            DocumenterWriter.WriteLine(table.SchemaAndTableName);
+            DocumenterWriter.WriteLine(table.SchemaAndTableName, "Indexes");
 
             foreach (var index in table.Properties.OfType<Index>())
             {
-                DocumenterWriter.Write(table.Name, index.Name);
+                DocumenterWriter.Write(table.SchemaAndTableName, index.Name);
                 foreach (var indexColumn in index.SqlColumns)
                 {
-                    DocumenterWriter.Write(table.Name, indexColumn.SqlColumn.Name);
-                    DocumenterWriter.Write(table.Name, indexColumn);
+                    DocumenterWriter.Write(table.SchemaAndTableName, indexColumn.SqlColumn.Name);
+                    DocumenterWriter.Write(table.SchemaAndTableName, indexColumn);
                 }
 
-                DocumenterWriter.Write(table.Name, "");
-                DocumenterWriter.Write(table.Name, "Includes:");
+                DocumenterWriter.Write(table.SchemaAndTableName, "");
+                DocumenterWriter.Write(table.SchemaAndTableName, "Includes:");
                 foreach (var includeColumn in index.Includes)
-                    DocumenterWriter.Write(table.Name, includeColumn.Name);
+                    DocumenterWriter.Write(table.SchemaAndTableName, includeColumn.Name);
             }
         }
     }

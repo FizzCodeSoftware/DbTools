@@ -17,7 +17,7 @@
         {
             var dd = new DatabaseDefinition();
 
-            foreach (var tableName in GetTableNames())
+            foreach (var tableName in GetSchemaAndTableNames())
                 dd.AddTable(GetTableDefinition(tableName, false));
 
             // TODO
@@ -32,11 +32,11 @@
             return dd;
         }
 
-        public override List<string> GetTableNames()
+        public override List<SchemaAndTableName> GetSchemaAndTableNames()
         {
             // TODO this is not working in in memory mode?
             var reader = _executer.ExecuteQuery("SELECT * FROM sqlite_master WHERE type = 'table'");
-            return reader.GetRows<string>().ToList();
+            return reader.GetRows<string>().Select(item => new SchemaAndTableName(item)).ToList();
         }
 
         public override SqlTable GetTableDefinition(string tableName, bool fullDefinition = true)

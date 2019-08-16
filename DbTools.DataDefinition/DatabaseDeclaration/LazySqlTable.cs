@@ -5,12 +5,12 @@
 
     public class LazySqlTable
     {
-        protected string Name { get; set; }
+        protected SchemaAndTableName SchemaAndTableName { get; set; }
         internal DatabaseDeclaration DatabaseDeclaration { get; private set; }
 
-        public void SetLazyProperties(string name, DatabaseDeclaration databaseDeclaration)
+        public void SetLazyProperties(SchemaAndTableName schemaAndTableName, DatabaseDeclaration databaseDeclaration)
         {
-            Name = name;
+            SchemaAndTableName = schemaAndTableName;
             DatabaseDeclaration = databaseDeclaration;
         }
 
@@ -30,7 +30,7 @@
                 if (_sqltable == null)
                 {
                     _sqltable = LazySqlTableHolder.Value;
-                    _sqltable.SetLazyProperties(Name, DatabaseDeclaration);
+                    _sqltable.SetLazyProperties(SchemaAndTableName, DatabaseDeclaration);
                 }
 
                 return _sqltable;

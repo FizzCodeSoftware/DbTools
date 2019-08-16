@@ -4,10 +4,10 @@
     {
         public void SetPrimaryKeyName(PrimaryKey pk)
         {
-            if (pk.SqlTable.Name == null)
+            if (pk.SqlTable.SchemaAndTableName.TableName == null)
                 return;
 
-            pk.Name = $"PK_{pk.SqlTable.Name}";
+            pk.Name = $"PK_{pk.SqlTable.SchemaAndTableName.TableName}";
         }
     }
 }

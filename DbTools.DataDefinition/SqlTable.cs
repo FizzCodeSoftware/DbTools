@@ -2,18 +2,61 @@
 {
     using System.Collections.Generic;
 
-    public class SqlTable
+    public class SchemaAndTableName
     {
-        public string Name { get; protected set; }
+        public string Schema { get; protected set; }
+        public string TableName { get; protected set; }
 
-        public SqlTable(string name)
+        public SchemaAndTableName(string name)
         {
-            Name = name;
+            TableName = name;
+        }
+
+        public SchemaAndTableName(string schema, string name)
+        {
+            Schema = schema;
+            TableName = name;
+        }
+
+        public string SchemaAndName
+        {
+            get
+            {
+                if (Schema == null)
+                    return TableName;
+
+                return Schema + "." + TableName;
+            }
         }
 
         public override string ToString()
         {
-            return Name;
+            return SchemaAndName;
+        }
+
+        public static implicit operator string(SchemaAndTableName schemaAndTableName)
+        {
+            return schemaAndTableName.ToString();
+        }
+    }
+
+    public class SqlTable
+    {
+        public SchemaAndTableName SchemaAndTableName { get; protected set; }
+
+        public SqlTable(string schema, string name)
+        {
+            SchemaAndTableName = new SchemaAndTableName(schema, name);
+        }
+
+        public SqlTable(string name)
+        {
+            SchemaAndTableName = new SchemaAndTableName(name);
+        }
+
+        public override string ToString()
+        {
+            return SchemaAndTableName;
         }
 
         public List<SqlTableProperty> Properties { get; } = new List<SqlTableProperty>();

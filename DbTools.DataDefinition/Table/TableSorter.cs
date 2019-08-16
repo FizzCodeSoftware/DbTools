@@ -13,7 +13,7 @@
 
             public override string ToString()
             {
-                return SqlTable.Name;
+                return SqlTable.SchemaAndTableName;
             }
         }
 

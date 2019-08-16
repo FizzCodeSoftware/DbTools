@@ -12,9 +12,9 @@ namespace FizzCode.DbTools.DataDefinition
         {
         }
 
-        public void SetLazyProperties(string name, DatabaseDeclaration databaseDeclaration)
+        public void SetLazyProperties(SchemaAndTableName schemaAndTableName, DatabaseDeclaration databaseDeclaration)
         {
-            Name = name;
+            SchemaAndTableName = schemaAndTableName;
             DatabaseDeclaration = databaseDeclaration;
         }
 

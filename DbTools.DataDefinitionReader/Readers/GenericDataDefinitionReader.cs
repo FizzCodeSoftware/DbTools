@@ -13,7 +13,7 @@
 
         protected readonly SqlExecuter _executer;
 
-        public abstract List<string> GetTableNames();
+        public abstract List<SchemaAndTableName> GetSchemaAndTableNames();
         public abstract SqlTable GetTableDefinition(string tableName, bool fullDefinition);
 
         public abstract DatabaseDefinition GetDatabaseDefinition();

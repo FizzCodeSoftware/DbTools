@@ -17,7 +17,7 @@
 
         public override string ToString()
         {
-            return $"{Name} {Enum.GetName(typeof(SqlType), Type)} on {Table.Name}";
+            return $"{Name} {Enum.GetName(typeof(SqlType), Type)} on {Table.SchemaAndTableName}";
         }
 
         public T CopyTo<T>(T column) where T : SqlColumn

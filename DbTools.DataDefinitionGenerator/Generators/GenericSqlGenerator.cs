@@ -26,7 +26,9 @@
         {
             var sb = new StringBuilder();
             sb.Append("CREATE TABLE ")
-                .Append(GuardKeywords(table.Name))
+                .Append(GuardKeywords(table.SchemaAndTableName.Schema))
+                .Append(".")
+                .Append(GuardKeywords(table.SchemaAndTableName.TableName))
                 .AppendLine(" (");
 
             var idx = 0;
@@ -55,10 +57,11 @@
             if (sqlColumnDescription == null)
                 return null;
 
-            var sqlStatementWithParameters = new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
+            var sqlStatementWithParameters = new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=@SchemaName, @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
 
             sqlStatementWithParameters.Parameters.Add("@Description", sqlColumnDescription.Description);
-            sqlStatementWithParameters.Parameters.Add("@TableName", column.Table.Name);
+            sqlStatementWithParameters.Parameters.Add("@SchemaName", column.Table.SchemaAndTableName.Schema);
+            sqlStatementWithParameters.Parameters.Add("@TableName", column.Table.SchemaAndTableName.TableName);
             sqlStatementWithParameters.Parameters.Add("@ColumnName", column.Name);
 
             return sqlStatementWithParameters;
@@ -70,10 +73,11 @@
             if (sqlTableDescription == null)
                 return null;
 
-            var sqlStatementWithParameters = new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name = @TableName");
+            var sqlStatementWithParameters = new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name = @SchemaName, @level1type=N'TABLE', @level1name = @TableName");
 
             sqlStatementWithParameters.Parameters.Add("@Description", sqlTableDescription.Description);
-            sqlStatementWithParameters.Parameters.Add("@TableName", table.Name);
+            sqlStatementWithParameters.Parameters.Add("@SchemaName", table.SchemaAndTableName.Schema);
+            sqlStatementWithParameters.Parameters.Add("@TableName", table.SchemaAndTableName.TableName);
 
             return sqlStatementWithParameters;
         }
@@ -99,7 +103,9 @@
                 .Append("INDEX ")
                 .Append(GuardKeywords(index.Name))
                 .Append(" ON ")
-                .AppendLine(GuardKeywords(index.SqlTable.Name))
+                .Append(GuardKeywords(index.SqlTable.SchemaAndTableName.Schema))
+                .Append(".")
+                .AppendLine(GuardKeywords(index.SqlTable.SchemaAndTableName.TableName))
                 .AppendLine("(")
                 .AppendLine(string.Join(", \r\n", index.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)} {c.OrderAsKeyword}"))) // Index column list + asc desc
                 .AppendLine(")");
@@ -147,11 +153,15 @@
             foreach (var fk in allFks)
             {
                 sb.Append("ALTER TABLE ")
-                    .Append(GuardKeywords(table.Name))
+                    .Append(GuardKeywords(table.SchemaAndTableName.Schema))
+                    .Append(".")
+                    .Append(GuardKeywords(table.SchemaAndTableName.TableName))
                     .Append(" WITH CHECK ADD ")
                     .AppendLine(ForeignKeyGeneratorHelper.FKConstraint(fk, GuardKeywords))
                     .Append("ALTER TABLE ")
-                    .Append(GuardKeywords(table.Name))
+                    .Append(GuardKeywords(table.SchemaAndTableName.Schema))
+                    .Append(".")
+                    .Append(GuardKeywords(table.SchemaAndTableName.TableName))
                     .Append(" CHECK CONSTRAINT ")
                     .AppendLine(GuardKeywords(fk.Name));
             }
@@ -179,7 +189,7 @@
 
         public string DropTable(SqlTable table)
         {
-            return $"DROP TABLE {GuardKeywords(table.Name)}";
+            return $"DROP TABLE {GuardKeywords(table.SchemaAndTableName.Schema)}.{GuardKeywords(table.SchemaAndTableName.TableName)}";
         }
 
         protected string GenerateCreateColumn(SqlColumn column)
@@ -248,7 +258,7 @@ SELECT
 
         public string TableNotEmpty(SqlTable table)
         {
-            return $"SELECT COUNT(*) FROM (SELECT TOP 1 * FROM {GuardKeywords(table.Name)}) t";
+            return $"SELECT COUNT(*) FROM (SELECT TOP 1 * FROM {GuardKeywords(table.SchemaAndTableName.Schema)}.{GuardKeywords(table.SchemaAndTableName.TableName)} t";
         }
     }
 }

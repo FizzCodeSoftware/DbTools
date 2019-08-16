@@ -45,7 +45,7 @@
             var tables = new ForeignKeyCompositeTestsDb().GetTables();
             Assert.AreEqual(4, tables.Count);
 
-            var topOrdersPerCompany = tables.First(t => t.Name == "TopOrdersPerCompany");
+            var topOrdersPerCompany = tables.First(t => t.SchemaAndTableName.TableName == "TopOrdersPerCompany");
             var fks = topOrdersPerCompany.Properties.OfType<ForeignKey>().ToList();
 
             Assert.AreEqual(2, fks.Count);

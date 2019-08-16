@@ -29,11 +29,11 @@
                 else
                     isFirst = false;
 
-                sb.Append(fkColumn.ForeignKeyColumn.Table.Name)
+                sb.Append(fkColumn.ForeignKeyColumn.Table.SchemaAndTableName)
                     .Append(".")
                     .Append(fkColumn.ForeignKeyColumn.Name)
                     .Append(" -> ")
-                    .Append(fkColumn.PrimaryKeyColumn.Table.Name)
+                    .Append(fkColumn.PrimaryKeyColumn.Table.SchemaAndTableName)
                     .Append(".")
                     .Append(fkColumn.PrimaryKeyColumn.Name);
             }

@@ -64,7 +64,8 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
         {
             var fakePKs = new Dictionary<string, SqlTable>();
 
-            foreach (var row in QueryResult.Where(r => r.GetAs<string>("FK_TABLE_NAME") == table.Name).OrderBy(row => row.GetAs<int>("FK_ORDINAL_POSITION")))
+            // TODO schema
+            foreach (var row in QueryResult.Where(r => r.GetAs<string>("FK_TABLE_NAME") == table.SchemaAndTableName.TableName).OrderBy(row => row.GetAs<int>("FK_ORDINAL_POSITION")))
             {
                 var fkColumn = table.Columns[row.GetAs<string>("FK_COLUMN_NAME")];
 
@@ -107,7 +108,7 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
                     pk2 = dd.GetTable(pkTableName).Properties.OfType<PrimaryKey>().First();
                 }
 
-                var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.PrimaryKey.SqlTable.Name == pkTableName);
+                var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.PrimaryKey.SqlTable.SchemaAndTableName == pkTableName);
                 fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkColumn, pk2.SqlColumns.First(co => co.SqlColumn.Name == pkColumnName).SqlColumn));
             }
 

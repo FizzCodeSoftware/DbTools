@@ -13,7 +13,7 @@
         {
             var tables = new TestDatabaseSimpleNoNameProvided().GetTables();
             Assert.AreEqual(1, tables.Count);
-            Assert.AreEqual("Company", tables[0].Name);
+            Assert.AreEqual("Company", tables[0].SchemaAndTableName.TableName);
         }
 
         [TestMethod]
@@ -21,7 +21,7 @@
         {
             var tables = new TestDatabaseSimple().GetTables();
             Assert.AreEqual(1, tables.Count);
-            Assert.AreEqual("Company", tables[0].Name);
+            Assert.AreEqual("Company", tables[0].SchemaAndTableName.TableName);
         }
 
         [TestMethod]
@@ -29,16 +29,16 @@
         {
             var tables = new TestDatabaseFks().GetTables();
             Assert.AreEqual(3, tables.Count);
-            Assert.AreEqual("Parent", tables[0].Name);
-            Assert.AreEqual("Child", tables[1].Name);
-            Assert.AreEqual("ChildChild", tables[2].Name);
+            Assert.AreEqual("Parent", tables[0].SchemaAndTableName.TableName);
+            Assert.AreEqual("Child", tables[1].SchemaAndTableName.TableName);
+            Assert.AreEqual("ChildChild", tables[2].SchemaAndTableName.TableName);
 
             CheckFK(tables, "Child", "ParentId");
         }
 
         protected void CheckFK(IList<SqlTable> tables, string childName, string fkColumnName)
         {
-            var child = tables.First(t => t.Name == childName);
+            var child = tables.First(t => t.SchemaAndTableName.TableName == childName);
             var fk = child.Properties.OfType<ForeignKey>().First();
 
             // TODO CheckFK if there are more Columns

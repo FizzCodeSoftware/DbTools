@@ -199,23 +199,23 @@ namespace FizzCode.DbTools.DataDefinition.Tests
             var aCFK = a.Properties.OfType<CircularFK>().First();
             var bCFK = b.Properties.OfType<CircularFK>().First();
 
-            Assert.AreEqual("A", aCFK.SqlTable.Name);
-            Assert.AreEqual("B", bCFK.SqlTable.Name);
+            Assert.AreEqual("A", aCFK.SqlTable.SchemaAndTableName.TableName);
+            Assert.AreEqual("B", bCFK.SqlTable.SchemaAndTableName.TableName);
 
             Assert.AreEqual(2, aCFK.ForeignKeyChain.Count);
             Assert.AreEqual(2, bCFK.ForeignKeyChain.Count);
 
-            Assert.AreEqual("A", aCFK.ForeignKeyChain.First().SqlTable.Name);
-            Assert.AreEqual("B", aCFK.ForeignKeyChain.First().PrimaryKey.SqlTable.Name);
+            Assert.AreEqual("A", aCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName.TableName);
+            Assert.AreEqual("B", aCFK.ForeignKeyChain.First().PrimaryKey.SqlTable.SchemaAndTableName.TableName);
 
-            Assert.AreEqual("B", aCFK.ForeignKeyChain.Last().SqlTable.Name);
-            Assert.AreEqual("A", aCFK.ForeignKeyChain.Last().PrimaryKey.SqlTable.Name);
+            Assert.AreEqual("B", aCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName.TableName);
+            Assert.AreEqual("A", aCFK.ForeignKeyChain.Last().PrimaryKey.SqlTable.SchemaAndTableName.TableName);
 
-            Assert.AreEqual("B", bCFK.ForeignKeyChain.First().SqlTable.Name);
-            Assert.AreEqual("A", bCFK.ForeignKeyChain.First().PrimaryKey.SqlTable.Name);
+            Assert.AreEqual("B", bCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName.TableName);
+            Assert.AreEqual("A", bCFK.ForeignKeyChain.First().PrimaryKey.SqlTable.SchemaAndTableName.TableName);
 
-            Assert.AreEqual("A", bCFK.ForeignKeyChain.Last().SqlTable.Name);
-            Assert.AreEqual("B", bCFK.ForeignKeyChain.Last().PrimaryKey.SqlTable.Name);
+            Assert.AreEqual("A", bCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName.TableName);
+            Assert.AreEqual("B", bCFK.ForeignKeyChain.Last().PrimaryKey.SqlTable.SchemaAndTableName.TableName);
         }
 
         [TestMethod]
@@ -231,22 +231,22 @@ namespace FizzCode.DbTools.DataDefinition.Tests
             var bCFK = b.Properties.OfType<CircularFK>().First();
             var cCFK = c.Properties.OfType<CircularFK>().First();
 
-            Assert.AreEqual("A", aCFK.SqlTable.Name);
-            Assert.AreEqual("B", bCFK.SqlTable.Name);
-            Assert.AreEqual("C", cCFK.SqlTable.Name);
+            Assert.AreEqual("A", aCFK.SqlTable.SchemaAndTableName.TableName);
+            Assert.AreEqual("B", bCFK.SqlTable.SchemaAndTableName.TableName);
+            Assert.AreEqual("C", cCFK.SqlTable.SchemaAndTableName.TableName);
 
             Assert.AreEqual(3, aCFK.ForeignKeyChain.Count);
             Assert.AreEqual(3, bCFK.ForeignKeyChain.Count);
             Assert.AreEqual(3, cCFK.ForeignKeyChain.Count);
 
-            Assert.AreEqual("A", aCFK.ForeignKeyChain.First().SqlTable.Name);
-            Assert.AreEqual("C", aCFK.ForeignKeyChain.Last().SqlTable.Name);
+            Assert.AreEqual("A", aCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName.TableName);
+            Assert.AreEqual("C", aCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName.TableName);
 
-            Assert.AreEqual("B", bCFK.ForeignKeyChain.First().SqlTable.Name);
-            Assert.AreEqual("A", bCFK.ForeignKeyChain.Last().SqlTable.Name);
+            Assert.AreEqual("B", bCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName.TableName);
+            Assert.AreEqual("A", bCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName.TableName);
 
-            Assert.AreEqual("C", cCFK.ForeignKeyChain.First().SqlTable.Name);
-            Assert.AreEqual("B", cCFK.ForeignKeyChain.Last().SqlTable.Name);
+            Assert.AreEqual("C", cCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName.TableName);
+            Assert.AreEqual("B", cCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName.TableName);
         }
     }
 }

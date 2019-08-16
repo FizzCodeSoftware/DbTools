@@ -6,11 +6,11 @@
     {
         public void SetIndexName(Index index)
         {
-            if (index.SqlTable.Name == null)
+            if (index.SqlTable.SchemaAndTableName.TableName == null)
                 return;
 
             var indexNameColumnsPart = string.Join("_", index.SqlColumns.Select(co => co.SqlColumn.Name).ToList());
-            index.Name = $"IX_{index.SqlTable.Name}_{indexNameColumnsPart}";
+            index.Name = $"IX_{index.SqlTable.SchemaAndTableName.TableName}_{indexNameColumnsPart}";
         }
     }
 }
