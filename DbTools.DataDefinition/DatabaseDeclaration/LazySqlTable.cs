@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System;
-    using System.Collections.Generic;
 
     public class LazySqlTable
     {
@@ -37,13 +36,7 @@
             }
         }
 
-        public SqlColumnDeclaration this[string columnName]
-        {
-            get
-            {
-                return (SqlColumnDeclaration)SqlTable.Columns[columnName];
-            }
-        }
+        public SqlColumnDeclaration this[string columnName] => (SqlColumnDeclaration)SqlTable.Columns[columnName];
 
         public static implicit operator SqlTable(LazySqlTable lazySqlTable)
         {

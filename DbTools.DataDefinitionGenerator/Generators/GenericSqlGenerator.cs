@@ -41,7 +41,7 @@
             sb.AppendLine();
 
             CreateTablePrimaryKey(table, sb);
-            if(withForeignKey)
+            if (withForeignKey)
                 CreateTableForeignKey(table, sb);
 
             sb.AppendLine(")");
@@ -55,7 +55,7 @@
             if (sqlColumnDescription == null)
                 return null;
 
-            var sqlStatementWithParameters = new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
+            var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
 
             sqlStatementWithParameters.Parameters.Add("@Description", sqlColumnDescription.Description);
             sqlStatementWithParameters.Parameters.Add("@TableName", column.Table.Name);
@@ -70,7 +70,7 @@
             if (sqlTableDescription == null)
                 return null;
 
-            var sqlStatementWithParameters = new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name = @TableName");
+            var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name = @TableName");
 
             sqlStatementWithParameters.Parameters.Add("@Description", sqlTableDescription.Description);
             sqlStatementWithParameters.Parameters.Add("@TableName", table.Name);

@@ -56,9 +56,9 @@
                     return $"AddDateTime(\"{column.Name}\"";
 
                 case SqlType.Decimal:
-                    return $"AddDecimal(\"{column.Name}\", {column.Length}, {column.Precision}";
+                    return $"AddDecimal(\"{column.Name}\", " + (column.Length != null ? column.Length.ToString() : "null") + (column.Precision != null ? column.Precision.ToString() : "null");
                 case SqlType.Double:
-                    return $"AddDouble(\"{column.Name}\", {column.Length}";
+                    return $"AddDouble(\"{column.Name}\", " + (column.Length != null ? column.Length.ToString() : "null");
 
                 case SqlType.Image:
                     return $"AddImage(\"{column.Name}\"";

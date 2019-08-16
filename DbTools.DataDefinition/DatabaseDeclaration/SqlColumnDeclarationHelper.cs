@@ -92,7 +92,7 @@
             return column;
         }
 
-        public static SqlColumnDeclaration AddDecimal(this SqlTableDeclaration table, string name, int scale, int precision, bool isNullable = false)
+        public static SqlColumnDeclaration AddDecimal(this SqlTableDeclaration table, string name, int? scale, int? precision, bool isNullable = false)
         {
             var column = new SqlColumnDeclaration { Type = SqlType.Decimal, Name = name, IsNullable = isNullable, Length = scale, Precision = precision };
             column.Table = table;
@@ -100,7 +100,7 @@
             return column;
         }
 
-        public static SqlColumnDeclaration AddDouble(this SqlTableDeclaration table, string name, int precision, bool isNullable = false)
+        public static SqlColumnDeclaration AddDouble(this SqlTableDeclaration table, string name, int? precision, bool isNullable = false)
         {
             var column = new SqlColumnDeclaration { Type = SqlType.Double, Name = name, Precision = precision, IsNullable = isNullable };
             column.Table = table;

@@ -59,9 +59,9 @@
                 .AppendLine(_namespace)
                 .AppendLine("{")
                 .AppendLine("\tusing FizzCode.DbTools.DataDefinition;")
-                .AppendLine("");
+                .AppendLine();
 
-            sb.AppendLine($"\tpublic partial class {_databaseName} : DatabaseDeclaration");
+            sb.Append("\tpublic partial class ").Append(_databaseName).AppendLine(" : DatabaseDeclaration");
             sb.AppendLine("\t{");
 
             sb.AppendLine("\t}");
@@ -72,23 +72,22 @@
 
             var fileInfo = new FileInfo(path);
             fileInfo.Directory.Create();
-            File.WriteAllText(path, sb.ToString());
+            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
         }
 
         protected void GenerateTable(string category, SqlTable table)
         {
             var sb = new StringBuilder();
-            sb.Append("namespace ")
-                .AppendLine(_namespace)
+            sb.Append("namespace ").AppendLine(_namespace)
                 .AppendLine("{")
                 .AppendLine("\tusing FizzCode.DbTools.DataDefinition;")
-                .AppendLine("");
+                .AppendLine();
 
-            sb.AppendLine($"\tpublic partial class {_databaseName}")
+            sb.Append("\tpublic partial class ").AppendLine(_databaseName)
                 .AppendLine("\t{");
 
 
-            sb.AppendLine($"\t\tpublic static LazySqlTable {table.Name}  = new LazySqlTable(() =>")
+            sb.Append("\t\tpublic static LazySqlTable ").Append(table.Name).AppendLine(" = new LazySqlTable(() =>")
                 .AppendLine("\t\t{")
                 .AppendLine("\t\t\tvar table = new SqlTableDeclaration();");
 
@@ -97,14 +96,14 @@
             foreach (var column in table.Columns.Values)
             {
                 // TODO Type as ISqlTypeMapper
-                
+
                 var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
                 var description = "";
                 if (descriptionProperty != null)
                     description = descriptionProperty.Description;
 
                 var isPk = pks.Any(pk => pk.SqlColumns.Any(cao => cao.SqlColumn == column));
-                
+
                 sb.AppendLine(ColumnCreationHelper.GetColumnCreation(column));
 
                 // DocumenterWriter.Write(table.Name, category, table.Name, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
@@ -187,7 +186,7 @@
 
             var fileInfo = new FileInfo(path);
             fileInfo.Directory.Create();
-            File.WriteAllText(path, sb.ToString());
+            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
         }
     }
 }
