@@ -1,4 +1,7 @@
-﻿namespace FizzCode.DbTools.DataDefinitionGenerator
+﻿using System.Linq;
+using FizzCode.DbTools.DataDefinition;
+
+namespace FizzCode.DbTools.DataDefinitionGenerator
 {
     public class MsSqlGenerator : GenericSqlGenerator
     {
@@ -69,5 +72,44 @@ FOR XML path(''));
 
 EXEC sp_executesql @sql";
         }
+
+        public override SqlStatementWithParameters CreateDbTableDescription(SqlTable table)
+        {
+            var sqlTableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
+            if (sqlTableDescription == null)
+                return null;
+
+            var sqlStatementWithParameters = new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name = @SchemaName, @level1type=N'TABLE', @level1name = @TableName");
+
+            sqlStatementWithParameters.Parameters.Add("@Description", sqlTableDescription.Description);
+
+            sqlStatementWithParameters.Parameters.Add("@SchemaName", table.SchemaAndTableName.Schema ?? DefaultSchema());
+            sqlStatementWithParameters.Parameters.Add("@TableName", table.SchemaAndTableName.TableName);
+
+            return sqlStatementWithParameters;
+        }
+
+        public override SqlStatementWithParameters CreateDbColumnDescription(SqlColumn column)
+        {
+            var sqlColumnDescription = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
+            if (sqlColumnDescription == null)
+                return null;
+
+            var sqlStatementWithParameters = new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=@SchemaName, @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
+
+            sqlStatementWithParameters.Parameters.Add("@Description", sqlColumnDescription.Description);
+            sqlStatementWithParameters.Parameters.Add("@SchemaName", column.Table.SchemaAndTableName.Schema ?? DefaultSchema());
+            sqlStatementWithParameters.Parameters.Add("@TableName", column.Table.SchemaAndTableName.TableName);
+            sqlStatementWithParameters.Parameters.Add("@ColumnName", column.Name);
+
+            return sqlStatementWithParameters;
+        }
+
+
+        public string DefaultSchema()
+        {
+            return "dbo";
+        }
+
     }
 }

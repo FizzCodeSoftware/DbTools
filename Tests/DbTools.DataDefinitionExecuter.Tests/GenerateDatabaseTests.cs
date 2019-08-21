@@ -129,5 +129,31 @@
                 return table;
             });
         }
+
+        [TestMethod]
+        public void DatabaseDefinitionWithSchemaTableNameSeparator()
+        {
+            GenerateDatabase(new SchemaTableNameSeparatorTestDb(), "MsSql");
+        }
+
+        public class SchemaTableNameSeparatorTestDb : DatabaseDeclaration
+        {
+            public static LazySqlTable SchemaAꜗTable = new LazySqlTable(() =>
+            {
+                var table = new SqlTableDeclaration();
+                table.AddInt32("Id").SetPKIdentity();
+                table.AddNVarChar("Name", 100);
+                return table;
+            });
+
+            public static LazySqlTable SchemaBꜗTable = new LazySqlTable(() =>
+            {
+                var table = new SqlTableDeclaration();
+                table.AddInt32("Id").SetPKIdentity();
+                table.AddNVarChar("Name", 100);
+                table.AddForeignKey(SchemaAꜗTable);
+                return table;
+            });
+        }
     }
 }

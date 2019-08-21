@@ -32,13 +32,13 @@
 
             foreach (var table in databaseDefinition.GetTables())
             {
-                if (!_tableCustomizer.ShouldSkip(table.SchemaAndName))
-                    _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndName), table));
+                if (!_tableCustomizer.ShouldSkip(table.SchemaAndTableName))
+                    _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndTableName), table));
                 else
-                    _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndName), table));
+                    _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndTableName), table));
             }
 
-            foreach (var tableKvp in _sqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndName))
+            foreach (var tableKvp in _sqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName))
             {
                 var category = tableKvp.Key;
                 var table = tableKvp.Value;
@@ -88,7 +88,7 @@
                 .AppendLine("\t{");
 
 
-            sb.AppendLine($"\t\tpublic static LazySqlTable {table.SchemaAndName}  = new LazySqlTable(() =>")
+            sb.AppendLine($"\t\tpublic static LazySqlTable {table.SchemaAndTableName}  = new LazySqlTable(() =>")
                 .AppendLine("\t\t{")
                 .AppendLine("\t\t\tvar table = new SqlTableDeclaration();");
 
@@ -183,7 +183,7 @@
             categoryInPath = categoryInPath.Replace('?', '？');
 
             var path = ConfigurationManager.AppSettings["WorkingDirectory"]
-                + _databaseName + "/" + categoryInPath + "/" + table.SchemaAndName + ".cs";
+                + _databaseName + "/" + categoryInPath + "/" + table.SchemaAndTableName + ".cs";
 
             var fileInfo = new FileInfo(path);
             fileInfo.Directory.Create();

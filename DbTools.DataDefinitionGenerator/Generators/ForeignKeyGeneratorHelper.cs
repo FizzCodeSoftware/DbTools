@@ -19,9 +19,7 @@
                 .Append(string.Join(", \r\n", fk.ForeignKeyColumns.Select(fkc => $"{guard(fkc.ForeignKeyColumn.Name)}")))
                 .Append(")")
                 .Append(" REFERENCES ")
-                .Append(guard(fk.PrimaryKey.SqlTable.SchemaAndTableName.Schema))
-                .Append(".")
-                .Append(guard(fk.PrimaryKey.SqlTable.SchemaAndTableName.TableName))
+                .Append(GenericSqlGenerator.SchemaAndTableName(fk.PrimaryKey.SqlTable.SchemaAndTableName, guard))
                 .Append("(")
                 .Append(string.Join(", \r\n", fk.ForeignKeyColumns.Select(pkc => $"{guard(pkc.PrimaryKeyColumn.Name)}")))
                 .Append(")");

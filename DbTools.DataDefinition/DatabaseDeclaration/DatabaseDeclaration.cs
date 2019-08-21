@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -13,6 +14,8 @@
             NamingStrategies = new NamingStrategiesDictionary();
             Tables = GetDeclaredTables();
         }
+
+        public const char SchemaTableNameSeparator = 'ꜗ';
 
         public DatabaseDeclaration(params INamingStrategy[] namingStrategies)
         {
@@ -30,7 +33,7 @@
             foreach (var property in properties)
             {
                 var layzSqlTable = (LazySqlTable)property.GetValue(this);
-                layzSqlTable.SetLazyProperties(property.Name, this);
+                layzSqlTable.SetLazyProperties(SchemaAndTableNameFromDefinitionName(property.Name), this);
 
                 lazySqlTables.Add(layzSqlTable);
             }
@@ -65,6 +68,19 @@
                     delayedNaming.Resolve(NamingStrategies);
                 }
             }
+        }
+
+        private SchemaAndTableName SchemaAndTableNameFromDefinitionName(string methodName)
+        {
+            var schemaAndTableName = methodName.Split(SchemaTableNameSeparator);
+
+            if (schemaAndTableName.Length == 1)
+                return new SchemaAndTableName(schemaAndTableName[0]);
+
+            if (schemaAndTableName.Length == 2)
+                return new SchemaAndTableName(schemaAndTableName[0], schemaAndTableName[1]);
+
+            throw new ArgumentException("Method name contains invalid number of SchemaTableNameSeparator", nameof(methodName));
         }
     }
 }

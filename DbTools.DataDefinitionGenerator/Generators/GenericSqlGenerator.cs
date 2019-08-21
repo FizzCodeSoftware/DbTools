@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
+    using System;
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.DataDefinition;
@@ -26,9 +27,7 @@
         {
             var sb = new StringBuilder();
             sb.Append("CREATE TABLE ")
-                .Append(GuardKeywords(table.SchemaAndTableName.Schema))
-                .Append(".")
-                .Append(GuardKeywords(table.SchemaAndTableName.TableName))
+                .Append(SchemaAndTableName(table.SchemaAndTableName, GuardKeywords))
                 .AppendLine(" (");
 
             var idx = 0;
@@ -53,33 +52,12 @@
 
         public virtual SqlStatementWithParameters CreateDbColumnDescription(SqlColumn column)
         {
-            var sqlColumnDescription = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
-            if (sqlColumnDescription == null)
-                return null;
-
-            var sqlStatementWithParameters = new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=@SchemaName, @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
-
-            sqlStatementWithParameters.Parameters.Add("@Description", sqlColumnDescription.Description);
-            sqlStatementWithParameters.Parameters.Add("@SchemaName", column.Table.SchemaAndTableName.Schema);
-            sqlStatementWithParameters.Parameters.Add("@TableName", column.Table.SchemaAndTableName.TableName);
-            sqlStatementWithParameters.Parameters.Add("@ColumnName", column.Name);
-
-            return sqlStatementWithParameters;
+            return null;
         }
 
         public virtual SqlStatementWithParameters CreateDbTableDescription(SqlTable table)
         {
-            var sqlTableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
-            if (sqlTableDescription == null)
-                return null;
-
-            var sqlStatementWithParameters = new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name = @SchemaName, @level1type=N'TABLE', @level1name = @TableName");
-
-            sqlStatementWithParameters.Parameters.Add("@Description", sqlTableDescription.Description);
-            sqlStatementWithParameters.Parameters.Add("@SchemaName", table.SchemaAndTableName.Schema);
-            sqlStatementWithParameters.Parameters.Add("@TableName", table.SchemaAndTableName.TableName);
-
-            return sqlStatementWithParameters;
+            return null;
         }
 
         public string CreateIndexes(SqlTable table)
@@ -103,10 +81,8 @@
                 .Append("INDEX ")
                 .Append(GuardKeywords(index.Name))
                 .Append(" ON ")
-                .Append(GuardKeywords(index.SqlTable.SchemaAndTableName.Schema))
-                .Append(".")
-                .AppendLine(GuardKeywords(index.SqlTable.SchemaAndTableName.TableName))
-                .AppendLine("(")
+                .Append(SchemaAndTableName(index.SqlTable.SchemaAndTableName, GuardKeywords))
+                .AppendLine(" (")
                 .AppendLine(string.Join(", \r\n", index.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)} {c.OrderAsKeyword}"))) // Index column list + asc desc
                 .AppendLine(")");
 
@@ -153,9 +129,7 @@
             foreach (var fk in allFks)
             {
                 sb.Append("ALTER TABLE ")
-                    .Append(GuardKeywords(table.SchemaAndTableName.Schema))
-                    .Append(".")
-                    .Append(GuardKeywords(table.SchemaAndTableName.TableName))
+                    .Append(SchemaAndTableName(table.SchemaAndTableName, GuardKeywords))
                     .Append(" WITH CHECK ADD ")
                     .AppendLine(ForeignKeyGeneratorHelper.FKConstraint(fk, GuardKeywords))
                     .Append("ALTER TABLE ")
@@ -259,6 +233,14 @@ SELECT
         public string TableNotEmpty(SqlTable table)
         {
             return $"SELECT COUNT(*) FROM (SELECT TOP 1 * FROM {GuardKeywords(table.SchemaAndTableName.Schema)}.{GuardKeywords(table.SchemaAndTableName.TableName)} t";
+        }
+
+        public static string SchemaAndTableName(SchemaAndTableName schemaAndTableName, Func<string, string> guard)
+        {
+            if (schemaAndTableName.Schema != null)
+                return guard(schemaAndTableName.Schema) + "." + guard(schemaAndTableName.TableName);
+            else
+                return guard(schemaAndTableName.TableName);
         }
     }
 }
