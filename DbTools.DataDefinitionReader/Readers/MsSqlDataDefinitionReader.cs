@@ -77,7 +77,7 @@ FROM
 WHERE
     p.name = 'MS_Description'
     AND SCHEMA_NAME(t.schema_id) = @SchemaName
-    AND t.name = @TableName", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName));
+    AND t.name = @TableName", table.SchemaAndTableName.Schema ?? DefaultSchema(), table.SchemaAndTableName.TableName));
 
             foreach (var row in reader.Rows)
             {
@@ -139,5 +139,12 @@ FROM
                 }
             }
         }
+
+        // TODO duplicated in MsSqlGenerator
+        public string DefaultSchema()
+        {
+            return "dbo";
+        }
+
     }
 }

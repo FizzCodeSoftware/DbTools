@@ -133,9 +133,7 @@
                     .Append(" WITH CHECK ADD ")
                     .AppendLine(ForeignKeyGeneratorHelper.FKConstraint(fk, GuardKeywords))
                     .Append("ALTER TABLE ")
-                    .Append(GuardKeywords(table.SchemaAndTableName.Schema))
-                    .Append(".")
-                    .Append(GuardKeywords(table.SchemaAndTableName.TableName))
+                    .Append(SchemaAndTableName(table.SchemaAndTableName, GuardKeywords))
                     .Append(" CHECK CONSTRAINT ")
                     .AppendLine(GuardKeywords(fk.Name));
             }
@@ -163,7 +161,7 @@
 
         public string DropTable(SqlTable table)
         {
-            return $"DROP TABLE {GuardKeywords(table.SchemaAndTableName.Schema)}.{GuardKeywords(table.SchemaAndTableName.TableName)}";
+            return $"DROP TABLE {SchemaAndTableName(table.SchemaAndTableName, GuardKeywords)}";
         }
 
         protected string GenerateCreateColumn(SqlColumn column)

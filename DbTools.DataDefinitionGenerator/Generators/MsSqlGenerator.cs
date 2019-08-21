@@ -105,11 +105,9 @@ EXEC sp_executesql @sql";
             return sqlStatementWithParameters;
         }
 
-
         public string DefaultSchema()
         {
             return "dbo";
         }
-
     }
 }

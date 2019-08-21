@@ -28,7 +28,7 @@
             foreach (var row in Rows)
             {
                 var v1 = row.GetAsByIndex<T1>(0);
-                var v2 = row.GetAsByIndex<T2>(0);
+                var v2 = row.GetAsByIndex<T2>(1);
 
                 yield return (v1, v2);
             }
