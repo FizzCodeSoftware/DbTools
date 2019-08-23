@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.DataDefinition;
@@ -21,6 +22,14 @@
         public virtual string CreateTable(SqlTable table)
         {
             return CreateTableInternal(table, false);
+        }
+
+        public virtual string CreateSchema(string schemaName)
+        {
+            if (!string.IsNullOrEmpty(schemaName))
+                return $"CREATE SCHEMA {schemaName}";
+            else
+                return "";
         }
 
         protected string CreateTableInternal(SqlTable table, bool withForeignKey)
@@ -218,14 +227,24 @@
 
         public abstract string DropAllIndexes();
 
-        public virtual string TableExists(SqlTable table)
+        public virtual SqlStatementWithParameters TableExists(SqlTable table)
         {
-            return $@"
+            return new SqlStatementWithParameters($@"
 SELECT
-    CASE WHEN EXISTS((SELECT * FROM information_schema.tables WHERE table_name = @TableName))
+    CASE WHEN EXISTS(SELECT * FROM information_schema.tables WHERE table_schema = @ShemaName AND table_name = @TableName)
         THEN 1
         ELSE 0
-    END";
+    END", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName);
+        }
+
+        public SqlStatementWithParameters SchmaExists(SqlTable table)
+        {
+            return new SqlStatementWithParameters($@"
+SELECT
+    CASE WHEN EXISTS(SELECT schema_name FROM information_schema.schemata WHERE schema_name = @SchemaName)
+        THEN 1
+        ELSE 0
+    END", table.SchemaAndTableName.Schema);
         }
 
         public string TableNotEmpty(SqlTable table)

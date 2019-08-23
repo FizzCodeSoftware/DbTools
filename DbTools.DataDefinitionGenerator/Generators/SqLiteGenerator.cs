@@ -21,7 +21,7 @@
             throw new System.NotImplementedException();
         }
 
-        public override string TableExists(SqlTable table)
+        public override SqlStatementWithParameters TableExists(SqlTable table)
         {
             throw new System.NotImplementedException();
         }

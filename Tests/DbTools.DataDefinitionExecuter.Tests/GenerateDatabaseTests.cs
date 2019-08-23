@@ -32,7 +32,7 @@
                 generateForeignKeyCompositeTestDatabase.ReCreateDatabase(true);
             }
             finally
-            { 
+            {
                 var generator = SqlGeneratorFactory.CreateGenerator(SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings));
                 var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
                 executer.DropDatabaseIfExists();
@@ -136,6 +136,12 @@
             GenerateDatabase(new SchemaTableNameSeparatorTestDb(), "MsSql");
         }
 
+        [TestMethod]
+        public void DatabaseDefinitionWithSchemaAndDefaultSchema()
+        {
+            GenerateDatabase(new SchemaTableNameDefaultSchemaTestDb(), "MsSql");
+        }
+
         public class SchemaTableNameSeparatorTestDb : DatabaseDeclaration
         {
             public static LazySqlTable SchemaAꜗTable = new LazySqlTable(() =>
@@ -152,6 +158,17 @@
                 table.AddInt32("Id").SetPKIdentity();
                 table.AddNVarChar("Name", 100);
                 table.AddForeignKey(SchemaAꜗTable);
+                return table;
+            });
+        }
+
+        public class SchemaTableNameDefaultSchemaTestDb : SchemaTableNameSeparatorTestDb
+        {
+            public static LazySqlTable Table = new LazySqlTable(() =>
+            {
+                var table = new SqlTableDeclaration();
+                table.AddInt32("Id").SetPKIdentity();
+                table.AddNVarChar("Name", 100);
                 return table;
             });
         }

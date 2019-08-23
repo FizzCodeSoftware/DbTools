@@ -27,7 +27,7 @@
         {
             var tables = new Tables();
 
-            var properties = GetType().GetFields(BindingFlags.Static | BindingFlags.Public).Where(fi => fi.FieldType == typeof(LazySqlTable));
+            var properties = GetType().GetFields(BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public).Where(fi => fi.FieldType == typeof(LazySqlTable));
 
             var lazySqlTables = new List<LazySqlTable>();
             foreach (var property in properties)

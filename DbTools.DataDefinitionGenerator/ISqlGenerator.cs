@@ -4,6 +4,8 @@
 
     public interface ISqlGenerator
     {
+        string CreateSchema(string schemaName);
+
         string CreateTable(SqlTable table);
 
         string CreateForeignKeys(SqlTable table);
@@ -23,7 +25,7 @@
 
         ISqlTypeMapper SqlTypeMapper { get; }
 
-        string TableExists(SqlTable table);
+        SqlStatementWithParameters TableExists(SqlTable table);
         string TableNotEmpty(SqlTable table);
     }
 }
