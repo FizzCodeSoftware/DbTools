@@ -14,7 +14,7 @@
         protected readonly SqlExecuter _executer;
 
         public abstract List<SchemaAndTableName> GetSchemaAndTableNames();
-        public abstract SqlTable GetTableDefinition(string tableName, bool fullDefinition);
+        public abstract SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition);
 
         public abstract DatabaseDefinition GetDatabaseDefinition();
     }

@@ -63,6 +63,7 @@
     <Compile Include="DatabaseDeclaration\SqlTableDeclaration.cs" />
     <Compile Include="DatabaseDeclaration\LazySqlTableSuspectedCircularReferenceException.cs" />
     <Compile Include="DatabaseDeclaration\ForeignKeyHelper.cs" />
+    <Compile Include="SchemaAndTableName.cs" />
     <Compile Include="SqlDialectHelper.cs" />
     <Compile Include="Table\Tables.cs" />
     <Compile Include="Table\TableSorter.cs" />

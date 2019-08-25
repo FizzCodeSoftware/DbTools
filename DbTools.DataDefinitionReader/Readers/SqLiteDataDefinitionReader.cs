@@ -39,12 +39,12 @@
             return reader.GetRows<string>().Select(item => new SchemaAndTableName(item)).ToList();
         }
 
-        public override SqlTable GetTableDefinition(string tableName, bool fullDefinition = true)
+        public override SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition = true)
         {
-            var sqlTable = new SqlTable(tableName);
+            var sqlTable = new SqlTable(schemaAndTableName);
 
             // TODO not working / not possible with in memory
-            var reader = _executer.ExecuteQuery($"PRAGMA table_info({tableName}");
+            var reader = _executer.ExecuteQuery($"PRAGMA table_info({schemaAndTableName.TableName}");
             // cid, name, type, notnull, dflt_value, pk
             // type in the form varchar(20)
 

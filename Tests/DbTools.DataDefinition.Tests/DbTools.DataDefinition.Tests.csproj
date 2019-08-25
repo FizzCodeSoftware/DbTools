@@ -66,6 +66,7 @@
     <Compile Include="DataBaseDescriptors\TestDatabaseSelfFK.cs" />
     <Compile Include="DataBaseDescriptors\TestDatabaseSimple.cs" />
     <Compile Include="DataBaseDescriptors\TestDatabaseSimpleNoNameProvided.cs" />
+    <Compile Include="SchemaAndTableNameTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

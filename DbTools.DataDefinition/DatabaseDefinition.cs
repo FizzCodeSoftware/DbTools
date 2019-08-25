@@ -40,9 +40,9 @@
                 CircularFKDetector.DectectCircularFKs(Tables.ToList());
         }
 
-        public SqlTable GetTable(string name)
+        public SqlTable GetTable(SchemaAndTableName schemaAndTableName)
         {
-            return Tables[name];
+            return Tables[schemaAndTableName];
         }
     }
 }

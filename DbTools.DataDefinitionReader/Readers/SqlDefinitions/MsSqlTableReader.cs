@@ -36,11 +36,12 @@ FROM INFORMATION_SCHEMA.COLUMNS
             }
         }
 
-        public SqlTable GetTableDefinition(string tableName)
+        public SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName)
         {
-            var sqlTable = new SqlTable(tableName);
+            var sqlTable = new SqlTable(schemaAndTableName);
 
-            foreach (var row in QueryResult.Where(r => r.GetAs<string>("TABLE_NAME") == tableName).OrderBy(r => r.GetAs<int>("ORDINAL_POSITION")))
+            foreach (var row in QueryResult.Where(r => r.GetAs<string>("TABLE_NAME") == schemaAndTableName.TableName
+                && (string.IsNullOrEmpty(schemaAndTableName.Schema) || r.GetAs<string>("TABLE_SCHEMA") == schemaAndTableName.Schema)).OrderBy(r => r.GetAs<int>("ORDINAL_POSITION")))
             {
                 var type = MapSqlType(row.GetAs<string>("DATA_TYPE"));
                 var column = CreateSqlColumn(type, row);

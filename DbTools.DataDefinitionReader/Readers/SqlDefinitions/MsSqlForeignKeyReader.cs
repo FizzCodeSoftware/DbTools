@@ -30,10 +30,12 @@
                     var reader = _executer.ExecuteQuery(@"
 SELECT
      KCU1.CONSTRAINT_NAME AS FK_CONSTRAINT_NAME
+    ,KCU1.CONSTRAINT_SCHEMA as FK_CONSTRAINT_SCHEMA
     ,KCU1.TABLE_NAME AS FK_TABLE_NAME
     ,KCU1.COLUMN_NAME AS FK_COLUMN_NAME
     ,KCU1.ORDINAL_POSITION AS FK_ORDINAL_POSITION
     ,KCU2.CONSTRAINT_NAME AS REFERENCED_CONSTRAINT_NAME
+    ,KCU2.CONSTRAINT_SCHEMA AS REFERENCED_CONSTRAINT_SCHEMA
     ,KCU2.TABLE_NAME AS REFERENCED_TABLE_NAME
     ,KCU2.COLUMN_NAME AS REFERENCED_COLUMN_NAME
     ,KCU2.ORDINAL_POSITION AS REFERENCED_ORDINAL_POSITION
@@ -62,14 +64,17 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
 
         public DatabaseDefinition GetForeignKeys(SqlTable table, DatabaseDefinition dd)
         {
-            var fakePKs = new Dictionary<string, SqlTable>();
+            var fakePKs = new Dictionary<SchemaAndTableName, SqlTable>();
 
             // TODO schema
-            foreach (var row in QueryResult.Where(r => r.GetAs<string>("FK_TABLE_NAME") == table.SchemaAndTableName.TableName).OrderBy(row => row.GetAs<int>("FK_ORDINAL_POSITION")))
+            foreach (var row in QueryResult.Where(r => r.GetAs<string>("FK_TABLE_NAME") == table.SchemaAndTableName.TableName
+                && (!string.IsNullOrEmpty(table.SchemaAndTableName.Schema) || r.GetAs<string>("FK_CONSTRAINT_SCHEMA") == table.SchemaAndTableName.Schema)).OrderBy(row => row.GetAs<int>("FK_ORDINAL_POSITION")))
             {
                 var fkColumn = table.Columns[row.GetAs<string>("FK_COLUMN_NAME")];
 
+                var pkSchema = row.GetAs<string>("REFERENCED_CONSTRAINT_SCHEMA");
                 var pkTableName = row.GetAs<string>("REFERENCED_TABLE_NAME");
+                var pkSchemaAndTableName = new SchemaAndTableName(pkSchema, pkTableName);
                 var pkColumnName = row.GetAs<string>("REFERENCED_COLUMN_NAME");
                 var fkName = row.GetAs<string>("FK_CONSTRAINT_NAME");
 
@@ -78,14 +83,14 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
                     PrimaryKey pk;
                     if (dd == null)
                     {
-                        if (!fakePKs.ContainsKey(pkTableName))
-                            fakePKs.Add(pkTableName, new SqlTable(row.GetAs<string>(pkTableName)));
+                        if (!fakePKs.ContainsKey(pkSchemaAndTableName))
+                            fakePKs.Add(pkSchemaAndTableName, new SqlTable(row.GetAs<string>(pkTableName)));
 
-                        pk = fakePKs[pkTableName].Properties.OfType<PrimaryKey>().First();
+                        pk = fakePKs[pkSchemaAndTableName].Properties.OfType<PrimaryKey>().First();
                     }
                     else
                     {
-                        pk = dd.GetTable(pkTableName).Properties.OfType<PrimaryKey>().First();
+                        pk = dd.GetTable(pkSchemaAndTableName).Properties.OfType<PrimaryKey>().First();
                     }
 
                     var newFk = new ForeignKey(table, pk, fkName);
@@ -95,20 +100,20 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
                 PrimaryKey pk2;
                 if (dd == null)
                 {
-                    pk2 = fakePKs[pkTableName].Properties.OfType<PrimaryKey>().First();
+                    pk2 = fakePKs[pkSchemaAndTableName].Properties.OfType<PrimaryKey>().First();
                     var fakePkColumn = fkColumn.CopyTo(new SqlColumn());
-                    fakePkColumn.Table = fakePKs[pkTableName];
+                    fakePkColumn.Table = fakePKs[pkSchemaAndTableName];
 
-                    fakePKs[pkTableName].Columns.Add(fakePkColumn.Name, fakePkColumn);
+                    fakePKs[pkSchemaAndTableName].Columns.Add(fakePkColumn.Name, fakePkColumn);
 
-                    fakePKs[pkTableName].Properties.Add(new PrimaryKey(fakePKs[pkTableName], null));
+                    fakePKs[pkSchemaAndTableName].Properties.Add(new PrimaryKey(fakePKs[pkSchemaAndTableName], null));
                 }
                 else
                 {
-                    pk2 = dd.GetTable(pkTableName).Properties.OfType<PrimaryKey>().First();
+                    pk2 = dd.GetTable(pkSchemaAndTableName).Properties.OfType<PrimaryKey>().First();
                 }
 
-                var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.PrimaryKey.SqlTable.SchemaAndTableName == pkTableName);
+                var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.PrimaryKey.SqlTable.SchemaAndTableName == pkSchemaAndTableName);
                 fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkColumn, pk2.SqlColumns.First(co => co.SqlColumn.Name == pkColumnName).SqlColumn));
             }
 

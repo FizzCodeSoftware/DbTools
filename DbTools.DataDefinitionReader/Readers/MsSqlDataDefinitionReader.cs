@@ -17,8 +17,8 @@
         {
             var dd = new DatabaseDefinition();
 
-            foreach (var tableName in GetSchemaAndTableNames())
-                dd.AddTable(GetTableDefinition(tableName, false));
+            foreach (var schemaAndTableName in GetSchemaAndTableNames())
+                dd.AddTable(GetTableDefinition(schemaAndTableName, false));
 
             AddTableDocumentation(dd);
 
@@ -47,9 +47,9 @@ WHERE type = 'U'");
             }
         }
 
-        public override SqlTable GetTableDefinition(string tableName, bool fullDefinition = true)
+        public override SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition = true)
         {
-            var sqlTable = TableReader.GetTableDefinition(tableName);
+            var sqlTable = TableReader.GetTableDefinition(schemaAndTableName);
 
             if (fullDefinition)
             {
@@ -145,6 +145,5 @@ FROM
         {
             return "dbo";
         }
-
     }
 }

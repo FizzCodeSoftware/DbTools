@@ -7,6 +7,6 @@
     {
         DatabaseDefinition GetDatabaseDefinition();
         List<SchemaAndTableName> GetSchemaAndTableNames();
-        SqlTable GetTableDefinition(string tableName, bool fullDefinition = true);
+        SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition = true);
     }
 }

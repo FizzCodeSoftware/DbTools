@@ -59,9 +59,9 @@
             foreach (var table in databaseDefinition.GetTables())
             {
                 if (!_tableCustomizer.ShouldSkip(table.SchemaAndTableName.TableName))
-                    _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndTableName), table));
+                    _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndTableName.TableName), table));
                 else
-                    _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndTableName), table));
+                    _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndTableName.TableName), table));
             }
 
             foreach (var tableKvp in _sqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName.Schema).ThenBy(t => t.Value.SchemaAndTableName.TableName))
@@ -75,7 +75,7 @@
 
             DocumenterWriter.WriteLine("Tables");
 
-            foreach (var tableKvp in _skippedSqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName))
+            foreach (var tableKvp in _skippedSqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName.Schema).ThenBy(t => t.Value.SchemaAndTableName.TableName))
             {
                 var category = tableKvp.Key;
                 var table = tableKvp.Value;
@@ -109,7 +109,7 @@
         {
             DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", category);
             DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", table.SchemaAndTableName.Schema);
-            DocumenterWriter.WriteLink(GetColor(table.SchemaAndTableName), "Tables", table.SchemaAndTableName.TableName);
+            DocumenterWriter.WriteLink(GetColor(table.SchemaAndTableName), "Tables", table.SchemaAndTableName);
             DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", table.Columns.Count);
 
             var tableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
@@ -169,7 +169,7 @@
                 else
                     DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All tables", "");
 
-                DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), "All tables", defaultValue);
+                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All tables", defaultValue);
                 DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), "All tables", description);
             }
 

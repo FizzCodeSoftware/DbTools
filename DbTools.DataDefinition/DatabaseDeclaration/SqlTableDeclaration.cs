@@ -8,7 +8,7 @@ namespace FizzCode.DbTools.DataDefinition
         public List<DelayedNamingTask> DelayedNamingTasks { get; } = new List<DelayedNamingTask>();
 
         public SqlTableDeclaration()
-            : base(null)
+            : base((SchemaAndTableName)null)
         {
         }
 

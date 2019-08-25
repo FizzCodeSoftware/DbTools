@@ -7,7 +7,7 @@
     internal class Tables : ICollection<SqlTable>
     {
         private SortedList<int, SqlTable> _sorted = new SortedList<int, SqlTable>();
-        private readonly Dictionary<string, SqlTable> byName = new Dictionary<string, SqlTable>();
+        private readonly Dictionary<SchemaAndTableName, SqlTable> byName = new Dictionary<SchemaAndTableName, SqlTable>();
 
         public int Count => byName.Count;
 
@@ -52,11 +52,11 @@
             return _sorted.Values.GetEnumerator();
         }
 
-        public SqlTable this[string name]
+        public SqlTable this[SchemaAndTableName schemaAndTableName]
         {
             get
             {
-                return byName[name];
+                return byName[schemaAndTableName];
             }
         }
 
