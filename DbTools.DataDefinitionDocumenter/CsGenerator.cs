@@ -109,7 +109,7 @@
                 var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
                 if (!string.IsNullOrEmpty(descriptionProperty?.Description))
                 {
-                    sb.Append(" // ").Append(descriptionProperty.Description);
+                    sb.Append(" // ").Append(descriptionProperty.Description.Replace("\r", string.Empty).Replace("\n", string.Empty));
                 }
 
                 sb.AppendLine();
@@ -128,7 +128,7 @@
                 var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
                 if (!string.IsNullOrEmpty(descriptionProperty?.Description))
                 {
-                    sb.Append(" // ").Append(descriptionProperty.Description);
+                    sb.Append(" // ").Append(descriptionProperty.Description.Replace("\r", string.Empty).Replace("\n", string.Empty));
                 }
 
                 sb.AppendLine();
