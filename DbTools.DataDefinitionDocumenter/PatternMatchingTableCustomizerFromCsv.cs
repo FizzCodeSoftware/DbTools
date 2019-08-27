@@ -8,6 +8,8 @@
         public PatternMatchingTableCustomizerFromCsv(string fileName)
         {
             var path = ConfigurationManager.AppSettings["WorkingDirectory"];
+            if (path == null)
+                path = "";
 
             // default name <dbname>.DbTools.Patterns.csv
             if (!fileName.EndsWith(".csv"))

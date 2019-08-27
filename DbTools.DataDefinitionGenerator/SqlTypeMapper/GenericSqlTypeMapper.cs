@@ -52,6 +52,8 @@
                     return "IMAGE";
                 case SqlType.NText:
                     return "NTEXT";
+                case SqlType.Single:
+                    return "REAL";
                 default:
                     throw new NotImplementedException($"Unmapped SqlType: {Enum.GetName(typeof(SqlType), type)}");
             }
