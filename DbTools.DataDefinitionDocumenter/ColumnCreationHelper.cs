@@ -20,14 +20,12 @@
 
             if (column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
             {
-                if (column.Properties.OfType<Identity>().Any())
-                {
-                    sb.Append(".SetPKIdentity()");
-                }
-                else
-                {
-                    sb.Append(".SetPK()");
-                }
+                sb.Append(".SetPK()");
+            }
+
+            if (column.Properties.OfType<Identity>().Any())
+            {
+                sb.Append(".SetIdentity()");
             }
 
             sb.Append(";");

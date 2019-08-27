@@ -16,7 +16,8 @@
 
         private List<Row> _queryResult;
 
-        private List<Row> QueryResult {
+        private List<Row> QueryResult
+        {
             get
             {
                 if (_queryResult == null)

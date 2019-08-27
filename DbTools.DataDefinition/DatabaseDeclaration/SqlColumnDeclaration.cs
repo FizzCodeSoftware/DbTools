@@ -14,16 +14,15 @@
             }
         }
 
-        public SqlColumnDeclaration SetPKIdentity()
-        {
-            SetPK();
-            Properties.Add(new Identity(this));
-            return this;
-        }
-
         public SqlColumnDeclaration SetPK()
         {
             Table.SetPK(this);
+            return this;
+        }
+
+        public SqlColumnDeclaration SetIdentity()
+        {
+            Properties.Add(new Identity(this));
             return this;
         }
     }

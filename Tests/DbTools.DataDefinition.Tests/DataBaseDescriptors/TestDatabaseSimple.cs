@@ -7,7 +7,7 @@
         public static LazySqlTable Company = new LazySqlTable(() =>
         {
             var company = new SqlTableDeclaration();
-            company.AddInt32("Id").SetPKIdentity();
+            company.AddInt32("Id").SetPK().SetIdentity();
             company.AddNVarChar("Name", 100);
             return company;
         });
