@@ -59,9 +59,9 @@
                 .AppendLine(_namespace)
                 .AppendLine("{")
                 .AppendLine("\tusing FizzCode.DbTools.DataDefinition;")
-                .AppendLine("");
+                .AppendLine();
 
-            sb.AppendLine($"\tpublic partial class {_databaseName} : DatabaseDeclaration");
+            sb.Append("\tpublic partial class ").Append(_databaseName).AppendLine(" : DatabaseDeclaration");
             sb.AppendLine("\t{");
 
             sb.AppendLine("\t}");
@@ -72,41 +72,65 @@
 
             var fileInfo = new FileInfo(path);
             fileInfo.Directory.Create();
-            File.WriteAllText(path, sb.ToString());
+            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
         }
 
         protected void GenerateTable(string category, SqlTable table)
         {
             var sb = new StringBuilder();
-            sb.Append("namespace ")
-                .AppendLine(_namespace)
+            sb.Append("namespace ").AppendLine(_namespace)
                 .AppendLine("{")
                 .AppendLine("\tusing FizzCode.DbTools.DataDefinition;")
-                .AppendLine("");
+                .AppendLine();
 
-            sb.AppendLine($"\tpublic partial class {_databaseName}")
+            sb.Append("\tpublic partial class ").AppendLine(_databaseName)
                 .AppendLine("\t{");
 
+            var pks = table.Properties.OfType<PrimaryKey>().ToList();
+            if (pks.Count == 0)
+            {
+                sb.AppendLine("\t\t// no primary key");
+            }
 
-            sb.AppendLine($"\t\tpublic static LazySqlTable {table.SchemaAndTableName}  = new LazySqlTable(() =>")
+            sb.Append("\t\tpublic static LazySqlTable ").Append(table.SchemaAndTableName).AppendLine(" = new LazySqlTable(() =>")
                 .AppendLine("\t\t{")
                 .AppendLine("\t\t\tvar table = new SqlTableDeclaration();");
 
-            var pks = table.Properties.OfType<PrimaryKey>().ToList();
+            var pkColumns = table.Columns.Values
+                .Where(column => column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
+                .ToList();
 
-            foreach (var column in table.Columns.Values)
+            foreach (var column in pkColumns)
+            {
+                var line = ColumnCreationHelper.GetColumnCreation(column);
+                sb.Append(line);
+
+                var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
+                if (!string.IsNullOrEmpty(descriptionProperty?.Description))
+                {
+                    sb.Append(" // ").Append(descriptionProperty.Description.Replace("\r", string.Empty).Replace("\n", string.Empty));
+                }
+
+                sb.AppendLine();
+            }
+
+            var regularColumns = table.Columns.Values
+                .Where(x => !pkColumns.Contains(x)).ToList();
+
+            foreach (var column in regularColumns)
             {
                 // TODO Type as ISqlTypeMapper
-                
+
+                var line = ColumnCreationHelper.GetColumnCreation(column);
+                sb.Append(line);
+
                 var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
-                var description = "";
-                if (descriptionProperty != null)
-                    description = descriptionProperty.Description;
+                if (!string.IsNullOrEmpty(descriptionProperty?.Description))
+                {
+                    sb.Append(" // ").Append(descriptionProperty.Description.Replace("\r", string.Empty).Replace("\n", string.Empty));
+                }
 
-                var isPk = pks.Any(pk => pk.SqlColumns.Any(cao => cao.SqlColumn == column));
-                
-                sb.AppendLine(ColumnCreationHelper.GetColumnCreation(column));
-
+                sb.AppendLine();
                 // DocumenterWriter.Write(table.Name, category, table.Name, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
 
                 /*if (isPk)
@@ -187,7 +211,7 @@
 
             var fileInfo = new FileInfo(path);
             fileInfo.Directory.Create();
-            File.WriteAllText(path, sb.ToString());
+            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
         }
     }
 }

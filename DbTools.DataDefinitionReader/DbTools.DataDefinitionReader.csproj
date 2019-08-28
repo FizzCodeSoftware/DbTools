@@ -62,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Readers\SqlDefinitions\MsSqlIdentityReader.cs" />
     <Compile Include="Readers\SqlDefinitions\MsSqlPrimaryKeyReader.cs" />
     <Compile Include="Readers\SqlDefinitions\MsSqlTableReader.cs" />
     <Compile Include="Readers\SqlDefinitions\MsSqlForeignKeyReader.cs" />

@@ -50,7 +50,7 @@
             sb.AppendLine();
 
             CreateTablePrimaryKey(table, sb);
-            if(withForeignKey)
+            if (withForeignKey)
                 CreateTableForeignKey(table, sb);
 
             sb.AppendLine(")");
@@ -60,12 +60,31 @@
 
         public virtual SqlStatementWithParameters CreateDbColumnDescription(SqlColumn column)
         {
-            return null;
+            var sqlColumnDescription = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
+            if (sqlColumnDescription == null)
+                return null;
+
+            var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
+
+            sqlStatementWithParameters.Parameters.Add("@Description", sqlColumnDescription.Description);
+            sqlStatementWithParameters.Parameters.Add("@TableName", column.Table.SchemaAndTableName.TableName);
+            sqlStatementWithParameters.Parameters.Add("@ColumnName", column.Name);
+
+            return sqlStatementWithParameters;
         }
 
         public virtual SqlStatementWithParameters CreateDbTableDescription(SqlTable table)
         {
-            return null;
+            var sqlTableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
+            if (sqlTableDescription == null)
+                return null;
+
+            var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=N'dbo', @level1type=N'TABLE', @level1name = @TableName");
+
+            sqlStatementWithParameters.Parameters.Add("@Description", sqlTableDescription.Description);
+            sqlStatementWithParameters.Parameters.Add("@TableName", table.SchemaAndTableName.TableName);
+
+            return sqlStatementWithParameters;
         }
 
         public string CreateIndexes(SqlTable table)
