@@ -1,26 +1,43 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
     using System.Linq;
+    using System.Text;
     using FizzCode.DbTools.DataDefinition;
 
     public class OracleGenerator : MsSqlGenerator
     {
-        public override SqlStatementWithParameters CreateDatabase(string databaseName, bool shouldSkipIfExists)
+        public override ISqlTypeMapper SqlTypeMapper { get; } = new OracleTypeMapper();
+
+        protected override string GuardKeywords(string name)
         {
-            return shouldSkipIfExists
-                ? IfExists(new SqlStatementWithParameters($"SELECT INSTANCE_NAME, STATUS, DATABASE_STATUS FROM V$INSTANCE WHERE INSTANCE_NAME = @DatabaseName)", databaseName), "", $"CREATE DATABASE { GuardKeywords(databaseName)}\r\nEND IF")
-                : $"CREATE DATABASE {GuardKeywords(databaseName)}";
+            return $"\"{ name}\"";
         }
 
-        public override SqlStatementWithParameters DropDatabaseIfExists(string databaseName)
+        protected override void GenerateCreateColumnIdentity(StringBuilder sb, Identity identity)
         {
-            return DropDatabase(databaseName) + ";";
-            return IfExists(new SqlStatementWithParameters($"SELECT INSTANCE_NAME, STATUS, DATABASE_STATUS FROM V$INSTANCE WHERE INSTANCE_NAME = @DatabaseName)", databaseName), DropDatabase(databaseName), "");
+            // TODO REVERSE index
+            sb.Append(" GENERATED ALWAYS AS IDENTITY START WITH ")
+                .Append(identity.Seed)
+                .Append(" INCREMENT BY ")
+                .Append(identity.Increment);
         }
 
-        public new string DropDatabase(string databaseName)
+        protected override void CreateTablePrimaryKey(SqlTable table, StringBuilder sb)
         {
-            return $"DROP DATABASE {databaseName}";
+            // TODO NO CLUSTERED/NONCLUSTERED
+            // TODO NO ASC/DESC
+            // example: CONSTRAINT [PK_dbo.AddressShort] PRIMARY KEY ([Id] )
+            var pk = table.Properties.OfType<PrimaryKey>().FirstOrDefault();
+
+            if (pk == null || pk.SqlColumns.Count == 0)
+                return;
+
+            sb.Append(", CONSTRAINT ")
+                .Append(GuardKeywords(pk.Name))
+                .Append(" PRIMARY KEY ")
+                .AppendLine("(")
+                .AppendLine(string.Join(", \r\n", pk.SqlColumns.Select(c => GuardKeywords(c.SqlColumn.Name))))
+                .Append(")");
         }
 
         public SqlStatementWithParameters IfExists(SqlStatementWithParameters ifExistsCondition, SqlStatementWithParameters ifExists, SqlStatementWithParameters ifNotExists)

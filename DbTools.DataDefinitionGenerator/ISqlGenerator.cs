@@ -19,10 +19,6 @@
 
         string DropAllTables();
 
-        SqlStatementWithParameters CreateDatabase(string databaseName, bool shouldSkipIfExists);
-        string DropDatabase(string databaseName);
-        SqlStatementWithParameters DropDatabaseIfExists(string databaseName);
-
         ISqlTypeMapper SqlTypeMapper { get; }
 
         SqlStatementWithParameters TableExists(SqlTable table);

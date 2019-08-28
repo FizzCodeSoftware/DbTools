@@ -87,6 +87,7 @@
       <Link>Properties\AssemblyInfo.Global.cs</Link>
     </Compile>
     <Compile Include="Executers\DbConnectionStringBuilderHelper.cs" />
+    <Compile Include="Executers\ISqlExecuter.cs" />
     <Compile Include="Executers\OracleExecuter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Executers\MsSqlExecuter.cs" />

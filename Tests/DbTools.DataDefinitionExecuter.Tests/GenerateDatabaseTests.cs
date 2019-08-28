@@ -2,7 +2,6 @@
 {
     using System;
     using System.Configuration;
-    using System.Linq;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.DataDefinitionExecuter;
@@ -33,7 +32,9 @@
 
             var connectionStringSettings = ConfigurationManager.ConnectionStrings[connectionStringKey];
 
-            var generateForeignKeyCompositeTestDatabase = DatabaseCreator.FromConnectionStringSettings(dd, connectionStringSettings);
+            var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
+
+            var generateForeignKeyCompositeTestDatabase = DatabaseCreator.FromConnectionStringSettings(dd, connectionStringSettings, Helper.GetDefaultTestSettings(sqlDialect));
             try
             {
                 generateForeignKeyCompositeTestDatabase.ReCreateDatabase(true);
@@ -41,8 +42,9 @@
             finally
             {
                 var generator = SqlGeneratorFactory.CreateGenerator(SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings));
-                var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
-                executer.DropDatabaseIfExists();
+
+                var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator, Helper.GetDefaultTestSettings(sqlDialect));
+                executer.CleanupDatabase(dd);
             }
         }
 

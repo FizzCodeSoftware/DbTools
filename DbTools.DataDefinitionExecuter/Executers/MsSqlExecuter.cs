@@ -7,7 +7,7 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
-    public class MsSqlExecuter : SqlExecuter
+    public class MsSqlExecuter : SqlExecuter, ISqlExecuterDropAndCreateDatabase
     {
         protected override SqlDialect SqlDialect => SqlDialect.MsSql;
 
@@ -16,71 +16,38 @@
         {
         }
 
-        public override void CreateDatabase(bool shouldSkipIfExists)
+        public override void InitializeDatabase()
+        {
+            CreateDatabase();
+        }
+
+        public void CreateDatabase()
         {
             var builder = GetConnectionStringBuilder();
             builder.ConnectionString = ConnectionString;
-            var sql = Generator.CreateDatabase(GetDatabase(builder), shouldSkipIfExists);
+            var sql = ((ISqlGeneratorDropAndCreateDatabase)Generator).CreateDatabase(GetDatabase(builder));
             ExecuteNonQueryMaster(sql);
         }
 
-        public override void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
+        public override void CleanupDatabase(params DatabaseDefinition[] dds)
         {
-            var connection = OpenConnection();
-            try
-            {
-                var command = PrepareSqlCommand(sqlStatementWithParameters);
-                command.Connection = connection;
-                command.ExecuteNonQuery();
-            }
-            catch (SqlException ex)
-            {
-                var newEx = new Exception($"Sql fails:\r\n{sqlStatementWithParameters.Statement}\r\n{ex.Message}", ex);
-                throw newEx;
-            }
-            finally
-            {
-                connection.Close();
-                connection.Dispose();
-            }
+            DropDatabase();
         }
 
-        public override Reader ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters)
+        public virtual void DropDatabaseIfExists()
         {
-            var connection = OpenConnection();
-            try
-            {
-                var reader = new Reader();
+            var builder = GetConnectionStringBuilder();
+            builder.ConnectionString = ConnectionString;
+            var sql = ((ISqlGeneratorDropAndCreateDatabase)Generator).DropDatabaseIfExists(GetDatabase(builder));
+            ExecuteNonQueryMaster(sql);
+        }
 
-                var command = PrepareSqlCommand(sqlStatementWithParameters);
-                command.Connection = connection;
-
-                using (var sqlReader = command.ExecuteReader())
-                {
-                    while (sqlReader.Read())
-                    {
-                        var row = new Row();
-                        for (var i = 0; i < sqlReader.FieldCount; i++)
-                        {
-                            row.Add(sqlReader.GetName(i), sqlReader[i]);
-                        }
-
-                        reader.Rows.Add(row);
-                    }
-                }
-
-                return reader;
-            }
-            catch (SqlException ex)
-            {
-                var newEx = new Exception($"Sql fails:\r\n{sqlStatementWithParameters.Statement}\r\n{ex.Message}", ex);
-                throw newEx;
-            }
-            finally
-            {
-                connection.Close();
-                connection.Dispose();
-            }
+        public virtual void DropDatabase()
+        {
+            var builder = GetConnectionStringBuilder();
+            builder.ConnectionString = ConnectionString;
+            var sql = ((ISqlGeneratorDropAndCreateDatabase)Generator).DropDatabase(GetDatabase(builder));
+            ExecuteNonQueryMaster(sql);
         }
 
         protected override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)
@@ -99,31 +66,6 @@
                 connection.Close();
                 connection.Dispose();
             }
-        }
-
-        public override object ExecuteScalar(SqlStatementWithParameters sqlStatementWithParameters)
-        {
-            object result;
-
-            var connection = OpenConnection();
-            try
-            {
-                var command = PrepareSqlCommand(sqlStatementWithParameters);
-                command.Connection = connection;
-                result = command.ExecuteScalar();
-            }
-            catch (SqlException ex)
-            {
-                var newEx = new Exception($"Sql fails:\r\n{sqlStatementWithParameters.Statement}\r\n{ex.Message}", ex);
-                throw newEx;
-            }
-            finally
-            {
-                connection.Close();
-                connection.Dispose();
-            }
-
-            return result;
         }
 
         public override DbConnection OpenConnectionMaster()

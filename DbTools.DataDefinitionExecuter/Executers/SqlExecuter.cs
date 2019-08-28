@@ -1,11 +1,19 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
+    using System;
     using System.Configuration;
     using System.Data.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
-    public abstract class SqlExecuter
+    public interface ISqlExecuterDropAndCreateDatabase : ISqlExecuter
+    {
+        void CreateDatabase();
+        void DropDatabaseIfExists();
+        void DropDatabase();
+    }
+
+    public abstract class SqlExecuter : ISqlExecuter
     {
         protected abstract SqlDialect SqlDialect { get; }
 
@@ -21,11 +29,7 @@
             ConnectionString = ConnectionStringSettings.ConnectionString;
         }
 
-        public abstract void CreateDatabase(bool shouldSkipIfExists);
-        public abstract void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters);
-        public abstract Reader ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters);
         protected abstract void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters);
-        public abstract object ExecuteScalar(SqlStatementWithParameters sqlStatementWithParameters);
 
         public DbConnection OpenConnection()
         {
@@ -73,22 +77,94 @@
             return dbf.CreateConnectionStringBuilder();
         }
 
-        public virtual void DropDatabaseIfExists()
-        {
-            var builder = GetConnectionStringBuilder();
-            builder.ConnectionString = ConnectionString;
-            var sql = Generator.DropDatabaseIfExists(GetDatabase(builder));
-            ExecuteNonQueryMaster(sql);
-        }
-
-        public virtual void DropDatabase()
-        {
-            var builder = GetConnectionStringBuilder();
-            builder.ConnectionString = ConnectionString;
-            var sql = Generator.DropDatabase(GetDatabase(builder));
-            ExecuteNonQueryMaster(sql);
-        }
-
         public abstract string GetDatabase(DbConnectionStringBuilder builder);
+
+        public abstract void InitializeDatabase();
+
+        public abstract void CleanupDatabase(params DatabaseDefinition[] dds);
+
+        public virtual void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
+        {
+            var connection = OpenConnection();
+            try
+            {
+                var command = PrepareSqlCommand(sqlStatementWithParameters);
+                command.Connection = connection;
+                command.ExecuteNonQuery();
+            }
+            catch (DbException ex)
+            {
+                var newEx = new Exception($"Sql fails:\r\n{sqlStatementWithParameters.Statement}\r\n{ex.Message}", ex);
+                throw newEx;
+            }
+            finally
+            {
+                connection.Close();
+                connection.Dispose();
+            }
+        }
+
+        public virtual Reader ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters)
+        {
+            var connection = OpenConnection();
+            try
+            {
+                var reader = new Reader();
+
+                var command = PrepareSqlCommand(sqlStatementWithParameters);
+                command.Connection = connection;
+
+                using (var sqlReader = command.ExecuteReader())
+                {
+                    while (sqlReader.Read())
+                    {
+                        var row = new Row();
+                        for (var i = 0; i < sqlReader.FieldCount; i++)
+                        {
+                            row.Add(sqlReader.GetName(i), sqlReader[i]);
+                        }
+
+                        reader.Rows.Add(row);
+                    }
+                }
+
+                return reader;
+            }
+            catch (DbException ex)
+            {
+                var newEx = new Exception($"Sql fails:\r\n{sqlStatementWithParameters.Statement}\r\n{ex.Message}", ex);
+                throw newEx;
+            }
+            finally
+            {
+                connection.Close();
+                connection.Dispose();
+            }
+        }
+
+        public virtual object ExecuteScalar(SqlStatementWithParameters sqlStatementWithParameters)
+        {
+            object result;
+
+            var connection = OpenConnection();
+            try
+            {
+                var command = PrepareSqlCommand(sqlStatementWithParameters);
+                command.Connection = connection;
+                result = command.ExecuteScalar();
+            }
+            catch (DbException ex)
+            {
+                var newEx = new Exception($"Sql fails:\r\n{sqlStatementWithParameters.Statement}\r\n{ex.Message}", ex);
+                throw newEx;
+            }
+            finally
+            {
+                connection.Close();
+                connection.Dispose();
+            }
+
+            return result;
+        }
     }
 }

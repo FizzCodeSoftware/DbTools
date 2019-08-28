@@ -5,18 +5,16 @@
     using System.Text;
     using FizzCode.DbTools.DataDefinition;
 
+    public interface ISqlGeneratorDropAndCreateDatabase : ISqlGenerator
+    {
+        SqlStatementWithParameters CreateDatabase(string databaseName);
+        string DropDatabase(string databaseName);
+        SqlStatementWithParameters DropDatabaseIfExists(string databaseName);
+    }
+
     public abstract class GenericSqlGenerator : ISqlGenerator
     {
         public virtual ISqlTypeMapper SqlTypeMapper { get; } = new GenericSqlTypeMapper();
-
-        public abstract SqlStatementWithParameters CreateDatabase(string databaseName, bool shouldSkipIfExists);
-
-        public string DropDatabase(string databaseName)
-        {
-            return $"DROP DATABASE {GuardKeywords(databaseName)}";
-        }
-
-        public abstract SqlStatementWithParameters DropDatabaseIfExists(string databaseName);
 
         public virtual string CreateTable(SqlTable table)
         {
@@ -116,7 +114,7 @@
             return sb.ToString();
         }
 
-        private void CreateTablePrimaryKey(SqlTable table, StringBuilder sb)
+        protected virtual void CreateTablePrimaryKey(SqlTable table, StringBuilder sb)
         {
             // example: CONSTRAINT [PK_dbo.AddressShort] PRIMARY KEY CLUSTERED ([Id] ASC)
             var pk = table.Properties.OfType<PrimaryKey>().FirstOrDefault();
@@ -216,11 +214,7 @@
             var identity = column.Properties.OfType<Identity>().FirstOrDefault();
             if (identity != null)
             {
-                sb.Append(" IDENTITY(")
-                    .Append(identity.Seed)
-                    .Append(",")
-                    .Append(identity.Increment)
-                    .Append(")");
+                GenerateCreateColumnIdentity(sb, identity);
             }
 
             var defaultValue = column.Properties.OfType<DefaultValue>().FirstOrDefault();
@@ -237,6 +231,15 @@
                 sb.Append(" NOT NULL");
 
             return sb.ToString();
+        }
+
+        protected virtual void GenerateCreateColumnIdentity(StringBuilder sb, Identity identity)
+        {
+            sb.Append(" IDENTITY(")
+                .Append(identity.Seed)
+                .Append(",")
+                .Append(identity.Increment)
+                .Append(")");
         }
 
         protected abstract string GuardKeywords(string name);

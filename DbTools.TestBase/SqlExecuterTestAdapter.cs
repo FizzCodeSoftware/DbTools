@@ -11,8 +11,11 @@
     {
         private readonly Dictionary<string, (SqlExecuter SqlExecuter, SqlDialect SqlDialect)> sqlExecutersAndDialects = new Dictionary<string, (SqlExecuter, SqlDialect)>();
 
-        public ConnectionStringSettings Initialize(string connectionStringKey)
+        private readonly List<DatabaseDefinition> _dds = new List<DatabaseDefinition>();
+
+        public ConnectionStringSettings Initialize(string connectionStringKey, params DatabaseDefinition[] dd)
         {
+            _dds.AddRange(dd);
             var connectionStringSettings = ConfigurationManager.ConnectionStrings[connectionStringKey];
 
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
@@ -20,13 +23,13 @@
             if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
             {
                 var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect);
-                var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
+                var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator, Helper.GetDefaultTestSettings(sqlDialect));
                 sqlExecutersAndDialects.Add(connectionStringKey, (sqlExecuter, sqlDialect));
 
                 var shouldCreate = Helper.ShouldRunIntegrationTest(sqlDialect);
                 if (shouldCreate)
                 {
-                    sqlExecuter.CreateDatabase(true);
+                    sqlExecuter.InitializeDatabase();
                 }
             }
 
@@ -43,7 +46,7 @@
                     var shouldDrop = Helper.ShouldRunIntegrationTest(sqlExecuterAndDialect.SqlDialect);
                     if (shouldDrop)
                     {
-                        sqlExecuterAndDialect.SqlExecuter.DropDatabase();
+                        sqlExecuterAndDialect.SqlExecuter.CleanupDatabase(_dds.ToArray());
                     }
                 }
                 catch (Exception ex)

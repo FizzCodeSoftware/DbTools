@@ -3,9 +3,9 @@ using FizzCode.DbTools.DataDefinition;
 
 namespace FizzCode.DbTools.DataDefinitionGenerator
 {
-    public class MsSqlGenerator : GenericSqlGenerator
+    public class MsSqlGenerator : GenericSqlGenerator, ISqlGeneratorDropAndCreateDatabase
     {
-        public override ISqlTypeMapper SqlTypeMapper { get; } = new MsSqTypeMapper();
+        public override ISqlTypeMapper SqlTypeMapper { get; } = new MsSqlTypeMapper();
 
         protected override string GuardKeywords(string name)
         {
@@ -13,15 +13,18 @@ namespace FizzCode.DbTools.DataDefinitionGenerator
         }
 
         // TODO paramter
-        public override SqlStatementWithParameters CreateDatabase(string databaseName, bool shouldSkipIfExists)
+        public SqlStatementWithParameters CreateDatabase(string databaseName)
         {
-            return shouldSkipIfExists
-                ? new SqlStatementWithParameters($"IF NOT EXISTS(select * from sys.databases where name = @DatabaseName)\r\n\tCREATE DATABASE {GuardKeywords(databaseName)}", databaseName)
-                : $"CREATE DATABASE {GuardKeywords(databaseName)}";
+            return $"CREATE DATABASE {GuardKeywords(databaseName)}";
+        }
+
+        public string DropDatabase(string databaseName)
+        {
+            return $"DROP DATABASE {GuardKeywords(databaseName)}";
         }
 
         // TODO paramter
-        public override SqlStatementWithParameters DropDatabaseIfExists(string databaseName)
+        public SqlStatementWithParameters DropDatabaseIfExists(string databaseName)
         {
             return new SqlStatementWithParameters($"IF EXISTS(select * from sys.databases where name = @DatabaseName)\r\n\t{DropDatabase(databaseName)}", databaseName);
         }

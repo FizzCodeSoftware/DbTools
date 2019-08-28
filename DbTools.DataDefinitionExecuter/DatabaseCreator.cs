@@ -17,19 +17,19 @@
             _executer = sqlExecuter;
         }
 
-        public static DatabaseCreator FromConnectionStringSettings(DatabaseDefinition databaseDefinition, ConnectionStringSettings connectionStringSettings)
+        public static DatabaseCreator FromConnectionStringSettings(DatabaseDefinition databaseDefinition, ConnectionStringSettings connectionStringSettings, SqlDialectSpecificSettings settings = null)
         {
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
             var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect);
-            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
+
+            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator, settings);
 
             return new DatabaseCreator(databaseDefinition, executer);
         }
 
         public void ReCreateDatabase(bool createTables)
         {
-            _executer.DropDatabaseIfExists();
-            _executer.CreateDatabase(false);
+            _executer.InitializeDatabase();
 
             if (createTables)
             {
@@ -51,9 +51,7 @@
 
         private void CreateSchemas(DatabaseDefinition databaseDefinition)
         {
-            var schemas = databaseDefinition.GetTables().Select(t => t.SchemaAndTableName.Schema).Distinct().Where(sn => !string.IsNullOrEmpty(sn));
-
-            foreach (var schemaName in schemas)
+            foreach (var schemaName in databaseDefinition.GetSchemaNames())
             {
                 var sql = _executer.Generator.CreateSchema(schemaName);
                 _executer.ExecuteNonQuery(sql);

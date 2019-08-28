@@ -12,7 +12,7 @@
         {
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
             var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect);
-            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
+            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator, null); // no specific settings for reader - for now
 
             return CreateDataDefinitionReader(sqlDialect, executer);
         }

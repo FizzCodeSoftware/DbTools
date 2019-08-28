@@ -2,14 +2,14 @@
 {
     using FizzCode.DbTools.DataDefinition;
 
-    public class MsSqTypeMapper : GenericSqlTypeMapper
+    public class OracleTypeMapper : GenericSqlTypeMapper
     {
         public override string GetType(SqlType type)
         {
             switch (type)
             {
-                case SqlType.DateTime:
-                    return "DATETIME2";
+                case SqlType.NVarchar:
+                    return "VARCHAR2";
 
                 default:
                     return base.GetType(type);
