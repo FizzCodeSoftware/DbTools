@@ -2,12 +2,15 @@
 {
     using System;
     using System.Configuration;
+    using System.Data.Common;
     using System.Data.SqlClient;
-    using System.Text.RegularExpressions;
+    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
     public class MsSqlExecuter : SqlExecuter
     {
+        protected override SqlDialect SqlDialect => SqlDialect.MsSql;
+
         public MsSqlExecuter(ConnectionStringSettings connectionStringSettings, ISqlGenerator sqlGenerator)
             : base(connectionStringSettings, sqlGenerator)
         {
@@ -15,41 +18,10 @@
 
         public override void CreateDatabase(bool shouldSkipIfExists)
         {
-            var builder = new SqlConnectionStringBuilder(ConnectionString);
-            var sql = Generator.CreateDatabase(builder.InitialCatalog, shouldSkipIfExists);
+            var builder = GetConnectionStringBuilder();
+            builder.ConnectionString = ConnectionString;
+            var sql = Generator.CreateDatabase(GetDatabase(builder), shouldSkipIfExists);
             ExecuteNonQueryMaster(sql);
-        }
-
-        public override void DropDatabase()
-        {
-            var builder = new SqlConnectionStringBuilder(ConnectionString);
-            var sql = Generator.DropDatabase(builder.InitialCatalog);
-            ExecuteNonQueryMaster(sql);
-        }
-
-        public override void DropDatabaseIfExists()
-        {
-            var builder = new SqlConnectionStringBuilder(ConnectionString);
-            var sql = Generator.DropDatabaseIfExists(builder.InitialCatalog);
-            ExecuteNonQueryMaster(sql);
-        }
-
-        public SqlConnection OpenConnection()
-        {
-            var connection = new SqlConnection(ConnectionString);
-            connection.Open();
-
-            return connection;
-        }
-
-        public SqlCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
-        {
-            var command = new SqlCommand(sqlStatementWithParameters.Statement);
-
-            foreach (var parameter in sqlStatementWithParameters.Parameters)
-                command.Parameters.AddWithValue(parameter.Key, parameter.Value);
-
-            return command;
         }
 
         public override void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
@@ -154,19 +126,12 @@
             return result;
         }
 
-        public SqlConnection OpenConnectionMaster()
+        public override DbConnection OpenConnectionMaster()
         {
             var connection = new SqlConnection(ChangeInitialCatalog(ConnectionString, string.Empty));
             connection.Open();
 
             return connection;
-        }
-
-        // TODO delete?
-        protected override string ChangeInitialCatalog(string connectionString)
-        {
-            return "";
-            // return ChangeInitialCatalog(connectionString, InitialCatalog);
         }
 
         private string ChangeInitialCatalog(string connectionString, string newInitialCatalog)
@@ -176,6 +141,11 @@
                 builder.InitialCatalog = newInitialCatalog;
 
             return builder.ConnectionString;
+        }
+
+        public override string GetDatabase(DbConnectionStringBuilder builder)
+        {
+            return builder.ValueOfKey<string>("Initial Catalog");
         }
     }
 }

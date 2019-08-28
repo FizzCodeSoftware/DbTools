@@ -13,6 +13,8 @@
                     return new SqLiteGenerator();
                 case SqlDialect.MsSql:
                     return new MsSqlGenerator();
+                case SqlDialect.Oracle:
+                    return new OracleGenerator();
                 default:
                     throw new NotImplementedException($"Not implemented {dialect}.");
             }

@@ -11,7 +11,7 @@
             return $"\"{name}\"";
         }
 
-        public override string DropDatabaseIfExists(string databaseName)
+        public override SqlStatementWithParameters DropDatabaseIfExists(string databaseName)
         {
             return "";
         }
@@ -42,7 +42,7 @@
             return "";
         }
 
-        public override string CreateDatabase(string databaseName, bool shouldSkipIfExists)
+        public override SqlStatementWithParameters CreateDatabase(string databaseName, bool shouldSkipIfExists)
         {
             throw new System.NotImplementedException();
         }

@@ -3,6 +3,7 @@
     public enum SqlDialect
     {
         MsSql,
-        SqLite
+        SqLite,
+        Oracle
     }
 }

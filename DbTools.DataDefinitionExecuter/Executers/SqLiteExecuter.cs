@@ -2,8 +2,10 @@
 {
     using System;
     using System.Configuration;
+    using System.Data.Common;
     using System.Data.SQLite;
     using System.Text.RegularExpressions;
+    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
     public class SqLiteExecuter : SqlExecuter
@@ -14,6 +16,8 @@
         }
 
         protected SQLiteConnection _connection;
+
+        protected override SqlDialect SqlDialect => SqlDialect.SqLite;
 
         public override void CreateDatabase(bool shouldSkipIfExists)
         {
@@ -40,25 +44,13 @@
             DropDatabase();
         }
 
-        public SQLiteCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
-        {
-            var command = _connection.CreateCommand();
-            command.CommandText = sqlStatementWithParameters.Statement;
-
-            foreach (var parameters in sqlStatementWithParameters.Parameters)
-            {
-                command.Parameters.AddWithValue(parameters.Key, parameters.Value);
-            }
-
-            return command;
-        }
-
         public override void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
             try
             {
                 using (var command = PrepareSqlCommand(sqlStatementWithParameters))
                 {
+                    command.Connection = _connection;
                     command.ExecuteNonQuery();
                 }
             }
@@ -123,7 +115,7 @@
             }
         }
 
-        protected override string ChangeInitialCatalog(string connectionString)
+        public override string GetDatabase(DbConnectionStringBuilder builder)
         {
             throw new NotImplementedException();
         }

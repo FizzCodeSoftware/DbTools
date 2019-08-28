@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.DataDefinition;
@@ -10,14 +9,14 @@
     {
         public virtual ISqlTypeMapper SqlTypeMapper { get; } = new GenericSqlTypeMapper();
 
-        public abstract string CreateDatabase(string databaseName, bool shouldSkipIfExists);
+        public abstract SqlStatementWithParameters CreateDatabase(string databaseName, bool shouldSkipIfExists);
 
         public string DropDatabase(string databaseName)
         {
             return $"DROP DATABASE {GuardKeywords(databaseName)}";
         }
 
-        public abstract string DropDatabaseIfExists(string databaseName);
+        public abstract SqlStatementWithParameters DropDatabaseIfExists(string databaseName);
 
         public virtual string CreateTable(SqlTable table)
         {

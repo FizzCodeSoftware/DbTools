@@ -14,6 +14,13 @@
     public class GenerateDatabaseTests
     {
         [TestMethod]
+        [SqlDialects(new[] { SqlDialect.Oracle })]
+        public void GenerateTestDatabaseSimple(SqlDialect sqlDialect)
+        {
+            GenerateDatabase(new TestDatabaseSimple(), sqlDialect.ToString());
+        }
+
+        [TestMethod]
         public void GenerateForeignKeyCompositeTestDatabase()
         {
             GenerateDatabase(new ForeignKeyCompositeTestsDb(), "MsSql");
@@ -37,25 +44,6 @@
                 var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
                 executer.DropDatabaseIfExists();
             }
-        }
-
-        [TestMethod]
-        public void CheckCompositeFks()
-        {
-            var tables = new ForeignKeyCompositeTestsDb().GetTables();
-            Assert.AreEqual(4, tables.Count);
-
-            var topOrdersPerCompany = tables.First(t => t.SchemaAndTableName.TableName == "TopOrdersPerCompany");
-            var fks = topOrdersPerCompany.Properties.OfType<ForeignKey>().ToList();
-
-            Assert.AreEqual(2, fks.Count);
-
-            var top1AColumn = fks[0].ForeignKeyColumns.First(x0 => x0.ForeignKeyColumn.Name == "Top1A");
-            var top1BColumn = fks[0].ForeignKeyColumns.First(x0 => x0.ForeignKeyColumn.Name == "Top1B");
-            var top2AColumn = fks[1].ForeignKeyColumns.First(x0 => x0.ForeignKeyColumn.Name == "Top2A");
-            var top2BColumn = fks[1].ForeignKeyColumns.First(x0 => x0.ForeignKeyColumn.Name == "Top2B");
-
-            // TODO check that AA and AB vs BA and BB are in 2 different FKs
         }
 
         [TestMethod]

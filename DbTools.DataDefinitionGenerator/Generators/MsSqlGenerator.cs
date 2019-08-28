@@ -13,17 +13,17 @@ namespace FizzCode.DbTools.DataDefinitionGenerator
         }
 
         // TODO paramter
-        public override string CreateDatabase(string databaseName, bool shouldSkipIfExists)
+        public override SqlStatementWithParameters CreateDatabase(string databaseName, bool shouldSkipIfExists)
         {
             return shouldSkipIfExists
-                ? $"IF NOT EXISTS(select * from sys.databases where name='{databaseName}')\r\n\tCREATE DATABASE {GuardKeywords(databaseName)}"
+                ? new SqlStatementWithParameters($"IF NOT EXISTS(select * from sys.databases where name = @DatabaseName)\r\n\tCREATE DATABASE {GuardKeywords(databaseName)}", databaseName)
                 : $"CREATE DATABASE {GuardKeywords(databaseName)}";
         }
 
         // TODO paramter
-        public override string DropDatabaseIfExists(string databaseName)
+        public override SqlStatementWithParameters DropDatabaseIfExists(string databaseName)
         {
-            return $"IF EXISTS(select * from sys.databases where name='{databaseName}')\r\n\t{DropDatabase(databaseName)}";
+            return new SqlStatementWithParameters($"IF EXISTS(select * from sys.databases where name = @DatabaseName)\r\n\t{DropDatabase(databaseName)}", databaseName);
         }
 
         public override string DropAllTables()
@@ -79,7 +79,7 @@ EXEC sp_executesql @sql";
             if (sqlTableDescription == null)
                 return null;
 
-            var sqlStatementWithParameters = new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name = @SchemaName, @level1type=N'TABLE', @level1name = @TableName");
+            var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name = @SchemaName, @level1type=N'TABLE', @level1name = @TableName");
 
             sqlStatementWithParameters.Parameters.Add("@Description", sqlTableDescription.Description);
 
@@ -95,7 +95,7 @@ EXEC sp_executesql @sql";
             if (sqlColumnDescription == null)
                 return null;
 
-            var sqlStatementWithParameters = new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=@SchemaName, @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
+            var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=@SchemaName, @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
 
             sqlStatementWithParameters.Parameters.Add("@Description", sqlColumnDescription.Description);
             sqlStatementWithParameters.Parameters.Add("@SchemaName", column.Table.SchemaAndTableName.Schema ?? DefaultSchema());

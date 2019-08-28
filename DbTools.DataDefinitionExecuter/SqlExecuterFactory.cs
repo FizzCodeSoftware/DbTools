@@ -17,6 +17,8 @@
                     return new SqLiteExecuter(connectionStringSettings, sqlGenerator);
                 case SqlDialect.MsSql:
                     return new MsSqlExecuter(connectionStringSettings, sqlGenerator);
+                case SqlDialect.Oracle:
+                    return new OracleExecuter(connectionStringSettings, sqlGenerator);
                 default:
                     throw new NotImplementedException($"Not implemented {dialect}.");
             }
