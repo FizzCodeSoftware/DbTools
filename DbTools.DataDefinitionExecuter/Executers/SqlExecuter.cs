@@ -61,6 +61,7 @@
                 var dbParameter = command.CreateParameter();
                 dbParameter.ParameterName = parameter.Key;
                 dbParameter.Value = parameter.Value;
+                command.Parameters.Add(dbParameter);
             }
 
             return command;

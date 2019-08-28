@@ -48,6 +48,9 @@
 
         public bool Equals(SchemaAndTableName other)
         {
+            if (ReferenceEquals(other, null))
+                return false;
+
             return Schema == other.Schema && TableName == other.TableName;
         }
 
@@ -61,6 +64,9 @@
 
         public static bool operator ==(SchemaAndTableName obj1, SchemaAndTableName obj2)
         {
+            if (ReferenceEquals(obj1, null))
+                return ReferenceEquals(obj2, null);
+
             return obj1.Equals(obj2);
         }
 

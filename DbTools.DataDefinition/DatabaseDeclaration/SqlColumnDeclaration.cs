@@ -25,5 +25,12 @@
             Properties.Add(new Identity(this));
             return this;
         }
+
+        public SqlColumnDeclaration SetPKIdentity()
+        {
+            SetPK();
+            SetIdentity();
+            return this;
+        }
     }
 }

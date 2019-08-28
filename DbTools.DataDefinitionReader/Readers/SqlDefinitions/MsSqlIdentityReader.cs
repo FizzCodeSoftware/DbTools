@@ -39,7 +39,7 @@
 
         public void GetIdentity(SqlTable table)
         {
-            foreach (var row in QueryResult.Where(row => row.GetAs<string>("table_name") == table.Name))
+            foreach (var row in QueryResult.Where(row => row.GetAs<string>("table_name") == table.SchemaAndTableName.TableName))
             {
                 var column = table.Columns[row.GetAs<string>("column_name")];
 
