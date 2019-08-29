@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
     public interface ISqlGenerator
@@ -23,5 +24,7 @@
 
         SqlStatementWithParameters TableExists(SqlTable table);
         string TableNotEmpty(SqlTable table);
+
+        Settings GetSettings();
     }
 }

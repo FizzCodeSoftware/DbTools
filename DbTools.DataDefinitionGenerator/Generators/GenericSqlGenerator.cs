@@ -3,6 +3,7 @@
     using System;
     using System.Linq;
     using System.Text;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
     public interface ISqlGeneratorDropAndCreateDatabase : ISqlGenerator
@@ -15,6 +16,13 @@
     public abstract class GenericSqlGenerator : ISqlGenerator
     {
         public virtual ISqlTypeMapper SqlTypeMapper { get; } = new GenericSqlTypeMapper();
+
+        private readonly Settings _settings;
+
+        protected GenericSqlGenerator(Settings settings)
+        {
+            _settings = settings;
+        }
 
         public virtual string CreateTable(SqlTable table)
         {
@@ -279,6 +287,11 @@ SELECT
                 return guard(schemaAndTableName.Schema) + "." + guard(schemaAndTableName.TableName);
             else
                 return guard(schemaAndTableName.TableName);
+        }
+
+        public Settings GetSettings()
+        {
+            return _settings;
         }
     }
 }

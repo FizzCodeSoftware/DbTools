@@ -1,9 +1,14 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
     public class SqLiteGenerator : GenericSqlGenerator
     {
+        public SqLiteGenerator(Settings settings) : base(settings)
+        {
+        }
+
         public override ISqlTypeMapper SqlTypeMapper { get; } = new SqLiteTypeMapper();
 
         protected override string GuardKeywords(string name)

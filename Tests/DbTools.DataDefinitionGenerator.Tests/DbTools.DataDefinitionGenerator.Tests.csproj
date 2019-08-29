@@ -85,6 +85,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\DbTools.Common\DbTools.Common.csproj">
+      <Project>{cfcc1e6d-003e-405f-8ade-674594343e63}</Project>
+      <Name>DbTools.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\DbTools.DataDefinitionExecuter\DbTools.DataDefinitionExecuter.csproj">
       <Project>{4ab49f19-8e03-4944-b104-4dfde056231f}</Project>
       <Name>DbTools.DataDefinitionExecuter</Name>

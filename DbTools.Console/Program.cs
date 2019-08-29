@@ -3,6 +3,7 @@
     using System;
     using System.Configuration;
     using System.Data.SqlClient;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionDocumenter;
     using FizzCode.DbTools.DataDefinitionReader;
@@ -48,10 +49,9 @@
 
             // TODO provider-specific ConnectionStringBuilder class
             var builder = new SqlConnectionStringBuilder(connectionString);
-
             var databaseName = builder.InitialCatalog;
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings);
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings, Helper.GetDefaultTestSettings(sqlDialect));
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -76,7 +76,7 @@
                 ProviderName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect)
             };
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings);
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings, Helper.GetDefaultTestSettings(sqlDialect));
 
             var dd = ddlReader.GetDatabaseDefinition();
 

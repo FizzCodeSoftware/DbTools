@@ -2,6 +2,7 @@
 {
     using System;
     using System.Configuration;
+    using FizzCode.DbTools.Common;
 
     public static class SqlDialectHelper
     {

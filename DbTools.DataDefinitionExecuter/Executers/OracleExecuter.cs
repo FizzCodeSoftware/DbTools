@@ -1,7 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
+    using System;
     using System.Configuration;
     using System.Data.Common;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
@@ -9,11 +11,8 @@
     {
         protected override SqlDialect SqlDialect => SqlDialect.Oracle;
 
-        private readonly SqlDialectSpecificSettings _settings;
-
-        public OracleExecuter(ConnectionStringSettings connectionStringSettings, ISqlGenerator sqlGenerator, SqlDialectSpecificSettings settings) : base(connectionStringSettings, sqlGenerator)
+        public OracleExecuter(ConnectionStringSettings connectionStringSettings, ISqlGenerator sqlGenerator) : base(connectionStringSettings, sqlGenerator)
         {
-            _settings = settings;
         }
 
         public override DbConnection OpenConnectionMaster()
@@ -23,14 +22,12 @@
 
         public override string GetDatabase(DbConnectionStringBuilder builder)
         {
-            var oracleDatabaseNameKey = ConnectionStringSettings.Name + "_Database_Name";
-            var oracleDatabaseName = ConfigurationManager.AppSettings[oracleDatabaseNameKey];
-            return oracleDatabaseName;
+            throw new NotImplementedException("Oracle executer does not handle database name.");
         }
 
         public override void InitializeDatabase()
         {
-            var defaultSchema = _settings.GetAs<string>("DefaultSchema");
+            var defaultSchema = GetSettings().SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
 
             ExecuteQuery($"CREATE USER {defaultSchema} IDENTIFIED BY sa123");
             ExecuteQuery($"GRANT CONNECT, DBA TO {defaultSchema}");
@@ -47,7 +44,7 @@
 
         public override void CleanupDatabase(params DatabaseDefinition[] dds)
         {
-            var defaultSchema = _settings.GetAs<string>("DefaultSchema");
+            var defaultSchema = GetSettings().SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
             // TODO - DROP ALL Schemas - in current DD
 
             var currentUser = ExecuteQuery("select user from dual").Rows[0].GetAs<string>("USER");

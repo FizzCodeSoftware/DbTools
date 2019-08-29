@@ -2,17 +2,18 @@
 {
     using System;
     using System.Configuration;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
     public static class DataDefinitionReaderFactory
     {
-        public static IDataDefinitionReader CreateDataDefinitionReader(ConnectionStringSettings connectionStringSettings)
+        public static IDataDefinitionReader CreateDataDefinitionReader(ConnectionStringSettings connectionStringSettings, Settings settings)
         {
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect);
-            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator, null); // no specific settings for reader - for now
+            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, settings);
+            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
 
             return CreateDataDefinitionReader(sqlDialect, executer);
         }

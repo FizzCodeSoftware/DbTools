@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
 
@@ -78,7 +79,6 @@
                 default:
                     throw new NotImplementedException($"Unhandled SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
             }
-            
         }
     }
 }

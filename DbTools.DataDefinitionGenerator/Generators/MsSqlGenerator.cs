@@ -1,10 +1,15 @@
-﻿using System.Linq;
-using FizzCode.DbTools.DataDefinition;
-
-namespace FizzCode.DbTools.DataDefinitionGenerator
+﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
+    using System.Linq;
+    using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.DataDefinition;
+
     public class MsSqlGenerator : GenericSqlGenerator, ISqlGeneratorDropAndCreateDatabase
     {
+        public MsSqlGenerator(Settings settings) : base(settings)
+        {
+        }
+
         public override ISqlTypeMapper SqlTypeMapper { get; } = new MsSqlTypeMapper();
 
         protected override string GuardKeywords(string name)
@@ -86,7 +91,7 @@ EXEC sp_executesql @sql";
 
             sqlStatementWithParameters.Parameters.Add("@Description", sqlTableDescription.Description);
 
-            sqlStatementWithParameters.Parameters.Add("@SchemaName", table.SchemaAndTableName.Schema ?? DefaultSchema());
+            sqlStatementWithParameters.Parameters.Add("@SchemaName", table.SchemaAndTableName.Schema ?? GetSettings().SqlDialectSpecificSettings.GetAs<string>("DefaultSchema"));
             sqlStatementWithParameters.Parameters.Add("@TableName", table.SchemaAndTableName.TableName);
 
             return sqlStatementWithParameters;
@@ -100,17 +105,14 @@ EXEC sp_executesql @sql";
 
             var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=@SchemaName, @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
 
+            var defaultSchema = GetSettings().SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+
             sqlStatementWithParameters.Parameters.Add("@Description", sqlColumnDescription.Description);
-            sqlStatementWithParameters.Parameters.Add("@SchemaName", column.Table.SchemaAndTableName.Schema ?? DefaultSchema());
+            sqlStatementWithParameters.Parameters.Add("@SchemaName", column.Table.SchemaAndTableName.Schema ?? defaultSchema);
             sqlStatementWithParameters.Parameters.Add("@TableName", column.Table.SchemaAndTableName.TableName);
             sqlStatementWithParameters.Parameters.Add("@ColumnName", column.Name);
 
             return sqlStatementWithParameters;
-        }
-
-        public string DefaultSchema()
-        {
-            return "dbo";
         }
     }
 }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Configuration;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.DataDefinitionExecuter;
@@ -13,7 +14,7 @@
     public class GenerateDatabaseTests
     {
         [TestMethod]
-        [SqlDialects(new[] { SqlDialect.Oracle })]
+        [SqlDialects]
         public void GenerateTestDatabaseSimple(SqlDialect sqlDialect)
         {
             GenerateDatabase(new TestDatabaseSimple(), sqlDialect.ToString());
@@ -27,23 +28,23 @@
 
         public void GenerateDatabase(DatabaseDefinition dd, string connectionStringKey, bool isIntegrationTest = true)
         {
-            if (isIntegrationTest && !Helper.ShouldForceIntegrationTests())
+            if (isIntegrationTest && !TestBase.Helper.ShouldForceIntegrationTests())
                 Assert.Inconclusive("Test is skipped, integration tests are not running.");
 
             var connectionStringSettings = ConfigurationManager.ConnectionStrings[connectionStringKey];
 
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
 
-            var generateForeignKeyCompositeTestDatabase = DatabaseCreator.FromConnectionStringSettings(dd, connectionStringSettings, Helper.GetDefaultTestSettings(sqlDialect));
+            var generateForeignKeyCompositeTestDatabase = DatabaseCreator.FromConnectionStringSettings(dd, connectionStringSettings, Common.Helper.GetDefaultTestSettings(sqlDialect));
             try
             {
                 generateForeignKeyCompositeTestDatabase.ReCreateDatabase(true);
             }
             finally
             {
-                var generator = SqlGeneratorFactory.CreateGenerator(SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings));
+                var generator = SqlGeneratorFactory.CreateGenerator(SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings), Common.Helper.GetDefaultTestSettings(sqlDialect));
 
-                var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator, Helper.GetDefaultTestSettings(sqlDialect));
+                var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
                 executer.CleanupDatabase(dd);
             }
         }

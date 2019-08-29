@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Configuration;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
     using FizzCode.DbTools.DataDefinitionGenerator;
@@ -22,8 +23,8 @@
 
             if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
             {
-                var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect);
-                var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator, Helper.GetDefaultTestSettings(sqlDialect));
+                var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, Helper.GetDefaultTestSettings(sqlDialect));
+                var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
                 sqlExecutersAndDialects.Add(connectionStringKey, (sqlExecuter, sqlDialect));
 
                 var shouldCreate = Helper.ShouldRunIntegrationTest(sqlDialect);

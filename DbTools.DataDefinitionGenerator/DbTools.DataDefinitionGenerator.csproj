@@ -94,6 +94,10 @@
     <Compile Include="SqlGeneratorFactory.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj">
+      <Project>{cfcc1e6d-003e-405f-8ade-674594343e63}</Project>
+      <Name>DbTools.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj">
       <Project>{626e2bd9-8e64-4c06-b47e-a9a911e90e56}</Project>
       <Name>DbTools.DataDefinition</Name>

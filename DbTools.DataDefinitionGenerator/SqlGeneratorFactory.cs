@@ -1,20 +1,21 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
     using System;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
     public static class SqlGeneratorFactory
     {
-        public static ISqlGenerator CreateGenerator(SqlDialect dialect)
+        public static ISqlGenerator CreateGenerator(SqlDialect dialect, Settings settings)
         {
             switch (dialect)
             {
                 case SqlDialect.SqLite:
-                    return new SqLiteGenerator();
+                    return new SqLiteGenerator(settings);
                 case SqlDialect.MsSql:
-                    return new MsSqlGenerator();
+                    return new MsSqlGenerator(settings);
                 case SqlDialect.Oracle:
-                    return new OracleGenerator();
+                    return new OracleGenerator(settings);
                 default:
                     throw new NotImplementedException($"Not implemented {dialect}.");
             }

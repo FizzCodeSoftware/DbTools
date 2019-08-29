@@ -67,6 +67,8 @@ WHERE type = 'U'");
 
         public void AddColumnDocumentation(SqlTable table)
         {
+            var defaultSchema = _executer.GetSettings().SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+
             var reader = _executer.ExecuteQuery(new SqlStatementWithParameters(@"
 SELECT
     c.name ColumnName,
@@ -78,7 +80,7 @@ FROM
 WHERE
     p.name = 'MS_Description'
     AND SCHEMA_NAME(t.schema_id) = @SchemaName
-    AND t.name = @TableName", table.SchemaAndTableName.Schema ?? DefaultSchema(), table.SchemaAndTableName.TableName));
+    AND t.name = @TableName", table.SchemaAndTableName.Schema ?? defaultSchema, table.SchemaAndTableName.TableName));
 
             foreach (var row in reader.Rows)
             {
@@ -139,12 +141,6 @@ FROM
                     table.Properties.Add(descriptionProperty);
                 }
             }
-        }
-
-        // TODO duplicated in MsSqlGenerator
-        public string DefaultSchema()
-        {
-            return "dbo";
         }
     }
 }

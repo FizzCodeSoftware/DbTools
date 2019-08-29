@@ -3,6 +3,7 @@
     using System;
     using System.Configuration;
     using System.Linq;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
@@ -17,12 +18,12 @@
             _executer = sqlExecuter;
         }
 
-        public static DatabaseCreator FromConnectionStringSettings(DatabaseDefinition databaseDefinition, ConnectionStringSettings connectionStringSettings, SqlDialectSpecificSettings settings = null)
+        public static DatabaseCreator FromConnectionStringSettings(DatabaseDefinition databaseDefinition, ConnectionStringSettings connectionStringSettings, Settings settings)
         {
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect);
+            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, settings);
 
-            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator, settings);
+            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
 
             return new DatabaseCreator(databaseDefinition, executer);
         }

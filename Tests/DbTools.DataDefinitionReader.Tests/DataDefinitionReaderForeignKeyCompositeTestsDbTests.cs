@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader.Tests
 {
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.DataDefinitionExecuter;
     using FizzCode.DbTools.TestBase;

@@ -92,6 +92,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\DbTools.Common\DbTools.Common.csproj">
+      <Project>{cfcc1e6d-003e-405f-8ade-674594343e63}</Project>
+      <Name>DbTools.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DbTools.DataDefinition.Tests\DbTools.DataDefinition.Tests.csproj">
       <Project>{4949ca8a-d159-40b2-baf1-ab19e56c262c}</Project>
       <Name>DbTools.DataDefinition.Tests</Name>

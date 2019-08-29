@@ -3,6 +3,7 @@
     using System;
     using System.Configuration;
     using System.Data.Common;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
@@ -165,6 +166,11 @@
             }
 
             return result;
+        }
+
+        public Settings GetSettings()
+        {
+            return Generator.GetSettings();
         }
     }
 }

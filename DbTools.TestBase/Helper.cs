@@ -1,8 +1,8 @@
 ﻿namespace FizzCode.DbTools.TestBase
 {
     using System.Configuration;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinitionExecuter;
 
     public static class Helper
     {
@@ -43,16 +43,20 @@
             }
         }
 
-        public static SqlDialectSpecificSettings GetDefaultTestSettings(SqlDialect sqlDialect)
+        public static Settings GetDefaultTestSettings(SqlDialect sqlDialect)
         {
-            SqlDialectSpecificSettings settings = null;
+            var settings = new Settings();
+
+            SqlDialectSpecificSettings sqlDialectSpecificSettings = null;
             if (sqlDialect == SqlDialect.Oracle)
             {
-                settings = new SqlDialectSpecificSettings
+                sqlDialectSpecificSettings = new SqlDialectSpecificSettings
                     {
                         { "DefaultSchema", System.Reflection.Assembly.GetExecutingAssembly().GetName().Name.TrimStart("DbTools.".ToCharArray()).Replace(".", "_") }
                     };
             }
+
+            settings.SqlDialectSpecificSettings = sqlDialectSpecificSettings;
 
             return settings;
         }

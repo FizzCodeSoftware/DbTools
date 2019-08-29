@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinitionExecuter;
 
     public static class DataDefinitionReaderHelper
     {

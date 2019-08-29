@@ -4,6 +4,7 @@
     using System.Configuration;
     using System.Data.Common;
     using System.Data.SQLite;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 

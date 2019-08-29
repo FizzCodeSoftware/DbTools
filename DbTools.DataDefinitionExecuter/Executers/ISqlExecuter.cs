@@ -1,10 +1,11 @@
-﻿using System.Configuration;
-using System.Data.Common;
-using FizzCode.DbTools.DataDefinition;
-using FizzCode.DbTools.DataDefinitionGenerator;
-
-namespace FizzCode.DbTools.DataDefinitionExecuter
+﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
+    using System.Configuration;
+    using System.Data.Common;
+    using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinitionGenerator;
+
     public interface ISqlExecuter
     {
         string ConnectionString { get; }
@@ -21,5 +22,6 @@ namespace FizzCode.DbTools.DataDefinitionExecuter
         DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters);
         void InitializeDatabase();
         void CleanupDatabase(params DatabaseDefinition[] dds);
+        Settings GetSettings();
     }
 }
