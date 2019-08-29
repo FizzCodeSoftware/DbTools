@@ -125,7 +125,7 @@
 
             foreach (var column in table.Columns)
             {
-                // TODO Type as ISqlTypeMapper
+                // TODO Create ISqlTypeMapper according to SqlDialect
                 var sqlType = SqlTypeMapper.GetType(column.Value.Type);
                 var descriptionProperty = column.Value.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
                 var description = "";
