@@ -7,7 +7,7 @@
         public static LazySqlTable OrderHeader = new LazySqlTable(() =>
         {
             var orderHeader = new SqlTableDeclaration();
-            orderHeader.AddInt32("Id").SetPKIdentity();
+            orderHeader.AddInt32("Id").SetPK().SetIdentity();
             orderHeader.AddNVarChar("OrderHeaderDescription", 100);
             return orderHeader;
         });
@@ -25,7 +25,7 @@
         public static LazySqlTable Company = new LazySqlTable(() =>
         {
             var company = new SqlTableDeclaration();
-            company.AddInt32("Id").SetPKIdentity();
+            company.AddInt32("Id").SetPK().SetIdentity();
             company.AddNVarChar("Name", 100);
             return company;
         });

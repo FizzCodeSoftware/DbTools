@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using System;
+    using System.Linq;
     using System.Text;
     using FizzCode.DbTools.DataDefinition;
 
@@ -12,14 +13,22 @@
             sb.Append("\t\t\ttable.");
             sb.Append(GetColumnCreationMethod(column));
 
-
             if (column.IsNullable)
                 sb.Append(", true");
 
-            // TODO nullable
-            // TODO: PKK, Identity etc.
+            sb.Append(")");
 
-            sb.Append(");");
+            if (column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
+            {
+                sb.Append(".SetPK()");
+            }
+
+            if (column.Properties.OfType<Identity>().Any())
+            {
+                sb.Append(".SetIdentity()");
+            }
+
+            sb.Append(";");
 
             return sb.ToString();
         }
@@ -56,9 +65,9 @@
                     return $"AddDateTime(\"{column.Name}\"";
 
                 case SqlType.Decimal:
-                    return $"AddDecimal(\"{column.Name}\", {column.Length}, {column.Precision}";
+                    return $"AddDecimal(\"{column.Name}\", " + (column.Length != null ? column.Length.ToString() : "null") + "," + (column.Precision != null ? column.Precision.ToString() : "null");
                 case SqlType.Double:
-                    return $"AddDouble(\"{column.Name}\", {column.Length}";
+                    return $"AddDouble(\"{column.Name}\", " + (column.Length != null ? column.Length.ToString() : "null");
 
                 case SqlType.Image:
                     return $"AddImage(\"{column.Name}\"";

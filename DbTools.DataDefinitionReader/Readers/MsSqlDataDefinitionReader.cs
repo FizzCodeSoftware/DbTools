@@ -22,6 +22,7 @@
 
             AddTableDocumentation(dd);
 
+            new MsSqlIdentityReader(_executer).GetIdentity(dd);
             new MsSqlPrimaryKeyReader(_executer).GetPrimaryKey(dd);
             new MsSqlForeignKeyReader(_executer).GetForeignKeys(dd);
 

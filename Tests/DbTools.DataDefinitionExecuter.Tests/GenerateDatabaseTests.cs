@@ -81,7 +81,7 @@
             public static LazySqlTable Table = new LazySqlTable(() =>
             {
                 var table = new SqlTableDeclaration();
-                table.AddInt32("Id").SetPKIdentity();
+                table.AddInt32("Id").SetPK().SetIdentity();
                 table.AddNVarChar("Name", 100);
                 table.AddIndex("Name");
                 table.AddIndex("Id", "Name");
@@ -94,7 +94,7 @@
             public static LazySqlTable Table = new LazySqlTable(() =>
             {
                 var table = new SqlTableDeclaration();
-                table.AddInt32("Id").SetPKIdentity();
+                table.AddInt32("Id").SetPK().SetIdentity();
                 table.AddNVarChar("Name", 100);
                 table.AddDescription("Table description");
                 return table;
@@ -106,7 +106,7 @@
             public static LazySqlTable Table = new LazySqlTable(() =>
             {
                 var table = new SqlTableDeclaration();
-                table.AddInt32("Id").SetPKIdentity().AddDescription("Id Column description");
+                table.AddInt32("Id").SetPK().SetIdentity().AddDescription("Id Column description");
                 table.AddNVarChar("Name", 100).AddDescription("Name Column description");
                 return table;
             });
@@ -123,7 +123,7 @@
             public static LazySqlTable Table = new LazySqlTable(() =>
             {
                 var table = new SqlTableDeclaration();
-                table.AddInt32("Id").SetPKIdentity();
+                table.AddInt32("Id").SetPK().SetIdentity();
                 table.AddNVarChar("Name", 100).AddDefaultValue("'apple'");
                 table.AddDateTime("DateTime").AddDefaultValue("'" + new DateTime(2019,8,7,13,59,57,357).ToString("yyyy-M-d HH:mm:ss.fff") + "'");
                 return table;

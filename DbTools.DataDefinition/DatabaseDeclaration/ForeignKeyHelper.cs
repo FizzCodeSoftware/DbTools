@@ -50,6 +50,24 @@
             return columns;
         }
 
+        public static SqlColumnDeclaration SetForeignKeyTo(this SqlColumnDeclaration column, LazySqlTable referredTable)
+        {
+            var pk = referredTable.SqlTable.Properties.OfType<PrimaryKey>().First();
+
+            var fk = new ForeignKey(column.Table, pk, null);
+            column.Table.Properties.Add(fk);
+
+            fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(column, pk.SqlColumns.Single().SqlColumn));
+
+            var fkNaming = column.Table.DatabaseDeclaration?.NamingStrategies.GetNamingStrategy<IForeignKeyNamingStrategy>();
+            fkNaming?.SetFKName(fk);
+
+            if (fk.Name == null)
+                column.Table.DelayedNamingTasks.Add(new DelayedNamingForeignKey(fk));
+
+            return column;
+        }
+
         public static SqlColumnDeclaration AddForeignKey(this SqlTableDeclaration table, string columnName, SqlColumn pkColumn, string columnNamePrefix = null, ForeignKey existingForeignKey = null)
         {
             var fkColumn = pkColumn.CopyTo(new SqlColumnDeclaration());

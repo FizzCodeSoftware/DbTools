@@ -4,7 +4,7 @@
 
     public static class SqlColumnDeclarationHelper
     {
-        public static SqlColumnDeclaration AddNVarChar(this SqlTableDeclaration table, string name, int length, bool isNullable = false)
+        public static SqlColumnDeclaration AddNVarChar(this SqlTableDeclaration table, string name, int? length, bool isNullable = false)
         {
             var column = new SqlColumnDeclaration { Type = SqlType.NVarchar, Name = name, Length = length, IsNullable = isNullable };
             column.Table = table;
@@ -12,7 +12,7 @@
             return column;
         }
 
-        public static SqlColumnDeclaration AddVarChar(this SqlTableDeclaration table, string name, int length, bool isNullable = false)
+        public static SqlColumnDeclaration AddVarChar(this SqlTableDeclaration table, string name, int? length, bool isNullable = false)
         {
             var column = new SqlColumnDeclaration { Type = SqlType.Varchar, Name = name, Length = length, IsNullable = isNullable };
             column.Table = table;
@@ -20,7 +20,7 @@
             return column;
         }
 
-        public static SqlColumnDeclaration AddNChar(this SqlTableDeclaration table, string name, int length, bool isNullable = false)
+        public static SqlColumnDeclaration AddNChar(this SqlTableDeclaration table, string name, int? length, bool isNullable = false)
         {
             var column = new SqlColumnDeclaration { Type = SqlType.NChar, Name = name, Length = length, IsNullable = isNullable };
             column.Table = table;
@@ -28,7 +28,7 @@
             return column;
         }
 
-        public static SqlColumnDeclaration AddChar(this SqlTableDeclaration table, string name, int length, bool isNullable = false)
+        public static SqlColumnDeclaration AddChar(this SqlTableDeclaration table, string name, int? length, bool isNullable = false)
         {
             var column = new SqlColumnDeclaration { Type = SqlType.Char, Name = name, Length = length, IsNullable = isNullable };
             column.Table = table;
@@ -92,7 +92,7 @@
             return column;
         }
 
-        public static SqlColumnDeclaration AddDecimal(this SqlTableDeclaration table, string name, int scale, int precision, bool isNullable = false)
+        public static SqlColumnDeclaration AddDecimal(this SqlTableDeclaration table, string name, int? scale, int? precision, bool isNullable = false)
         {
             var column = new SqlColumnDeclaration { Type = SqlType.Decimal, Name = name, IsNullable = isNullable, Length = scale, Precision = precision };
             column.Table = table;
@@ -100,7 +100,7 @@
             return column;
         }
 
-        public static SqlColumnDeclaration AddDouble(this SqlTableDeclaration table, string name, int precision, bool isNullable = false)
+        public static SqlColumnDeclaration AddDouble(this SqlTableDeclaration table, string name, int? precision, bool isNullable = false)
         {
             var column = new SqlColumnDeclaration { Type = SqlType.Double, Name = name, Precision = precision, IsNullable = isNullable };
             column.Table = table;
