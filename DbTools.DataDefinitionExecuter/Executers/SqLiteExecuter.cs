@@ -2,11 +2,12 @@
 {
     using System;
     using System.Configuration;
+    using System.Data.Common;
     using System.Data.SQLite;
-    using System.Text.RegularExpressions;
+    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
-    public class SqLiteExecuter : SqlExecuter
+    public class SqLiteExecuter : SqlExecuter, ISqlExecuterDropAndCreateDatabase
     {
         public SqLiteExecuter(ConnectionStringSettings connectionStringSettings, ISqlGenerator sqlGenerator = null)
             : base(connectionStringSettings, sqlGenerator)
@@ -15,16 +16,28 @@
 
         protected SQLiteConnection _connection;
 
-        public override void CreateDatabase(bool shouldSkipIfExists)
+        protected override SqlDialect SqlDialect => SqlDialect.SqLite;
+
+        public override void InitializeDatabase()
         {
-            if (!shouldSkipIfExists && _connection != null)
+            CreateDatabase();
+        }
+
+        public void CreateDatabase()
+        {
+            if (_connection != null)
                 throw new Exception("Database already connected.");
 
             _connection = new SQLiteConnection(ConnectionString);
             _connection.Open();
         }
 
-        public override void DropDatabase()
+        public override void CleanupDatabase(params DatabaseDefinition[] dds)
+        {
+            DropDatabase();
+        }
+
+        public void DropDatabase()
         {
             if (_connection != null)
             {
@@ -35,22 +48,9 @@
             }
         }
 
-        public override void DropDatabaseIfExists()
+        public void DropDatabaseIfExists()
         {
             DropDatabase();
-        }
-
-        public SQLiteCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
-        {
-            var command = _connection.CreateCommand();
-            command.CommandText = sqlStatementWithParameters.Statement;
-
-            foreach (var parameters in sqlStatementWithParameters.Parameters)
-            {
-                command.Parameters.AddWithValue(parameters.Key, parameters.Value);
-            }
-
-            return command;
         }
 
         public override void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
@@ -59,6 +59,7 @@
             {
                 using (var command = PrepareSqlCommand(sqlStatementWithParameters))
                 {
+                    command.Connection = _connection;
                     command.ExecuteNonQuery();
                 }
             }
@@ -123,7 +124,7 @@
             }
         }
 
-        protected override string ChangeInitialCatalog(string connectionString)
+        public override string GetDatabase(DbConnectionStringBuilder builder)
         {
             throw new NotImplementedException();
         }

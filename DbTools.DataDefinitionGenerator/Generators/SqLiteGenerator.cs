@@ -11,11 +11,6 @@
             return $"\"{name}\"";
         }
 
-        public override string DropDatabaseIfExists(string databaseName)
-        {
-            return "";
-        }
-
         public override string DropAllTables()
         {
             throw new System.NotImplementedException();
@@ -40,11 +35,6 @@
         public override string CreateForeignKeys(SqlTable table)
         {
             return "";
-        }
-
-        public override string CreateDatabase(string databaseName, bool shouldSkipIfExists)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

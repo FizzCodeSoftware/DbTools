@@ -95,7 +95,7 @@
             // TODO
             // - format schema and table name
             // - configure use of default schema
-            sb.Append($"\t\tpublic static LazySqlTable ").Append(table.SchemaAndTableName).AppendLine(" = new LazySqlTable(() =>")
+            sb.Append("\t\tpublic static LazySqlTable ").Append(table.SchemaAndTableName).AppendLine(" = new LazySqlTable(() =>")
                 .AppendLine("\t\t{")
                 .AppendLine("\t\t\tvar table = new SqlTableDeclaration();");
 

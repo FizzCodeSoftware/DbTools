@@ -3,9 +3,9 @@ using FizzCode.DbTools.DataDefinition;
 
 namespace FizzCode.DbTools.DataDefinitionGenerator
 {
-    public class MsSqlGenerator : GenericSqlGenerator
+    public class MsSqlGenerator : GenericSqlGenerator, ISqlGeneratorDropAndCreateDatabase
     {
-        public override ISqlTypeMapper SqlTypeMapper { get; } = new MsSqTypeMapper();
+        public override ISqlTypeMapper SqlTypeMapper { get; } = new MsSqlTypeMapper();
 
         protected override string GuardKeywords(string name)
         {
@@ -13,17 +13,20 @@ namespace FizzCode.DbTools.DataDefinitionGenerator
         }
 
         // TODO paramter
-        public override string CreateDatabase(string databaseName, bool shouldSkipIfExists)
+        public SqlStatementWithParameters CreateDatabase(string databaseName)
         {
-            return shouldSkipIfExists
-                ? $"IF NOT EXISTS(select * from sys.databases where name='{databaseName}')\r\n\tCREATE DATABASE {GuardKeywords(databaseName)}"
-                : $"CREATE DATABASE {GuardKeywords(databaseName)}";
+            return $"CREATE DATABASE {GuardKeywords(databaseName)}";
+        }
+
+        public string DropDatabase(string databaseName)
+        {
+            return $"DROP DATABASE {GuardKeywords(databaseName)}";
         }
 
         // TODO paramter
-        public override string DropDatabaseIfExists(string databaseName)
+        public SqlStatementWithParameters DropDatabaseIfExists(string databaseName)
         {
-            return $"IF EXISTS(select * from sys.databases where name='{databaseName}')\r\n\t{DropDatabase(databaseName)}";
+            return new SqlStatementWithParameters($"IF EXISTS(select * from sys.databases where name = @DatabaseName)\r\n\t{DropDatabase(databaseName)}", databaseName);
         }
 
         public override string DropAllTables()
@@ -79,7 +82,7 @@ EXEC sp_executesql @sql";
             if (sqlTableDescription == null)
                 return null;
 
-            var sqlStatementWithParameters = new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name = @SchemaName, @level1type=N'TABLE', @level1name = @TableName");
+            var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name = @SchemaName, @level1type=N'TABLE', @level1name = @TableName");
 
             sqlStatementWithParameters.Parameters.Add("@Description", sqlTableDescription.Description);
 
@@ -95,7 +98,7 @@ EXEC sp_executesql @sql";
             if (sqlColumnDescription == null)
                 return null;
 
-            var sqlStatementWithParameters = new SqlStatementWithParameters(@"EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=@SchemaName, @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
+            var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=@SchemaName, @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
 
             sqlStatementWithParameters.Parameters.Add("@Description", sqlColumnDescription.Description);
             sqlStatementWithParameters.Parameters.Add("@SchemaName", column.Table.SchemaAndTableName.Schema ?? DefaultSchema());

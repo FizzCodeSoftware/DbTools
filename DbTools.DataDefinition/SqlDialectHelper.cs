@@ -18,6 +18,8 @@
                     return SqlDialect.MsSql;
                 case "System.Data.SQLite":
                     return SqlDialect.SqLite;
+                case "Oracle.ManagedDataAccess.Client":
+                    return SqlDialect.Oracle;
                 default:
                     throw new NotImplementedException($"Unmapped connection string provider {providerName}");
             }
@@ -31,6 +33,8 @@
                     return "System.Data.SqlClient";
                 case SqlDialect.SqLite:
                     return "System.Data.SQLite";
+                case SqlDialect.Oracle:
+                    return "Oracle.ManagedDataAccess.Client";
                 default:
                     throw new NotImplementedException($"Unmapped sqlDialect {sqlDialect}");
             }
