@@ -66,9 +66,8 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
         {
             var fakePKs = new Dictionary<SchemaAndTableName, SqlTable>();
 
-            // TODO schema
-            foreach (var row in QueryResult.Where(r => r.GetAs<string>("FK_TABLE_NAME") == table.SchemaAndTableName.TableName
-                && (!string.IsNullOrEmpty(table.SchemaAndTableName.Schema) || r.GetAs<string>("FK_CONSTRAINT_SCHEMA") == table.SchemaAndTableName.Schema)).OrderBy(row => row.GetAs<int>("FK_ORDINAL_POSITION")))
+            foreach (var row in QueryResult.Where(r =>
+            DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "FK_CONSTRAINT_SCHEMA", "FK_TABLE_NAME")).OrderBy(row => row.GetAs<int>("FK_ORDINAL_POSITION")))
             {
                 var fkColumn = table.Columns[row.GetAs<string>("FK_COLUMN_NAME")];
 

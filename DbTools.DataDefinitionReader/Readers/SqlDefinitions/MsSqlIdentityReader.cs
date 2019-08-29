@@ -39,8 +39,7 @@
 
         public void GetIdentity(SqlTable table)
         {
-            // TODO Schema
-            foreach (var row in QueryResult.Where(row => row.GetAs<string>("table_name") == table.SchemaAndTableName.TableName))
+            foreach (var row in QueryResult.Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table)))
             {
                 var column = table.Columns[row.GetAs<string>("column_name")];
 
@@ -56,8 +55,7 @@
             return $@"
 SELECT schema_name(tab.schema_id) schema_name, 
     col.[name] as column_name, 
-    tab.[name] as table_name,
-	col.*
+    tab.[name] as table_name
 FROM sys.tables tab
     INNER JOIN sys.columns col
         ON tab.object_id = col.object_id

@@ -40,8 +40,7 @@
         public void GetPrimaryKey(SqlTable table)
         {
             var pk = new PrimaryKey(table, null);
-            foreach (var row in QueryResult.Where(row => row.GetAs<string>("table_name") == table.SchemaAndTableName.TableName
-                && (!string.IsNullOrEmpty(table.SchemaAndTableName.Schema) || row.GetAs<string>("schema_name") == table.SchemaAndTableName.Schema)).OrderBy(row => row.GetAs<string>("schema_name")).ThenBy(row => row.GetAs<string>("index_name")).ThenBy(row => row.GetAs<int>("index_column_id")))
+            foreach (var row in QueryResult.Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table)).OrderBy(row => row.GetAs<string>("schema_name")).ThenBy(row => row.GetAs<string>("index_name")).ThenBy(row => row.GetAs<int>("index_column_id")))
             {
                 if (row.GetAs<int>("index_column_id") == 1)
                 {
