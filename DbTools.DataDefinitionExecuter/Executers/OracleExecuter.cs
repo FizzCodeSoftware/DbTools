@@ -48,7 +48,7 @@
         public bool CheckIfUserExists(string userName)
         {
             var result = ExecuteScalar(((OracleGenerator)Generator).IfExists("dba_users", "username", userName));
-            return (decimal)result != 0;
+            return (decimal)result == 0;
         }
 
         public override void CleanupDatabase(params DatabaseDefinition[] dds)

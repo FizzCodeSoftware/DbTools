@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FizzCode.DbTools.Common
+﻿namespace FizzCode.DbTools.Common
 {
     public static class Helper
     {
@@ -15,9 +9,16 @@ namespace FizzCode.DbTools.Common
             SqlDialectSpecificSettings sqlDialectSpecificSettings = null;
             if (sqlDialect == SqlDialect.Oracle)
             {
+                // TODO check if always correct?
+                var assemblyName = System.Reflection.Assembly.GetCallingAssembly().GetName().Name;
+                if (assemblyName.StartsWith("FizzCode.DbTools."))
+                    assemblyName = assemblyName.Substring("FizzCode.DbTools.".Length);
+
+                var schemaName = assemblyName.Replace(".", "_");
+
                 sqlDialectSpecificSettings = new SqlDialectSpecificSettings
                 {
-                    { "DefaultSchema", System.Reflection.Assembly.GetExecutingAssembly().GetName().Name.TrimStart("DbTools.".ToCharArray()).Replace(".", "_") }
+                    { "DefaultSchema", schemaName }
                 };
             }
 
