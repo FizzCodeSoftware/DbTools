@@ -19,8 +19,11 @@
 
         protected override SqlDialect SqlDialect => SqlDialect.SqLite;
 
-        public override void InitializeDatabase()
+        public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dds)
         {
+            if (dropIfExists)
+                DropDatabase();
+
             CreateDatabase();
         }
 

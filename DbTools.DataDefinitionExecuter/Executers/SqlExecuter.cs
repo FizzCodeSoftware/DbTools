@@ -54,7 +54,7 @@
             return connection;
         }
 
-        public DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
+        public virtual DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
         {
             var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(SqlDialect));
 
@@ -80,7 +80,7 @@
 
         public abstract string GetDatabase(DbConnectionStringBuilder builder);
 
-        public abstract void InitializeDatabase();
+        public abstract void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd);
 
         public abstract void CleanupDatabase(params DatabaseDefinition[] dds);
 

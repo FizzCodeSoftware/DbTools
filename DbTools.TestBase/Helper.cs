@@ -56,6 +56,14 @@
                     };
             }
 
+            if (sqlDialect == SqlDialect.MsSql)
+            {
+                sqlDialectSpecificSettings = new SqlDialectSpecificSettings
+                    {
+                        { "DefaultSchema", "dbo" }
+                    };
+            }
+
             settings.SqlDialectSpecificSettings = sqlDialectSpecificSettings;
 
             return settings;

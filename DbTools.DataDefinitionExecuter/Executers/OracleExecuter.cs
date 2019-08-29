@@ -25,9 +25,12 @@
             throw new NotImplementedException("Oracle executer does not handle database name.");
         }
 
-        public override void InitializeDatabase()
+        public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dds)
         {
             var defaultSchema = GetSettings().SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+
+            if (dropIfExists && CheckIfUserExists(defaultSchema))
+                CleanupDatabase(dds);
 
             ExecuteQuery($"CREATE USER {defaultSchema} IDENTIFIED BY sa123");
             ExecuteQuery($"GRANT CONNECT, DBA TO {defaultSchema}");
@@ -42,6 +45,12 @@
             ExecuteQuery($"ALTER SESSION SET current_schema = {defaultSchema}");
         }
 
+        public bool CheckIfUserExists(string userName)
+        {
+            var result = ExecuteScalar(((OracleGenerator)Generator).IfExists("dba_users", "username", userName));
+            return (decimal)result != 0;
+        }
+
         public override void CleanupDatabase(params DatabaseDefinition[] dds)
         {
             var defaultSchema = GetSettings().SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
@@ -51,6 +60,22 @@
 
             ExecuteQuery($"ALTER SESSION SET current_schema = {currentUser}");
             ExecuteQuery($"DROP USER {defaultSchema} CASCADE");
+        }
+
+        public override DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
+        {
+            var dbCommand = base.PrepareSqlCommand(sqlStatementWithParameters);
+            dbCommand.GetType().GetProperty("BindByName").SetValue(dbCommand, true, null);
+
+            dbCommand.CommandText = dbCommand.CommandText.Replace(" @", " :"); //replace named parameter indicators
+
+            foreach (var paramter in dbCommand.Parameters)
+            {
+                var dbParameter = (DbParameter)paramter;
+                dbParameter.ParameterName = ":" + dbParameter.ParameterName.TrimStart('@');
+            }
+
+            return dbCommand;
         }
 
         protected override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)

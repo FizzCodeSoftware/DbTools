@@ -20,7 +20,7 @@
         DbConnection OpenConnection();
         DbConnection OpenConnectionMaster();
         DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters);
-        void InitializeDatabase();
+        void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd);
         void CleanupDatabase(params DatabaseDefinition[] dds);
         Settings GetSettings();
     }

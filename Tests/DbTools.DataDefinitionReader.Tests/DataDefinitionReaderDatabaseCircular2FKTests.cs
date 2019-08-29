@@ -11,12 +11,20 @@
     {
         private static readonly SqlExecuterTestAdapter _sqlExecuterTestAdatper = new SqlExecuterTestAdapter();
 
+        /*[DataTestMethod]
+        [SqlDialects]
+        public void Test(SqlDialect sqlDialect)
+        {
+            _sqlExecuterTestAdatper.Initialize(sqlDialect.ToString());
+            CreateTables(sqlDialect);
+            ReadTables(sqlDialect);
+        }*/
+
         [DataTestMethod]
         [SqlDialects]
         public void CreateTables(SqlDialect sqlDialect)
         {
             _sqlExecuterTestAdatper.Initialize(sqlDialect.ToString());
-
             var creator = new DatabaseCreator(new TestDatabaseCircular2FK(), _sqlExecuterTestAdatper.GetExecuter(sqlDialect.ToString()));
             creator.ReCreateDatabase(true);
         }

@@ -45,32 +45,38 @@
                 .Append(")");
         }
 
-        public SqlStatementWithParameters IfExists(SqlStatementWithParameters ifExistsCondition, SqlStatementWithParameters ifExists, SqlStatementWithParameters ifNotExists)
+        public SqlStatementWithParameters IfExists(string table, string column, object value)
         {
-            var sql = string.Format(SqlIfExists, ifExistsCondition.Statement, ifExists.Statement, ifNotExists.Statement);
-            var unionParameters = ifExistsCondition.Parameters.Union(ifExists.Parameters.Union(ifNotExists.Parameters)).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            var sqls = new SqlStatementWithParameters(sql, unionParameters);
-
-            return sqls;
+            return new SqlStatementWithParameters($@"
+SELECT CASE WHEN MAX({column}) IS NULL THEN 1 ELSE 0 END
+FROM {table}
+WHERE {column} = @{column}", value);
         }
 
-        private const string SqlIfExists = @"
-DECLARE
-    l_exst number(1);
-BEGIN
-    SELECT CASE 
-        WHEN EXISTS({0})
-        THEN 1
-        ELSE 0
-    END INTO l_exst
-    FROM dual;
+        public override string CreateForeignKeys(SqlTable table)
+        {
+            /* example: ALTER TABLE [dbo].[Dim_Currency] ADD CONSTRAINT [FK_Dim_Currency_Dim_CurrencyGroup] FOREIGN KEY([Dim_CurrencyGroupId])
+            REFERENCES[dbo].[Dim_CurrencyGroup]([Dim_CurrencyGroupId])
+s            */
 
-    IF l_exst = 1 
-    THEN
-        {1}
-    ELSE
-        {2}
-    END IF;
-END;";
+            // TODO initially deferred / DEFERRABLE 
+
+            var allFks = table.Properties.OfType<ForeignKey>().ToList();
+
+            if (allFks.Count == 0)
+                return null;
+
+            var sb = new StringBuilder();
+
+            foreach (var fk in allFks)
+            {
+                sb.Append("ALTER TABLE ")
+                    .Append(SchemaAndTableName(table.SchemaAndTableName, GuardKeywords))
+                    .Append(" ADD ")
+                    .AppendLine(ForeignKeyGeneratorHelper.FKConstraint(fk, GuardKeywords));
+            }
+
+            return sb.ToString();
+        }
     }
 }

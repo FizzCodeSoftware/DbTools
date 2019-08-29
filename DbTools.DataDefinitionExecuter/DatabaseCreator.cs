@@ -30,7 +30,7 @@
 
         public void ReCreateDatabase(bool createTables)
         {
-            _executer.InitializeDatabase();
+            _executer.InitializeDatabase(true, DatabaseDefinition);
 
             if (createTables)
             {

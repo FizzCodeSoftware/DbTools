@@ -14,9 +14,9 @@
 
         private readonly List<DatabaseDefinition> _dds = new List<DatabaseDefinition>();
 
-        public ConnectionStringSettings Initialize(string connectionStringKey, params DatabaseDefinition[] dd)
+        public ConnectionStringSettings Initialize(string connectionStringKey, params DatabaseDefinition[] dds)
         {
-            _dds.AddRange(dd);
+            _dds.AddRange(dds);
             var connectionStringSettings = ConfigurationManager.ConnectionStrings[connectionStringKey];
 
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
@@ -30,7 +30,7 @@
                 var shouldCreate = Helper.ShouldRunIntegrationTest(sqlDialect);
                 if (shouldCreate)
                 {
-                    sqlExecuter.InitializeDatabase();
+                    sqlExecuter.InitializeDatabase(false, dds);
                 }
             }
 
