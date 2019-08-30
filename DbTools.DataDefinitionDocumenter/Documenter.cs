@@ -68,7 +68,7 @@
             {
                 var category = tableKvp.Key;
                 var table = tableKvp.Value;
-                DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, "Category", "Schema", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
+                DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, "Category", "Schema", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key name", "Primary Key table", "Primary Key column");
                 DocumentTable(category, table);
                 DocumentTableDetails(category, table);
             }
@@ -155,7 +155,19 @@
                 else
                     DocumenterWriter.Write(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, "");
 
-                DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, description.Trim());
+                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, description.Trim());
+
+                // "Foreign Key name", "Priary Key table", "Priary Key column"
+                var fkOnColumn = table.Properties.OfType<ForeignKey>().Where(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn == column.Value)).FirstOrDefault();
+
+                if (fkOnColumn != null)
+                {
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, fkOnColumn.Name);
+                    DocumenterWriter.WriteLink(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, fkOnColumn.PrimaryKey.SqlTable.SchemaAndTableName);
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, fkOnColumn.ForeignKeyColumns.Where(fkc => fkc.ForeignKeyColumn == column.Value).First().PrimaryKeyColumn.Name);
+                }
+
+                DocumenterWriter.WriteLine(table.SchemaAndTableName);
 
                 DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All tables", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
 
@@ -176,7 +188,8 @@
             DocumenterWriter.WriteLine(table.SchemaAndTableName);
             DocumenterWriter.WriteLine(table.SchemaAndTableName, "Foreign keys");
 
-            foreach (var fk in table.Properties.OfType<ForeignKey>())
+            var fks = table.Properties.OfType<ForeignKey>().ToList();
+            foreach (var fk in fks)
             {
                 DocumenterWriter.Write(table.SchemaAndTableName, fk.Name);
                 foreach (var fkColumn in fk.ForeignKeyColumns)
@@ -189,6 +202,9 @@
                 foreach (var fkColumn in fk.ForeignKeyColumns)
                     DocumenterWriter.Write(table.SchemaAndTableName, fkColumn.PrimaryKeyColumn.Name);
             }
+
+            if(fks.Count() > 0)
+                DocumenterWriter.WriteLine(table.SchemaAndTableName);
 
             DocumenterWriter.WriteLine(table.SchemaAndTableName);
             DocumenterWriter.WriteLine(table.SchemaAndTableName, "Indexes");

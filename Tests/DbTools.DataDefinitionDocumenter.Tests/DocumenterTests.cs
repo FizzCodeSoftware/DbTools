@@ -22,6 +22,14 @@
             documenter.Document(db);
         }
 
+        [TestMethod]
+        public void DocumentTestForeignKeyComposite()
+        {
+            var db = new ForeignKeyCompositeTestsDb();
+            var documenter = new Documenter("ForeignKeyCompositeTestsDb");
+            documenter.Document(db);
+        }
+
         public class TableCustomizer : ITableCustomizer
         {
             public string BackGroundColor(string tableName)
