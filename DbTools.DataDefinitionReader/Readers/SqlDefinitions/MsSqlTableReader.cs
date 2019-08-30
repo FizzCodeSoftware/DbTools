@@ -18,14 +18,14 @@
 
         private List<Row> _queryResult;
 
-        private List<Row> QueryResult {
+        private List<Row> QueryResult
+        {
             get
             {
                 if (_queryResult == null)
                 {
                     var reader = _executer.ExecuteQuery(@"
-SELECT TABLE_NAME, TABLE_SCHEMA, ORDINAL_POSITION, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE
-       , IS_NULLABLE
+SELECT TABLE_NAME, TABLE_SCHEMA, ORDINAL_POSITION, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE, IS_NULLABLE, DATETIME_PRECISION
 FROM INFORMATION_SCHEMA.COLUMNS
 --WHERE TABLE_NAME = ''
 --ORDER BY ORDINAL_POSITION");
@@ -69,6 +69,8 @@ FROM INFORMATION_SCHEMA.COLUMNS
                     return SqlType.Int64;
                 case "decimal":
                     return SqlType.Decimal;
+                case "money":
+                    return SqlType.Money;
                 case "nvarchar":
                     return SqlType.NVarchar;
                 case "nchar":
@@ -79,6 +81,8 @@ FROM INFORMATION_SCHEMA.COLUMNS
                     return SqlType.Char;
                 case "datetime":
                     return SqlType.DateTime;
+                case "datetimeoffset":
+                    return SqlType.DateTimeOffset;
                 case "date":
                     return SqlType.Date;
                 case "bit":
@@ -122,6 +126,12 @@ FROM INFORMATION_SCHEMA.COLUMNS
                     column = new SqlColumn
                     {
                         Length = row.GetAs<byte>("NUMERIC_PRECISION")
+                    };
+                    break;
+                case SqlType.DateTimeOffset:
+                    column = new SqlColumn
+                    {
+                        Precision = row.GetAs<short>("DATETIME_PRECISION"),
                     };
                     break;
                 case SqlType.Char:

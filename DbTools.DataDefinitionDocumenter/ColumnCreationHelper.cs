@@ -63,6 +63,8 @@
                 // TODO Datetime2 / offset?
                 case SqlType.DateTime:
                     return $"AddDateTime(\"{column.Name}\"";
+                case SqlType.DateTimeOffset:
+                    return $"AddDateTimeOffset(\"{column.Name}\", " + column.Precision;
 
                 case SqlType.Decimal:
                     return $"AddDecimal(\"{column.Name}\", " + (column.Length != null ? column.Length.ToString() : "null") + "," + (column.Precision != null ? column.Precision.ToString() : "null");

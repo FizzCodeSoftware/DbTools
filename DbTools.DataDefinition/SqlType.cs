@@ -16,6 +16,7 @@
         NVarchar,
 
         DateTime,
+        DateTimeOffset,
         Date,
 
         Byte,
@@ -26,6 +27,7 @@
         Decimal,
         Single,
         Double,
+        Money,
 
         Xml,
         Guid,

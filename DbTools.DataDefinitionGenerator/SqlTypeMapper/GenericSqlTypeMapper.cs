@@ -34,11 +34,15 @@
                 // TODO Datetime2 / offset?
                 case SqlType.DateTime:
                     return "DATETIME";
+                case SqlType.DateTimeOffset:
+                    return "DATETIMEOFFSET";
 
                 case SqlType.Decimal:
                     return "DECIMAL";
                 case SqlType.Double:
                     return "FLOAT";
+                case SqlType.Money:
+                    return "MONEY";
 
                 case SqlType.Xml:
                     return "XML";
@@ -48,7 +52,7 @@
                     return "BINARY";
                 case SqlType.VarBinary:
                     return "VARBINARY";
-                case SqlType.Image :
+                case SqlType.Image:
                     return "IMAGE";
                 case SqlType.NText:
                     return "NTEXT";

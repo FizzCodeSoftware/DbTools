@@ -15,7 +15,12 @@
             if (!fileName.EndsWith(".csv"))
                 fileName += ".DbTools.Patterns.csv";
 
-            using (var reader = new StreamReader(Path.Combine(path, fileName)))
+            fileName = Path.Combine(path, fileName);
+
+            if (!File.Exists(fileName))
+                return;
+
+            using (var reader = new StreamReader(fileName))
             {
                 reader.ReadLine(); // skip header row
                 while (!reader.EndOfStream)

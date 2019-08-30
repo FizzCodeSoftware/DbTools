@@ -84,6 +84,14 @@
             return column;
         }
 
+        public static SqlColumnDeclaration AddDateTimeOffset(this SqlTableDeclaration table, string name, int precision, bool isNullable = false)
+        {
+            var column = new SqlColumnDeclaration { Type = SqlType.DateTimeOffset, Name = name, Precision = precision, IsNullable = isNullable };
+            column.Table = table;
+            table.Columns.Add(name, column);
+            return column;
+        }
+
         public static SqlColumnDeclaration AddDate(this SqlTableDeclaration table, string name, bool isNullable = false)
         {
             var column = new SqlColumnDeclaration { Type = SqlType.Date, Name = name, IsNullable = isNullable };
