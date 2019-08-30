@@ -21,7 +21,7 @@
             column.Properties.Add(new Identity(column) { Increment = 1, Seed = 1 });
             table.AddNVarChar("Name", 100);
 
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, Common.Helper.GetDefaultTestSettings(sqlDialect));
+            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, TestBase.Helper.GetDefaultTestSettings(sqlDialect));
 
             var sql = generator.CreateTable(table);
 
@@ -39,7 +39,7 @@
 
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
 
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, Common.Helper.GetDefaultTestSettings(sqlDialect));
+            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, TestBase.Helper.GetDefaultTestSettings(sqlDialect));
             var sql = generator.DropTable(table);
             var result = _sqlExecuterTestAdatper.ExecuteNonQuery(sqlDialect.ToString(), sql);
 

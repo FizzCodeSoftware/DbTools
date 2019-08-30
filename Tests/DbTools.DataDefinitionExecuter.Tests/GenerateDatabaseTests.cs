@@ -35,14 +35,14 @@
 
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
 
-            var generateForeignKeyCompositeTestDatabase = DatabaseCreator.FromConnectionStringSettings(dd, connectionStringSettings, Common.Helper.GetDefaultTestSettings(sqlDialect));
+            var generateForeignKeyCompositeTestDatabase = DatabaseCreator.FromConnectionStringSettings(dd, connectionStringSettings, TestBase.Helper.GetDefaultTestSettings(sqlDialect));
             try
             {
                 generateForeignKeyCompositeTestDatabase.ReCreateDatabase(true);
             }
             finally
             {
-                var generator = SqlGeneratorFactory.CreateGenerator(SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings), Common.Helper.GetDefaultTestSettings(sqlDialect));
+                var generator = SqlGeneratorFactory.CreateGenerator(SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings), TestBase.Helper.GetDefaultTestSettings(sqlDialect));
 
                 var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
                 executer.CleanupDatabase(dd);

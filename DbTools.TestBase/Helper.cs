@@ -1,6 +1,9 @@
 ﻿namespace FizzCode.DbTools.TestBase
 {
     using System.Configuration;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Reflection;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
@@ -50,10 +53,22 @@
             SqlDialectSpecificSettings sqlDialectSpecificSettings = null;
             if (sqlDialect == SqlDialect.Oracle)
             {
+                var executingAssembly = Assembly.GetExecutingAssembly();
+                var callerAssemblies = new StackTrace().GetFrames()
+                            .Select(f => f.GetMethod().ReflectedType.Assembly).Distinct()
+                            .Where(a => a.GetReferencedAssemblies().Any(a2 => a2.FullName == executingAssembly.FullName));
+                var initialAssembly = callerAssemblies.Last();
+
+                var assemblyName = initialAssembly.GetName().Name;
+                if (assemblyName.StartsWith("FizzCode.DbTools."))
+                    assemblyName = assemblyName.Substring("FizzCode.DbTools.".Length);
+
+                var schemaName = assemblyName.Replace(".", "_");
+
                 sqlDialectSpecificSettings = new SqlDialectSpecificSettings
-                    {
-                        { "DefaultSchema", System.Reflection.Assembly.GetExecutingAssembly().GetName().Name.TrimStart("DbTools.".ToCharArray()).Replace(".", "_") }
-                    };
+                {
+                    { "DefaultSchema", schemaName }
+                };
             }
 
             if (sqlDialect == SqlDialect.MsSql)

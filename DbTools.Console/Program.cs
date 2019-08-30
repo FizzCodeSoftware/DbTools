@@ -51,7 +51,7 @@
             var builder = new SqlConnectionStringBuilder(connectionString);
             var databaseName = builder.InitialCatalog;
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings, Helper.GetDefaultTestSettings(sqlDialect));
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings, Helper.GetDefaultSettings(sqlDialect));
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -76,7 +76,7 @@
                 ProviderName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect)
             };
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings, Helper.GetDefaultTestSettings(sqlDialect));
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings, Helper.GetDefaultSettings(sqlDialect));
 
             var dd = ddlReader.GetDatabaseDefinition();
 

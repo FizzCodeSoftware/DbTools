@@ -32,17 +32,17 @@
             if (dropIfExists && CheckIfUserExists(defaultSchema))
                 CleanupDatabase(dds);
 
-            ExecuteQuery($"CREATE USER {defaultSchema} IDENTIFIED BY sa123");
-            ExecuteQuery($"GRANT CONNECT, DBA TO {defaultSchema}");
-            ExecuteQuery($"GRANT CREATE SESSION TO {defaultSchema}");
-            ExecuteQuery($"GRANT UNLIMITED TABLESPACE TO {defaultSchema}");
+            ExecuteQuery($"CREATE USER \"{defaultSchema}\" IDENTIFIED BY sa123");
+            ExecuteQuery($"GRANT CONNECT, DBA TO \"{defaultSchema}\"");
+            ExecuteQuery($"GRANT CREATE SESSION TO \"{defaultSchema}\"");
+            ExecuteQuery($"GRANT UNLIMITED TABLESPACE TO \"{defaultSchema}\"");
 
             /*var builder = GetConnectionStringBuilder();
             builder.ConnectionString = ConnectionString;
             var connect_identifier = "//" + builder.ValueOfKey("DATA SOURCE");
             ExecuteQuery($"CONNECT {defaultSchema}/sa123@{connect_identifier}");*/
 
-            ExecuteQuery($"ALTER SESSION SET current_schema = {defaultSchema}");
+            ExecuteQuery($"ALTER SESSION SET current_schema = \"{defaultSchema}\"");
         }
 
         public bool CheckIfUserExists(string userName)
@@ -59,7 +59,7 @@
             var currentUser = ExecuteQuery("select user from dual").Rows[0].GetAs<string>("USER");
 
             ExecuteQuery($"ALTER SESSION SET current_schema = {currentUser}");
-            ExecuteQuery($"DROP USER {defaultSchema} CASCADE");
+            ExecuteQuery($"DROP USER \"{defaultSchema}\" CASCADE");
         }
 
         public override DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
