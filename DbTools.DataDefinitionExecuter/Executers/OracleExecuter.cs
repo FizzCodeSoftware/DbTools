@@ -62,20 +62,12 @@
             ExecuteQuery($"DROP USER \"{defaultSchema}\" CASCADE");
         }
 
+        private readonly OracleDbCommandPreparer _oracleSqlCommandPreparer = new OracleDbCommandPreparer();
+
         public override DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
         {
             var dbCommand = base.PrepareSqlCommand(sqlStatementWithParameters);
-            dbCommand.GetType().GetProperty("BindByName").SetValue(dbCommand, true, null);
-
-            dbCommand.CommandText = dbCommand.CommandText.Replace(" @", " :"); //replace named parameter indicators
-
-            foreach (var paramter in dbCommand.Parameters)
-            {
-                var dbParameter = (DbParameter)paramter;
-                dbParameter.ParameterName = ":" + dbParameter.ParameterName.TrimStart('@');
-            }
-
-            return dbCommand;
+            return _oracleSqlCommandPreparer.PrepareSqlCommand(dbCommand);
         }
 
         protected override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)

@@ -73,7 +73,8 @@ s            */
                 sb.Append("ALTER TABLE ")
                     .Append(SchemaAndTableName(table.SchemaAndTableName, GuardKeywords))
                     .Append(" ADD ")
-                    .AppendLine(ForeignKeyGeneratorHelper.FKConstraint(fk, GuardKeywords));
+                    .Append(ForeignKeyGeneratorHelper.FKConstraint(fk, GuardKeywords))
+                    .AppendLine(";");
             }
 
             return sb.ToString();
