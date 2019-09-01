@@ -28,21 +28,21 @@
 
         public void GenerateDatabase(DatabaseDefinition dd, string connectionStringKey, bool isIntegrationTest = true)
         {
-            if (isIntegrationTest && !TestBase.Helper.ShouldForceIntegrationTests())
+            if (isIntegrationTest && !TestHelper.ShouldForceIntegrationTests())
                 Assert.Inconclusive("Test is skipped, integration tests are not running.");
 
             var connectionStringSettings = ConfigurationManager.ConnectionStrings[connectionStringKey];
 
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
 
-            var generateForeignKeyCompositeTestDatabase = DatabaseCreator.FromConnectionStringSettings(dd, connectionStringSettings, TestBase.Helper.GetDefaultTestSettings(sqlDialect));
+            var generateForeignKeyCompositeTestDatabase = DatabaseCreator.FromConnectionStringSettings(dd, connectionStringSettings, TestHelper.GetDefaultTestSettings(sqlDialect));
             try
             {
                 generateForeignKeyCompositeTestDatabase.ReCreateDatabase(true);
             }
             finally
             {
-                var generator = SqlGeneratorFactory.CreateGenerator(SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings), TestBase.Helper.GetDefaultTestSettings(sqlDialect));
+                var generator = SqlGeneratorFactory.CreateGenerator(SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings), TestHelper.GetDefaultTestSettings(sqlDialect));
 
                 var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
                 executer.CleanupDatabase(dd);

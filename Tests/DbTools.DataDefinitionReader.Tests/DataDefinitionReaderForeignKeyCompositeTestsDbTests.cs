@@ -7,17 +7,15 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class DataDefinitionReaderForeignKeyCompositeTestsDbTests
+    public class DataDefinitionReaderForeignKeyCompositeTestsDbTests : DataDefinitionReaderTests
     {
-        private static readonly SqlExecuterTestAdapter _sqlExecuterTestAdatper = new SqlExecuterTestAdapter();
-
         [DataTestMethod]
         [SqlDialects]
         public void CreateTables(SqlDialect sqlDialect)
         {
-            _sqlExecuterTestAdatper.Initialize(sqlDialect.ToString());
+            _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString());
 
-            var creator = new DatabaseCreator(new ForeignKeyCompositeTestsDb(), _sqlExecuterTestAdatper.GetExecuter(sqlDialect.ToString()));
+            var creator = new DatabaseCreator(new ForeignKeyCompositeTestsDb(), _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
             creator.ReCreateDatabase(true);
         }
 
@@ -25,18 +23,16 @@
         [SqlDialects]
         public void ReadTables(SqlDialect sqlDialect)
         {
-            // var dd = new ForeignKeyCompositeTestsDb();
-            if (sqlDialect == SqlDialect.SqLite)
-                Assert.Inconclusive("Test is skipped, no known way to read DDL with SqLite in memory.");
+            TestHelper.CheckFeature(sqlDialect, "ReadDdl");
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(sqlDialect, _sqlExecuterTestAdatper.GetExecuter(sqlDialect.ToString()));
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(sqlDialect, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
             _ = ddlReader.GetDatabaseDefinition();
         }
 
         [ClassCleanup]
         public static void Cleanup()
         {
-            _sqlExecuterTestAdatper.Cleanup();
+            _sqlExecuterTestAdapter.Cleanup();
         }
     }
 }

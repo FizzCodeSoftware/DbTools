@@ -13,7 +13,7 @@
         {
             foreach (ConnectionStringSettings c in ConfigurationManager.ConnectionStrings)
             {
-                if (Helper.ShouldRunIntegrationTest(c.ProviderName))
+                if (TestHelper.ShouldRunIntegrationTest(c.ProviderName))
                     yield return new[] { c.Name };
             }
         }

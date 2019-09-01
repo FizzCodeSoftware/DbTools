@@ -36,6 +36,11 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Features\Feature.cs" />
+    <Compile Include="Features\FeatureList.cs" />
+    <Compile Include="Features\Features.cs" />
+    <Compile Include="Features\FeatureSupport.cs" />
+    <Compile Include="Features\Support.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Options.cs" />
     <Compile Include="Row.cs" />
