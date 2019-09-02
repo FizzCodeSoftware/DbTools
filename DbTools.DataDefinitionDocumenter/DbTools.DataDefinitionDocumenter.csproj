@@ -71,6 +71,7 @@
     <Compile Include="..\Global\AssemblyInfo.Global.cs">
       <Link>Properties\AssemblyInfo.Global.cs</Link>
     </Compile>
+    <Compile Include="DocumenterFlags.cs" />
     <Compile Include="DocumenterWriterExcel.cs" />
     <Compile Include="EmptyTableCustomizer.cs" />
     <Compile Include="ColumnCreationHelper.cs" />

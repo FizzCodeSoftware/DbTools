@@ -1,8 +1,10 @@
 ﻿namespace FizzCode.DbTools.Console
 {
     using System;
+    using System.Collections.Generic;
     using System.Configuration;
     using System.Data.SqlClient;
+    using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionDocumenter;
@@ -21,7 +23,12 @@
                         string patternFileName = null;
                         if (args.Length > 3)
                             patternFileName = args[3].Trim();
-                        Document(args[1], (SqlDialect)Enum.Parse(typeof(SqlDialect), args[2]), patternFileName);
+
+                        var flags = (args.Length > 4)
+                            ? args[4].Trim().Split(',').Select(x => (DocumenterFlags)Enum.Parse(typeof(DocumenterFlags), x)).Distinct().ToHashSet()
+                            : new HashSet<DocumenterFlags>();
+
+                        Document(args[1], (SqlDialect)Enum.Parse(typeof(SqlDialect), args[2]), patternFileName, flags);
                         break;
                     }
                 case "gen":
@@ -38,7 +45,7 @@
             }
         }
 
-        public static void Document(string connectionString, SqlDialect sqlDialect, string patternFileName, IDocumenterWriter documenterWriter = null)
+        public static void Document(string connectionString, SqlDialect sqlDialect, string patternFileName, HashSet<DocumenterFlags> flags, IDocumenterWriter documenterWriter = null)
         {
             var connectionStringSettings = new ConnectionStringSettings
             {
@@ -61,8 +68,8 @@
                 customizer = new PatternMatchingTableCustomizerFromCsv(patternFileName);
 
             var documenter = documenterWriter == null
-                ? new Documenter(databaseName, customizer)
-                : new Documenter(documenterWriter, databaseName, customizer);
+                ? new Documenter(databaseName, customizer, null, flags)
+                : new Documenter(documenterWriter, databaseName, customizer, null, flags);
 
             documenter.Document(dd);
         }

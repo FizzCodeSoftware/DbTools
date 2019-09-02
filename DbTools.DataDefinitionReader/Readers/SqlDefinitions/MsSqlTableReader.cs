@@ -114,6 +114,7 @@ FROM INFORMATION_SCHEMA.COLUMNS
             switch (type)
             {
                 case SqlType.Decimal:
+                case SqlType.Money:
                     column = new SqlColumn
                     {
                         Precision = row.GetAs<int>("NUMERIC_SCALE"),
