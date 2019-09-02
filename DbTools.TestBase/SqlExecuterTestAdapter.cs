@@ -23,11 +23,11 @@
 
             if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
             {
-                var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, Helper.GetDefaultTestSettings(sqlDialect));
+                var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, TestHelper.GetDefaultTestSettings(sqlDialect));
                 var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
                 sqlExecutersAndDialects.Add(connectionStringKey, (sqlExecuter, sqlDialect));
 
-                var shouldCreate = Helper.ShouldRunIntegrationTest(sqlDialect);
+                var shouldCreate = TestHelper.ShouldRunIntegrationTest(sqlDialect);
                 if (shouldCreate)
                 {
                     sqlExecuter.InitializeDatabase(false, dds);
@@ -44,7 +44,7 @@
             {
                 try
                 {
-                    var shouldDrop = Helper.ShouldRunIntegrationTest(sqlExecuterAndDialect.SqlDialect);
+                    var shouldDrop = TestHelper.ShouldRunIntegrationTest(sqlExecuterAndDialect.SqlDialect);
                     if (shouldDrop)
                     {
                         sqlExecuterAndDialect.SqlExecuter.CleanupDatabase(_dds.ToArray());
@@ -65,7 +65,7 @@
 
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
 
-            if (!Helper.ShouldRunIntegrationTest(sqlDialect))
+            if (!TestHelper.ShouldRunIntegrationTest(sqlDialect))
                 return "Query execution is skipped, integration tests are not running.";
 
             sqlExecutersAndDialects[connectionStringKey].SqlExecuter.ExecuteNonQuery(query);

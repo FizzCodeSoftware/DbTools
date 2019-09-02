@@ -5,9 +5,9 @@
     using System.Linq;
     using System.Reflection;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    public static class Helper
+    public static class TestHelper
     {
         public static bool ShouldForceIntegrationTests()
         {
@@ -82,6 +82,15 @@
             settings.SqlDialectSpecificSettings = sqlDialectSpecificSettings;
 
             return settings;
+        }
+
+        public static void CheckFeature(SqlDialect sqlDialect, string feature)
+        {
+            var featureSupport = Features.Instance[sqlDialect, feature];
+            if (featureSupport.Support == Support.NotSupported)
+                Assert.Inconclusive($"Test is skipped, feature {feature} is not supported. ({featureSupport.Description}).");
+            if (featureSupport.Support == Support.NotImplementedYet)
+                Assert.Inconclusive($"Test is skipped, feature {feature} is not implemented (yet). ({featureSupport.Description}).");
         }
     }
 }

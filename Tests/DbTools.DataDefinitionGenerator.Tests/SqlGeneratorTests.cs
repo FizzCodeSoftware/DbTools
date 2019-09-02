@@ -8,24 +8,24 @@
     [TestClass]
     public class SqlGeneratorTests
     {
-        private static readonly SqlExecuterTestAdapter _sqlExecuterTestAdatper = new SqlExecuterTestAdapter();
+        private static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new SqlExecuterTestAdapter();
 
         [DataTestMethod]
         [SqlDialects]
         public void _010_GenerateScriptAndCreateTable(SqlDialect sqlDialect)
         {
-            _sqlExecuterTestAdatper.Initialize(sqlDialect.ToString());
+            _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString());
 
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
             var column = table.AddInt32("Id");
             column.Properties.Add(new Identity(column) { Increment = 1, Seed = 1 });
             table.AddNVarChar("Name", 100);
 
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, TestBase.Helper.GetDefaultTestSettings(sqlDialect));
+            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, TestHelper.GetDefaultTestSettings(sqlDialect));
 
             var sql = generator.CreateTable(table);
 
-            var result = _sqlExecuterTestAdatper.ExecuteNonQuery(sqlDialect.ToString(), sql);
+            var result = _sqlExecuterTestAdapter.ExecuteNonQuery(sqlDialect.ToString(), sql);
 
             if (result != null)
                 Assert.Inconclusive(result);
@@ -35,13 +35,13 @@
         [SqlDialects]
         public void _020_DropTable(SqlDialect sqlDialect)
         {
-            _sqlExecuterTestAdatper.Initialize(sqlDialect.ToString());
+            _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString());
 
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
 
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, TestBase.Helper.GetDefaultTestSettings(sqlDialect));
+            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, TestHelper.GetDefaultTestSettings(sqlDialect));
             var sql = generator.DropTable(table);
-            var result = _sqlExecuterTestAdatper.ExecuteNonQuery(sqlDialect.ToString(), sql);
+            var result = _sqlExecuterTestAdapter.ExecuteNonQuery(sqlDialect.ToString(), sql);
 
             if (result != null)
                 Assert.Inconclusive(result);
@@ -50,7 +50,7 @@
         [ClassCleanup]
         public static void Cleanup()
         {
-            _sqlExecuterTestAdatper.Cleanup();
+            _sqlExecuterTestAdapter.Cleanup();
         }
     }
 }

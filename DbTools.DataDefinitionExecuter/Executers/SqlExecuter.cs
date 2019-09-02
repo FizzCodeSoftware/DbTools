@@ -87,15 +87,15 @@
         public virtual void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
             var connection = OpenConnection();
+            var command = PrepareSqlCommand(sqlStatementWithParameters);
+            command.Connection = connection;
             try
             {
-                var command = PrepareSqlCommand(sqlStatementWithParameters);
-                command.Connection = connection;
                 command.ExecuteNonQuery();
             }
             catch (DbException ex)
             {
-                var newEx = new Exception($"Sql fails:\r\n{sqlStatementWithParameters.Statement}\r\n{ex.Message}", ex);
+                var newEx = new Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
                 throw newEx;
             }
             finally
@@ -108,12 +108,13 @@
         public virtual Reader ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
             var connection = OpenConnection();
+
+            var command = PrepareSqlCommand(sqlStatementWithParameters);
+            command.Connection = connection;
+
             try
             {
                 var reader = new Reader();
-
-                var command = PrepareSqlCommand(sqlStatementWithParameters);
-                command.Connection = connection;
 
                 using (var sqlReader = command.ExecuteReader())
                 {
@@ -133,7 +134,7 @@
             }
             catch (DbException ex)
             {
-                var newEx = new Exception($"Sql fails:\r\n{sqlStatementWithParameters.Statement}\r\n{ex.Message}", ex);
+                var newEx = new Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
                 throw newEx;
             }
             finally
@@ -148,15 +149,16 @@
             object result;
 
             var connection = OpenConnection();
+            var command = PrepareSqlCommand(sqlStatementWithParameters);
+            command.Connection = connection;
+
             try
             {
-                var command = PrepareSqlCommand(sqlStatementWithParameters);
-                command.Connection = connection;
                 result = command.ExecuteScalar();
             }
             catch (DbException ex)
             {
-                var newEx = new Exception($"Sql fails:\r\n{sqlStatementWithParameters.Statement}\r\n{ex.Message}", ex);
+                var newEx = new Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
                 throw newEx;
             }
             finally

@@ -27,7 +27,7 @@
         {
             foreach (var item in _sqlDialects)
             {
-                if (Helper.ShouldRunIntegrationTest(item))
+                if (TestHelper.ShouldRunIntegrationTest(item))
                     yield return new[] { (object)item };
             }
         }

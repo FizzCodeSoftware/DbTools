@@ -20,7 +20,7 @@
                 .Append(")")
                 .Append(" REFERENCES ")
                 .Append(GenericSqlGenerator.SchemaAndTableName(fk.PrimaryKey.SqlTable.SchemaAndTableName, guard))
-                .Append("(")
+                .Append(" (")
                 .Append(string.Join(", \r\n", fk.ForeignKeyColumns.Select(pkc => $"{guard(pkc.PrimaryKeyColumn.Name)}")))
                 .Append(")");
 
