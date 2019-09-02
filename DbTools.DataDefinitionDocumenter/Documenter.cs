@@ -30,7 +30,11 @@
             DocumenterWriter = documenterWriter;
             _tableCustomizer = tableCustomizer ?? new EmptyTableCustomizer();
             _fileName = fileName;
-            _flags = flags;
+
+            if (flags == null)
+                _flags = new HashSet<DocumenterFlags>();
+            else
+                _flags = flags;
         }
 
         private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
