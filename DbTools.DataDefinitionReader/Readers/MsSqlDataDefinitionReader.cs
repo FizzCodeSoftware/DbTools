@@ -106,7 +106,7 @@ FROM
         public void AddTableDocumentation(SqlTable table)
         {
             var reader = _executer.ExecuteQuery(new SqlStatementWithParameters(
-            SqlGetTableDocumentation + " AND SCHEMA_NAME(t.schema_id) = @SchemaNam AND t.name = @TableName", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName));
+            SqlGetTableDocumentation + " AND SCHEMA_NAME(t.schema_id) = @SchemaName AND t.name = @TableName", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName));
 
             foreach (var row in reader.Rows)
             {
@@ -121,18 +121,19 @@ FROM
         {
             var reader = _executer.ExecuteQuery(@"
 SELECT
-    t.name TableName, 
-    p.value Property
+    SCHEMA_NAME(t.schema_id) as SchemaName,
+    t.name AS TableName, 
+    p.value AS Property
 FROM
     sys.tables AS t
     INNER JOIN sys.extended_properties AS p ON p.major_id = t.object_id AND p.minor_id = 0 AND p.class = 1
-    -- WHERE SCHEMA_NAME(t.schema_id) = 'dbo'
-    -- AND t.name=''
     AND p.name = 'MS_Description'");
+
+            var tables = dd.GetTables();
 
             foreach (var row in reader.Rows)
             {
-                var table = dd.GetTables().Find(t => t.SchemaAndTableName == row.GetAs<string>("TableName"));
+                var table = tables.Find(t => t.SchemaAndTableName.Schema == row.GetAs<string>("SchemaName") && t.SchemaAndTableName.TableName == row.GetAs<string>("TableName"));
                 if (table != null)
                 {
                     var description = row.GetAs<string>("Property");
