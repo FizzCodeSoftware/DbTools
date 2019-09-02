@@ -1,7 +1,8 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Tests;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class DocumenterTests
@@ -32,25 +33,25 @@
 
         public class TableCustomizer : ITableCustomizer
         {
-            public string BackGroundColor(string tableName)
+            public string BackGroundColor(SchemaAndTableName tableName)
             {
-                if (tableName == "Child")
+                if (tableName.SchemaAndName == "Child")
                     return "#00FFFF";
 
                 return null;
             }
 
-            public string Category(string tableName)
+            public string Category(SchemaAndTableName tableName)
             {
-                if (tableName == "Child")
+                if (tableName.SchemaAndName == "Child")
                     return "CategoryTest";
 
                 return null;
             }
 
-            public bool ShouldSkip(string tableName)
+            public bool ShouldSkip(SchemaAndTableName tableName)
             {
-                if (tableName == "ChildChild")
+                if (tableName.SchemaAndName == "ChildChild")
                     return true;
 
                 return false;

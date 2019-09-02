@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -13,7 +12,7 @@
 
             public override string ToString()
             {
-                return SqlTable.SchemaAndTableName;
+                return SqlTable.SchemaAndTableName.SchemaAndName;
             }
         }
 

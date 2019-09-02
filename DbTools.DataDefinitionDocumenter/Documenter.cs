@@ -39,7 +39,7 @@
         private Color? GetColor(SchemaAndTableName schemaAndTableName)
         {
             // TODO coloring to incude schema
-            var hexColor = _tableCustomizer.BackGroundColor(schemaAndTableName.TableName);
+            var hexColor = _tableCustomizer.BackGroundColor(schemaAndTableName);
 
             if (hexColor == null)
                 return null;
@@ -53,10 +53,10 @@
 
             foreach (var table in tables)
             {
-                if (!_tableCustomizer.ShouldSkip(table.SchemaAndTableName.TableName))
-                    _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndTableName.TableName), table));
+                if (!_tableCustomizer.ShouldSkip(table.SchemaAndTableName))
+                    _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndTableName), table));
                 else
-                    _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndTableName.TableName), table));
+                    _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndTableName), table));
             }
 
             var hasCategories = _sqlTablesByCategory.Any(x => !string.IsNullOrEmpty(x.Key));
@@ -75,8 +75,8 @@
                 }
 
                 DocumenterWriter.WriteLine("Database", "Database name", _databaseName);
-                DocumenterWriter.WriteLine("Database", "Number of documented tables", databaseDefinition.GetTables().Count(t => !_tableCustomizer.ShouldSkip(t.SchemaAndTableName.TableName)));
-                DocumenterWriter.WriteLine("Database", "Number of skipped tables", databaseDefinition.GetTables().Count(t => _tableCustomizer.ShouldSkip(t.SchemaAndTableName.TableName)));
+                DocumenterWriter.WriteLine("Database", "Number of documented tables", databaseDefinition.GetTables().Count(t => !_tableCustomizer.ShouldSkip(t.SchemaAndTableName)));
+                DocumenterWriter.WriteLine("Database", "Number of skipped tables", databaseDefinition.GetTables().Count(t => _tableCustomizer.ShouldSkip(t.SchemaAndTableName)));
                 DocumenterWriter.WriteLine("Database", "Number of tables", databaseDefinition.GetTables().Count);
                 DocumenterWriter.WriteLine("Database");
 

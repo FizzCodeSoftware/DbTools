@@ -2,9 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Configuration;
-    using System.IO;
     using System.Text.RegularExpressions;
+    using FizzCode.DbTools.DataDefinition;
 
     public class PatternMatchingTableCustomizer : ITableCustomizer
     {
@@ -15,25 +14,25 @@
             _patterns.Add(new PatternMatchingTableCustomizerItem(pattern, patternExcept, shouldSkip, category, backGroundColor));
         }
 
-        public string BackGroundColor(string tableName)
+        public string BackGroundColor(SchemaAndTableName tableName)
         {
             var item = GetPatternMatching(tableName);
             return item?.BackGroundColorIfMatch;
         }
 
-        public string Category(string tableName)
+        public string Category(SchemaAndTableName tableName)
         {
             var item = GetPatternMatching(tableName);
             return item?.CategoryIfMatch;
         }
 
-        public bool ShouldSkip(string tableName)
+        public bool ShouldSkip(SchemaAndTableName tableName)
         {
             var item = GetPatternMatching(tableName);
             return item?.ShouldSkipIfMatch == true;
         }
 
-        private PatternMatchingTableCustomizerItem GetPatternMatching(string tableName)
+        private PatternMatchingTableCustomizerItem GetPatternMatching(SchemaAndTableName tableName)
         {
             PatternMatchingTableCustomizerItem matchingItem = null;
             foreach (var item in _patterns)
@@ -41,16 +40,18 @@
                 if (IsRegex(item.Pattern))
                 {
                     var regexPattern = "^" + Regex.Escape(item.Pattern).Replace(@"\*", ".*").Replace(@"\?", ".").Replace("#", @"\d");
-                    if (Regex.Match(tableName, regexPattern).Success
+                    if ((Regex.Match(tableName.SchemaAndName, regexPattern).Success
+                        || Regex.Match(tableName.TableName, regexPattern).Success)
                         && ShouldNotSkipPatternExcept(item, tableName))
                     {
                         if (matchingItem == null)
                             matchingItem = item;
                         else
-                            throw new ApplicationException($"Multiple patterns are matching for {tableName}.");
+                            throw new ApplicationException($"Multiple patterns are matching for {tableName.SchemaAndName}.");
                     }
                 }
-                else if (item.Pattern == tableName
+                else if ((string.Equals(item.Pattern, tableName.SchemaAndName, StringComparison.InvariantCultureIgnoreCase)
+                    || string.Equals(item.Pattern, tableName.TableName, StringComparison.InvariantCultureIgnoreCase))
                     && ShouldNotSkipPatternExcept(item, tableName))
                 {
                     matchingItem = item;
@@ -61,16 +62,18 @@
             return matchingItem;
         }
 
-        private bool ShouldNotSkipPatternExcept(PatternMatchingTableCustomizerItem item, string tableName)
+        private bool ShouldNotSkipPatternExcept(PatternMatchingTableCustomizerItem item, SchemaAndTableName tableName)
         {
             if (IsRegex(item.PatternExcept))
             {
                 var regexPatternExcept = Regex.Escape(item.PatternExcept).Replace(@"\*", ".*").Replace(@"\?", ".").Replace("#", @"\d");
-                return !Regex.Match(tableName, regexPatternExcept).Success;
+                return !Regex.Match(tableName.SchemaAndName, regexPatternExcept).Success
+                    && !Regex.Match(tableName.TableName, regexPatternExcept).Success;
             }
             else
             {
-                return item.PatternExcept != tableName;
+                return !string.Equals(item.PatternExcept, tableName.SchemaAndName, StringComparison.InvariantCultureIgnoreCase)
+                    && !string.Equals(item.PatternExcept, tableName.TableName, StringComparison.InvariantCultureIgnoreCase);
             }
         }
 

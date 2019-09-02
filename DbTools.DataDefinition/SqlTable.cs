@@ -23,7 +23,7 @@
 
         public override string ToString()
         {
-            return SchemaAndTableName;
+            return SchemaAndTableName.SchemaAndName;
         }
 
         public List<SqlTableProperty> Properties { get; } = new List<SqlTableProperty>();

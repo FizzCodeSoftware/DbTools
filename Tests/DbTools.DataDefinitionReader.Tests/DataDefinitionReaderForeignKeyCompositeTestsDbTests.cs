@@ -30,7 +30,7 @@
         }
 
         [ClassCleanup]
-        public static void Cleanup()
+        public static new void Cleanup()
         {
             _sqlExecuterTestAdapter.Cleanup();
         }

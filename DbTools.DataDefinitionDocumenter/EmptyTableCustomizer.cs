@@ -1,19 +1,20 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
+    using FizzCode.DbTools.DataDefinition;
 
     public class EmptyTableCustomizer : ITableCustomizer
     {
-        public string BackGroundColor(string tableName)
+        public string BackGroundColor(SchemaAndTableName tableName)
         {
             return null;
         }
 
-        public string Category(string tableName)
+        public string Category(SchemaAndTableName tableName)
         {
             return null;
         }
 
-        public bool ShouldSkip(string tableName)
+        public bool ShouldSkip(SchemaAndTableName tableName)
         {
             return false;
         }
