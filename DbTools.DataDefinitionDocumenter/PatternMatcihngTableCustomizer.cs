@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Configuration;
-    using System.IO;
     using System.Text.RegularExpressions;
 
     public class PatternMatchingTableCustomizer : ITableCustomizer
