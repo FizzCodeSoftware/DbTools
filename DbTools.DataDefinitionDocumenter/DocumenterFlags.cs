@@ -1,8 +1,5 @@
-﻿using System;
-
-namespace FizzCode.DbTools.DataDefinitionDocumenter
+﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
-    [Flags]
     public enum DocumenterFlags
     {
         None,
