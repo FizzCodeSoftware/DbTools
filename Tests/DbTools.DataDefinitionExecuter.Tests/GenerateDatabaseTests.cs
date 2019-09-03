@@ -35,7 +35,10 @@
 
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
 
+            TestHelper.CheckProvider(sqlDialect);
+
             var generateForeignKeyCompositeTestDatabase = DatabaseCreator.FromConnectionStringSettings(dd, connectionStringSettings, TestHelper.GetDefaultTestSettings(sqlDialect));
+
             try
             {
                 generateForeignKeyCompositeTestDatabase.ReCreateDatabase(true);

@@ -1,10 +1,15 @@
 ﻿namespace FizzCode.DbTools.TestBase
 {
+    using System;
+    using System.Collections.Generic;
     using System.Configuration;
+    using System.Data;
+    using System.Data.Common;
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.DataDefinition;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     public static class TestHelper
@@ -91,6 +96,48 @@
                 Assert.Inconclusive($"Test is skipped, feature {feature} is not supported. ({featureSupport.Description}).");
             if (featureSupport.Support == Support.NotImplementedYet)
                 Assert.Inconclusive($"Test is skipped, feature {feature} is not implemented (yet). ({featureSupport.Description}).");
+        }
+
+        public static void CheckProvider(SqlDialect sqlDialect)
+        {
+            CheckAndRegisterInstalledProviders();
+            if(!_sqlDialectWithInstalledProviders.Contains(sqlDialect))
+                Assert.Inconclusive($"Test is skipped, .Net Framework Data Provider is not installed for {sqlDialect.ToString()} dialect, provier name: {SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect)}");
+        }
+
+        public static List<SqlDialect> _sqlDialectWithInstalledProviders;
+
+        private static readonly object syncRoot = new object();
+
+        private static void CheckAndRegisterInstalledProviders()
+        {
+            lock (syncRoot)
+            {
+                if (_sqlDialectWithInstalledProviders == null)
+                {
+                    _sqlDialectWithInstalledProviders = new List<SqlDialect>();
+
+                    var array = Enum.GetValues(typeof(SqlDialect));
+                    foreach (var sqlDialect in array.Cast<SqlDialect>())
+                    {
+                        var providerName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect);
+
+                        try
+                        {
+                            var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect));
+                        }
+                        catch (ConfigurationException ex)
+                        {
+                            if (ex.BareMessage == "Failed to find or load the registered .Net Framework Data Provider.")
+                                break;
+                            else
+                                throw ex;
+                        }
+
+                        _sqlDialectWithInstalledProviders.Add(sqlDialect);
+                    }
+                }
+            }
         }
     }
 }
