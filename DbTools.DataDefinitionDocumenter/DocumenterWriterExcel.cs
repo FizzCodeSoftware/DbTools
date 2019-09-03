@@ -5,6 +5,7 @@
     using System.Drawing;
     using System.Linq;
     using OfficeOpenXml;
+    using OfficeOpenXml.Style;
 
     public class DocumenterWriterExcel : IDocumenterWriter
     {
@@ -93,34 +94,76 @@
         {
             var sheet = Sheet(GetSheetName(sheetName), backgroundColor);
             sheet.SetValue(content, backgroundColor);
-            sheet.ExcelWorksheet.Cells[sheet.LastRow, sheet.LastColumn, sheet.LastRow, sheet.LastColumn + mergeAmount].Merge = true;
+
+            var cell = sheet.ExcelWorksheet.Cells[sheet.LastRow, sheet.LastColumn, sheet.LastRow, sheet.LastColumn + mergeAmount];
+            cell.Merge = true;
             sheet.LastColumn += mergeAmount + 1;
+        }
+
+        private double GetRenderedTextHeight(string text, ExcelFont font, double width)
+        {
+            using (var bm = new Bitmap(1, 1))
+            {
+                using (var graphics = Graphics.FromImage(bm))
+                {
+                    var pixelWidth = Convert.ToInt32(width * 7.5);
+                    using (var drawingFont = new Font(font.Name, font.Size))
+                    {
+                        var size = graphics.MeasureString(text, drawingFont, pixelWidth);
+                        return Math.Min(Convert.ToDouble(size.Height) * 72 / 96, 409) * 1.2d;
+                    }
+                }
+            }
         }
 
         public byte[] GetContent()
         {
-            foreach (var worksheet in ExcelPackage.Workbook.Worksheets)
+            foreach (var sheet in ExcelPackage.Workbook.Worksheets)
             {
-                var cells = worksheet.Cells[worksheet.Dimension.Address];
+                var cells = sheet.Cells[sheet.Dimension.Address];
                 cells.AutoFitColumns(0, 100);
                 cells.Style.WrapText = true;
                 cells.Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
 
-                var start = worksheet.Dimension.Start;
-                var end = worksheet.Dimension.End;
+                var start = sheet.Dimension.Start;
+                var end = sheet.Dimension.End;
                 for (var row = start.Row; row <= end.Row; row++)
                 {
                     var hasValue = false;
                     for (var col = start.Column; col <= end.Column && !hasValue; col++)
                     {
-                        if (!string.IsNullOrEmpty(worksheet.Cells[row, col].Text))
+                        if (!string.IsNullOrEmpty(sheet.Cells[row, col].Text))
                             hasValue = true;
                     }
 
                     if (hasValue)
                     {
-                        foreach (var cell in worksheet.Cells[row, 1, row, end.Column])
+                        foreach (var cell in sheet.Cells[row, 1, row, end.Column])
                             cell.Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                    }
+                }
+
+                foreach (var mergeAddress in sheet.MergedCells)
+                {
+                    var mergedRange = sheet.Cells[mergeAddress];
+                    if (mergedRange.Value == null)
+                        continue;
+
+                    var value = (mergedRange.Value as object[,])?[0, 0]?.ToString();
+                    if (string.IsNullOrEmpty(value))
+                        continue;
+
+                    var mergedRangeWidth = 0.0d;
+                    for (var col = mergedRange.Start.Column; col <= mergedRange.End.Column; col++)
+                    {
+                        mergedRangeWidth += sheet.Column(col).Width;
+                    }
+
+                    var renderedTextHeight = GetRenderedTextHeight(value, mergedRange.Style.Font, mergedRangeWidth);
+                    var row = sheet.Row(mergedRange.Start.Row);
+                    if (renderedTextHeight > row.Height)
+                    {
+                        row.Height = renderedTextHeight;
                     }
                 }
             }

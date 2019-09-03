@@ -72,16 +72,22 @@
                 DocumenterWriter.WriteLine("Database", "Number of skipped tables", databaseDefinition.GetTables().Count(t => _tableCustomizer.ShouldSkip(t.SchemaAndTableName)));
                 DocumenterWriter.WriteLine("Database", "Number of tables", databaseDefinition.GetTables().Count);
                 DocumenterWriter.WriteLine("Database");
+                DocumenterWriter.WriteLine("Database", "Documented category", "Table count");
 
                 foreach (var category in _sqlTablesByCategory.Select(kvp => kvp.Key).Distinct().OrderBy(x => x))
                 {
-                    DocumenterWriter.WriteLine("Database", $"{category ?? "(No category)"}, number of documented tables", _sqlTablesByCategory.Count(kvp => kvp.Key == category));
+                    DocumenterWriter.WriteLine("Database", category ?? "(No category)", _sqlTablesByCategory.Count(kvp => kvp.Key == category));
                 }
 
-                DocumenterWriter.WriteLine("Database");
-                foreach (var category in _skippedSqlTablesByCategory.Select(kvp => kvp.Key).Distinct().OrderBy(x => x))
+                if (_skippedSqlTablesByCategory.Count > 0)
                 {
-                    DocumenterWriter.WriteLine("Database", $"{category ?? "(No category)"}, number of skipped tables", _skippedSqlTablesByCategory.Count(kvp => kvp.Key == category));
+                    DocumenterWriter.WriteLine("Database");
+                    DocumenterWriter.WriteLine("Database", "Skipped category", "Table count");
+
+                    foreach (var category in _skippedSqlTablesByCategory.Select(kvp => kvp.Key).Distinct().OrderBy(x => x))
+                    {
+                        DocumenterWriter.WriteLine("Database", category ?? "(No category)", _skippedSqlTablesByCategory.Count(kvp => kvp.Key == category));
+                    }
                 }
 
                 DocumenterWriter.WriteLine("Tables", "Category", "Schema", "Table Name", "Link", "Number of columns", "Description");
@@ -164,7 +170,12 @@
             var fileName = _fileName ?? (_databaseName?.Length == 0 ? "Database.xlsx" : _databaseName + ".xlsx");
 
             var path = ConfigurationManager.AppSettings["WorkingDirectory"];
-            File.WriteAllBytes(Path.Combine(path, fileName), content);
+            if (!string.IsNullOrEmpty(path))
+            {
+                fileName = Path.Combine(path, fileName);
+            }
+
+            File.WriteAllBytes(fileName, content);
         }
 
         private List<SqlTable> RemoveKnownTechnicalTables(List<SqlTable> list)

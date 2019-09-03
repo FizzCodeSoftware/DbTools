@@ -88,8 +88,12 @@ WHERE
                 if (column != null)
                 {
                     var description = row.GetAs<string>("Property");
-                    var descriptionProperty = new SqlColumnDescription(column, description);
-                    column.Properties.Add(descriptionProperty);
+                    if (!string.IsNullOrEmpty(description))
+                    {
+                        description = description.Replace("\\n", "\n").Trim();
+                        var descriptionProperty = new SqlColumnDescription(column, description);
+                        column.Properties.Add(descriptionProperty);
+                    }
                 }
             }
         }
@@ -111,9 +115,12 @@ FROM
             foreach (var row in reader.Rows)
             {
                 var description = row.GetAs<string>("Property");
-                var descriptionProperty = new SqlTableDescription(table, description);
-
-                table.Properties.Add(descriptionProperty);
+                if (!string.IsNullOrEmpty(description))
+                {
+                    description = description.Replace("\\n", "\n").Trim();
+                    var descriptionProperty = new SqlTableDescription(table, description);
+                    table.Properties.Add(descriptionProperty);
+                }
             }
         }
 
@@ -138,9 +145,12 @@ FROM
                 if (table != null)
                 {
                     var description = row.GetAs<string>("Property");
-                    var descriptionProperty = new SqlTableDescription(table, description);
-
-                    table.Properties.Add(descriptionProperty);
+                    if (!string.IsNullOrEmpty(description))
+                    {
+                        description = description.Replace("\\n", "\n").Trim();
+                        var descriptionProperty = new SqlTableDescription(table, description);
+                        table.Properties.Add(descriptionProperty);
+                    }
                 }
             }
         }
