@@ -5,7 +5,7 @@
     using System.Text;
     using FizzCode.DbTools.DataDefinition;
 
-    public class ColumnCreationHelper
+    public static class ColumnCreationHelper
     {
         public static string GetColumnCreation(SqlColumn column)
         {

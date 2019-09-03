@@ -2,14 +2,14 @@
 {
     public abstract class GeneratorBase<TResult> : GeneratorBase
     {
-        public GeneratorBase() : base()
+        protected GeneratorBase()
         {
         }
     }
 
     public abstract class GeneratorBase
     {
-        public GeneratorBase()
+        protected GeneratorBase()
         {
         }
 

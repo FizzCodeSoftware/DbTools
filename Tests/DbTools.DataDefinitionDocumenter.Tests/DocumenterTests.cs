@@ -51,10 +51,7 @@
 
             public bool ShouldSkip(SchemaAndTableName tableName)
             {
-                if (tableName.SchemaAndName == "ChildChild")
-                    return true;
-
-                return false;
+                return tableName.SchemaAndName == "ChildChild";
             }
         }
 

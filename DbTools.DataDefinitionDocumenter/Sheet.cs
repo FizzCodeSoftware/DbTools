@@ -9,7 +9,7 @@
         public Sheet(ExcelPackage excelPackage, string name, Color? tabColor = null)
         {
             ExcelWorksheet = excelPackage.Workbook.Worksheets.Add(name);
-            if(tabColor.HasValue)
+            if (tabColor.HasValue)
                 ExcelWorksheet.TabColor = tabColor.Value;
             LastRow = 1;
             LastColumn = 1;
@@ -37,9 +37,9 @@
             }
         }
 
-        public void SetLink(string value, string link, Color? backgroundColor = null)
+        public void SetLink(string text, string sheetName, Color? backgroundColor = null)
         {
-            ExcelWorksheet.Cells[LastRow, LastColumn].Hyperlink = new ExcelHyperLink($"#{link}!A1", value);
+            ExcelWorksheet.Cells[LastRow, LastColumn].Hyperlink = new ExcelHyperLink($"#{sheetName}!A1", text);
             if (backgroundColor.HasValue)
             {
                 ExcelWorksheet.Cells[LastRow, LastColumn].Style.Fill.PatternType = ExcelFillStyle.Solid;

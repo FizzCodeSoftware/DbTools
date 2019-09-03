@@ -76,42 +76,71 @@
 
         public void Write(string name, params object[] content)
         {
-            Write((Color?)null, name, content);
+            Write(null, name, content);
         }
 
-        public void Write(Color? backgroundColor, string name, params object[] content)
+        public void Write(Color? backgroundColor, string sheetName, params object[] content)
         {
-            var sheetName = GetSheetName(name);
-
+            var sheet = Sheet(GetSheetName(sheetName), backgroundColor);
             foreach (var value in content)
             {
-                Sheet(sheetName, backgroundColor).SetValue(value, backgroundColor);
-                Sheet(sheetName, backgroundColor).LastColumn++;
+                sheet.SetValue(value, backgroundColor);
+                sheet.LastColumn++;
             }
+        }
+
+        public void WriteAndMerge(Color? backgroundColor, string sheetName, int mergeAmount, object content)
+        {
+            var sheet = Sheet(GetSheetName(sheetName), backgroundColor);
+            sheet.SetValue(content, backgroundColor);
+            sheet.ExcelWorksheet.Cells[sheet.LastRow, sheet.LastColumn, sheet.LastRow, sheet.LastColumn + mergeAmount].Merge = true;
+            sheet.LastColumn += mergeAmount + 1;
         }
 
         public byte[] GetContent()
         {
-            foreach (var ws in ExcelPackage.Workbook.Worksheets)
+            foreach (var worksheet in ExcelPackage.Workbook.Worksheets)
             {
-                ws.Cells[ws.Dimension.Address].AutoFitColumns(0, 100);
+                var cells = worksheet.Cells[worksheet.Dimension.Address];
+                cells.AutoFitColumns(0, 100);
+                cells.Style.WrapText = true;
+                cells.Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+
+                var start = worksheet.Dimension.Start;
+                var end = worksheet.Dimension.End;
+                for (var row = start.Row; row <= end.Row; row++)
+                {
+                    var hasValue = false;
+                    for (var col = start.Column; col <= end.Column && !hasValue; col++)
+                    {
+                        if (!string.IsNullOrEmpty(worksheet.Cells[row, col].Text))
+                            hasValue = true;
+                    }
+
+                    if (hasValue)
+                    {
+                        foreach (var cell in worksheet.Cells[row, 1, row, end.Column])
+                            cell.Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                    }
+                }
             }
-                
+
             return ExcelPackage.GetAsByteArray();
         }
 
-        public void WriteLink(string name, string targetName)
+        public void WriteLink(string sheetName, string text, string targetSheetName, Color? backgroundColor = null)
         {
-            WriteLink((Color?)null, name, targetName);
+            sheetName = GetSheetName(sheetName);
+            targetSheetName = GetSheetName(targetSheetName);
+
+            Sheet(sheetName, backgroundColor).SetLink(text, targetSheetName, backgroundColor);
+            Sheet(sheetName, backgroundColor).LastColumn++;
         }
 
-        public void WriteLink(Color? backgroundColor, string name, string targetName)
+        public void SetSheetColor(string sheetName, Color color)
         {
-            var sheetName = GetSheetName(name);
-            var targetSheetName = GetSheetName(targetName);
-
-            Sheet(sheetName, backgroundColor).SetLink(targetName, targetSheetName, backgroundColor);
-            Sheet(sheetName, backgroundColor).LastColumn++;
+            sheetName = GetSheetName(sheetName);
+            Sheet(sheetName).ExcelWorksheet.TabColor = color;
         }
     }
 }
