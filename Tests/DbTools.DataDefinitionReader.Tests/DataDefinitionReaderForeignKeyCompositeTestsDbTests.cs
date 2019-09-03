@@ -28,11 +28,5 @@
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(sqlDialect, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
             _ = ddlReader.GetDatabaseDefinition();
         }
-
-        [ClassCleanup]
-        public static new void Cleanup()
-        {
-            _sqlExecuterTestAdapter.Cleanup();
-        }
     }
 }

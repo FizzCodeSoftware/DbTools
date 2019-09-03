@@ -133,6 +133,7 @@ FROM
 
             foreach (var row in reader.Rows)
             {
+                // TODO SchemaAndTableName.Schema might be null on default schema?
                 var table = tables.Find(t => t.SchemaAndTableName.Schema == row.GetAs<string>("SchemaName") && t.SchemaAndTableName.TableName == row.GetAs<string>("TableName"));
                 if (table != null)
                 {
