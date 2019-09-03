@@ -14,7 +14,8 @@
         [SqlDialects]
         public void _010_GenerateScriptAndCreateTable(SqlDialect sqlDialect)
         {
-            _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString());
+            _sqlExecuterTestAdapter.InitializeAndCheck(sqlDialect);
+            TestHelper.CheckProvider(sqlDialect);
 
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
             var column = table.AddInt32("Id");
@@ -35,7 +36,7 @@
         [SqlDialects]
         public void _020_DropTable(SqlDialect sqlDialect)
         {
-            _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString());
+            _sqlExecuterTestAdapter.InitializeAndCheck(sqlDialect);
 
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
 

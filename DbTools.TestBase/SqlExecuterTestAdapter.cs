@@ -14,6 +14,12 @@
 
         private readonly List<DatabaseDefinition> _dds = new List<DatabaseDefinition>();
 
+        public ConnectionStringSettings InitializeAndCheck(SqlDialect sqlDialect, params DatabaseDefinition[] dds)
+        {
+            TestHelper.CheckProvider(sqlDialect);
+            return Initialize(sqlDialect.ToString(), dds);
+        }
+
         public ConnectionStringSettings Initialize(string connectionStringKey, params DatabaseDefinition[] dds)
         {
             _dds.AddRange(dds);

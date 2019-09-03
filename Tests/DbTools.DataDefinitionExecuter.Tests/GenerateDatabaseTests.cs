@@ -37,11 +37,11 @@
 
             TestHelper.CheckProvider(sqlDialect);
 
-            var generateForeignKeyCompositeTestDatabase = DatabaseCreator.FromConnectionStringSettings(dd, connectionStringSettings, TestHelper.GetDefaultTestSettings(sqlDialect));
+            var databaseCreator = DatabaseCreator.FromConnectionStringSettings(dd, connectionStringSettings, TestHelper.GetDefaultTestSettings(sqlDialect));
 
             try
             {
-                generateForeignKeyCompositeTestDatabase.ReCreateDatabase(true);
+                databaseCreator.ReCreateDatabase(true);
             }
             finally
             {

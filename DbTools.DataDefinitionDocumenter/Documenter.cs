@@ -162,9 +162,11 @@
             var content = DocumenterWriter.GetContent();
 
             var fileName = _fileName ?? (_databaseName?.Length == 0 ? "Database.xlsx" : _databaseName + ".xlsx");
-
+             
             var path = ConfigurationManager.AppSettings["WorkingDirectory"];
-            File.WriteAllBytes(Path.Combine(path, fileName), content);
+            path = path == null ? fileName : Path.Combine(path, fileName);
+
+            File.WriteAllBytes(path, content);
         }
 
         private List<SqlTable> RemoveKnownTechnicalTables(List<SqlTable> list)
