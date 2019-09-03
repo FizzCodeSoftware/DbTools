@@ -49,7 +49,7 @@
 
             var path = ConfigurationManager.AppSettings["WorkingDirectory"];
 
-            File.WriteAllBytes(path + fileName, content)*/;
+            File.WriteAllBytes(path + fileName, content);*/
         }
 
         public void GenerateMainFile()

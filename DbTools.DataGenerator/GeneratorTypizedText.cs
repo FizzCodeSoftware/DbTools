@@ -2,7 +2,7 @@
 {
     public abstract class GeneratorTypizedText : GeneratorBase<string>
     {
-        public GeneratorTypizedText() : base()
+        protected GeneratorTypizedText()
         {
         }
     }

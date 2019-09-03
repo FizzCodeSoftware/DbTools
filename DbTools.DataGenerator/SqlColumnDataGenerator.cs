@@ -8,7 +8,7 @@
     /// </summary>
     public class SqlColumnDataGenerator : SqlColumnCustomProperty
     {
-        public GeneratorBase Generator { get; private set; }
+        public GeneratorBase Generator { get; }
 
         public SqlColumnDataGenerator(SqlColumn sqlColumn, GeneratorBase generator) : base(sqlColumn)
         {

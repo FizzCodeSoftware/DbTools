@@ -4,7 +4,7 @@
 
     public class GeneratorName : GeneratorTypizedText
     {
-        public GeneratorName() : base()
+        public GeneratorName()
         {
         }
 

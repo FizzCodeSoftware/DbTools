@@ -2,7 +2,6 @@
 {
     using System.Data.Common;
 
-
     public class OracleDbCommandPreparer
     {
         public DbCommand PrepareSqlCommand(DbCommand dbCommand)

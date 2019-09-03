@@ -33,7 +33,8 @@ namespace FizzCode.DbTools.DataGenerator
 
     public class GeneratorParameters
     {
-        public Type GeneratorType { get; private set; }
+        public Type GeneratorType { get; }
+
         public GeneratorParameters(Type generatorType)
         {
             GeneratorType = generatorType;

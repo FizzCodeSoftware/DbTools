@@ -2,7 +2,7 @@
 {
     public abstract class GeneratorMinMax<T> : GeneratorBase<T>
     {
-        public GeneratorMinMax(T min, T max) : base()
+        protected GeneratorMinMax(T min, T max)
         {
             Min = min;
             Max = max;

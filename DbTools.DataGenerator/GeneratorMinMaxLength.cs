@@ -2,9 +2,10 @@
 {
     public abstract class GeneratorMinMaxLength<T> : GeneratorBase<T>
     {
-        public int MinLength { get; private set; }
-        public int MaxLength { get; private set; }
-        public GeneratorMinMaxLength(int minLength, int maxLength) : base()
+        public int MinLength { get; }
+        public int MaxLength { get; }
+
+        protected GeneratorMinMaxLength(int minLength, int maxLength)
         {
             MinLength = minLength;
             MaxLength = maxLength;
