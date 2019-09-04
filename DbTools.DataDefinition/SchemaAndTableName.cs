@@ -29,6 +29,20 @@
             }
         }
 
+        public SchemaAndTableName SimplifiedSchemaAndTableName
+        {
+            get
+            {
+                switch (Schema)
+                {
+                    case "dbo":
+                        return TableName;
+                }
+
+                return SchemaAndName;
+            }
+        }
+
         public override string ToString()
         {
             return SchemaAndName;

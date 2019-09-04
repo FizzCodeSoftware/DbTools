@@ -95,7 +95,7 @@
             // TODO
             // - format schema and table name
             // - configure use of default schema
-            sb.Append("\t\tpublic static LazySqlTable ").Append(table.SchemaAndTableName).AppendLine(" = new LazySqlTable(() =>")
+            sb.Append("\t\tpublic static LazySqlTable ").Append(table.SchemaAndTableName.SimplifiedSchemaAndTableName).AppendLine(" = new LazySqlTable(() =>")
                 .AppendLine("\t\t{")
                 .AppendLine("\t\t\tvar table = new SqlTableDeclaration();");
 
@@ -210,7 +210,7 @@
             categoryInPath = categoryInPath.Replace('?', '？');
 
             var path = ConfigurationManager.AppSettings["WorkingDirectory"]
-                + _databaseName + "/" + categoryInPath + "/" + table.SchemaAndTableName + ".cs";
+                + _databaseName + "/" + categoryInPath + "/" + table.SchemaAndTableName.SimplifiedSchemaAndTableName + ".cs";
 
             var fileInfo = new FileInfo(path);
             fileInfo.Directory.Create();

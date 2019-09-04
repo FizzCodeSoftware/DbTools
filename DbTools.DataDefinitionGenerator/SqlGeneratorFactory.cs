@@ -2,7 +2,6 @@
 {
     using System;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition;
 
     public static class SqlGeneratorFactory
     {

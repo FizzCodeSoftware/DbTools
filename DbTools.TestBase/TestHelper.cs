@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Configuration;
-    using System.Data;
     using System.Data.Common;
     using System.Diagnostics;
     using System.Linq;
@@ -101,7 +100,7 @@
         public static void CheckProvider(SqlDialect sqlDialect)
         {
             CheckAndRegisterInstalledProviders();
-            if(!_sqlDialectWithInstalledProviders.Contains(sqlDialect))
+            if (!_sqlDialectWithInstalledProviders.Contains(sqlDialect))
                 Assert.Inconclusive($"Test is skipped, .Net Framework Data Provider is not installed for {sqlDialect.ToString()} dialect, provier name: {SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect)}");
         }
 
@@ -131,7 +130,7 @@
                             if (ex.BareMessage == "Failed to find or load the registered .Net Framework Data Provider.")
                                 break;
                             else
-                                throw ex;
+                                throw;
                         }
 
                         _sqlDialectWithInstalledProviders.Add(sqlDialect);
