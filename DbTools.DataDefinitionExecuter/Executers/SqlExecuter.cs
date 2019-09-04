@@ -7,13 +7,6 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
-    public interface ISqlExecuterDropAndCreateDatabase : ISqlExecuter
-    {
-        void CreateDatabase();
-        void DropDatabaseIfExists();
-        void DropDatabase();
-    }
-
     public abstract class SqlExecuter : ISqlExecuter
     {
         protected abstract SqlDialect SqlDialect { get; }

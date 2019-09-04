@@ -88,6 +88,7 @@
     </Compile>
     <Compile Include="Executers\DbConnectionStringBuilderHelper.cs" />
     <Compile Include="Executers\ISqlExecuter.cs" />
+    <Compile Include="Executers\ISqlExecuterDropAndCreateDatabase.cs" />
     <Compile Include="Executers\OracleDbCommandPreparer.cs" />
     <Compile Include="Executers\OracleExecuter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
