@@ -84,6 +84,10 @@
     <Compile Include="Sheet.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj">
+      <Project>{cfcc1e6d-003e-405f-8ade-674594343e63}</Project>
+      <Name>DbTools.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DbTools.DataDefinitionGenerator\DbTools.DataDefinitionGenerator.csproj">
       <Project>{da2f3610-73c6-4f4a-9927-82332f91e957}</Project>
       <Name>DbTools.DataDefinitionGenerator</Name>

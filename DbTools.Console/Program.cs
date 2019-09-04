@@ -58,7 +58,10 @@
             var builder = new SqlConnectionStringBuilder(connectionString);
             var databaseName = builder.InitialCatalog;
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings, Helper.GetDefaultSettings(sqlDialect));
+            // TODO accept from argument
+            var settings = Helper.GetDefaultSettings(sqlDialect);
+
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings, settings);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -68,8 +71,8 @@
                 customizer = new PatternMatchingTableCustomizerFromCsv(patternFileName);
 
             var documenter = documenterWriter == null
-                ? new Documenter(databaseName, customizer, null, flags)
-                : new Documenter(documenterWriter, databaseName, customizer, null, flags);
+                ? new Documenter(settings, databaseName, customizer, null, flags)
+                : new Documenter(documenterWriter, settings, databaseName, customizer, null, flags);
 
             documenter.Document(dd);
         }
@@ -83,7 +86,9 @@
                 ProviderName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect)
             };
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings, Helper.GetDefaultSettings(sqlDialect));
+            var settings = Helper.GetDefaultSettings(sqlDialect);
+
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings, settings);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -92,7 +97,7 @@
             if (patternFileName != null)
                 customizer = new PatternMatchingTableCustomizerFromCsv(patternFileName);
 
-            var generator = new CsGenerator(newDatabaseName, @namespace, customizer);
+            var generator = new CsGenerator(settings, newDatabaseName, @namespace, customizer);
 
             generator.Generate(dd);
         }

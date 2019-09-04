@@ -5,6 +5,8 @@
     using System.Configuration;
     using System.IO;
     using FizzCode.DbTools.DataDefinition.Tests;
+    using FizzCode.DbTools.TestBase;
+    using FizzCode.DbTools.Common;
 
     [TestClass]
     public class PatternMatchingTableCustomizerTests
@@ -73,7 +75,7 @@
 
             var db = new TestDatabaseFks();
             var patternMatching = new PatternMatchingTableCustomizerFromCsv("TestDatabaseFks");
-            var documenter = new Documenter("TestDatabaseFks", patternMatching);
+            var documenter = new Documenter(TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks", patternMatching);
             documenter.Document(db);
         }
     }

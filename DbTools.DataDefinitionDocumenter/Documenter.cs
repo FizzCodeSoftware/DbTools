@@ -5,6 +5,7 @@
     using System.Drawing;
     using System.IO;
     using System.Linq;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
@@ -19,12 +20,12 @@
         private readonly string _fileName;
         private readonly HashSet<DocumenterFlags> _flags;
 
-        public Documenter(string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlags> flags = null)
-            : this(new DocumenterWriterExcel(), databaseName, tableCustomizer, fileName, flags)
+        public Documenter(Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlags> flags = null)
+            : this(new DocumenterWriterExcel(), settings, databaseName, tableCustomizer, fileName, flags)
         {
         }
 
-        public Documenter(IDocumenterWriter documenterWriter, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlags> flags = null)
+        public Documenter(IDocumenterWriter documenterWriter, Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlags> flags = null)
         {
             _databaseName = databaseName;
             DocumenterWriter = documenterWriter;
@@ -180,6 +181,7 @@
 
         private List<SqlTable> RemoveKnownTechnicalTables(List<SqlTable> list)
         {
+            // TODO MS Sql specific
             return list.Where(x =>
                 x.SchemaAndTableName.SchemaAndName != "dbo.__RefactorLog"
                 && x.SchemaAndTableName.SchemaAndName != "dbo.sysdiagrams"

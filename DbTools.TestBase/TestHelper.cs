@@ -78,9 +78,9 @@
             if (sqlDialect == SqlDialect.MsSql)
             {
                 sqlDialectSpecificSettings = new SqlDialectSpecificSettings
-                    {
-                        { "DefaultSchema", "dbo" }
-                    };
+                {
+                    { "DefaultSchema", "dbo" }
+                };
             }
 
             settings.SqlDialectSpecificSettings = sqlDialectSpecificSettings;

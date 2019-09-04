@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Text;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
     public class CsGenerator
@@ -12,15 +13,14 @@
         private readonly string _namespace;
         private readonly string _databaseName;
         private readonly ITableCustomizer _tableCustomizer;
+        private readonly Settings _settings;
 
-        private readonly string _fileName;
-
-        public CsGenerator(string databaseName, string @namespace, ITableCustomizer tableCustomizer = null, string fileName = null)
+        public CsGenerator(Settings settings, string databaseName, string @namespace, ITableCustomizer tableCustomizer = null)
         {
+            _settings = settings;
             _databaseName = databaseName;
             _namespace = @namespace;
             _tableCustomizer = tableCustomizer ?? new EmptyTableCustomizer();
-            _fileName = fileName;
         }
 
         private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
@@ -44,12 +44,6 @@
                 var table = tableKvp.Value;
                 GenerateTable(category, table);
             }
-
-            /*var fileName = _fileName ?? (_databaseName?.Length == 0 ? "Database.xlsx" : _databaseName + ".xlsx");
-
-            var path = ConfigurationManager.AppSettings["WorkingDirectory"];
-
-            File.WriteAllBytes(path + fileName, content);*/
         }
 
         public void GenerateMainFile()

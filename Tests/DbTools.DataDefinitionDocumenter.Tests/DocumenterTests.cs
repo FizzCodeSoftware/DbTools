@@ -1,7 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Tests;
+    using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -11,7 +13,7 @@
         public void DocumentTest()
         {
             var db = new TestDatabaseFks();
-            var documenter = new Documenter("TestDatabaseFks");
+            var documenter = new Documenter(TestHelper.GetDefaultTestSettings(SqlDialect.MsSql),  "TestDatabaseFks");
             documenter.Document(db);
         }
 
@@ -19,7 +21,7 @@
         public void TableCustomizerTest()
         {
             var db = new TestDatabaseFks();
-            var documenter = new Documenter("TestDatabaseFks", new TableCustomizer());
+            var documenter = new Documenter(TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks", new TableCustomizer());
             documenter.Document(db);
         }
 
@@ -27,7 +29,7 @@
         public void DocumentTestForeignKeyComposite()
         {
             var db = new ForeignKeyCompositeTestsDb();
-            var documenter = new Documenter("ForeignKeyCompositeTestsDb");
+            var documenter = new Documenter(TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "ForeignKeyCompositeTestsDb");
             documenter.Document(db);
         }
 
@@ -59,7 +61,7 @@
         public void GeneratorTest()
         {
             var db = new TestDatabaseFks();
-            var generator = new CsGenerator("TestDatabaseFks", "FizzCode.DbTools.DataDefinitionDocumenter.Tests", new TableCustomizer());
+            var generator = new CsGenerator(TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks", "FizzCode.DbTools.DataDefinitionDocumenter.Tests", new TableCustomizer());
             generator.Generate(db);
         }
     }
