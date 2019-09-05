@@ -1,4 +1,7 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using FizzCode.DbTools.DataDefinitionDocumenter;
+
+namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using FizzCode.DbTools.DataDefinitionDocumenter;
@@ -7,6 +10,7 @@
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.DataDefinition;
 
     [TestClass]
     public class PatternMatchingTableCustomizerTests
@@ -74,9 +78,47 @@
             }
 
             var db = new TestDatabaseFks();
-            var patternMatching = new PatternMatchingTableCustomizerFromCsv("TestDatabaseFks");
+            var patternMatching = PatternMatchingTableCustomizerFromPatterns.FromCsv("TestDatabaseFks");
             var documenter = new Documenter(TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks", patternMatching);
             documenter.Document(db);
+        }
+
+        [TestMethod()]
+        public void ShouldSkipTest()
+        {
+            // Pattern; PatternExcept; ShouldSkipIfMatch; CategoryIfMatch; BackGroundColorIfMatch
+
+            var patternContent = "skip*;;1;";
+
+            var customizer = PatternMatchingTableCustomizerFromPatterns.FromString(patternContent);
+
+            var schemaAndTableName1 = new SchemaAndTableName("dbo", "skipMe");
+            var schemaAndTableName2 = new SchemaAndTableName("dbo", "dontSkipMe");
+
+            var shouldSkip1 = customizer.ShouldSkip(schemaAndTableName1);
+            var shouldSkip2 = customizer.ShouldSkip(schemaAndTableName2);
+
+            Assert.IsTrue(shouldSkip1);
+            Assert.IsFalse(shouldSkip2);
+        }
+
+        [TestMethod()]
+        public void ShouldSkipDefaultSchemaTest()
+        {
+            // Pattern; PatternExcept; ShouldSkipIfMatch; CategoryIfMatch; BackGroundColorIfMatch
+
+            var patternContent = "skip*;;1;";
+
+            var customizer = PatternMatchingTableCustomizerFromPatterns.FromString(patternContent);
+
+            var schemaAndTableName1 = new SchemaAndTableName(null, "skipMe");
+            var schemaAndTableName2 = new SchemaAndTableName(null, "dontSkipMe");
+
+            var shouldSkip1 = customizer.ShouldSkip(schemaAndTableName1);
+            var shouldSkip2 = customizer.ShouldSkip(schemaAndTableName2);
+
+            Assert.IsTrue(shouldSkip1);
+            Assert.IsFalse(shouldSkip2);
         }
     }
 }

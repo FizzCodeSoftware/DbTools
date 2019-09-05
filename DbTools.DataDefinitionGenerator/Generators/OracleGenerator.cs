@@ -71,9 +71,9 @@ s            */
             foreach (var fk in allFks)
             {
                 sb.Append("ALTER TABLE ")
-                    .Append(SchemaAndTableName(table.SchemaAndTableName, GuardKeywords))
+                    .Append(GetSimplifiedSchemaAndTableName(table.SchemaAndTableName))
                     .Append(" ADD ")
-                    .Append(ForeignKeyGeneratorHelper.FKConstraint(fk, GuardKeywords))
+                    .Append(FKConstraint(fk))
                     .AppendLine(";");
             }
 

@@ -54,7 +54,11 @@
         {
             var settings = new Settings();
 
-            SqlDialectSpecificSettings sqlDialectSpecificSettings = null;
+            var sqlDialectSpecificSettings = new SqlDialectSpecificSettings
+            {
+                ["DefaultSchema"] = null
+            };
+
             if (sqlDialect == SqlDialect.Oracle)
             {
                 var executingAssembly = Assembly.GetExecutingAssembly();
@@ -69,18 +73,12 @@
 
                 var schemaName = assemblyName.Replace(".", "_");
 
-                sqlDialectSpecificSettings = new SqlDialectSpecificSettings
-                {
-                    { "DefaultSchema", schemaName }
-                };
+                sqlDialectSpecificSettings["DefaultSchema"] = schemaName;
             }
 
             if (sqlDialect == SqlDialect.MsSql)
             {
-                sqlDialectSpecificSettings = new SqlDialectSpecificSettings
-                {
-                    { "DefaultSchema", "dbo" }
-                };
+                sqlDialectSpecificSettings["DefaultSchema"] = "dbo";
             }
 
             settings.SqlDialectSpecificSettings = sqlDialectSpecificSettings;

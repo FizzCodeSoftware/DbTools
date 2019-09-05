@@ -9,13 +9,10 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
-    public class Documenter
+    public class Documenter : DocumenterBase
     {
         protected IDocumenterWriter DocumenterWriter { get; }
         protected ISqlTypeMapper SqlTypeMapper { get; } = new GenericSqlTypeMapper();
-
-        private readonly string _databaseName;
-        private readonly ITableCustomizer _tableCustomizer;
 
         private readonly string _fileName;
         private readonly HashSet<DocumenterFlags> _flags;
@@ -25,12 +22,12 @@
         {
         }
 
-        public Documenter(IDocumenterWriter documenterWriter, Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlags> flags = null)
+        public Documenter(IDocumenterWriter documenterWriter, Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlags> flags = null) : base(settings, databaseName, tableCustomizer)
         {
-            _databaseName = databaseName;
             DocumenterWriter = documenterWriter;
-            _tableCustomizer = tableCustomizer ?? new EmptyTableCustomizer();
             _fileName = fileName;
+
+            Helper = new DocumenterHelper(settings);
 
             if (flags == null)
                 _flags = new HashSet<DocumenterFlags>();
@@ -66,52 +63,53 @@
 
             var hasCategories = _sqlTablesByCategory.Any(x => !string.IsNullOrEmpty(x.Key));
 
+            WriteLine("Database", "Database name", _databaseName);
+            WriteLine("Database", "Number of documented tables", databaseDefinition.GetTables().Count(t => !_tableCustomizer.ShouldSkip(t.SchemaAndTableName)));
+            WriteLine("Database", "Number of skipped tables", databaseDefinition.GetTables().Count(t => _tableCustomizer.ShouldSkip(t.SchemaAndTableName)));
+            WriteLine("Database", "Number of tables", databaseDefinition.GetTables().Count);
+
             if (hasCategories)
             {
-                DocumenterWriter.WriteLine("Database", "Database name", _databaseName);
-                DocumenterWriter.WriteLine("Database", "Number of documented tables", databaseDefinition.GetTables().Count(t => !_tableCustomizer.ShouldSkip(t.SchemaAndTableName)));
-                DocumenterWriter.WriteLine("Database", "Number of skipped tables", databaseDefinition.GetTables().Count(t => _tableCustomizer.ShouldSkip(t.SchemaAndTableName)));
-                DocumenterWriter.WriteLine("Database", "Number of tables", databaseDefinition.GetTables().Count);
-                DocumenterWriter.WriteLine("Database");
-                DocumenterWriter.WriteLine("Database", "Documented category", "Table count");
+                WriteLine("Database");
+                WriteLine("Database", "Documented category", "Table count");
 
                 foreach (var category in _sqlTablesByCategory.Select(kvp => kvp.Key).Distinct().OrderBy(x => x))
                 {
-                    DocumenterWriter.WriteLine("Database", category ?? "(No category)", _sqlTablesByCategory.Count(kvp => kvp.Key == category));
+                    WriteLine("Database", category ?? "(No category)", _sqlTablesByCategory.Count(kvp => kvp.Key == category));
                 }
 
                 if (_skippedSqlTablesByCategory.Count > 0)
                 {
-                    DocumenterWriter.WriteLine("Database");
-                    DocumenterWriter.WriteLine("Database", "Skipped category", "Table count");
+                    WriteLine("Database");
+                    WriteLine("Database", "Skipped category", "Table count");
 
                     foreach (var category in _skippedSqlTablesByCategory.Select(kvp => kvp.Key).Distinct().OrderBy(x => x))
                     {
-                        DocumenterWriter.WriteLine("Database", category ?? "(No category)", _skippedSqlTablesByCategory.Count(kvp => kvp.Key == category));
+                        WriteLine("Database", category ?? "(No category)", _skippedSqlTablesByCategory.Count(kvp => kvp.Key == category));
                     }
                 }
 
-                DocumenterWriter.WriteLine("Tables", "Category", "Schema", "Table Name", "Link", "Number of columns", "Description");
+                WriteLine("Tables", "Category", "Schema", "Table Name", "Link", "Number of columns", "Description");
 
                 if (!_flags.Contains(DocumenterFlags.NoInternalDataTypes))
                 {
-                    DocumenterWriter.WriteLine("All columns", "Category", "Schema", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
+                    WriteLine("All columns", "Category", "Schema", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
                 }
                 else
                 {
-                    DocumenterWriter.WriteLine("All columns", "Category", "Schema", "Table Name", "Column Name", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
+                    WriteLine("All columns", "Category", "Schema", "Table Name", "Column Name", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
                 }
             }
             else
             {
-                DocumenterWriter.WriteLine("Tables", "Schema", "Table Name", "Number of columns", "Description");
+                WriteLine("Tables", "Schema", "Table Name", "Number of columns", "Description");
                 if (!_flags.Contains(DocumenterFlags.NoInternalDataTypes))
                 {
-                    DocumenterWriter.WriteLine("All columns", "Schema", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
+                    WriteLine("All columns", "Schema", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
                 }
                 else
                 {
-                    DocumenterWriter.WriteLine("All columns", "Schema", "Table Name", "Column Name", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
+                    WriteLine("All columns", "Schema", "Table Name", "Column Name", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
                 }
             }
 
@@ -123,41 +121,41 @@
 
                 var sheetColor = GetColor(table.SchemaAndTableName);
                 if (sheetColor != null)
-                    DocumenterWriter.SetSheetColor(table.SchemaAndTableName, sheetColor.Value);
+                    DocumenterWriter.SetSheetColor(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName), sheetColor.Value);
 
                 var mergeAmount = !_flags.Contains(DocumenterFlags.NoInternalDataTypes) ? 12 : 11;
 
-                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, "Schema");
-                DocumenterWriter.WriteAndMerge(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, mergeAmount, table.SchemaAndTableName.Schema);
-                DocumenterWriter.WriteLine(table.SchemaAndTableName);
+                WriteColor(table.SchemaAndTableName, "Schema");
+                WriteAndMerge(table.SchemaAndTableName, mergeAmount, table.SchemaAndTableName.Schema);
+                WriteLine(table.SchemaAndTableName);
 
-                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, "Table name");
-                DocumenterWriter.WriteAndMerge(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, mergeAmount, table.SchemaAndTableName.TableName);
-                DocumenterWriter.WriteLine(table.SchemaAndTableName);
+                WriteColor(table.SchemaAndTableName, "Table name");
+                WriteAndMerge(table.SchemaAndTableName, mergeAmount, table.SchemaAndTableName.TableName);
+                WriteLine(table.SchemaAndTableName);
 
                 var tableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
-                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, "Description");
-                DocumenterWriter.WriteAndMerge(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, mergeAmount, tableDescription?.Description);
-                DocumenterWriter.WriteLine(table.SchemaAndTableName);
+                WriteColor(table.SchemaAndTableName, "Description");
+                WriteAndMerge(table.SchemaAndTableName, mergeAmount, tableDescription?.Description);
+                WriteLine(table.SchemaAndTableName);
 
                 if (hasCategories && !string.IsNullOrEmpty(category))
                 {
-                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, "Category");
-                    DocumenterWriter.WriteAndMerge(GetColor(table.SchemaAndTableName), table.SchemaAndTableName, mergeAmount, category);
-                    DocumenterWriter.WriteLine(table.SchemaAndTableName);
+                    WriteColor(table.SchemaAndTableName, "Category");
+                    WriteAndMerge(table.SchemaAndTableName, mergeAmount, category);
+                    WriteLine(table.SchemaAndTableName);
                 }
 
-                DocumenterWriter.WriteLine(table.SchemaAndTableName);
+                WriteLine(table.SchemaAndTableName);
 
                 if (!_flags.Contains(DocumenterFlags.NoInternalDataTypes))
-                    DocumenterWriter.WriteLine(null, table.SchemaAndTableName, "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key Name", "Referenced Table", "Link", "Referenced Column");
+                    WriteLine(table.SchemaAndTableName, "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key Name", "Referenced Table", "Link", "Referenced Column");
                 else
-                    DocumenterWriter.WriteLine(null, table.SchemaAndTableName, "Column Name", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key Name", "Referenced Table", "Link", "Referenced Column");
+                    WriteLine(table.SchemaAndTableName, "Column Name", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key Name", "Referenced Table", "Link", "Referenced Column");
 
                 AddTableDetails(category, table, hasCategories);
             }
 
-            DocumenterWriter.WriteLine("Tables");
+            WriteLine("Tables");
 
             foreach (var tableKvp in _skippedSqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName.Schema).ThenBy(t => t.Value.SchemaAndTableName.TableName))
             {
@@ -197,7 +195,7 @@
 
             DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", table.SchemaAndTableName.Schema);
             DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", table.SchemaAndTableName.TableName);
-            DocumenterWriter.WriteLink("Tables", "link", table.SchemaAndTableName.SchemaAndName, GetColor(table.SchemaAndTableName));
+            DocumenterWriter.WriteLink("Tables", "link", Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName), GetColor(table.SchemaAndTableName));
             DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", table.Columns.Count);
 
             var tableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
@@ -223,43 +221,44 @@
                 var isPk = pks.Any(pk => pk.SqlColumns.Any(cao => cao.SqlColumn == column.Value));
 
                 if (!_flags.Contains(DocumenterFlags.NoInternalDataTypes))
-                    DocumenterWriter.Write(null, table.SchemaAndTableName, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
+                    Write(table.SchemaAndTableName, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
                 else
-                    DocumenterWriter.Write(null, table.SchemaAndTableName, column.Value.Name, sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
+                    Write(table.SchemaAndTableName, column.Value.Name, sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
 
                 if (isPk)
-                    DocumenterWriter.Write(null, table.SchemaAndTableName, true);
+                    Write(table.SchemaAndTableName, true);
                 else
-                    DocumenterWriter.Write(null, table.SchemaAndTableName, "");
+                    Write(table.SchemaAndTableName, "");
 
                 var identity = column.Value.Properties.OfType<Identity>().FirstOrDefault();
 
                 if (identity != null)
-                    DocumenterWriter.Write(null, table.SchemaAndTableName, $"IDENTITY ({identity.Seed}, {identity.Increment})");
+                    Write(table.SchemaAndTableName, $"IDENTITY ({identity.Seed}, {identity.Increment})");
                 else
-                    DocumenterWriter.Write(null, table.SchemaAndTableName, "");
+                    Write(table.SchemaAndTableName, "");
 
                 var defaultValue = column.Value.Properties.OfType<DefaultValue>().FirstOrDefault();
 
                 if (defaultValue != null)
-                    DocumenterWriter.Write(null, table.SchemaAndTableName, defaultValue);
+                    Write(table.SchemaAndTableName, defaultValue);
                 else
-                    DocumenterWriter.Write(null, table.SchemaAndTableName, "");
+                    Write(table.SchemaAndTableName, "");
 
-                DocumenterWriter.Write(null, table.SchemaAndTableName, description.Trim());
+                Write(table.SchemaAndTableName, description.Trim());
 
                 // "Foreign Key name", "Priary Key table", "Priary Key column"
                 var fkOnColumn = table.Properties.OfType<ForeignKey>().FirstOrDefault(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn == column.Value));
 
                 if (fkOnColumn != null)
                 {
-                    DocumenterWriter.Write(null, table.SchemaAndTableName, fkOnColumn.Name);
-                    DocumenterWriter.Write(null, table.SchemaAndTableName, fkOnColumn.PrimaryKey.SqlTable.SchemaAndTableName.SchemaAndName);
-                    DocumenterWriter.WriteLink(table.SchemaAndTableName, "link", fkOnColumn.PrimaryKey.SqlTable.SchemaAndTableName.SchemaAndName);
-                    DocumenterWriter.Write(null, table.SchemaAndTableName, fkOnColumn.ForeignKeyColumns.First(fkc => fkc.ForeignKeyColumn == column.Value).PrimaryKeyColumn.Name);
+                    Write(table.SchemaAndTableName, fkOnColumn.Name);
+                    Write(table.SchemaAndTableName, 
+                        Helper.GetSimplifiedSchemaAndTableName(fkOnColumn.PrimaryKey.SqlTable.SchemaAndTableName));
+                    WriteLink(table.SchemaAndTableName, "link", fkOnColumn.PrimaryKey.SqlTable.SchemaAndTableName);
+                    Write(table.SchemaAndTableName, fkOnColumn.ForeignKeyColumns.First(fkc => fkc.ForeignKeyColumn == column.Value).PrimaryKeyColumn.Name);
                 }
 
-                DocumenterWriter.WriteLine(table.SchemaAndTableName);
+                WriteLine(table.SchemaAndTableName);
 
                 if (hasCategories)
                 {
@@ -292,48 +291,83 @@
 
             if (!_flags.Contains(DocumenterFlags.NoDetailedForeignKeys))
             {
-                DocumenterWriter.WriteLine(table.SchemaAndTableName);
-                DocumenterWriter.WriteLine(table.SchemaAndTableName, "Foreign keys");
+                WriteLine(table.SchemaAndTableName);
+                WriteLine(table.SchemaAndTableName, "Foreign keys");
 
                 var fks = table.Properties.OfType<ForeignKey>().ToList();
                 foreach (var fk in fks)
                 {
-                    DocumenterWriter.Write(table.SchemaAndTableName, fk.Name);
+                    Write(table.SchemaAndTableName, fk.Name);
                     foreach (var fkColumn in fk.ForeignKeyColumns)
-                        DocumenterWriter.Write(table.SchemaAndTableName, fkColumn.ForeignKeyColumn.Name);
+                        Write(table.SchemaAndTableName, fkColumn.ForeignKeyColumn.Name);
 
-                    DocumenterWriter.Write(table.SchemaAndTableName, "");
-                    DocumenterWriter.Write(table.SchemaAndTableName, fk.PrimaryKey.SqlTable.SchemaAndTableName);
-                    DocumenterWriter.Write(table.SchemaAndTableName, "");
+                    Write(table.SchemaAndTableName, "");
+                    Write(table.SchemaAndTableName, Helper.GetSimplifiedSchemaAndTableName(fk.PrimaryKey.SqlTable.SchemaAndTableName));
+                    Write(table.SchemaAndTableName, "");
 
                     foreach (var fkColumn in fk.ForeignKeyColumns)
-                        DocumenterWriter.Write(table.SchemaAndTableName, fkColumn.PrimaryKeyColumn.Name);
+                        Write(table.SchemaAndTableName, fkColumn.PrimaryKeyColumn.Name);
                 }
 
                 if (fks.Count > 0)
-                    DocumenterWriter.WriteLine(table.SchemaAndTableName);
+                    WriteLine(table.SchemaAndTableName);
             }
 
             if (!_flags.Contains(DocumenterFlags.NoDetailedIndexes))
             {
-                DocumenterWriter.WriteLine(table.SchemaAndTableName);
-                DocumenterWriter.WriteLine(table.SchemaAndTableName, "Indexes");
+                WriteLine(table.SchemaAndTableName);
+                WriteLine(table.SchemaAndTableName, "Indexes");
 
                 foreach (var index in table.Properties.OfType<Index>())
                 {
-                    DocumenterWriter.Write(table.SchemaAndTableName, index.Name);
+                    Write(table.SchemaAndTableName, index.Name);
                     foreach (var indexColumn in index.SqlColumns)
                     {
-                        DocumenterWriter.Write(table.SchemaAndTableName, indexColumn.SqlColumn.Name);
-                        DocumenterWriter.Write(table.SchemaAndTableName, indexColumn);
+                        Write(table.SchemaAndTableName, indexColumn.SqlColumn.Name);
+                        Write(table.SchemaAndTableName, indexColumn);
                     }
 
-                    DocumenterWriter.Write(table.SchemaAndTableName, "");
-                    DocumenterWriter.Write(table.SchemaAndTableName, "Includes:");
+                    Write(table.SchemaAndTableName, "");
+                    Write(table.SchemaAndTableName, "Includes:");
                     foreach (var includeColumn in index.Includes)
-                        DocumenterWriter.Write(table.SchemaAndTableName, includeColumn.Name);
+                        Write(table.SchemaAndTableName, includeColumn.Name);
                 }
             }
+        }
+
+        protected void Write(string sheetName, params object[] content)
+        {
+            DocumenterWriter.Write(sheetName, content);
+        }
+
+        protected void WriteLine(string sheetName, params object[] content)
+        {
+            DocumenterWriter.WriteLine(sheetName, content);
+        }
+
+        protected void Write(SchemaAndTableName schemaAndTableName, params object[] content)
+        {
+            DocumenterWriter.Write(Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), content);
+        }
+
+        protected void WriteColor(SchemaAndTableName schemaAndTableName, params object[] content)
+        {
+            DocumenterWriter.Write(GetColor(schemaAndTableName), Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), content);
+        }
+
+        protected void WriteLine(SchemaAndTableName schemaAndTableName, params object[] content)
+        {
+            DocumenterWriter.WriteLine(Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), content);
+        }
+
+        protected void WriteLink(SchemaAndTableName schemaAndTableName, string text, SchemaAndTableName targetSchemaAndTableName, Color? backgroundColor = null)
+        {
+            DocumenterWriter.WriteLink(Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), text, Helper.GetSimplifiedSchemaAndTableName(targetSchemaAndTableName), backgroundColor);
+        }
+
+        protected void WriteAndMerge(SchemaAndTableName schemaAndTableName, int mergeAmount, params object[] content)
+        {
+            DocumenterWriter.WriteAndMerge(GetColor(schemaAndTableName), Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), mergeAmount, content);
         }
     }
 }

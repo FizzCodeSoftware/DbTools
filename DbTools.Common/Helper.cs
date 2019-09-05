@@ -6,7 +6,7 @@
         {
             var settings = new Settings();
 
-            SqlDialectSpecificSettings sqlDialectSpecificSettings = null;
+            var sqlDialectSpecificSettings = new SqlDialectSpecificSettings();
 
             if (sqlDialect == SqlDialect.MsSql)
             {

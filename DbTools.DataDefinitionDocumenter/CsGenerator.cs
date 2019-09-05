@@ -8,19 +8,12 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
-    public class CsGenerator
+    public class CsGenerator : DocumenterBase
     {
         private readonly string _namespace;
-        private readonly string _databaseName;
-        private readonly ITableCustomizer _tableCustomizer;
-        private readonly Settings _settings;
-
-        public CsGenerator(Settings settings, string databaseName, string @namespace, ITableCustomizer tableCustomizer = null)
+        public CsGenerator(Settings settings, string databaseName, string @namespace, ITableCustomizer tableCustomizer = null) : base(settings, databaseName, tableCustomizer)
         {
-            _settings = settings;
-            _databaseName = databaseName;
             _namespace = @namespace;
-            _tableCustomizer = tableCustomizer ?? new EmptyTableCustomizer();
         }
 
         private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
@@ -89,7 +82,7 @@
             // TODO
             // - format schema and table name
             // - configure use of default schema
-            sb.Append("\t\tpublic static LazySqlTable ").Append(table.SchemaAndTableName.SimplifiedSchemaAndTableName).AppendLine(" = new LazySqlTable(() =>")
+            sb.Append("\t\tpublic static LazySqlTable ").Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString())).AppendLine(" = new LazySqlTable(() =>")
                 .AppendLine("\t\t{")
                 .AppendLine("\t\t\tvar table = new SqlTableDeclaration();");
 
@@ -204,7 +197,7 @@
             categoryInPath = categoryInPath.Replace('?', '？');
 
             var path = ConfigurationManager.AppSettings["WorkingDirectory"]
-                + _databaseName + "/" + categoryInPath + "/" + table.SchemaAndTableName.SimplifiedSchemaAndTableName + ".cs";
+                + _databaseName + "/" + categoryInPath + "/" + Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, ".") + ".cs";
 
             var fileInfo = new FileInfo(path);
             fileInfo.Directory.Create();

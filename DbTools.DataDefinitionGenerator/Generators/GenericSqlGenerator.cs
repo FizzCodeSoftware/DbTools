@@ -6,13 +6,6 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
-    public interface ISqlGeneratorDropAndCreateDatabase : ISqlGenerator
-    {
-        SqlStatementWithParameters CreateDatabase(string databaseName);
-        string DropDatabase(string databaseName);
-        SqlStatementWithParameters DropDatabaseIfExists(string databaseName);
-    }
-
     public abstract class GenericSqlGenerator : ISqlGenerator
     {
         public virtual ISqlTypeMapper SqlTypeMapper { get; } = new GenericSqlTypeMapper();
@@ -41,7 +34,7 @@
         {
             var sb = new StringBuilder();
             sb.Append("CREATE TABLE ")
-                .Append(SchemaAndTableName(table.SchemaAndTableName, GuardKeywords))
+                .Append(GetSimplifiedSchemaAndTableName(table.SchemaAndTableName))
                 .AppendLine(" (");
 
             var idx = 0;
@@ -116,7 +109,7 @@
                 .Append("INDEX ")
                 .Append(GuardKeywords(index.Name))
                 .Append(" ON ")
-                .Append(SchemaAndTableName(index.SqlTable.SchemaAndTableName, GuardKeywords))
+                .Append(GetSimplifiedSchemaAndTableName(index.SqlTable.SchemaAndTableName))
                 .AppendLine(" (")
                 .AppendLine(string.Join(", \r\n", index.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)} {c.OrderAsKeyword}"))) // Index column list + asc desc
                 .AppendLine(")");
@@ -164,14 +157,33 @@
             foreach (var fk in allFks)
             {
                 sb.Append("ALTER TABLE ")
-                    .Append(SchemaAndTableName(table.SchemaAndTableName, GuardKeywords))
+                    .Append(GetSimplifiedSchemaAndTableName(table.SchemaAndTableName))
                     .Append(" WITH CHECK ADD ")
-                    .AppendLine(ForeignKeyGeneratorHelper.FKConstraint(fk, GuardKeywords))
+                    .AppendLine(FKConstraint(fk))
                     .Append("ALTER TABLE ")
-                    .Append(SchemaAndTableName(table.SchemaAndTableName, GuardKeywords))
+                    .Append(GetSimplifiedSchemaAndTableName(table.SchemaAndTableName))
                     .Append(" CHECK CONSTRAINT ")
                     .AppendLine(GuardKeywords(fk.Name));
             }
+
+            return sb.ToString();
+        }
+
+        protected string FKConstraint(ForeignKey fk)
+        {
+            var sb = new StringBuilder();
+
+            sb.Append("CONSTRAINT ")
+                .Append(GuardKeywords(fk.Name))
+                .Append(" FOREIGN KEY ")
+                .Append("(")
+                .Append(string.Join(", \r\n", fk.ForeignKeyColumns.Select(fkc => $"{GuardKeywords(fkc.ForeignKeyColumn.Name)}")))
+                .Append(")")
+                .Append(" REFERENCES ")
+                .Append(GetSimplifiedSchemaAndTableName(fk.PrimaryKey.SqlTable.SchemaAndTableName))
+                .Append(" (")
+                .Append(string.Join(", \r\n", fk.ForeignKeyColumns.Select(pkc => $"{GuardKeywords(pkc.PrimaryKeyColumn.Name)}")))
+                .Append(")");
 
             return sb.ToString();
         }
@@ -190,13 +202,13 @@
             foreach (var fk in allFks)
             {
                 sb.Append(", ")
-                    .Append(ForeignKeyGeneratorHelper.FKConstraint(fk, GuardKeywords));
+                    .Append(FKConstraint(fk));
             }
         }
 
         public string DropTable(SqlTable table)
         {
-            return $"DROP TABLE {SchemaAndTableName(table.SchemaAndTableName, GuardKeywords)}";
+            return $"DROP TABLE {GetSimplifiedSchemaAndTableName(table.SchemaAndTableName)}";
         }
 
         protected string GenerateCreateColumn(SqlColumn column)
@@ -280,15 +292,26 @@ SELECT
 
         public string TableNotEmpty(SqlTable table)
         {
-            return $"SELECT COUNT(*) FROM (SELECT TOP 1 * FROM {GuardKeywords(table.SchemaAndTableName.Schema)}.{GuardKeywords(table.SchemaAndTableName.TableName)} t";
+            return $"SELECT COUNT(*) FROM (SELECT TOP 1 * FROM {GetSimplifiedSchemaAndTableName(table.SchemaAndTableName)} t";
         }
 
-        public static string SchemaAndTableName(SchemaAndTableName schemaAndTableName, Func<string, string> guard)
+        public string GetSimplifiedSchemaAndTableName(SchemaAndTableName schemaAndTableName)
         {
-            if (schemaAndTableName.Schema != null)
-                return guard(schemaAndTableName.Schema) + "." + guard(schemaAndTableName.TableName);
+            var schema = schemaAndTableName.Schema;
+            var tableName = schemaAndTableName.TableName;
+
+            var defaultSchema = _settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+
+            if (_settings.Options.ShouldUseDefaultSchema && schema == null)
+                return GuardKeywords(defaultSchema) + "." + GuardKeywords(tableName);
+
+            if (!_settings.Options.ShouldUseDefaultSchema && schema == defaultSchema)
+                return GuardKeywords(tableName);
+
+            if (schema != null)
+                return GuardKeywords(schema) + "." + GuardKeywords(tableName);
             else
-                return guard(schemaAndTableName.TableName);
+                return GuardKeywords(tableName);
         }
 
         public Settings GetSettings()

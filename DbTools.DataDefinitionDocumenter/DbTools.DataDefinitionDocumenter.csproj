@@ -71,13 +71,15 @@
     <Compile Include="..\Global\AssemblyInfo.Global.cs">
       <Link>Properties\AssemblyInfo.Global.cs</Link>
     </Compile>
+    <Compile Include="DocumenterBase.cs" />
     <Compile Include="DocumenterFlags.cs" />
+    <Compile Include="DocumenterHelper.cs" />
     <Compile Include="DocumenterWriterExcel.cs" />
     <Compile Include="EmptyTableCustomizer.cs" />
     <Compile Include="ColumnCreationHelper.cs" />
     <Compile Include="IDocumenterWriter.cs" />
     <Compile Include="ITableCustomizer.cs" />
-    <Compile Include="PatternMatchingTableCustomizerFromCsv.cs" />
+    <Compile Include="PatternMatchingTableCustomizerFromPatterns.cs" />
     <Compile Include="PatternMatchingTableCustomizerItem.cs" />
     <Compile Include="PatternMatchingTableCustomizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

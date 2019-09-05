@@ -78,10 +78,10 @@
     <Compile Include="..\Global\AssemblyInfo.Global.cs">
       <Link>Properties\AssemblyInfo.Global.cs</Link>
     </Compile>
-    <Compile Include="Generators\ForeignKeyGeneratorHelper.cs" />
     <Compile Include="Generators\OracleGenerator.cs" />
     <Compile Include="Generators\SqLiteGenerator.cs" />
     <Compile Include="Generators\MsSqlGenerator.cs" />
+    <Compile Include="ISqlGeneratorDropAndCreateDatabase.cs" />
     <Compile Include="SqlStatementWithParams.cs" />
     <Compile Include="SqlTypeMapper\OracleTypeMapper.cs" />
     <Compile Include="SqlTypeMapper\SqLiteTypeMapper.cs" />

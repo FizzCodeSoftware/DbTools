@@ -68,7 +68,7 @@
             ITableCustomizer customizer = null;
 
             if (patternFileName != null)
-                customizer = new PatternMatchingTableCustomizerFromCsv(patternFileName);
+                customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName);
 
             var documenter = documenterWriter == null
                 ? new Documenter(settings, databaseName, customizer, null, flags)
@@ -95,7 +95,7 @@
             ITableCustomizer customizer = null;
 
             if (patternFileName != null)
-                customizer = new PatternMatchingTableCustomizerFromCsv(patternFileName);
+                customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv (patternFileName);
 
             var generator = new CsGenerator(settings, newDatabaseName, @namespace, customizer);
 
