@@ -6,6 +6,14 @@
 
     public static class ForeignKeyHelper
     {
+        /// <summary>
+        /// Creates a set of columns (one or more, depeding on the PK columns) which will be an FK pointing to the PK of <paramref name="lazyReferredTable">.
+        /// </summary>
+        /// <param name="table">The table the column will be added to.</param>
+        /// <param name="lazyReferredTable">The PK table.</param>
+        /// <param name="columnNamePrefix">Column prefix used with naming strategy.</param>
+        /// <param name="isNullable">New FK columns will be nullable, ff set to true.</param>
+        /// <returns>The list of newly created column declaration.</returns>
         public static List<SqlColumnDeclaration> AddForeignKey(this SqlTableDeclaration table, LazySqlTable lazyReferredTable, string columnNamePrefix = null, bool isNullable = false)
         {
             SqlTable referredTable;
@@ -50,9 +58,18 @@
             return columns;
         }
 
+        /// <summary>
+        /// Sets an existing column as an FK, pointing to the PK of <paramref name="referredTable"/>.
+        /// </summary>
+        /// <param name="column"></param>
+        /// <param name="referredTable"></param>
+        /// <returns></returns>
         public static SqlColumnDeclaration SetForeignKeyTo(this SqlColumnDeclaration column, LazySqlTable referredTable)
         {
             var pk = referredTable.SqlTable.Properties.OfType<PrimaryKey>().First();
+
+            if (pk == null || pk.SqlColumns.Count == 0)
+                throw new ArgumentException("Referred table must have a Primary Key.", nameof(referredTable));
 
             var fk = new ForeignKey(column.Table, pk, null);
             column.Table.Properties.Add(fk);
@@ -68,6 +85,16 @@
             return column;
         }
 
+        /// <summary>
+        /// Creates a new column which will be an FK pointing to <paramref name="pkColumn">.
+        /// The FK column properties (Type, IsNullable, Length, Precision) will be a copy of the <paramref name="pkColumn"/>.
+        /// </summary>
+        /// <param name="table">The table the column will be added to.</param>
+        /// <param name="columnName">Name of the FK column to create. If null, the naming strategy will determine the name of the newwly created column.</param>
+        /// <param name="pkColumn">The PK column the <paramref name="columnName"/> will point to.</param>
+        /// <param name="columnNamePrefix">Column prefix used with naming strategy.</param>
+        /// <param name="existingForeignKey">If the column is a part of a composite (multiple column) foreign key, provide the defined FK.</param>
+        /// <returns>The newly created column declaration.</returns>
         public static SqlColumnDeclaration AddForeignKey(this SqlTableDeclaration table, string columnName, SqlColumn pkColumn, string columnNamePrefix = null, ForeignKey existingForeignKey = null)
         {
             var fkColumn = pkColumn.CopyTo(new SqlColumnDeclaration());
