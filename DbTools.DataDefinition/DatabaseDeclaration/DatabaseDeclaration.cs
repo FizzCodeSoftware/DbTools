@@ -49,7 +49,14 @@
                 foreach (var lazyForeignKey in lazySqlTable.SqlTable.LazyForeignKeys())
                 {
                     lazySqlTable.SqlTable.Columns.Remove(lazyForeignKey.Name);
-                    lazySqlTable.SqlTable.AddForeignKey(lazyForeignKey.ReferredTable, lazyForeignKey.ColumnNamePrefix, lazyForeignKey.IsNullable);
+                    if (lazyForeignKey is SqlColumnLazyForeignKeyFromSet)
+                    {
+                        lazyForeignKey.SetForeignKeyTo(lazyForeignKey.ReferredTable, lazyForeignKey.IsNullable);
+                    }
+                    else
+                    {
+                        lazySqlTable.SqlTable.AddForeignKey(lazyForeignKey.ReferredTable, lazyForeignKey.ColumnNamePrefix, lazyForeignKey.IsNullable);
+                    }
                 }
             }
 

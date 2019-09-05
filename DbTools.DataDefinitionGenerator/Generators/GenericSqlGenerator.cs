@@ -228,9 +228,12 @@
             }
             else if (column.Length.HasValue)
             {
-                sb.Append("(")
-                    .Append(column.Length)
-                    .Append(")");
+                sb.Append("(");
+                if (column.Length == -1)
+                    sb.Append("MAX");
+                else
+                    sb.Append(column.Length);
+                sb.Append(")");
             }
 
             var identity = column.Properties.OfType<Identity>().FirstOrDefault();

@@ -78,6 +78,7 @@
     <Compile Include="DatabaseDeclaration\NamingStrategies\IndexNamingMsSqlDefaultStrategy.cs" />
     <Compile Include="DatabaseDeclaration\NamingStrategies\IPrimaryKeyNamingStrategy.cs" />
     <Compile Include="DatabaseDeclaration\NamingStrategies\PrimaryKeyNamingDefaultStrategy.cs" />
+    <Compile Include="DatabaseDeclaration\SqlColumnLazyForeignKeyFromSet.cs" />
     <Compile Include="DatabaseDeclaration\SqlTableDeclaration.cs" />
     <Compile Include="DatabaseDeclaration\LazySqlTableSuspectedCircularReferenceException.cs" />
     <Compile Include="DatabaseDeclaration\ForeignKeyHelper.cs" />

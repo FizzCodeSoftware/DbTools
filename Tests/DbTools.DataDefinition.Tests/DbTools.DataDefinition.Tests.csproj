@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Column\Properties\ForeignKeyTests.cs" />
+    <Compile Include="DatabaseDefinitionCircularFKWithSetFK.cs" />
     <Compile Include="DataBaseDescriptors\ForeignKeyCompositeTestsDb.cs" />
     <Compile Include="DatabaseDefinitionCircularFKDetectionTests.cs" />
     <Compile Include="DatabaseDefinitionTests.cs" />

@@ -59,14 +59,38 @@
         }
 
         /// <summary>
-        /// Sets an existing column as an FK, pointing to the PK of <paramref name="referredTable"/>.
+        /// Sets an existing column as an FK, pointing to the PK of <paramref name="lazyReferredTable"/>.
         /// </summary>
         /// <param name="column"></param>
-        /// <param name="referredTable"></param>
-        /// <returns></returns>
-        public static SqlColumnDeclaration SetForeignKeyTo(this SqlColumnDeclaration column, LazySqlTable referredTable)
+        /// <param name="lazyReferredTable"></param>
+        /// <param name="isNullable">New FK columns will be nullable, ff set to true.</param>
+        /// <returns>The original <paramref name="column"/>.</returns>
+        public static SqlColumnDeclaration SetForeignKeyTo(this SqlColumnDeclaration column, LazySqlTable lazyReferredTable, bool isNullable = false)
         {
-            var pk = referredTable.SqlTable.Properties.OfType<PrimaryKey>().First();
+            SqlTable referredTable;
+            try
+            {
+                try
+                {
+                    referredTable = lazyReferredTable.SqlTable;
+                }
+                catch (InvalidOperationException ex)
+                {
+                    throw new LazySqlTableSuspectedCircularReferenceException(ex);
+                }
+            }
+            catch (LazySqlTableSuspectedCircularReferenceException)
+            {
+                var lazyColumn = new SqlColumnLazyForeignKeyFromSet(column, lazyReferredTable, isNullable);
+                column.CopyTo(lazyColumn);
+                
+                // replace the already existing column
+                column.Table.Columns[column.Name] = lazyColumn;
+
+                return lazyColumn;
+            }
+
+            var pk = referredTable.Properties.OfType<PrimaryKey>().First();
 
             if (pk == null || pk.SqlColumns.Count == 0)
                 throw new ArgumentException("Referred table must have a Primary Key.", nameof(referredTable));
