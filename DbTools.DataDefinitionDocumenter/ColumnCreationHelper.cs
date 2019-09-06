@@ -11,6 +11,8 @@
         {
             var sb = new StringBuilder();
             sb.Append("\t\t\ttable.");
+
+            // TODO Type as ISqlTypeMapper
             sb.Append(GetColumnCreationMethod(column));
 
             if (column.IsNullable)
@@ -31,16 +33,28 @@
             var fkOnColumn = column.Table.Properties.OfType<ForeignKey>().FirstOrDefault(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn == column));
             if (fkOnColumn != null)
             {
-                if (fkOnColumn.ForeignKeyColumns.Count() == 1)
+                if (fkOnColumn.ForeignKeyColumns.Count == 1)
+                {
                     sb.Append(".SetForeignKeyTo(nameof(")
-                        // TODO spec name
-                        .Append(fkOnColumn.SqlTable.SchemaAndTableName.TableName)
-                        .Append("))");
+                       // TODO spec name
+                       .Append(fkOnColumn.SqlTable.SchemaAndTableName.TableName)
+                       .Append("))");
+                }
                 else
+                {
                     throw new NotImplementedException("Multiple FK columns");
+                }
             }
 
+            // TODO Default Value + config
+
             sb.Append(";");
+
+            var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
+            if (!string.IsNullOrEmpty(descriptionProperty?.Description))
+            {
+                sb.Append(" // ").Append(descriptionProperty.Description.Replace("\r", string.Empty).Replace("\n", string.Empty));
+            }
 
             return sb.ToString();
         }
@@ -67,8 +81,7 @@
                 case SqlType.NChar:
                     return $"AddNChar(\"{column.Name}\", {column.Length}";
                 case SqlType.Char:
-                    throw new NotImplementedException($"Implement SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
-
+                    return $"AddChar(\"{column.Name}\", {column.Length}";
                 case SqlType.Date:
                     return $"AddDate(\"{column.Name}\"";
 

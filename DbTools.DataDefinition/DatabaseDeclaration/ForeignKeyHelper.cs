@@ -25,6 +25,11 @@ namespace FizzCode.DbTools.DataDefinition
             return singleFkColumn;
         }
 
+        public static SqlTable AddForeignKey(this SqlTable table, string referredTableName, List<ForeignKeyGroup> map, bool isNullable = false, string prefix = null, string fkName = null)
+        {
+            return AddForeignKey(table, referredTableName, isNullable, prefix, fkName, map);
+        }
+
         public static SqlTable AddForeignKey(this SqlTable table, string referredTableName, bool isNullable = false, string prefix = null, string fkName = null, List<ForeignKeyGroup> map = null)
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);

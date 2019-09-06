@@ -11,6 +11,7 @@
     public class CsGenerator : DocumenterBase
     {
         private readonly string _namespace;
+
         public CsGenerator(Settings settings, string databaseName, string @namespace, ITableCustomizer tableCustomizer = null) : base(settings, databaseName, tableCustomizer)
         {
             _namespace = @namespace;
@@ -79,9 +80,6 @@
                 sb.AppendLine("\t\t// no primary key");
             }
 
-            // TODO
-            // - format schema and table name
-            // - configure use of default schema
             sb.Append("\t\tpublic static LazySqlTable ").Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString())).AppendLine(" = new LazySqlTable(() =>")
                 .AppendLine("\t\t{")
                 .AppendLine("\t\t\tvar table = new SqlTable();");
@@ -94,13 +92,6 @@
             {
                 var line = ColumnCreationHelper.GetColumnCreation(column);
                 sb.Append(line);
-
-                var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
-                if (!string.IsNullOrEmpty(descriptionProperty?.Description))
-                {
-                    sb.Append(" // ").Append(descriptionProperty.Description.Replace("\r", string.Empty).Replace("\n", string.Empty));
-                }
-
                 sb.AppendLine();
             }
 
@@ -109,77 +100,12 @@
 
             foreach (var column in regularColumns)
             {
-                // TODO Type as ISqlTypeMapper
-
                 var line = ColumnCreationHelper.GetColumnCreation(column);
                 sb.Append(line);
-
-                var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
-                if (!string.IsNullOrEmpty(descriptionProperty?.Description))
-                {
-                    sb.Append(" // ").Append(descriptionProperty.Description.Replace("\r", string.Empty).Replace("\n", string.Empty));
-                }
-
                 sb.AppendLine();
-                // DocumenterWriter.Write(table.Name, category, table.Name, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
-
-                /*if (isPk)
-                    DocumenterWriter.Write(table.Name, true);
-                else
-                    DocumenterWriter.Write(table.Name, "");
-
-                var identity = column.Value.Properties.OfType<Identity>().FirstOrDefault();
-
-                if(identity != null)
-                    DocumenterWriter.Write(table.Name, $"IDENTITY ({identity.Seed}, {identity.Increment})");
-                else
-                    DocumenterWriter.Write(table.Name, "");
-
-                var defaultValue = column.Value.Properties.OfType<DefaultValue>().FirstOrDefault();
-
-                if (defaultValue != null)
-                    DocumenterWriter.Write(table.Name, defaultValue);
-                else
-                    DocumenterWriter.Write(table.Name, "");
-
-                DocumenterWriter.WriteLine(table.Name, description.Trim());*/
-
             }
 
-            /*DocumenterWriter.WriteLine(table.Name);
-            DocumenterWriter.WriteLine(table.Name, "Foreign keys");
-
-            foreach (var fk in table.Properties.OfType<ForeignKey>())
-            {
-                DocumenterWriter.Write(table.Name, fk.Name);
-                foreach (var fkColumn in fk.ForeignKeyColumns)
-                    DocumenterWriter.Write(table.Name, fkColumn.ForeignKeyColumn.Name);
-
-                DocumenterWriter.Write(table.Name, "");
-                DocumenterWriter.Write(table.Name, fk.PrimaryKey.SqlTable.Name);
-                DocumenterWriter.Write(table.Name, "");
-
-                foreach (var fkColumn in fk.ForeignKeyColumns)
-                    DocumenterWriter.Write(table.Name, fkColumn.PrimaryKeyColumn.Name);
-            }
-
-            DocumenterWriter.WriteLine(table.Name);
-            DocumenterWriter.WriteLine(table.Name, "Indexes");
-
-            foreach (var index in table.Properties.OfType<Index>())
-            {
-                DocumenterWriter.Write(table.Name, index.Name);
-                foreach (var indexColumn in index.SqlColumns)
-                {
-                    DocumenterWriter.Write(table.Name, indexColumn.SqlColumn.Name);
-                    DocumenterWriter.Write(table.Name, indexColumn);
-                }
-
-                DocumenterWriter.Write(table.Name, "");
-                DocumenterWriter.Write(table.Name, "Includes:");
-                foreach (var includeColumn in index.Includes)
-                    DocumenterWriter.Write(table.Name, includeColumn.Name);
-            }*/
+            // TODO Indexes + config
 
             sb.AppendLine("\t\t\treturn table;");
             sb.AppendLine("\t\t});");
