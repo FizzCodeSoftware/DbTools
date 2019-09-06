@@ -28,6 +28,18 @@
                 sb.Append(".SetIdentity()");
             }
 
+            var fkOnColumn = column.Table.Properties.OfType<ForeignKey>().FirstOrDefault(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn == column));
+            if (fkOnColumn != null)
+            {
+                if (fkOnColumn.ForeignKeyColumns.Count() == 1)
+                    sb.Append(".SetForeignKeyTo(nameof(")
+                        // TODO spec name
+                        .Append(fkOnColumn.SqlTable.SchemaAndTableName.TableName)
+                        .Append("))");
+                else
+                    throw new NotImplementedException("Multiple FK columns");
+            }
+
             sb.Append(";");
 
             return sb.ToString();

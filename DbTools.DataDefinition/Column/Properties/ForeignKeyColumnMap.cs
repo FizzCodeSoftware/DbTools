@@ -7,27 +7,6 @@ namespace FizzCode.DbTools.DataDefinition
         public SqlColumn ForeignKeyColumn { get; }
 
         private SqlColumn _referredColumnCached;
-
-        public SqlColumn ReferredColumn
-        {
-            get
-            {
-                if (_referredColumnCached == null)
-                {
-                    _referredColumnCached = NewMethod();
-                }
-
-                return _referredColumnCached;
-            }
-        }
-
-        private SqlColumn NewMethod()
-        {
-            return !string.IsNullOrEmpty(ReferredColumnName)
-                                   ? _foreignKey.ReferredTable.Columns[ReferredColumnName]
-                                   : _foreignKey.ReferredTable.Properties.OfType<PrimaryKey>().FirstOrDefault()?.SqlColumns.FirstOrDefault()?.SqlColumn;
-        }
-
         public string ReferredColumnName { get; }
 
         private readonly ForeignKey _foreignKey;
@@ -37,6 +16,26 @@ namespace FizzCode.DbTools.DataDefinition
             _foreignKey = foreignKey;
             ForeignKeyColumn = foreignKeyColumn;
             ReferredColumnName = referredColumnName;
+        }
+
+        public SqlColumn ReferredColumn
+        {
+            get
+            {
+                if (_referredColumnCached == null)
+                {
+                    _referredColumnCached = GetReferredColumn();
+                }
+
+                return _referredColumnCached;
+            }
+        }
+
+        private SqlColumn GetReferredColumn()
+        {
+            return !string.IsNullOrEmpty(ReferredColumnName)
+                                   ? _foreignKey.ReferredTable.Columns[ReferredColumnName]
+                                   : _foreignKey.ReferredTable.Properties.OfType<PrimaryKey>().FirstOrDefault()?.SqlColumns.FirstOrDefault()?.SqlColumn;
         }
     }
 }

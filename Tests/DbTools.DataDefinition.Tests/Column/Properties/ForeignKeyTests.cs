@@ -28,7 +28,7 @@
         [TestMethod]
         public void ToStringTestForeignKeyCompositeTestsDb()
         {
-            var dd = new ForeignKeyCompositeTestsDb();
+            var dd = new TestDataBaseForeignKeyComposite();
 
             var topOrdersPerCompany = dd.GetTable("TopOrdersPerCompany");
             var fks = topOrdersPerCompany.Properties.OfType<ForeignKey>().ToList();
@@ -44,7 +44,7 @@
         [TestMethod]
         public void CheckCompositeFks()
         {
-            var tables = new ForeignKeyCompositeTestsDb().GetTables();
+            var tables = new TestDataBaseForeignKeyComposite().GetTables();
             Assert.AreEqual(4, tables.Count);
 
             var topOrdersPerCompany = tables.First(t => t.SchemaAndTableName.TableName == "TopOrdersPerCompany");

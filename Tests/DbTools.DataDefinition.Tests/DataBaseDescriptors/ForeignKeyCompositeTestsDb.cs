@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using FizzCode.DbTools.DataDefinition;
 
-    public class ForeignKeyCompositeTestsDb : DatabaseDeclaration
+    public class TestDataBaseForeignKeyComposite : DatabaseDeclaration
     {
         public static LazySqlTable OrderHeader = new LazySqlTable(() =>
         {

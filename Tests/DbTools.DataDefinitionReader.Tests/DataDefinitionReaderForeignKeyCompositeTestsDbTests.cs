@@ -13,7 +13,7 @@
         [SqlDialects]
         public void CreateTables(SqlDialect sqlDialect)
         {
-            var dd = new ForeignKeyCompositeTestsDb();
+            var dd = new TestDataBaseForeignKeyComposite();
             _sqlExecuterTestAdapter.InitializeAndCheck(sqlDialect, dd);
 
             var creator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
