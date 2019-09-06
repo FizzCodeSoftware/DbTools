@@ -4,11 +4,14 @@ namespace FizzCode.DbTools.DataDefinition
 {
     public static class ForeignKeyHelper
     {
+        // TODO should throw if PK is multi column
+
         /// <summary>
-        /// Sets an existing column as an FK, pointing to the PK of <paramref name="lazyReferredTable"/>.
+        /// Sets an existing column as an FK, pointing to the PK of <paramref name="referredTableName"/>.
         /// </summary>
         /// <param name="singleFkColumn"></param>
-        /// <param name="lazyReferredTable"></param>
+        /// <param name="referredTableName"></param>
+        /// <param name="fkName"></param>
         /// <returns>The original <paramref name="singleFkColumn"/>.</returns>
         public static SqlColumn SetForeignKeyTo(this SqlColumn singleFkColumn, string referredTableName, string fkName = null)
         {
@@ -26,7 +29,7 @@ namespace FizzCode.DbTools.DataDefinition
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
 
-            var fk = new ForeignKeyToPrimaryKey(table, referredTableNameWithSchema, isNullable, prefix, fkName, map);
+            var fk = new ForeignKeyRegistrationToReferredTable(table, referredTableNameWithSchema, isNullable, prefix, fkName, map);
             table.Properties.Add(fk);
 
             return table;

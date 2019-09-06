@@ -18,18 +18,7 @@ namespace FizzCode.DbTools.DataDefinition
             ReferredColumnName = referredColumnName;
         }
 
-        public SqlColumn ReferredColumn
-        {
-            get
-            {
-                if (_referredColumnCached == null)
-                {
-                    _referredColumnCached = GetReferredColumn();
-                }
-
-                return _referredColumnCached;
-            }
-        }
+        public SqlColumn ReferredColumn => _referredColumnCached ?? (_referredColumnCached = GetReferredColumn());
 
         private SqlColumn GetReferredColumn()
         {

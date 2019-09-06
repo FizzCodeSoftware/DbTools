@@ -34,8 +34,8 @@
             var fk1Cfks = db.GetTable("FK1").Properties.OfType<CircularFK>().ToList();
             var fk2Cfks = db.GetTable("FK2").Properties.OfType<CircularFK>().ToList();
 
-            Assert.AreEqual(1, fk1Cfks.Count());
-            Assert.AreEqual(1, fk2Cfks.Count());
+            Assert.AreEqual(1, fk1Cfks.Count);
+            Assert.AreEqual(1, fk2Cfks.Count);
         }
     }
 }

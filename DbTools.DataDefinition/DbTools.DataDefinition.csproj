@@ -59,7 +59,7 @@
   <ItemGroup>
     <Compile Include="Column\Properties\DefaultValue.cs" />
     <Compile Include="Column\Properties\ForeignKeyGroup.cs" />
-    <Compile Include="Column\Properties\ForeignKeyToPrimaryKey.cs" />
+    <Compile Include="Column\Properties\ForeignKeyRegistrationToReferredTable.cs" />
     <Compile Include="DatabaseDeclaration\DefaultValueHelper.cs" />
     <Compile Include="DatabaseDeclaration\DescriptionHelper.cs" />
     <Compile Include="Column\Properties\SqlColumnDescription.cs" />

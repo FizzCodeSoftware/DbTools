@@ -9,31 +9,29 @@
         public NamingStrategiesDictionary NamingStrategies { get; }
         public const char SchemaTableNameSeparator = 'ꜗ';
 
-        public DatabaseDeclaration()
+        public DatabaseDeclaration() : this(new NamingStrategiesDictionary())
         {
             NamingStrategies = new NamingStrategiesDictionary();
+        }
 
+        public DatabaseDeclaration(params INamingStrategy[] namingStrategies) : this(new NamingStrategiesDictionary(namingStrategies))
+        {
+        }
+
+        protected DatabaseDeclaration(NamingStrategiesDictionary namingStrategies)
+        {
             AddDeclaredTables();
+            CreateRegisteredForeignKeys();
             AddAutoNaming();
         }
 
-        public DatabaseDeclaration(params INamingStrategy[] namingStrategies)
+        private void CreateRegisteredForeignKeys()
         {
-            NamingStrategies = new NamingStrategiesDictionary(namingStrategies);
-
-            AddDeclaredTables();
-            AddAutoNaming();
-        }
-
-        private void AddAutoNaming()
-        {
-            var pkNaming = NamingStrategies.GetNamingStrategy<IPrimaryKeyNamingStrategy>();
-            var indexNaming = NamingStrategies.GetNamingStrategy<IIndexNamingStrategy>();
             var fkNaming = NamingStrategies.GetNamingStrategy<IForeignKeyNamingStrategy>();
 
             foreach (var sqlTable in Tables)
             {
-                var properties = sqlTable.Properties.OfType<ForeignKeyToPrimaryKey>().ToList();
+                var properties = sqlTable.Properties.OfType<ForeignKeyRegistrationToReferredTable>().ToList();
                 foreach (var pkfk in properties)
                 {
                     var referredTable = pkfk.ReferredTable;
@@ -72,6 +70,13 @@
                     }
                 }
             }
+        }
+
+        private void AddAutoNaming()
+        {
+            var pkNaming = NamingStrategies.GetNamingStrategy<IPrimaryKeyNamingStrategy>();
+            var indexNaming = NamingStrategies.GetNamingStrategy<IIndexNamingStrategy>();
+            var fkNaming = NamingStrategies.GetNamingStrategy<IForeignKeyNamingStrategy>();
 
             foreach (var sqlTable in Tables)
             {
