@@ -5,40 +5,18 @@
 
     public class DatabaseDefinition
     {
-        private Tables _tables = new Tables();
-
-        internal Tables Tables
-        {
-            get
-            {
-                return _tables;
-            }
-            set
-            {
-                _isDirty = true;
-                _tables = value;
-                Initialize();
-            }
-        }
-
-        private bool _isDirty;
+        internal Tables Tables { get; } = new Tables();
 
         public void AddTable(SqlTable sqlTable)
         {
-            _isDirty = true;
+            sqlTable.DatabaseDefinition = this;
+
             Tables.Add(sqlTable);
         }
 
         public virtual List<SqlTable> GetTables()
         {
-            Initialize();
             return Tables.ToList();
-        }
-
-        private void Initialize()
-        {
-            if (_isDirty)
-                CircularFKDetector.DectectCircularFKs(Tables.ToList());
         }
 
         public SqlTable GetTable(SchemaAndTableName schemaAndTableName)

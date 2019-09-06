@@ -3,7 +3,6 @@
     public interface IForeignKeyNamingStrategy : INamingStrategy
     {
         void SetFKName(ForeignKey fk);
-
-        void SetFKColumnsNames(ForeignKey fk, string prefix);
+        string GetFkToPkColumnName(SqlColumn referredColumn, string prefix);
     }
 }

@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -34,12 +33,12 @@
             visitedFks.Add(fk);
             visitedTables.Add(fk.SqlTable);
 
-            if (visitedTables.Contains(fk.PrimaryKey.SqlTable))
+            if (visitedTables.Contains(fk.ReferredTable))
             {
                 return true;
             }
 
-            var nextFKs = fk.PrimaryKey.SqlTable.Properties.OfType<ForeignKey>().ToList();
+            var nextFKs = fk.ReferredTable.Properties.OfType<ForeignKey>().ToList();
 
             foreach (var nextFk in nextFKs)
             {

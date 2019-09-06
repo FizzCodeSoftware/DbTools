@@ -56,7 +56,7 @@ WHERE type = 'U'");
             {
                 new MsSqlPrimaryKeyReader(_executer).
                 GetPrimaryKey(sqlTable);
-                new MsSqlForeignKeyReader(_executer).GetForeignKeys(sqlTable, null);
+                new MsSqlForeignKeyReader(_executer).GetForeignKeys(sqlTable);
                 AddTableDocumentation(sqlTable);
             }
 

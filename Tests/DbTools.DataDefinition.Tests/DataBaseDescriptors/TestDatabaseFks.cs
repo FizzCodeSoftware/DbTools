@@ -6,28 +6,28 @@
     {
         public static LazySqlTable Child = new LazySqlTable(() =>
         {
-            var company = new SqlTableDeclaration();
-            company.AddInt32("Id").SetPK().SetIdentity();
-            company.AddNVarChar("Name", 100);
-            company.AddForeignKey(Parent);
-            return company;
+            var table = new SqlTable();
+            table.AddInt32("Id").SetPK().SetIdentity();
+            table.AddNVarChar("Name", 100);
+            table.AddForeignKey(nameof(Parent));
+            return table;
         });
 
         public static LazySqlTable ChildChild = new LazySqlTable(() =>
         {
-            var company = new SqlTableDeclaration();
-            company.AddInt32("Id").SetPK().SetIdentity();
-            company.AddNVarChar("Name", 100);
-            company.AddForeignKey(Child);
-            return company;
+            var table = new SqlTable();
+            table.AddInt32("Id").SetPK().SetIdentity();
+            table.AddNVarChar("Name", 100);
+            table.AddForeignKey(nameof(Child));
+            return table;
         });
 
         public static LazySqlTable Parent = new LazySqlTable(() =>
         {
-            var company = new SqlTableDeclaration();
-            company.AddInt32("Id").SetPK().SetIdentity();
-            company.AddNVarChar("Name", 100);
-            return company;
+            var table = new SqlTable();
+            table.AddInt32("Id").SetPK().SetIdentity();
+            table.AddNVarChar("Name", 100);
+            return table;
         });
     }
 }

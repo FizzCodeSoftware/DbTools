@@ -6,27 +6,27 @@
     {
         public static LazySqlTable A = new LazySqlTable(() =>
         {
-            var table = new SqlTableDeclaration();
+            var table = new SqlTable();
             table.AddInt32("Id").SetPK().SetIdentity();
-            table.AddForeignKey(B);
+            table.AddForeignKey(nameof(B));
             table.AddNVarChar("Name", 100);
             return table;
         });
 
         public static LazySqlTable B = new LazySqlTable(() =>
         {
-            var table = new SqlTableDeclaration();
+            var table = new SqlTable();
             table.AddInt32("Id").SetPK().SetIdentity();
-            table.AddForeignKey(C);
+            table.AddForeignKey(nameof(C));
             table.AddNVarChar("Name", 100);
             return table;
         });
 
         public static LazySqlTable C = new LazySqlTable(() =>
         {
-            var table = new SqlTableDeclaration();
+            var table = new SqlTable();
             table.AddInt32("Id").SetPK().SetIdentity();
-            table.AddForeignKey(A);
+            table.AddForeignKey(nameof(A));
             table.AddNVarChar("Name", 100);
             return table;
         });

@@ -180,9 +180,9 @@
                 .Append(string.Join(", \r\n", fk.ForeignKeyColumns.Select(fkc => $"{GuardKeywords(fkc.ForeignKeyColumn.Name)}")))
                 .Append(")")
                 .Append(" REFERENCES ")
-                .Append(GetSimplifiedSchemaAndTableName(fk.PrimaryKey.SqlTable.SchemaAndTableName))
+                .Append(GetSimplifiedSchemaAndTableName(fk.ReferredTable.SchemaAndTableName))
                 .Append(" (")
-                .Append(string.Join(", \r\n", fk.ForeignKeyColumns.Select(pkc => $"{GuardKeywords(pkc.PrimaryKeyColumn.Name)}")))
+                .Append(string.Join(", \r\n", fk.ForeignKeyColumns.Select(pkc => $"{GuardKeywords(pkc.ReferredColumn.Name)}")))
                 .Append(")");
 
             return sb.ToString();
@@ -292,7 +292,7 @@ SELECT
         ELSE 0
     END", table.SchemaAndTableName.Schema);
         }
-         
+
         public string TableNotEmpty(SqlTable table)
         {
             return $"SELECT COUNT(*) FROM (SELECT TOP 1 * FROM {GetSimplifiedSchemaAndTableName(table.SchemaAndTableName)}) t";

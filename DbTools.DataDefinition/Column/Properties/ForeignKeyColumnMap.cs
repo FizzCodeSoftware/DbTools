@@ -1,14 +1,42 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿using System.Linq;
+
+namespace FizzCode.DbTools.DataDefinition
 {
     public class ForeignKeyColumnMap
     {
         public SqlColumn ForeignKeyColumn { get; }
-        public SqlColumn PrimaryKeyColumn { get; }
 
-        public ForeignKeyColumnMap(SqlColumn foreignKeyColumn, SqlColumn primaryKeyColumn)
+        private SqlColumn _referredColumnCached;
+
+        public SqlColumn ReferredColumn
         {
+            get
+            {
+                if (_referredColumnCached == null)
+                {
+                    _referredColumnCached = NewMethod();
+                }
+
+                return _referredColumnCached;
+            }
+        }
+
+        private SqlColumn NewMethod()
+        {
+            return !string.IsNullOrEmpty(ReferredColumnName)
+                                   ? _foreignKey.ReferredTable.Columns[ReferredColumnName]
+                                   : _foreignKey.ReferredTable.Properties.OfType<PrimaryKey>().FirstOrDefault()?.SqlColumns.FirstOrDefault()?.SqlColumn;
+        }
+
+        public string ReferredColumnName { get; }
+
+        private readonly ForeignKey _foreignKey;
+
+        public ForeignKeyColumnMap(ForeignKey foreignKey, SqlColumn foreignKeyColumn, string referredColumnName)
+        {
+            _foreignKey = foreignKey;
             ForeignKeyColumn = foreignKeyColumn;
-            PrimaryKeyColumn = primaryKeyColumn;
+            ReferredColumnName = referredColumnName;
         }
     }
 }

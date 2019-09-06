@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Tests
 {
-    using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.DataDefinition;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,17 +8,17 @@
     {
         public static LazySqlTable FK1 = new LazySqlTable(() =>
         {
-            var table = new SqlTableDeclaration();
+            var table = new SqlTable();
             table.AddInt32("FK1Id").SetPK().SetIdentity();
-            table.AddInt32("FK2Id").SetForeignKeyTo(FK2);
+            table.AddForeignKey(nameof(FK2));
             return table;
         });
 
         public static LazySqlTable FK2 = new LazySqlTable(() =>
         {
-            var table = new SqlTableDeclaration();
+            var table = new SqlTable();
             table.AddInt32("FK2Id").SetPK().SetIdentity();
-            table.AddInt32("FK1Id").SetForeignKeyTo(FK1);
+            table.AddForeignKey(nameof(FK1));
             return table;
         });
     }

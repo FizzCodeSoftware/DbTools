@@ -6,10 +6,10 @@
     {
         public override void SetFKName(ForeignKey fk)
         {
-            if (fk.SqlTable.SchemaAndTableName == null || fk.PrimaryKey.SqlTable.SchemaAndTableName == null)
+            if (fk.SqlTable.SchemaAndTableName == null || fk.ReferredTable.SchemaAndTableName == null)
                 return;
 
-            var fkName = $"{fk.SqlTable.SchemaAndTableName}{fk.PrimaryKey.SqlTable.SchemaAndTableName}";
+            var fkName = $"{fk.SqlTable.SchemaAndTableName}{fk.ReferredTable.SchemaAndTableName}";
 
             var sameNameFks = fk.SqlTable.Properties.OfType<ForeignKey>().Where(fk1 =>
                 fk1 != fk

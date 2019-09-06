@@ -9,7 +9,16 @@
 
         public SchemaAndTableName(string tableName)
         {
-            TableName = tableName;
+            if (tableName.IndexOf(DatabaseDeclaration.SchemaTableNameSeparator) == -1)
+            {
+                TableName = tableName;
+            }
+            else
+            {
+                var parts = tableName.Split(DatabaseDeclaration.SchemaTableNameSeparator);
+                Schema = parts[0];
+                TableName = parts[1];
+            }
         }
 
         public SchemaAndTableName(string schema, string tableName)

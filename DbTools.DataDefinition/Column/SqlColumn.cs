@@ -30,5 +30,18 @@
             column.Precision = Precision;
             return column;
         }
+
+        public SqlColumn SetPK()
+        {
+            Table.SetPK(this);
+            return this;
+        }
+
+        public SqlColumn SetIdentity()
+        {
+            Properties.Add(new Identity(this));
+            return this;
+        }
+
     }
 }

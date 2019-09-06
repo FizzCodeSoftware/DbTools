@@ -12,27 +12,15 @@
             fk.Name = $"FK_{fk.SqlTable.SchemaAndTableName}__{string.Join("__", fk.ForeignKeyColumns.Select(y => y.ForeignKeyColumn.Name))}";
         }
 
-        public virtual void SetFKColumnsNames(ForeignKey fk, string prefix)
+        public virtual string GetFkToPkColumnName(SqlColumn referredColumn, string prefix)
         {
-            foreach (var fkColumn in fk.ForeignKeyColumns)
+            if (prefix != null)
             {
-                string columnName;
-                if (prefix != null)
-                {
-                    if (fkColumn.PrimaryKeyColumn.Name == null)
-                        return;
-
-                    columnName = $"{prefix}{fkColumn.PrimaryKeyColumn.Name}";
-                }
-                else
-                {
-                    if (fk.PrimaryKey.SqlTable.SchemaAndTableName == null || fkColumn.PrimaryKeyColumn.Name == null)
-                        return;
-
-                    columnName = $"{fk.PrimaryKey.SqlTable.SchemaAndTableName}{fkColumn.PrimaryKeyColumn.Name}";
-                }
-
-                fkColumn.ForeignKeyColumn.Name = columnName;
+                return $"{prefix}{referredColumn.Name}";
+            }
+            else
+            {
+                return $"{referredColumn.Table.SchemaAndTableName}{referredColumn.Name}";
             }
         }
     }

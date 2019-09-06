@@ -4,7 +4,12 @@
 
     public class SqlTable
     {
-        public SchemaAndTableName SchemaAndTableName { get; protected set; }
+        public DatabaseDefinition DatabaseDefinition { get; set; }
+        public SchemaAndTableName SchemaAndTableName { get; set; }
+
+        public SqlTable()
+        {
+        }
 
         public SqlTable(string schema, string name)
         {

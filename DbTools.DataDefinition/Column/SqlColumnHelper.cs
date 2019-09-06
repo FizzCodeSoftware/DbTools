@@ -56,5 +56,77 @@
             table.Columns.Add(name, column);
             return column;
         }
+
+        public static SqlColumn AddVarChar(this SqlTable table, string name, int? length, bool isNullable = false)
+        {
+            var column = new SqlColumn { Type = SqlType.Varchar, Name = name, Length = length, IsNullable = isNullable };
+            column.Table = table;
+            table.Columns.Add(name, column);
+            return column;
+        }
+
+        public static SqlColumn AddChar(this SqlTable table, string name, int? length, bool isNullable = false)
+        {
+            var column = new SqlColumn { Type = SqlType.Char, Name = name, Length = length, IsNullable = isNullable };
+            column.Table = table;
+            table.Columns.Add(name, column);
+            return column;
+        }
+
+        public static SqlColumn AddBoolean(this SqlTable table, string name, bool isNullable = false)
+        {
+            var column = new SqlColumn { Type = SqlType.Boolean, Name = name, IsNullable = isNullable };
+            column.Table = table;
+            table.Columns.Add(name, column);
+            return column;
+        }
+
+        public static SqlColumn AddByte(this SqlTable table, string name, bool isNullable = false)
+        {
+            var column = new SqlColumn { Type = SqlType.Byte, Name = name, IsNullable = isNullable };
+            column.Table = table;
+            table.Columns.Add(name, column);
+            return column;
+        }
+
+        public static SqlColumn AddInt64(this SqlTable table, string name, bool isNullable = false)
+        {
+            var column = new SqlColumn { Type = SqlType.Int64, Name = name, IsNullable = isNullable };
+            column.Table = table;
+            table.Columns.Add(name, column);
+            return column;
+        }
+
+        public static SqlColumn AddDateTimeOffset(this SqlTable table, string name, int precision, bool isNullable = false)
+        {
+            var column = new SqlColumn { Type = SqlType.DateTimeOffset, Name = name, Precision = precision, IsNullable = isNullable };
+            column.Table = table;
+            table.Columns.Add(name, column);
+            return column;
+        }
+
+        public static SqlColumn AddDouble(this SqlTable table, string name, int? precision, bool isNullable = false)
+        {
+            var column = new SqlColumn { Type = SqlType.Double, Name = name, Precision = precision, IsNullable = isNullable };
+            column.Table = table;
+            table.Columns.Add(name, column);
+            return column;
+        }
+
+        public static SqlColumn AddImage(this SqlTable table, string name, bool isNullable = false)
+        {
+            var column = new SqlColumn { Type = SqlType.Image, Name = name, IsNullable = isNullable };
+            column.Table = table;
+            table.Columns.Add(name, column);
+            return column;
+        }
+
+        public static SqlColumn AddGuid(this SqlTable table, string name, bool isNullable = false)
+        {
+            var column = new SqlColumn { Type = SqlType.Guid, Name = name, IsNullable = isNullable };
+            column.Table = table;
+            table.Columns.Add(name, column);
+            return column;
+        }
     }
 }

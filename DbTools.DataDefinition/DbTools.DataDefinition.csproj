@@ -58,18 +58,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Column\Properties\DefaultValue.cs" />
-    <Compile Include="DatabaseDeclaration\DelayedNamingTask\DelayedNamingIndex.cs" />
-    <Compile Include="DatabaseDeclaration\DelayedNamingTask\DelayedNamingForeignKey.cs" />
-    <Compile Include="DatabaseDeclaration\DelayedNamingTask\DelayedNamingForeignKeyColumn.cs" />
-    <Compile Include="DatabaseDeclaration\DelayedNamingTask\DelayedNamingPrimaryKey.cs" />
-    <Compile Include="DatabaseDeclaration\DelayedNamingTask\DelayedNamingTask.cs" />
+    <Compile Include="Column\Properties\ForeignKeyGroup.cs" />
+    <Compile Include="Column\Properties\ForeignKeyToPrimaryKey.cs" />
     <Compile Include="DatabaseDeclaration\DefaultValueHelper.cs" />
     <Compile Include="DatabaseDeclaration\DescriptionHelper.cs" />
     <Compile Include="Column\Properties\SqlColumnDescription.cs" />
     <Compile Include="Column\Properties\SqlTableDescription.cs" />
+    <Compile Include="DatabaseDeclaration\LazySqlTable.cs" />
     <Compile Include="DatabaseDeclaration\NamingStrategiesDictionary.cs" />
-    <Compile Include="DatabaseDeclaration\SqlColumnDeclarationHelper.cs" />
-    <Compile Include="DatabaseDeclaration\SqlColumnDeclaration.cs" />
     <Compile Include="DatabaseDeclaration\NamingStrategies\ForeignKeyNamingDefaultStrategy.cs" />
     <Compile Include="DatabaseDeclaration\NamingStrategies\ForeignKeyNamingMsSqlDefaultStrategy.cs" />
     <Compile Include="DatabaseDeclaration\NamingStrategies\IForeignKeyNamingStrategy.cs" />
@@ -78,21 +74,17 @@
     <Compile Include="DatabaseDeclaration\NamingStrategies\IndexNamingMsSqlDefaultStrategy.cs" />
     <Compile Include="DatabaseDeclaration\NamingStrategies\IPrimaryKeyNamingStrategy.cs" />
     <Compile Include="DatabaseDeclaration\NamingStrategies\PrimaryKeyNamingDefaultStrategy.cs" />
-    <Compile Include="DatabaseDeclaration\SqlColumnLazyForeignKeyFromSet.cs" />
-    <Compile Include="DatabaseDeclaration\SqlTableDeclaration.cs" />
-    <Compile Include="DatabaseDeclaration\LazySqlTableSuspectedCircularReferenceException.cs" />
     <Compile Include="DatabaseDeclaration\ForeignKeyHelper.cs" />
     <Compile Include="SchemaAndTableName.cs" />
     <Compile Include="SqlDialectHelper.cs" />
+    <Compile Include="Table\CircularFKDetector.cs" />
     <Compile Include="Table\Tables.cs" />
     <Compile Include="Table\TableSorter.cs" />
-    <Compile Include="Table\CircularFKDetector.cs" />
     <Compile Include="Column\Properties\AscDesc.cs" />
     <Compile Include="Column\Properties\CircularFK.cs" />
     <Compile Include="Column\Properties\ColumnAndOrder.cs" />
     <Compile Include="Column\Properties\ForeignKey.cs" />
     <Compile Include="Column\Properties\ForeignKeyColumnMap.cs" />
-    <Compile Include="Column\Properties\ForeignKeyGroup.cs" />
     <Compile Include="Column\Properties\Identity.cs" />
     <Compile Include="Column\Properties\Index.cs" />
     <Compile Include="Column\Properties\IndexBase.cs" />
@@ -104,10 +96,8 @@
     <Compile Include="Column\Properties\SqlTableProperty.cs" />
     <Compile Include="Column\SqlColumn.cs" />
     <Compile Include="Column\SqlColumnHelper.cs" />
-    <Compile Include="DatabaseDeclaration\SqlColumnLazyForeignKey.cs" />
     <Compile Include="DatabaseDeclaration\DatabaseDeclaration.cs" />
     <Compile Include="DatabaseDefinition.cs" />
-    <Compile Include="DatabaseDeclaration\LazySqlTable.cs" />
     <Compile Include="..\Global\AssemblyInfo.Global.cs">
       <Link>Properties\AssemblyInfo.Global.cs</Link>
     </Compile>

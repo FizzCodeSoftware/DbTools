@@ -4,22 +4,12 @@
 
     public static class PrimaryKeyHelper
     {
-        public static void SetPK(this SqlTableDeclaration table, SqlColumnDeclaration column, AscDesc order = AscDesc.Asc, string name = null)
+        public static void SetPK(this SqlTable table, SqlColumn column, AscDesc order = AscDesc.Asc, string name = null)
         {
             var pk = table.Properties.OfType<PrimaryKey>().FirstOrDefault();
             if (pk == null)
             {
-                pk = new PrimaryKey((SqlTable)table, name);
-
-                if (name == null)
-                {
-                    var pkNaming = table.DatabaseDeclaration?.NamingStrategies.GetNamingStrategy<IPrimaryKeyNamingStrategy>();
-                    pkNaming?.SetPrimaryKeyName(pk);
-                }
-
-                if(pk.Name == null)
-                    table.DelayedNamingTasks.Add(new DelayedNamingPrimaryKey(pk));
-
+                pk = new PrimaryKey(table, name);
                 table.Properties.Add(pk);
             }
 

@@ -30,7 +30,7 @@
 
             foreach (var sqlTable in sqlTables)
             {
-                var parents = sqlTable.Properties.OfType<ForeignKey>().Select(fk => fk.PrimaryKey.SqlTable).Distinct().ToList();
+                var parents = sqlTable.Properties.OfType<ForeignKey>().Select(fk => fk.ReferredTable).Distinct().ToList();
 
                 sqlTableDependencies.Add(new SqlTableDependency() { SqlTable = sqlTable, Parents = parents });
             }

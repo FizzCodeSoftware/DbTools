@@ -6,11 +6,11 @@
     {
         public static LazySqlTable Company = new LazySqlTable(() =>
         {
-            var company = new SqlTableDeclaration();
-            company.AddInt32("Id").SetPK().SetIdentity();
-            company.AddForeignKey(Company, "Parent");
-            company.AddNVarChar("Name", 100);
-            return company;
+            var table = new SqlTable();
+            table.AddInt32("Id").SetPK().SetIdentity();
+            table.AddForeignKey(nameof(Company), false, null, "Parent");
+            table.AddNVarChar("Name", 100);
+            return table;
         });
     }
 }

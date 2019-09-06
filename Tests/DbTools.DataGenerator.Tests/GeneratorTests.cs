@@ -54,7 +54,7 @@
     {
         public static LazySqlTable Table = new LazySqlTable(() =>
         {
-            var table = new SqlTableDeclaration();
+            var table = new SqlTable();
             table.AddInt32("Number");
             table.AddNVarChar("Text", 10);
             return table;
@@ -65,7 +65,7 @@
     {
         public static LazySqlTable Table = new LazySqlTable(() =>
         {
-            var table = new SqlTableDeclaration();
+            var table = new SqlTable();
             table.AddDate("Date");
             table.AddDateTime("DateTime");
             return table;
@@ -76,7 +76,7 @@
     {
         public static LazySqlTable Table = new LazySqlTable(() =>
         {
-            var table = new SqlTableDeclaration();
+            var table = new SqlTable();
             table.AddNVarChar("Name", 200).AddDataGenerator(new GeneratorName());
             return table;
         });
@@ -84,7 +84,7 @@
 
     public static class GeneratorHelper
     {
-        public static SqlColumnDeclaration AddDataGenerator(this SqlColumnDeclaration column, GeneratorBase generator)
+        public static SqlColumn AddDataGenerator(this SqlColumn column, GeneratorBase generator)
         {
             column.Properties.Add(new SqlColumnDataGenerator(column, generator));
             return column;

@@ -10,25 +10,25 @@ namespace FizzCode.DbTools.DataDefinition.Tests
     {
         public static LazySqlTable Start = new LazySqlTable(() =>
         {
-            var table = new SqlTableDeclaration();
+            var table = new SqlTable();
             table.AddInt32("StartId").SetPK().SetIdentity();
-            table.AddForeignKey(FK1);
+            table.AddForeignKey(nameof(FK1));
             return table;
         });
 
         public static LazySqlTable FK1 = new LazySqlTable(() =>
         {
-            var table = new SqlTableDeclaration();
+            var table = new SqlTable();
             table.AddInt32("FK1Id").SetPK().SetIdentity();
-            table.AddForeignKey(FK2);
+            table.AddForeignKey(nameof(FK2));
             return table;
         });
 
         public static LazySqlTable FK2 = new LazySqlTable(() =>
         {
-            var table = new SqlTableDeclaration();
+            var table = new SqlTable();
             table.AddInt32("FK2Id").SetPK().SetIdentity();
-            table.AddForeignKey(FK1);
+            table.AddForeignKey(nameof(FK1));
             return table;
         });
     }
@@ -37,42 +37,42 @@ namespace FizzCode.DbTools.DataDefinition.Tests
     {
         public static LazySqlTable Start = new LazySqlTable(() =>
         {
-            var table = new SqlTableDeclaration();
+            var table = new SqlTable();
             table.AddInt32("StartId").SetPK().SetIdentity();
-            table.AddForeignKey(FKA1);
-            table.AddForeignKey(FKB1);
+            table.AddForeignKey(nameof(FKA1));
+            table.AddForeignKey(nameof(FKB1));
             return table;
         });
 
         public static LazySqlTable FKA1 = new LazySqlTable(() =>
         {
-            var table = new SqlTableDeclaration();
+            var table = new SqlTable();
             table.AddInt32("FKA1Id").SetPK().SetIdentity();
-            table.AddForeignKey(FKA2);
+            table.AddForeignKey(nameof(FKA2));
             return table;
         });
 
         public static LazySqlTable FKA2 = new LazySqlTable(() =>
         {
-            var table = new SqlTableDeclaration();
+            var table = new SqlTable();
             table.AddInt32("FKA2Id").SetPK().SetIdentity();
-            table.AddForeignKey(FKA1);
+            table.AddForeignKey(nameof(FKA1));
             return table;
         });
 
         public static LazySqlTable FKB1 = new LazySqlTable(() =>
         {
-            var table = new SqlTableDeclaration();
+            var table = new SqlTable();
             table.AddInt32("FKB1Id").SetPK().SetIdentity();
-            table.AddForeignKey(FKB2);
+            table.AddForeignKey(nameof(FKB2));
             return table;
         });
 
         public static LazySqlTable FKB2 = new LazySqlTable(() =>
         {
-            var table = new SqlTableDeclaration();
+            var table = new SqlTable();
             table.AddInt32("FKB2Id").SetPK().SetIdentity();
-            table.AddForeignKey(FKB1);
+            table.AddForeignKey(nameof(FKB1));
             return table;
         });
     }
@@ -206,16 +206,16 @@ namespace FizzCode.DbTools.DataDefinition.Tests
             Assert.AreEqual(2, bCFK.ForeignKeyChain.Count);
 
             Assert.AreEqual("A", aCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName.TableName);
-            Assert.AreEqual("B", aCFK.ForeignKeyChain.First().PrimaryKey.SqlTable.SchemaAndTableName.TableName);
+            Assert.AreEqual("B", aCFK.ForeignKeyChain.First().ReferredTable.SchemaAndTableName.TableName);
 
             Assert.AreEqual("B", aCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName.TableName);
-            Assert.AreEqual("A", aCFK.ForeignKeyChain.Last().PrimaryKey.SqlTable.SchemaAndTableName.TableName);
+            Assert.AreEqual("A", aCFK.ForeignKeyChain.Last().ReferredTable.SchemaAndTableName.TableName);
 
             Assert.AreEqual("B", bCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName.TableName);
-            Assert.AreEqual("A", bCFK.ForeignKeyChain.First().PrimaryKey.SqlTable.SchemaAndTableName.TableName);
+            Assert.AreEqual("A", bCFK.ForeignKeyChain.First().ReferredTable.SchemaAndTableName.TableName);
 
             Assert.AreEqual("A", bCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName.TableName);
-            Assert.AreEqual("B", bCFK.ForeignKeyChain.Last().PrimaryKey.SqlTable.SchemaAndTableName.TableName);
+            Assert.AreEqual("B", bCFK.ForeignKeyChain.Last().ReferredTable.SchemaAndTableName.TableName);
         }
 
         [TestMethod]

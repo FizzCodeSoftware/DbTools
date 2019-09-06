@@ -6,14 +6,15 @@
     public class ForeignKey : SqlTableProperty
     {
         public List<ForeignKeyColumnMap> ForeignKeyColumns { get; set; } = new List<ForeignKeyColumnMap>();
-        public PrimaryKey PrimaryKey { get; set; }
-
         public string Name { get; set; }
 
-        public ForeignKey(SqlTable table, PrimaryKey pk, string name)
+        public SqlTable ReferredTable => SqlTable.DatabaseDefinition.GetTable(_referredTableName);
+        private readonly SchemaAndTableName _referredTableName;
+
+        public ForeignKey(SqlTable table, SchemaAndTableName referredTableName, string name)
             : base(table)
         {
-            PrimaryKey = pk;
+            _referredTableName = referredTableName;
             Name = name;
         }
 
@@ -33,9 +34,9 @@
                     .Append(".")
                     .Append(fkColumn.ForeignKeyColumn.Name)
                     .Append(" -> ")
-                    .Append(fkColumn.PrimaryKeyColumn.Table.SchemaAndTableName)
+                    .Append(fkColumn.ReferredColumn.Table.SchemaAndTableName)
                     .Append(".")
-                    .Append(fkColumn.PrimaryKeyColumn.Name);
+                    .Append(fkColumn.ReferredColumn.Name);
             }
 
             return sb.ToString();

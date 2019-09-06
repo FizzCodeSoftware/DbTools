@@ -84,7 +84,7 @@
             // - configure use of default schema
             sb.Append("\t\tpublic static LazySqlTable ").Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString())).AppendLine(" = new LazySqlTable(() =>")
                 .AppendLine("\t\t{")
-                .AppendLine("\t\t\tvar table = new SqlTableDeclaration();");
+                .AppendLine("\t\t\tvar table = new SqlTable();");
 
             var pkColumns = table.Columns.Values
                 .Where(column => column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))

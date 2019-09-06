@@ -252,10 +252,10 @@
                 if (fkOnColumn != null)
                 {
                     Write(table.SchemaAndTableName, fkOnColumn.Name);
-                    Write(table.SchemaAndTableName, 
-                        Helper.GetSimplifiedSchemaAndTableName(fkOnColumn.PrimaryKey.SqlTable.SchemaAndTableName));
-                    WriteLink(table.SchemaAndTableName, "link", fkOnColumn.PrimaryKey.SqlTable.SchemaAndTableName);
-                    Write(table.SchemaAndTableName, fkOnColumn.ForeignKeyColumns.First(fkc => fkc.ForeignKeyColumn == column.Value).PrimaryKeyColumn.Name);
+                    Write(table.SchemaAndTableName,
+                        Helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName));
+                    WriteLink(table.SchemaAndTableName, "link", fkOnColumn.ReferredTable.SchemaAndTableName);
+                    Write(table.SchemaAndTableName, fkOnColumn.ForeignKeyColumns.First(fkc => fkc.ForeignKeyColumn == column.Value).ReferredColumnName);
                 }
 
                 WriteLine(table.SchemaAndTableName);
@@ -302,11 +302,11 @@
                         Write(table.SchemaAndTableName, fkColumn.ForeignKeyColumn.Name);
 
                     Write(table.SchemaAndTableName, "");
-                    Write(table.SchemaAndTableName, Helper.GetSimplifiedSchemaAndTableName(fk.PrimaryKey.SqlTable.SchemaAndTableName));
+                    Write(table.SchemaAndTableName, Helper.GetSimplifiedSchemaAndTableName(fk.ReferredTable.SchemaAndTableName));
                     Write(table.SchemaAndTableName, "");
 
                     foreach (var fkColumn in fk.ForeignKeyColumns)
-                        Write(table.SchemaAndTableName, fkColumn.PrimaryKeyColumn.Name);
+                        Write(table.SchemaAndTableName, fkColumn.ReferredColumnName);
                 }
 
                 if (fks.Count > 0)
