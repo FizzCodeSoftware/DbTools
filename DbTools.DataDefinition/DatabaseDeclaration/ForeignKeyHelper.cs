@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition
 {
+    using System.Collections.Generic;
+
     public static class ForeignKeyHelper
     {
         // TODO should throw if PK is multi column

@@ -19,6 +19,11 @@
             return Tables.ToList();
         }
 
+        public SqlTable GetTable(string schema, string tableName)
+        {
+            return Tables[new SchemaAndTableName(schema, tableName)];
+        }
+
         public SqlTable GetTable(SchemaAndTableName schemaAndTableName)
         {
             return Tables[schemaAndTableName];

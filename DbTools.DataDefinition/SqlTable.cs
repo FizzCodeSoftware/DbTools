@@ -1,7 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System.Collections.Generic;
+    using System.Diagnostics;
 
+    [DebuggerDisplay("{ToString(),nq}")]
     public class SqlTable
     {
         public DatabaseDefinition DatabaseDefinition { get; set; }

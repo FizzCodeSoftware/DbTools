@@ -11,7 +11,6 @@
 
         public DatabaseDeclaration() : this(new NamingStrategiesDictionary())
         {
-            NamingStrategies = new NamingStrategiesDictionary();
         }
 
         public DatabaseDeclaration(params INamingStrategy[] namingStrategies) : this(new NamingStrategiesDictionary(namingStrategies))
@@ -20,6 +19,8 @@
 
         protected DatabaseDeclaration(NamingStrategiesDictionary namingStrategies)
         {
+            NamingStrategies = namingStrategies;
+
             AddDeclaredTables();
             CreateRegisteredForeignKeys();
             AddAutoNaming();

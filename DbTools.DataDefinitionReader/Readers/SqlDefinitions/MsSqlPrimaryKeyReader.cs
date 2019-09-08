@@ -55,9 +55,6 @@
 
                 var column = table.Columns[row.GetAs<string>("column_name")];
 
-                if (row.GetAs<bool>("is_identity"))
-                    column.Properties.Add(new Identity(column));
-
                 var ascDesc = AscDesc.Asc;
                 if (row.GetAs<bool>("is_descending_key"))
                     ascDesc = AscDesc.Desc;
@@ -77,7 +74,7 @@ SELECT schema_name(tab.schema_id) schema_name,
     col.[name] as column_name, 
     tab.[name] as table_name
 	, i.type-- 1 CLUSTERED, 2 NONCLUSTERED
-	, is_unique, is_primary_key, is_identity
+	, is_unique, is_primary_key
 	, is_included_column, is_descending_key
 FROM sys.tables tab
     INNER JOIN sys.indexes i

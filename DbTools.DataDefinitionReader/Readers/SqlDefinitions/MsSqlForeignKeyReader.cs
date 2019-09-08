@@ -67,7 +67,7 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
         public void GetForeignKeys(SqlTable table)
         {
             foreach (var row in QueryResult.Where(r =>
-            DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "FK_CONSTRAINT_SCHEMA", "FK_TABLE_NAME")).OrderBy(row => row.GetAs<int>("FK_ORDINAL_POSITION")))
+            DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "FK_CONSTRAINT_SCHEMA", "FK_TABLE_NAME")).OrderBy(row => row.GetAs<string>("FK_CONSTRAINT_NAME")).ThenBy(row => row.GetAs<int>("FK_ORDINAL_POSITION")))
             {
                 var fkColumn = table.Columns[row.GetAs<string>("FK_COLUMN_NAME")];
 
@@ -83,7 +83,7 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
                         new ForeignKey(table, referencedSchemaAndTableName, fkName));
                 }
 
-                var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName.SchemaAndName == referencedSchemaAndTableName.SchemaAndName);
+                var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName.SchemaAndName == referencedSchemaAndTableName.SchemaAndName && fk1.Name == fkName);
                 fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fk, fkColumn, referencedColumn));
             }
         }
