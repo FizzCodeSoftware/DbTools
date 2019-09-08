@@ -33,6 +33,7 @@
             var fkOnColumn = column.Table.Properties.OfType<ForeignKey>().FirstOrDefault(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn == column));
             if (fkOnColumn != null)
             {
+                // TODO gen AddForeignkeys?
                 if (fkOnColumn.ForeignKeyColumns.Count == 1)
                 {
                     sb.Append(".SetForeignKeyTo(nameof(")
@@ -42,7 +43,23 @@
                 }
                 else
                 {
-                    throw new NotImplementedException("Multiple FK columns");
+                    // Only create on first
+                    if (column == fkOnColumn.ForeignKeyColumns.First().ForeignKeyColumn)
+                    {
+                        sb.Append(".AddForeignKey(nameof(")
+                            // TODO spec name
+                            .Append(fkOnColumn.SqlTable.SchemaAndTableName.TableName)
+                            .AppendLine("), new List<ForeignKeyGroup>()")
+                            .AppendLine("\t\t\t{");
+
+                        foreach (var fkColumnMap in fkOnColumn.ForeignKeyColumns)
+                        {
+                            sb.Append("\t\t\t\tnew ForeignKeyGroup(\"").Append(fkColumnMap.ForeignKeyColumn.Name).Append("\", ").Append(fkColumnMap.ReferredColumnName).AppendLine("\"),");
+                        }
+
+                        sb.AppendLine("\t\t\t})");
+                    }
+                    // throw new NotImplementedException("Multiple FK columns");
                 }
             }
 

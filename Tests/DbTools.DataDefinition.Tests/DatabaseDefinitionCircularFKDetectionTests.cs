@@ -248,6 +248,14 @@ namespace FizzCode.DbTools.DataDefinition.Tests
             Assert.AreEqual("C", cCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName.TableName);
             Assert.AreEqual("B", cCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName.TableName);
         }
+
+        [TestMethod]
+        public void TestDatabaseSelfFK()
+        {
+            var dd = new TestDatabaseSelfFK();
+
+            var company = dd.GetTable("Company");
+        }
     }
 }
 #pragma warning restore RCS1077 // Optimize LINQ method call.

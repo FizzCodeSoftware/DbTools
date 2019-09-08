@@ -23,7 +23,7 @@
         [TestMethod]
         public void GenerateForeignKeyCompositeTestDatabase()
         {
-            GenerateDatabase(new TestDataBaseForeignKeyComposite(), "MsSql");
+            GenerateDatabase(new ForeignKeyCompositeTestsDb(), "MsSql");
         }
 
         public void GenerateDatabase(DatabaseDefinition dd, string connectionStringKey, bool isIntegrationTest = true)

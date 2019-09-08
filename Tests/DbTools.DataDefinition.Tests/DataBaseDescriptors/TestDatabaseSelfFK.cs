@@ -8,7 +8,7 @@
         {
             var table = new SqlTable();
             table.AddInt32("Id").SetPK().SetIdentity();
-            table.AddForeignKey(nameof(Company), false, null, "Parent");
+            table.AddForeignKey(nameof(Company), "Parent");
             table.AddNVarChar("Name", 100);
             return table;
         });

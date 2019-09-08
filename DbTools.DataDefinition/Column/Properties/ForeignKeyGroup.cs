@@ -3,12 +3,12 @@
     public class ForeignKeyGroup
     {
         public string ColumnName { get; }
-        public string ReferredColumn { get; }
+        public string ReferredColumnName { get; }
 
-        public ForeignKeyGroup(string name, string referredColumn)
+        public ForeignKeyGroup(string name, string referredColumnName)
         {
             ColumnName = name;
-            ReferredColumn = referredColumn;
+            ReferredColumnName = referredColumnName;
         }
     }
 }

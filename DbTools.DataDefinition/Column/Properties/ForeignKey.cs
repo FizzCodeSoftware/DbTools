@@ -3,18 +3,27 @@
     using System.Collections.Generic;
     using System.Text;
 
-    public class ForeignKey : SqlTableProperty
+    public abstract class ForeignKeyBase : SqlTableProperty
+    {
+        public string Name { get; set; }
+        public SchemaAndTableName ReferredTableName { get; }
+
+        public ForeignKeyBase(SqlTable table, SchemaAndTableName referredTableName, string name) : base(table)
+        {
+            Name = name;
+            ReferredTableName = referredTableName;
+        }
+    }
+
+    public class ForeignKey : ForeignKeyBase
     {
         public List<ForeignKeyColumnMap> ForeignKeyColumns { get; set; } = new List<ForeignKeyColumnMap>();
-        public string Name { get; set; }
 
-        public SqlTable ReferredTable => SqlTable.DatabaseDefinition.GetTable(_referredTableName);
-        private readonly SchemaAndTableName _referredTableName;
+        public SqlTable ReferredTable => SqlTable.DatabaseDefinition.GetTable(ReferredTableName);
 
         public ForeignKey(SqlTable table, SchemaAndTableName referredTableName, string name)
-            : base(table)
+            : base(table, referredTableName, name)
         {
-            _referredTableName = referredTableName;
             Name = name;
         }
 

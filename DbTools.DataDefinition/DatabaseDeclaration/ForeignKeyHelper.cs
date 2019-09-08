@@ -17,24 +17,50 @@
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
 
-            var fk = new ForeignKey(singleFkColumn.Table, referredTableNameWithSchema, fkName);
-            singleFkColumn.Table.Properties.Add(fk);
+            var fk = new ForeignKeyRegistrationToTableWithPrimaryKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, fkName);
 
-            fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fk, singleFkColumn, null));
+            singleFkColumn.Table.Properties.Add(fk);
 
             return singleFkColumn;
         }
 
-        public static SqlTable AddForeignKey(this SqlTable table, string referredTableName, List<ForeignKeyGroup> map, bool isNullable = false, string prefix = null, string fkName = null)
-        {
-            return AddForeignKey(table, referredTableName, isNullable, prefix, fkName, map);
-        }
-
-        public static SqlTable AddForeignKey(this SqlTable table, string referredTableName, bool isNullable = false, string prefix = null, string fkName = null, List<ForeignKeyGroup> map = null)
+        public static SqlTable SetForeignKeyTo(this SqlTable table, string referredTableName, List<ForeignKeyGroup> map, string fkName = null)
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
 
-            var fk = new ForeignKeyRegistrationToReferredTable(table, referredTableNameWithSchema, isNullable, prefix, fkName, map);
+            var fk = new ForeignKeyRegistrationToReferredTableExistingColumns(table, referredTableNameWithSchema, fkName, map);
+
+            table.Properties.Add(fk);
+
+            return table;
+        }
+
+        public static SqlTable AddForeignKey(this SqlTable table, string referredTableName, string singleFlColumnName, bool isNullable = false, string fkName = null)
+        {
+            var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
+
+            var fk = new ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn(table, referredTableNameWithSchema, singleFlColumnName, isNullable, fkName);
+
+            table.Properties.Add(fk);
+
+            return table;
+        }
+
+        public static SqlTable AddForeignKey(this SqlTable table, string referredTableName, List<ForeignKeyGroup> map, bool isNullable = false, string fkName = null)
+        {
+            var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
+
+            var fk = new ForeignKeyRegistrationToReferredTable(table, referredTableNameWithSchema, isNullable, fkName, map);
+            table.Properties.Add(fk);
+
+            return table;
+        }
+
+        public static SqlTable AddForeignKey(this SqlTable table, string nameOfReferredTableWithPrimaryKey, bool isNullable = false, string prefix = null, string fkName = null)
+        {
+            var referredTableNameWithSchema = new SchemaAndTableName(nameOfReferredTableWithPrimaryKey);
+
+            var fk = new ForeignKeyRegistrationToTableWithPrimaryKey(table, referredTableNameWithSchema, isNullable, prefix, fkName);
             table.Properties.Add(fk);
 
             return table;

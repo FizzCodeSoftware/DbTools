@@ -28,7 +28,7 @@
         [TestMethod]
         public void DocumentTestForeignKeyComposite()
         {
-            var db = new TestDataBaseForeignKeyComposite();
+            var db = new ForeignKeyCompositeTestsDb();
             var documenter = new Documenter(TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "ForeignKeyCompositeTestsDb");
             documenter.Document(db);
         }
@@ -68,7 +68,7 @@
         [TestMethod]
         public void GeneratorForeignKeyCompositeTestsDb()
         {
-            var db = new TestDataBaseForeignKeyComposite();
+            var db = new ForeignKeyCompositeTestsDb();
             var generator = new CsGenerator(TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks", "FizzCode.DbTools.DataDefinitionDocumenter.Tests", new TableCustomizer());
             generator.Generate(db);
         }
