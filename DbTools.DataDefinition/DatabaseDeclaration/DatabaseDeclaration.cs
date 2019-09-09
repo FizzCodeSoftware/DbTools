@@ -41,7 +41,7 @@
                         throw new Exception("Can't define ForeignKeyRegistrationToTableWithPrimaryKey against a table without primary key!");
 
                     sqlTable.Properties.Remove(fkRegistration);
-                    var fk = new ForeignKey(sqlTable, referredTable.SchemaAndTableName, fkRegistration.Name);
+                    var fk = new ForeignKey(sqlTable, referredTable, fkRegistration.Name);
                     sqlTable.Properties.Add(fk);
 
                     var pkColumn = referredPk.SqlColumns.First().SqlColumn;
@@ -53,7 +53,7 @@
                     col.IsNullable = fkRegistration.IsNullable;
                     col.Name = fkRegistration.SingleFkColumnName;
 
-                    fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fk, col, pkColumn.Name));
+                    fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(col, pkColumn));
                 }
 
                 var foreignKeyRegistrationsToTableWithPrimaryKey = sqlTable.Properties.OfType<ForeignKeyRegistrationToTableWithPrimaryKey>().ToList();
@@ -65,7 +65,7 @@
                         throw new Exception("Can't define ForeignKeyRegistrationToTableWithPrimaryKey against a table without primary key!");
 
                     sqlTable.Properties.Remove(fkRegistration);
-                    var fk = new ForeignKey(sqlTable, referredTable.SchemaAndTableName, fkRegistration.Name);
+                    var fk = new ForeignKey(sqlTable, referredTable, fkRegistration.Name);
                     sqlTable.Properties.Add(fk);
 
                     foreach (var pkColumn in referredPk.SqlColumns.Select(x => x.SqlColumn))
@@ -80,7 +80,7 @@
 
                         sqlTable.Columns.Add(col.Name, col);
 
-                        fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fk, col, pkColumn.Name));
+                        fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(col, pkColumn));
                     }
                 }
 
@@ -93,11 +93,11 @@
                         throw new Exception("Can't define ForeignKeyRegistrationToTableWithPrimaryKey against a table without primary key!");
 
                     sqlTable.Properties.Remove(fkRegistration);
-                    var fk = new ForeignKey(sqlTable, referredTable.SchemaAndTableName, fkRegistration.Name);
+                    var fk = new ForeignKey(sqlTable, referredTable, fkRegistration.Name);
                     sqlTable.Properties.Add(fk);
 
                     var pkColumn = referredPk.SqlColumns.First().SqlColumn;
-                    fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fk, fkRegistration.SingleFkColumn, pkColumn.Name));
+                    fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkRegistration.SingleFkColumn, pkColumn));
                 }
 
                 var foreignKeyRegistrationToReferredTableExistingColumns = sqlTable.Properties.OfType<ForeignKeyRegistrationToReferredTableExistingColumns>().ToList();
@@ -106,12 +106,12 @@
                     var referredTable = Tables[fkRegistration.ReferredTableName];
 
                     sqlTable.Properties.Remove(fkRegistration);
-                    var fk = new ForeignKey(sqlTable, referredTable.SchemaAndTableName, fkRegistration.Name);
+                    var fk = new ForeignKey(sqlTable, referredTable, fkRegistration.Name);
                     sqlTable.Properties.Add(fk);
 
                     foreach (var fkGroup in fkRegistration.Map)
                     {
-                        fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fk, sqlTable.Columns[fkGroup.ColumnName], fkGroup.ReferredColumnName));
+                        fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(sqlTable.Columns[fkGroup.ColumnName], referredTable[fkGroup.ReferredColumnName]));
                     }
                 }
 
@@ -121,7 +121,7 @@
                     var referredTable = Tables[fkRegistration.ReferredTableName];
 
                     sqlTable.Properties.Remove(fkRegistration);
-                    var fk = new ForeignKey(sqlTable, referredTable.SchemaAndTableName, fkRegistration.Name);
+                    var fk = new ForeignKey(sqlTable, referredTable, fkRegistration.Name);
                     sqlTable.Properties.Add(fk);
 
                     foreach (var fkGroup in fkRegistration.Map)
@@ -136,7 +136,7 @@
 
                         sqlTable.Columns.Add(col.Name, col);
 
-                        fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fk, col, fkGroup.ReferredColumnName));
+                        fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(col, referredTable[fkGroup.ReferredColumnName]));
                     }
                 }
             }

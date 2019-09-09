@@ -77,14 +77,18 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
                 var referencedColumn = row.GetAs<string>("REFERENCED_COLUMN_NAME");
                 var fkName = row.GetAs<string>("FK_CONSTRAINT_NAME");
 
+                var referencedSqlTable = table.DatabaseDefinition.GetTable(referencedSchemaAndTableName);
+
                 if (row.GetAs<int>("FK_ORDINAL_POSITION") == 1)
                 {
                     table.Properties.Add(
-                        new ForeignKey(table, referencedSchemaAndTableName, fkName));
+                        new ForeignKey(table, referencedSqlTable, fkName));
                 }
 
+                var referencedSqlColumn = referencedSqlTable[referencedColumn];
+
                 var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName.SchemaAndName == referencedSchemaAndTableName.SchemaAndName && fk1.Name == fkName);
-                fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fk, fkColumn, referencedColumn));
+                fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkColumn, referencedSqlColumn));
             }
         }
     }

@@ -59,7 +59,12 @@
   <ItemGroup>
     <Compile Include="Column\Properties\DefaultValue.cs" />
     <Compile Include="Column\Properties\ColumnReference.cs" />
-    <Compile Include="Column\Properties\ForeignKeyRegistrationToReferredTable.cs" />
+    <Compile Include="Column\Properties\ForeignKeyRegistration\ForeignKeyRegistrationBase.cs" />
+    <Compile Include="Column\Properties\ForeignKeyRegistration\ForeignKeyRegistrationToReferredTable.cs" />
+    <Compile Include="Column\Properties\ForeignKeyRegistration\ForeignKeyRegistrationToReferredTableExistingColumns.cs" />
+    <Compile Include="Column\Properties\ForeignKeyRegistration\ForeignKeyRegistrationToTableWithPrimaryKey.cs" />
+    <Compile Include="Column\Properties\ForeignKeyRegistration\ForeignKeyRegistrationToTableWithPrimaryKeyExistingColumn.cs" />
+    <Compile Include="Column\Properties\ForeignKeyRegistration\ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn.cs" />
     <Compile Include="DatabaseDeclaration\DefaultValueHelper.cs" />
     <Compile Include="DatabaseDeclaration\DescriptionHelper.cs" />
     <Compile Include="Column\Properties\SqlColumnDescription.cs" />
@@ -83,7 +88,7 @@
     <Compile Include="Column\Properties\CircularFK.cs" />
     <Compile Include="Column\Properties\ColumnAndOrder.cs" />
     <Compile Include="Column\Properties\ForeignKey.cs" />
-    <Compile Include="Column\Properties\ForeignKeyColumnMap.cs" />
+    <Compile Include="Column\Properties\ForeignKeyRegistration\ForeignKeyColumnMap.cs" />
     <Compile Include="Column\Properties\Identity.cs" />
     <Compile Include="Column\Properties\Index.cs" />
     <Compile Include="Column\Properties\IndexBase.cs" />
