@@ -123,12 +123,9 @@
                         {
                             var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect));
                         }
-                        catch (ConfigurationException ex)
+                        catch (ConfigurationException ex) when (ex.BareMessage == "Failed to find or load the registered .Net Framework Data Provider.")
                         {
-                            if (ex.BareMessage == "Failed to find or load the registered .Net Framework Data Provider.")
-                                break;
-                            else
-                                throw;
+                            break;
                         }
 
                         _sqlDialectWithInstalledProviders.Add(sqlDialect);

@@ -42,6 +42,5 @@
             Properties.Add(new Identity(this));
             return this;
         }
-
     }
 }
