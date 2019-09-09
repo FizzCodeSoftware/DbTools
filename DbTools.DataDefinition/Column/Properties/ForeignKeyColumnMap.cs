@@ -8,20 +8,9 @@ namespace FizzCode.DbTools.DataDefinition
 
         private SqlColumn _referredColumnCached;
 
-        public SqlColumn ReferredColumn
-        {
-            get
-            {
-                if (_referredColumnCached == null)
-                {
-                    _referredColumnCached = NewMethod();
-                }
+        public SqlColumn ReferredColumn => _referredColumnCached ?? (_referredColumnCached = GetReferredColumn());
 
-                return _referredColumnCached;
-            }
-        }
-
-        private SqlColumn NewMethod()
+        private SqlColumn GetReferredColumn()
         {
             return !string.IsNullOrEmpty(ReferredColumnName)
                                    ? _foreignKey.ReferredTable.Columns[ReferredColumnName]
