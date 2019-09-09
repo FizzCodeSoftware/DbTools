@@ -10,7 +10,7 @@
         public static string GetColumnCreation(SqlColumn column)
         {
             var sb = new StringBuilder();
-            sb.Append("\t\t\ttable.");
+            sb.Append(3, "table.");
 
             // TODO Type as ISqlTypeMapper
             sb.Append(GetColumnCreationMethod(column));
@@ -43,21 +43,21 @@
                 }
                 else
                 {
-                    // Only create on first
-                    if (column == fkOnColumn.ForeignKeyColumns.First().ForeignKeyColumn)
+                    // Only create after last
+                    if (column == fkOnColumn.ForeignKeyColumns.Last().ForeignKeyColumn)
                     {
-                        sb.Append(".AddForeignKey(nameof(")
-                            // TODO spec name
-                            .Append(fkOnColumn.SqlTable.SchemaAndTableName.TableName)
-                            .AppendLine("), new List<ForeignKeyGroup>()")
-                            .AppendLine("\t\t\t{");
+                        sb.AppendLine(";")
+                            .Append(3, "table.SetForeignKeyTo(nameof(")
+                            .Append(fkOnColumn.ReferredTable.SchemaAndTableName.TableName)
+                            .AppendLine("), new List<ColumnReference>()")
+                            .AppendLine(3, "{");
 
                         foreach (var fkColumnMap in fkOnColumn.ForeignKeyColumns)
                         {
-                            sb.Append("\t\t\t\tnew ForeignKeyGroup(\"").Append(fkColumnMap.ForeignKeyColumn.Name).Append("\", ").Append(fkColumnMap.ReferredColumn.Name).AppendLine("\"),");
+                            sb.Append(4, "new ColumnReference(\"").Append(fkColumnMap.ForeignKeyColumn.Name).Append("\", ").Append(fkColumnMap.ReferredColumn.Name).AppendLine("\"),");
                         }
 
-                        sb.AppendLine("\t\t\t})");
+                        sb.Append(3, "})");
                     }
                     // throw new NotImplementedException("Multiple FK columns");
                 }
@@ -128,6 +128,25 @@
                 default:
                     throw new NotImplementedException($"Unmapped SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
             }
+        }
+    }
+
+    internal static class StringBuilderExtensions
+    {
+        public static int indentationSpaces = 4;
+
+        public static StringBuilder Append(this StringBuilder sb, int level, string value)
+        {
+            sb.Append(new string(' ', level * indentationSpaces));
+            sb.Append(value);
+            return sb;
+        }
+
+        public static StringBuilder AppendLine(this StringBuilder sb, int level, string value)
+        {
+            sb.Append(new string(' ', level * indentationSpaces));
+            sb.AppendLine(value);
+            return sb;
         }
     }
 }

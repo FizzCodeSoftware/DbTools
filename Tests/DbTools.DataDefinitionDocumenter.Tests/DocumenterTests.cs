@@ -69,7 +69,23 @@
         public void GeneratorForeignKeyCompositeTestsDb()
         {
             var db = new ForeignKeyCompositeTestsDb();
-            var generator = new CsGenerator(TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks", "FizzCode.DbTools.DataDefinitionDocumenter.Tests", new TableCustomizer());
+            var generator = new CsGenerator(TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
+            generator.Generate(db);
+        }
+
+        [TestMethod]
+        public void GeneratorForeignKeyCompositeTestsDb1()
+        {
+            var db = new ForeignKeyCompositeTestsDb();
+            var generator = new CsGenerator(TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "ForeignKeyCompositeTestsDb", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
+            generator.Generate(db);
+        }
+
+        [TestMethod]
+        public void GeneratorForeignKeyCompositeTestsDb2()
+        {
+            var db = new ForeignKeyCompositeSetForeignKeyToTestDb();
+            var generator = new CsGenerator(TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "ForeignKeyCompositeSetForeignKeyToTestDb", "FizzCode.DbTools.DataDefinitionDocumenter.Tests", new TableCustomizer());
             generator.Generate(db);
         }
     }

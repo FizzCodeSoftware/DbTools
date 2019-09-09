@@ -32,6 +32,7 @@
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(sqlDialect, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
             var db = ddlReader.GetDatabaseDefinition();
 
+            // TODO db.GetTable("Company") - use default schema
             var company = db.GetTable("dbo", "Company");
 
             var pkCompany = company.Properties.OfType<PrimaryKey>().FirstOrDefault();

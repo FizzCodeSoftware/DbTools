@@ -46,13 +46,13 @@
             sb.Append("namespace ")
                 .AppendLine(_namespace)
                 .AppendLine("{")
-                .AppendLine("\tusing FizzCode.DbTools.DataDefinition;")
+                .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
                 .AppendLine();
 
-            sb.Append("\tpublic partial class ").Append(_databaseName).AppendLine(" : DatabaseDeclaration");
-            sb.AppendLine("\t{");
+            sb.Append(1, "public partial class ").Append(_databaseName).AppendLine(" : DatabaseDeclaration");
+            sb.AppendLine(1, "{");
 
-            sb.AppendLine("\t}");
+            sb.AppendLine(1, "}");
             sb.AppendLine("}");
 
             var path = ConfigurationManager.AppSettings["WorkingDirectory"]
@@ -68,21 +68,21 @@
             var sb = new StringBuilder();
             sb.Append("namespace ").AppendLine(_namespace)
                 .AppendLine("{")
-                .AppendLine("\tusing FizzCode.DbTools.DataDefinition;")
+                .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
                 .AppendLine();
 
-            sb.Append("\tpublic partial class ").AppendLine(_databaseName)
-                .AppendLine("\t{");
+            sb.Append(1, "public partial class ").AppendLine(_databaseName)
+                .AppendLine(1, "{");
 
             var pks = table.Properties.OfType<PrimaryKey>().ToList();
             if (pks.Count == 0)
             {
-                sb.AppendLine("\t\t// no primary key");
+                sb.AppendLine(2, "// no primary key");
             }
 
             sb.Append("\t\tpublic static LazySqlTable ").Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString())).AppendLine(" = new LazySqlTable(() =>")
-                .AppendLine("\t\t{")
-                .AppendLine("\t\t\tvar table = new SqlTable();");
+                .AppendLine(2, "{")
+                .AppendLine(3, "var table = new SqlTable();");
 
             var pkColumns = table.Columns.Values
                 .Where(column => column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
@@ -107,9 +107,9 @@
 
             // TODO Indexes + config
 
-            sb.AppendLine("\t\t\treturn table;");
-            sb.AppendLine("\t\t});");
-            sb.AppendLine("\t}");
+            sb.AppendLine(3, "return table;");
+            sb.AppendLine(2, "});");
+            sb.AppendLine(1, "}");
             sb.AppendLine("}");
 
             // TODO handle illegal chars

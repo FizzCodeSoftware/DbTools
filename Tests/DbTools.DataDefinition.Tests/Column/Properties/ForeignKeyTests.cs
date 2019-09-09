@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Tests
 {
+    using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.DataDefinition;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -42,9 +43,21 @@
         }
 
         [TestMethod]
-        public void CheckCompositeFks()
+        public void CheckCompositeFks1()
         {
             var tables = new ForeignKeyCompositeTestsDb().GetTables();
+            CheckCompositeFks(tables);
+        }
+
+        [TestMethod]
+        public void CheckCompositeFks2()
+        {
+            var tables = new ForeignKeyCompositeSetForeignKeyToTestDb().GetTables();
+            CheckCompositeFks(tables);
+        }
+
+        private void CheckCompositeFks(List<SqlTable> tables)
+        {
             Assert.AreEqual(4, tables.Count);
 
             var topOrdersPerCompany = tables.First(t => t.SchemaAndTableName.TableName == "TopOrdersPerCompany");
