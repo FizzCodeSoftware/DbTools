@@ -196,6 +196,16 @@
 
                 AddTable(table);
             }
+
+            var fields = GetType()
+                .GetFields()
+                .Where(fi => fi.IsPublic && fi.FieldType == typeof(SqlTable))
+                .ToList();
+
+            if (fields.Count > 0)
+            {
+                throw new InvalidOperationException(nameof(DatabaseDeclaration) + " is only compatible with tabled defined in public properties. Please review the following fields: " + string.Join(", ", fields.Select(fi => fi.Name)));
+            }
         }
 
         private SchemaAndTableName SchemaAndTableNameFromDefinitionName(string methodName)

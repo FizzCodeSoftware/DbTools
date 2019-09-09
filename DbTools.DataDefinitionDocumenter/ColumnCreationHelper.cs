@@ -10,9 +10,11 @@
         public static string GetColumnCreation(SqlColumn column)
         {
             var sb = new StringBuilder();
+
             sb.Append(3, "table.");
 
             // TODO Type as ISqlTypeMapper
+
             sb.Append(GetColumnCreationMethod(column));
 
             if (column.IsNullable)

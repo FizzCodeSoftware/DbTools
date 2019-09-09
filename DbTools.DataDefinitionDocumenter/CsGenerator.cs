@@ -68,7 +68,7 @@
             var sb = new StringBuilder();
             sb.Append("namespace ").AppendLine(_namespace)
                 .AppendLine("{")
-                .AppendLine(1,"using FizzCode.DbTools.DataDefinition;")
+                .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
                 .AppendLine();
 
             sb.Append(1, "public partial class ").AppendLine(_databaseName)
@@ -83,9 +83,8 @@
             // TODO
             // - format schema and table name
             // - configure use of default schema
-            sb.Append(2, "public SqlTable ").Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString())).AppendLine(" {get;} = InitTable(() =>")
-                .AppendLine(2, "{")
-                .AppendLine(3, "");
+            sb.Append(2, "public SqlTable ").Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString())).AppendLine(" {get;} = AddTable(() =>")
+                .AppendLine(2, "{");
 
             var pkColumns = table.Columns.Values
                 .Where(column => column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
@@ -122,32 +121,30 @@
                 }
 
                 sb.AppendLine();
-
-                sb.AppendLine(3, "");
-
-                // TODO Indexes + config
-
-                sb.AppendLine(2, "});");
-                sb.AppendLine(1, "}");
-                sb.AppendLine("}");
-
-                // TODO handle illegal chars
-                var categoryInPath = category;
-                /*if (categoryInPath == "?")
-                    categoryInPath = "QuestionMark";*/
-
-                if (string.IsNullOrEmpty(categoryInPath))
-                    categoryInPath = "_no_category_";
-
-                categoryInPath = categoryInPath.Replace('?', '？');
-
-                var path = ConfigurationManager.AppSettings["WorkingDirectory"]
-                    + _databaseName + "/" + categoryInPath + "/" + Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, ".") + ".cs";
-
-                var fileInfo = new FileInfo(path);
-                fileInfo.Directory.Create();
-                File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
             }
+
+            // TODO Indexes + config
+
+            sb.AppendLine(2, "});");
+            sb.AppendLine(1, "}");
+            sb.AppendLine("}");
+
+            // TODO handle illegal chars
+            var categoryInPath = category;
+            /*if (categoryInPath == "?")
+                categoryInPath = "QuestionMark";*/
+
+            if (string.IsNullOrEmpty(categoryInPath))
+                categoryInPath = "_no_category_";
+
+            categoryInPath = categoryInPath.Replace('?', '？');
+
+            var path = ConfigurationManager.AppSettings["WorkingDirectory"]
+                + _databaseName + "/" + categoryInPath + "/" + Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, ".") + ".cs";
+
+            var fileInfo = new FileInfo(path);
+            fileInfo.Directory.Create();
+            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
         }
     }
 }
