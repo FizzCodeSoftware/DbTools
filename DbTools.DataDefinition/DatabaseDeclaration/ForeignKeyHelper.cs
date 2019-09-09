@@ -24,7 +24,7 @@
             return singleFkColumn;
         }
 
-        public static SqlTable SetForeignKeyTo(this SqlTable table, string referredTableName, List<ForeignKeyGroup> map, string fkName = null)
+        public static SqlTable SetForeignKeyTo(this SqlTable table, string referredTableName, List<ColumnReference> map, string fkName = null)
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
 
@@ -46,7 +46,7 @@
             return table;
         }
 
-        public static SqlTable AddForeignKey(this SqlTable table, string referredTableName, List<ForeignKeyGroup> map, bool isNullable = false, string fkName = null)
+        public static SqlTable AddForeignKey(this SqlTable table, string referredTableName, List<ColumnReference> map, bool isNullable = false, string fkName = null)
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
 

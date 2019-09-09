@@ -54,7 +54,7 @@
 
                         foreach (var fkColumnMap in fkOnColumn.ForeignKeyColumns)
                         {
-                            sb.Append("\t\t\t\tnew ForeignKeyGroup(\"").Append(fkColumnMap.ForeignKeyColumn.Name).Append("\", ").Append(fkColumnMap.ReferredColumnName).AppendLine("\"),");
+                            sb.Append("\t\t\t\tnew ForeignKeyGroup(\"").Append(fkColumnMap.ForeignKeyColumn.Name).Append("\", ").Append(fkColumnMap.ReferredColumn.Name).AppendLine("\"),");
                         }
 
                         sb.AppendLine("\t\t\t})");

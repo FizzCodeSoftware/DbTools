@@ -35,16 +35,16 @@
         {
             var topOrdersPerCompany = new SqlTable();
 
-            topOrdersPerCompany.AddForeignKey(nameof(Order), new List<ForeignKeyGroup>()
+            topOrdersPerCompany.AddForeignKey(nameof(Order), new List<ColumnReference>()
             {
-                new ForeignKeyGroup("Top1A", "OrderHeaderId"),
-                new ForeignKeyGroup("Top1B", "LineNumber"),
+                new ColumnReference("Top1A", "OrderHeaderId"),
+                new ColumnReference("Top1B", "LineNumber"),
             });
 
-            topOrdersPerCompany.AddForeignKey(nameof(Order), new List<ForeignKeyGroup>()
+            topOrdersPerCompany.AddForeignKey(nameof(Order), new List<ColumnReference>()
             {
-                new ForeignKeyGroup("Top2A", "OrderHeaderId"),
-                new ForeignKeyGroup("Top2B", "LineNumber"),
+                new ColumnReference("Top2A", "OrderHeaderId"),
+                new ColumnReference("Top2B", "LineNumber"),
             });
 
             return topOrdersPerCompany;
@@ -137,10 +137,10 @@
             topOrdersPerCompany.AddInt32("Top2A");
             topOrdersPerCompany.AddInt32("Top2B");
 
-            topOrdersPerCompany.SetForeignKeyTo(nameof(Order), new List<ForeignKeyGroup>()
+            topOrdersPerCompany.SetForeignKeyTo(nameof(Order), new List<ColumnReference>()
             {
-                new ForeignKeyGroup("Top1A", "OrderHeaderId"),
-                new ForeignKeyGroup("Top1B", "LineNumber"),
+                new ColumnReference("Top1A", "OrderHeaderId"),
+                new ColumnReference("Top1B", "LineNumber"),
             });
 
             return topOrdersPerCompany;

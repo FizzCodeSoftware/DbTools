@@ -7,7 +7,9 @@ namespace FizzCode.DbTools.DataDefinition
         public SqlColumn ForeignKeyColumn { get; }
 
         private SqlColumn _referredColumnCached;
-        public string ReferredColumnName { get; }
+
+        // TODO it's possible that this should be SqlColumn
+        private readonly string _referredColumnName;
 
         private readonly ForeignKey _foreignKey;
 
@@ -15,15 +17,15 @@ namespace FizzCode.DbTools.DataDefinition
         {
             _foreignKey = foreignKey;
             ForeignKeyColumn = foreignKeyColumn;
-            ReferredColumnName = referredColumnName;
+            _referredColumnName = referredColumnName;
         }
 
         public SqlColumn ReferredColumn => _referredColumnCached ?? (_referredColumnCached = GetReferredColumn());
 
         private SqlColumn GetReferredColumn()
         {
-            return !string.IsNullOrEmpty(ReferredColumnName)
-                                   ? _foreignKey.ReferredTable.Columns[ReferredColumnName]
+            return !string.IsNullOrEmpty(_referredColumnName)
+                                   ? _foreignKey.ReferredTable.Columns[_referredColumnName]
                                    : _foreignKey.ReferredTable.Properties.OfType<PrimaryKey>().FirstOrDefault()?.SqlColumns.FirstOrDefault()?.SqlColumn;
         }
     }

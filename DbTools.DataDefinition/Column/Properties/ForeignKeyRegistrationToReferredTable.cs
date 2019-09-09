@@ -39,9 +39,9 @@ namespace FizzCode.DbTools.DataDefinition
     public class ForeignKeyRegistrationToReferredTable : ForeignKeyBase
     {
         public bool IsNullable { get; set; }
-        public List<ForeignKeyGroup> Map { get; set; }
+        public List<ColumnReference> Map { get; set; }
 
-        public ForeignKeyRegistrationToReferredTable(SqlTable table, SchemaAndTableName referredTableName, bool isNullable, string fkName, List<ForeignKeyGroup> map) : base(table, referredTableName, fkName)
+        public ForeignKeyRegistrationToReferredTable(SqlTable table, SchemaAndTableName referredTableName, bool isNullable, string fkName, List<ColumnReference> map) : base(table, referredTableName, fkName)
         {
             IsNullable = isNullable;
             Map = map;
@@ -50,9 +50,9 @@ namespace FizzCode.DbTools.DataDefinition
 
     public class ForeignKeyRegistrationToReferredTableExistingColumns : ForeignKeyBase
     {
-        public List<ForeignKeyGroup> Map { get; set; }
+        public List<ColumnReference> Map { get; set; }
 
-        public ForeignKeyRegistrationToReferredTableExistingColumns(SqlTable table, SchemaAndTableName referredTableName, string fkName, List<ForeignKeyGroup> map) : base(table, referredTableName, fkName)
+        public ForeignKeyRegistrationToReferredTableExistingColumns(SqlTable table, SchemaAndTableName referredTableName, string fkName, List<ColumnReference> map) : base(table, referredTableName, fkName)
         {
             Map = map;
         }
@@ -63,9 +63,9 @@ namespace FizzCode.DbTools.DataDefinition
         public bool IsNullable { get; set; }
         public string NamePrefix { get; set; }
 
-        public List<ForeignKeyGroup> Map { get; set; }
+        public List<ColumnReference> Map { get; set; }
 
-        public ForeignKeyRegistrationToReferredTableX(SqlTable table, SchemaAndTableName referredTableName, bool isNullable, string namePrefix, string fkName, List<ForeignKeyGroup> map)
+        public ForeignKeyRegistrationToReferredTableX(SqlTable table, SchemaAndTableName referredTableName, bool isNullable, string namePrefix, string fkName, List<ColumnReference> map)
             : base(table, referredTableName, fkName)
         {
             IsNullable = isNullable;

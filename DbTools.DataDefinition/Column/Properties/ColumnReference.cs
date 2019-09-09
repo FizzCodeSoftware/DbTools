@@ -1,14 +1,14 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    public class ForeignKeyGroup
+    public class ColumnReference
     {
         public string ColumnName { get; }
         public string ReferredColumnName { get; }
 
-        public ForeignKeyGroup(string name, string referredColumnName)
+        public ColumnReference(string name, string referredColumn)
         {
             ColumnName = name;
-            ReferredColumnName = referredColumnName;
+            ReferredColumnName = referredColumn;
         }
     }
 }
