@@ -10,6 +10,7 @@
             switch (type)
             {
                 case SqlType.Boolean:
+                    return "BIT";
                 case SqlType.Byte:
                     return "TINYINT";
                 case SqlType.Int16:
