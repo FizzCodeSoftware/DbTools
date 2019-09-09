@@ -1,8 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
-    using System;
     using System.Configuration;
-    using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
@@ -34,20 +32,25 @@
 
             if (createTables)
             {
-                CreateSchemas(DatabaseDefinition);
-
-                foreach (var sqlTable in DatabaseDefinition.GetTables())
-                    CreateTable(sqlTable);
-
-                foreach (var sqlTable in DatabaseDefinition.GetTables())
-                    CreateForeignkeys(sqlTable);
-
-                foreach (var sqlTable in DatabaseDefinition.GetTables())
-                    CreateIndexes(sqlTable);
-
-                foreach (var sqlTable in DatabaseDefinition.GetTables())
-                    CreateDbDescriptions(sqlTable);
+                CreateTables();
             }
+        }
+
+        public void CreateTables()
+        {
+            CreateSchemas(DatabaseDefinition);
+
+            foreach (var sqlTable in DatabaseDefinition.GetTables())
+                CreateTable(sqlTable);
+
+            foreach (var sqlTable in DatabaseDefinition.GetTables())
+                CreateForeignkeys(sqlTable);
+
+            foreach (var sqlTable in DatabaseDefinition.GetTables())
+                CreateIndexes(sqlTable);
+
+            foreach (var sqlTable in DatabaseDefinition.GetTables())
+                CreateDbDescriptions(sqlTable);
         }
 
         private void CreateSchemas(DatabaseDefinition databaseDefinition)
