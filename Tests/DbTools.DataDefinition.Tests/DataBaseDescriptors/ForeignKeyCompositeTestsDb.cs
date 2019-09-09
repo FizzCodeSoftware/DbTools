@@ -143,6 +143,12 @@
                 new ColumnReference("Top1B", "LineNumber"),
             });
 
+            topOrdersPerCompany.SetForeignKeyTo(nameof(Order), new List<ColumnReference>()
+            {
+                new ColumnReference("Top2A", "OrderHeaderId"),
+                new ColumnReference("Top2B", "LineNumber"),
+            });
+
             return topOrdersPerCompany;
         });
     }
