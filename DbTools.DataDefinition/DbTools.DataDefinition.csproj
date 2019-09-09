@@ -79,6 +79,7 @@
     <Compile Include="DatabaseDeclaration\NamingStrategies\IPrimaryKeyNamingStrategy.cs" />
     <Compile Include="DatabaseDeclaration\NamingStrategies\PrimaryKeyNamingDefaultStrategy.cs" />
     <Compile Include="DatabaseDeclaration\ForeignKeyHelper.cs" />
+    <Compile Include="DatabaseDeclaration\RegisteredForeignKeysCreator.cs" />
     <Compile Include="SchemaAndTableName.cs" />
     <Compile Include="SqlDialectHelper.cs" />
     <Compile Include="Table\CircularFKDetector.cs" />

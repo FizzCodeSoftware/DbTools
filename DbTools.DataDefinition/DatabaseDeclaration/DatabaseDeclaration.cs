@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
@@ -26,119 +27,32 @@
             AddAutoNaming();
         }
 
+        private IEnumerable<T> GetProperties<T>(SqlTable sqlTable)
+        {
+            return sqlTable.Properties.OfType<T>().ToList();
+        }
+
         private void CreateRegisteredForeignKeys()
         {
             var fkNaming = NamingStrategies.GetNamingStrategy<IForeignKeyNamingStrategy>();
 
             foreach (var sqlTable in Tables)
             {
-                var foreignKeyRegistrationsToTableWithPrimaryKeySingleColumn = sqlTable.Properties.OfType<ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn>().ToList();
-                foreach (var fkRegistration in foreignKeyRegistrationsToTableWithPrimaryKeySingleColumn)
-                {
-                    var referredTable = Tables[fkRegistration.ReferredTableName];
-                    var referredPk = referredTable.Properties.OfType<PrimaryKey>().FirstOrDefault();
-                    if (referredPk == null)
-                        throw new Exception("Can't define ForeignKeyRegistrationToTableWithPrimaryKey against a table without primary key!");
+                foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn>(sqlTable))
+                    RegisteredForeignKeysCreator.PrimaryKeySingleColum(Tables, sqlTable, fkRegistration);
 
-                    sqlTable.Properties.Remove(fkRegistration);
-                    var fk = new ForeignKey(sqlTable, referredTable, fkRegistration.Name);
-                    sqlTable.Properties.Add(fk);
+                foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithPrimaryKey>(sqlTable))
+                    RegisteredForeignKeysCreator.PrimaryKey(Tables, sqlTable, fkRegistration, fkNaming);
 
-                    var pkColumn = referredPk.SqlColumns.First().SqlColumn;
+                foreach (var fkRegistration in
+                    GetProperties<ForeignKeyRegistrationToTableWithPrimaryKeyExistingColumn>(sqlTable))
+                    RegisteredForeignKeysCreator.PrimaryKeyExistingColumn(Tables, sqlTable, fkRegistration);
 
-                    var col = new SqlColumn();
-                    pkColumn.CopyTo(col);
+                foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToReferredTableExistingColumns>(sqlTable))
+                    RegisteredForeignKeysCreator.ReferredTableExistingColumns(Tables, sqlTable, fkRegistration);
 
-                    col.Table = sqlTable;
-                    col.IsNullable = fkRegistration.IsNullable;
-                    col.Name = fkRegistration.SingleFkColumnName;
-
-                    fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(col, pkColumn));
-                }
-
-                var foreignKeyRegistrationsToTableWithPrimaryKey = sqlTable.Properties.OfType<ForeignKeyRegistrationToTableWithPrimaryKey>().ToList();
-                foreach (var fkRegistration in foreignKeyRegistrationsToTableWithPrimaryKey)
-                {
-                    var referredTable = Tables[fkRegistration.ReferredTableName];
-                    var referredPk = referredTable.Properties.OfType<PrimaryKey>().FirstOrDefault();
-                    if (referredPk == null)
-                        throw new Exception("Can't define ForeignKeyRegistrationToTableWithPrimaryKey against a table without primary key!");
-
-                    sqlTable.Properties.Remove(fkRegistration);
-                    var fk = new ForeignKey(sqlTable, referredTable, fkRegistration.Name);
-                    sqlTable.Properties.Add(fk);
-
-                    foreach (var pkColumn in referredPk.SqlColumns.Select(x => x.SqlColumn))
-                    {
-                        var col = new SqlColumn();
-                        pkColumn.CopyTo(col);
-
-                        col.Table = sqlTable;
-                        col.IsNullable = fkRegistration.IsNullable;
-
-                        col.Name = fkNaming.GetFkToPkColumnName(pkColumn, fkRegistration.NamePrefix);
-
-                        sqlTable.Columns.Add(col.Name, col);
-
-                        fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(col, pkColumn));
-                    }
-                }
-
-                var foreignKeyRegistrationsToTableWithPrimaryKeyExistingColumn = sqlTable.Properties.OfType<ForeignKeyRegistrationToTableWithPrimaryKeyExistingColumn>().ToList();
-                foreach (var fkRegistration in foreignKeyRegistrationsToTableWithPrimaryKeyExistingColumn)
-                {
-                    var referredTable = Tables[fkRegistration.ReferredTableName];
-                    var referredPk = referredTable.Properties.OfType<PrimaryKey>().FirstOrDefault();
-                    if (referredPk == null)
-                        throw new Exception("Can't define ForeignKeyRegistrationToTableWithPrimaryKey against a table without primary key!");
-
-                    sqlTable.Properties.Remove(fkRegistration);
-                    var fk = new ForeignKey(sqlTable, referredTable, fkRegistration.Name);
-                    sqlTable.Properties.Add(fk);
-
-                    var pkColumn = referredPk.SqlColumns.First().SqlColumn;
-                    fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkRegistration.SingleFkColumn, pkColumn));
-                }
-
-                var foreignKeyRegistrationToReferredTableExistingColumns = sqlTable.Properties.OfType<ForeignKeyRegistrationToReferredTableExistingColumns>().ToList();
-                foreach (var fkRegistration in foreignKeyRegistrationToReferredTableExistingColumns)
-                {
-                    var referredTable = Tables[fkRegistration.ReferredTableName];
-
-                    sqlTable.Properties.Remove(fkRegistration);
-                    var fk = new ForeignKey(sqlTable, referredTable, fkRegistration.Name);
-                    sqlTable.Properties.Add(fk);
-
-                    foreach (var fkGroup in fkRegistration.Map)
-                    {
-                        fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(sqlTable.Columns[fkGroup.ColumnName], referredTable[fkGroup.ReferredColumnName]));
-                    }
-                }
-
-                var foreignKeyRegistrationsToReferredTable = sqlTable.Properties.OfType<ForeignKeyRegistrationToReferredTable>().ToList();
-                foreach (var fkRegistration in foreignKeyRegistrationsToReferredTable)
-                {
-                    var referredTable = Tables[fkRegistration.ReferredTableName];
-
-                    sqlTable.Properties.Remove(fkRegistration);
-                    var fk = new ForeignKey(sqlTable, referredTable, fkRegistration.Name);
-                    sqlTable.Properties.Add(fk);
-
-                    foreach (var fkGroup in fkRegistration.Map)
-                    {
-                        var col = new SqlColumn();
-                        referredTable.Columns[fkGroup.ReferredColumnName].CopyTo(col);
-
-                        col.Table = sqlTable;
-                        col.IsNullable = fkRegistration.IsNullable;
-
-                        col.Name = fkGroup.ColumnName;
-
-                        sqlTable.Columns.Add(col.Name, col);
-
-                        fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(col, referredTable[fkGroup.ReferredColumnName]));
-                    }
-                }
+                foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToReferredTable>(sqlTable))
+                    RegisteredForeignKeysCreator.ReferredTable(Tables, sqlTable, fkRegistration);
             }
         }
 
