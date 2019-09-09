@@ -68,24 +68,23 @@
             var sb = new StringBuilder();
             sb.Append("namespace ").AppendLine(_namespace)
                 .AppendLine("{")
-                .AppendLine("\tusing FizzCode.DbTools.DataDefinition;")
+                .AppendLine("    using FizzCode.DbTools.DataDefinition;")
                 .AppendLine();
 
-            sb.Append("\tpublic partial class ").AppendLine(_databaseName)
-                .AppendLine("\t{");
+            sb.Append("    public partial class ").AppendLine(_databaseName)
+                .AppendLine("    {");
 
             var pks = table.Properties.OfType<PrimaryKey>().ToList();
             if (pks.Count == 0)
             {
-                sb.AppendLine("\t\t// no primary key");
+                sb.AppendLine("        // no primary key");
             }
 
             // TODO
             // - format schema and table name
             // - configure use of default schema
-            sb.Append("\t\tpublic SqlTable ").Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString())).AppendLine(" {get;} = InitTable(() =>")
-                .AppendLine("\t\t{")
-                .AppendLine("\t\t\t");
+            sb.Append("        public SqlTable ").Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString())).AppendLine(" { get; } = AddTable((table) =>")
+                .AppendLine("        {");
 
             var pkColumns = table.Columns.Values
                 .Where(column => column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
@@ -182,9 +181,8 @@
                     DocumenterWriter.Write(table.Name, includeColumn.Name);
             }*/
 
-            sb.AppendLine("\t\t\t");
-            sb.AppendLine("\t\t});");
-            sb.AppendLine("\t}");
+            sb.AppendLine("        });");
+            sb.AppendLine("    }");
             sb.AppendLine("}");
 
             // TODO handle illegal chars

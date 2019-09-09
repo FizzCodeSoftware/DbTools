@@ -10,7 +10,7 @@
         public static string GetColumnCreation(SqlColumn column)
         {
             var sb = new StringBuilder();
-            sb.Append("\t\t\ttable.");
+            sb.Append("            table.");
             sb.Append(GetColumnCreationMethod(column));
 
             if (column.IsNullable)
