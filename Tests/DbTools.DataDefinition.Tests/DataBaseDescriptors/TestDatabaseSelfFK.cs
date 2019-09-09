@@ -4,13 +4,11 @@
 
     public class TestDatabaseSelfFK : DatabaseDeclaration
     {
-        public static LazySqlTable Company = new LazySqlTable(() =>
+        public SqlTable Company {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddInt32("Id").SetPK().SetIdentity();
             table.AddForeignKey(nameof(Company), "Parent");
             table.AddNVarChar("Name", 100);
-            return table;
         });
     }
 }

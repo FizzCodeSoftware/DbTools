@@ -8,72 +8,56 @@ namespace FizzCode.DbTools.DataDefinition.Tests
 
     public class TestDatabaseOtherChainIsCircular : DatabaseDeclaration
     {
-        public static LazySqlTable Start = new LazySqlTable(() =>
+        public SqlTable Start {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddInt32("StartId").SetPK().SetIdentity();
             table.AddForeignKey(nameof(FK1));
-            return table;
         });
 
-        public static LazySqlTable FK1 = new LazySqlTable(() =>
+        public SqlTable FK1 {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddInt32("FK1Id").SetPK().SetIdentity();
             table.AddForeignKey(nameof(FK2));
-            return table;
         });
 
-        public static LazySqlTable FK2 = new LazySqlTable(() =>
+        public SqlTable FK2 {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddInt32("FK2Id").SetPK().SetIdentity();
             table.AddForeignKey(nameof(FK1));
-            return table;
         });
     }
 
     public class TestDatabaseOtherTwoChainsAreCircular : DatabaseDeclaration
     {
-        public static LazySqlTable Start = new LazySqlTable(() =>
+        public SqlTable Start {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddInt32("StartId").SetPK().SetIdentity();
             table.AddForeignKey(nameof(FKA1));
             table.AddForeignKey(nameof(FKB1));
-            return table;
         });
 
-        public static LazySqlTable FKA1 = new LazySqlTable(() =>
+        public SqlTable FKA1 {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddInt32("FKA1Id").SetPK().SetIdentity();
             table.AddForeignKey(nameof(FKA2));
-            return table;
         });
 
-        public static LazySqlTable FKA2 = new LazySqlTable(() =>
+        public SqlTable FKA2 {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddInt32("FKA2Id").SetPK().SetIdentity();
             table.AddForeignKey(nameof(FKA1));
-            return table;
         });
 
-        public static LazySqlTable FKB1 = new LazySqlTable(() =>
+        public SqlTable FKB1 {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddInt32("FKB1Id").SetPK().SetIdentity();
             table.AddForeignKey(nameof(FKB2));
-            return table;
         });
 
-        public static LazySqlTable FKB2 = new LazySqlTable(() =>
+        public SqlTable FKB2 {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddInt32("FKB2Id").SetPK().SetIdentity();
             table.AddForeignKey(nameof(FKB1));
-            return table;
         });
     }
 

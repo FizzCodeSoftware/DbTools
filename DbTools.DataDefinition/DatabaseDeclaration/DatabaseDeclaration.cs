@@ -180,13 +180,21 @@
 
         private void AddDeclaredTables()
         {
-            var properties = GetType().GetFields(BindingFlags.FlattenHierarchy | BindingFlags.Static | BindingFlags.Public).Where(fi => fi.FieldType == typeof(LazySqlTable));
+            var properties = GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(pi => pi.PropertyType == typeof(SqlTable));
+
             foreach (var property in properties)
             {
-                var sqlTable = ((LazySqlTable)property.GetValue(this)).Value;
-                var schemaAndTableName = SchemaAndTableNameFromDefinitionName(property.Name);
-                sqlTable.SchemaAndTableName = schemaAndTableName;
-                AddTable(sqlTable);
+                var table = (SqlTable)property.GetValue(this);
+
+                if (table.SchemaAndTableName == null)
+                {
+                    var schemaAndTableName = SchemaAndTableNameFromDefinitionName(property.Name);
+                    table.SchemaAndTableName = schemaAndTableName;
+                }
+
+                AddTable(table);
             }
         }
 
@@ -201,6 +209,13 @@
                 return new SchemaAndTableName(schemaAndTableName[0], schemaAndTableName[1]);
 
             throw new ArgumentException("Method name contains invalid number of SchemaTableNameSeparator", nameof(methodName));
+        }
+
+        protected static SqlTable AddTable(Action<SqlTable> configurator)
+        {
+            var table = new SqlTable();
+            configurator.Invoke(table);
+            return table;
         }
     }
 }

@@ -6,20 +6,16 @@
 
     public class TestDatabaseCircularFKSetPK : DatabaseDeclaration
     {
-        public static LazySqlTable FK1 = new LazySqlTable(() =>
+        public SqlTable FK1 {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddInt32("FK1Id").SetPK().SetIdentity();
             table.AddForeignKey(nameof(FK2));
-            return table;
         });
 
-        public static LazySqlTable FK2 = new LazySqlTable(() =>
+        public SqlTable FK2 {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddInt32("FK2Id").SetPK().SetIdentity();
             table.AddForeignKey(nameof(FK1));
-            return table;
         });
     }
 

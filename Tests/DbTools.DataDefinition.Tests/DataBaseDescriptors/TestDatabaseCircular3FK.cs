@@ -4,31 +4,25 @@
 
     public class TestDatabaseCircular3FK : DatabaseDeclaration
     {
-        public static LazySqlTable A = new LazySqlTable(() =>
+        public SqlTable A {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddInt32("Id").SetPK().SetIdentity();
             table.AddForeignKey(nameof(B));
             table.AddNVarChar("Name", 100);
-            return table;
         });
 
-        public static LazySqlTable B = new LazySqlTable(() =>
+        public SqlTable B {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddInt32("Id").SetPK().SetIdentity();
             table.AddForeignKey(nameof(C));
             table.AddNVarChar("Name", 100);
-            return table;
         });
 
-        public static LazySqlTable C = new LazySqlTable(() =>
+        public SqlTable C {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddInt32("Id").SetPK().SetIdentity();
             table.AddForeignKey(nameof(A));
             table.AddNVarChar("Name", 100);
-            return table;
         });
     }
 }

@@ -62,7 +62,6 @@
 
             var fk = new ForeignKeyRegistrationToTableWithPrimaryKey(table, referredTableNameWithSchema, isNullable, prefix, fkName);
             table.Properties.Add(fk);
-
             return table;
         }
     }

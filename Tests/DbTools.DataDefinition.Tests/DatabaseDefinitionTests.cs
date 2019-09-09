@@ -29,9 +29,6 @@
         {
             var tables = new TestDatabaseFks().GetTables();
             Assert.AreEqual(3, tables.Count);
-            Assert.AreEqual("Parent", tables[0].SchemaAndTableName.TableName);
-            Assert.AreEqual("Child", tables[1].SchemaAndTableName.TableName);
-            Assert.AreEqual("ChildChild", tables[2].SchemaAndTableName.TableName);
 
             CheckFK(tables, "Child", "ParentId");
         }

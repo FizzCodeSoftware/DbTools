@@ -5,151 +5,124 @@
 
     public class ForeignKeyCompositeTestsDb : DatabaseDeclaration
     {
-        public static LazySqlTable OrderHeader = new LazySqlTable(() =>
+        public SqlTable OrderHeader { get; } = AddTable(table =>
         {
-            var orderHeader = new SqlTable();
-            orderHeader.AddInt32("Id").SetPK().SetIdentity();
-            orderHeader.AddNVarChar("OrderHeaderDescription", 100);
-            return orderHeader;
+            table.AddInt32("Id").SetPK().SetIdentity();
+            table.AddNVarChar("OrderHeaderDescription", 100);
         });
 
-        public static LazySqlTable Order = new LazySqlTable(() =>
+        public SqlTable Order { get; } = AddTable(table =>
         {
-            var order = new SqlTable();
-            order.AddInt32("OrderHeaderId").SetForeignKeyTo(nameof(OrderHeader)).SetPK();
-            order.AddInt32("LineNumber").SetPK();
-            order.AddForeignKey(nameof(Company));
-            order.AddNVarChar("OrderDescription", 100);
-            return order;
+            table.AddInt32("OrderHeaderId").SetForeignKeyTo(nameof(OrderHeader)).SetPK();
+            table.AddInt32("LineNumber").SetPK();
+            table.AddForeignKey(nameof(Company));
+            table.AddNVarChar("OrderDescription", 100);
         });
 
-        public static LazySqlTable Company = new LazySqlTable(() =>
+        public SqlTable Company { get; } = AddTable(table =>
         {
-            var company = new SqlTable();
-            company.AddInt32("Id").SetPK().SetIdentity();
-            company.AddNVarChar("Name", 100);
-            return company;
+            table.AddInt32("Id").SetPK().SetIdentity();
+            table.AddNVarChar("Name", 100);
         });
 
-        public static LazySqlTable TopOrdersPerCompany = new LazySqlTable(() =>
+        public SqlTable TopOrdersPerCompany { get; } = AddTable(table =>
         {
-            var topOrdersPerCompany = new SqlTable();
-
-            topOrdersPerCompany.AddForeignKey(nameof(Order), new List<ColumnReference>()
+            table.AddForeignKey(nameof(Order), new List<ColumnReference>()
             {
                 new ColumnReference("Top1A", "OrderHeaderId"),
                 new ColumnReference("Top1B", "LineNumber"),
             });
 
-            topOrdersPerCompany.AddForeignKey(nameof(Order), new List<ColumnReference>()
+            table.AddForeignKey(nameof(Order), new List<ColumnReference>()
+
             {
                 new ColumnReference("Top2A", "OrderHeaderId"),
                 new ColumnReference("Top2B", "LineNumber"),
             });
-
-            return topOrdersPerCompany;
         });
     }
 
     public class ForeignKeyCompositeSetForeignKeyVerboseTestsDb : DatabaseDeclaration
     {
-        public static LazySqlTable OrderHeader = new LazySqlTable(() =>
+        public SqlTable OrderHeader { get; } = AddTable(table =>
         {
-            var orderHeader = new SqlTable();
-            orderHeader.AddInt32("Id").SetPK().SetIdentity();
-            orderHeader.AddNVarChar("OrderHeaderDescription", 100);
-            return orderHeader;
+            table.AddInt32("Id").SetPK().SetIdentity();
+            table.AddNVarChar("OrderHeaderDescription", 100);
         });
 
-        public static LazySqlTable Order = new LazySqlTable(() =>
+        public SqlTable Order { get; } = AddTable(table =>
         {
-            var order = new SqlTable();
-            order.AddInt32("OrderHeaderId").SetForeignKeyTo(nameof(OrderHeader)).SetPK();
-            order.AddInt32("LineNumber").SetPK();
-            order.AddForeignKey(nameof(Company));
-            order.AddNVarChar("OrderDescription", 100);
-            return order;
+            table.AddInt32("OrderHeaderId").SetForeignKeyTo(nameof(OrderHeader)).SetPK();
+            table.AddInt32("LineNumber").SetPK();
+            table.AddForeignKey(nameof(Company));
+            table.AddNVarChar("OrderDescription", 100);
         });
 
-        public static LazySqlTable Company = new LazySqlTable(() =>
+        public SqlTable Company { get; } = AddTable(table =>
         {
-            var company = new SqlTable();
-            company.AddInt32("Id").SetPK().SetIdentity();
-            company.AddNVarChar("Name", 100);
-            return company;
+            table.AddInt32("Id").SetPK().SetIdentity();
+            table.AddNVarChar("Name", 100);
         });
 
-        public static LazySqlTable TopOrdersPerCompany = new LazySqlTable(() =>
+        public SqlTable TopOrdersPerCompany { get; } = AddTable(table =>
         {
-            var topOrdersPerCompany = new SqlTable();
-            topOrdersPerCompany.AddInt32("Top1A");
-            topOrdersPerCompany.AddInt32("Top1B");
-            topOrdersPerCompany.AddInt32("Top2A");
-            topOrdersPerCompany.AddInt32("Top2B");
+            table.AddInt32("Top1A");
+            table.AddInt32("Top1B");
+            table.AddInt32("Top2A");
+            table.AddInt32("Top2B");
 
-            var fk1 = new ForeignKey(topOrdersPerCompany, nameof(Order), "FK_TopOrdersPerCompany__Top1A__Top1B");
-            fk1.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fk1, topOrdersPerCompany.Columns["Top1A"], "OrderHeaderId"));
-            fk1.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fk1, topOrdersPerCompany.Columns["Top1B"], "LineNumber"));
-            topOrdersPerCompany.Properties.Add(fk1);
+            var fk1 = new ForeignKey(table, nameof(Order), "FK_TopOrdersPerCompany__Top1A__Top1B");
+            fk1.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fk1, table.Columns["Top1A"], "OrderHeaderId"));
+            fk1.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fk1, table.Columns["Top1B"], "LineNumber"));
+            table.Properties.Add(fk1);
 
-            var fk2 = new ForeignKey(topOrdersPerCompany, nameof(Order), "FK_TopOrdersPerCompany__Top2A__Top2B");
-            fk2.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fk1, topOrdersPerCompany.Columns["Top2A"], "OrderHeaderId"));
-            fk2.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fk1, topOrdersPerCompany.Columns["Top2B"], "LineNumber"));
-            topOrdersPerCompany.Properties.Add(fk2);
-
-            return topOrdersPerCompany;
+            var fk2 = new ForeignKey(table, nameof(Order), "FK_TopOrdersPerCompany__Top2A__Top2B");
+            fk2.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fk1, table.Columns["Top2A"], "OrderHeaderId"));
+            fk2.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fk1, table.Columns["Top2B"], "LineNumber"));
+            table.Properties.Add(fk2);
         });
     }
 
     public class ForeignKeyCompositeSetForeignKeyToTestDb : DatabaseDeclaration
     {
-        public static LazySqlTable OrderHeader = new LazySqlTable(() =>
+        public SqlTable OrderHeader { get; } = AddTable(table =>
         {
-            var orderHeader = new SqlTable();
-            orderHeader.AddInt32("Id").SetPK().SetIdentity();
-            orderHeader.AddNVarChar("OrderHeaderDescription", 100);
-            return orderHeader;
+            table.AddInt32("Id").SetPK().SetIdentity();
+            table.AddNVarChar("OrderHeaderDescription", 100);
         });
 
-        public static LazySqlTable Order = new LazySqlTable(() =>
+        public SqlTable Order { get; } = AddTable(table =>
         {
-            var order = new SqlTable();
-            order.AddInt32("OrderHeaderId").SetForeignKeyTo(nameof(OrderHeader)).SetPK();
-            order.AddInt32("LineNumber").SetPK();
-            order.AddForeignKey(nameof(Company));
-            order.AddNVarChar("OrderDescription", 100);
-            return order;
+            table.AddInt32("OrderHeaderId").SetForeignKeyTo(nameof(OrderHeader)).SetPK();
+            table.AddInt32("LineNumber").SetPK();
+            table.AddForeignKey(nameof(Company));
+            table.AddNVarChar("OrderDescription", 100);
         });
 
-        public static LazySqlTable Company = new LazySqlTable(() =>
+        public SqlTable Company { get; } = AddTable(table =>
         {
-            var company = new SqlTable();
-            company.AddInt32("Id").SetPK().SetIdentity();
-            company.AddNVarChar("Name", 100);
-            return company;
+            table.AddInt32("Id").SetPK().SetIdentity();
+            table.AddNVarChar("Name", 100);
         });
 
-        public static LazySqlTable TopOrdersPerCompany = new LazySqlTable(() =>
+        public SqlTable TopOrdersPerCompany { get; } = AddTable(table =>
         {
-            var topOrdersPerCompany = new SqlTable();
-            topOrdersPerCompany.AddInt32("Top1A");
-            topOrdersPerCompany.AddInt32("Top1B");
-            topOrdersPerCompany.AddInt32("Top2A");
-            topOrdersPerCompany.AddInt32("Top2B");
+            table.AddInt32("Top1A");
+            table.AddInt32("Top1B");
+            table.AddInt32("Top2A");
+            table.AddInt32("Top2B");
 
-            topOrdersPerCompany.SetForeignKeyTo(nameof(Order), new List<ColumnReference>()
+            table.SetForeignKeyTo(nameof(Order), new List<ColumnReference>()
             {
                 new ColumnReference("Top1A", "OrderHeaderId"),
                 new ColumnReference("Top1B", "LineNumber"),
             });
 
-            topOrdersPerCompany.SetForeignKeyTo(nameof(Order), new List<ColumnReference>()
+            table.SetForeignKeyTo(nameof(Order), new List<ColumnReference>()
             {
                 new ColumnReference("Top2A", "OrderHeaderId"),
                 new ColumnReference("Top2B", "LineNumber"),
             });
-
-            return topOrdersPerCompany;
         });
     }
 }

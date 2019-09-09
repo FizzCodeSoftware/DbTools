@@ -52,33 +52,27 @@
 
     public class GeneratorTestSimpleDb : DatabaseDeclaration
     {
-        public static LazySqlTable Table = new LazySqlTable(() =>
+        public SqlTable Table {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddInt32("Number");
             table.AddNVarChar("Text", 10);
-            return table;
         });
     }
 
     public class GeneratorTestDateDb : DatabaseDeclaration
     {
-        public static LazySqlTable Table = new LazySqlTable(() =>
+        public SqlTable Table {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddDate("Date");
             table.AddDateTime("DateTime");
-            return table;
         });
     }
 
     public class GeneratorTestNameDb : DatabaseDeclaration
     {
-        public static LazySqlTable Table = new LazySqlTable(() =>
+        public SqlTable Table {get;} = AddTable(table =>
         {
-            var table = new SqlTable();
             table.AddNVarChar("Name", 200).AddDataGenerator(new GeneratorName());
-            return table;
         });
     }
 

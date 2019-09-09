@@ -52,13 +52,7 @@
             return _sorted.Values.GetEnumerator();
         }
 
-        public SqlTable this[SchemaAndTableName schemaAndTableName]
-        {
-            get
-            {
-                return byName[schemaAndTableName];
-            }
-        }
+        public SqlTable this[SchemaAndTableName schemaAndTableName] => byName[schemaAndTableName];
 
         private void EnsureSorted()
         {

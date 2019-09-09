@@ -6,7 +6,6 @@
         {
             var sqlTableDescription = new SqlTableDescription(table, description);
             table.Properties.Add(sqlTableDescription);
-
             return table;
         }
 

@@ -8,7 +8,7 @@
         protected readonly ITableCustomizer _tableCustomizer;
         protected DocumenterHelper Helper { get; set; }
 
-        public DocumenterBase(Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null)
+        protected DocumenterBase(Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null)
         {
             _databaseName = databaseName;
             _tableCustomizer = tableCustomizer ?? new EmptyTableCustomizer();
