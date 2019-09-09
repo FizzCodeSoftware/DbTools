@@ -29,10 +29,7 @@
 
             Helper = new DocumenterHelper(settings);
 
-            if (flags == null)
-                _flags = new HashSet<DocumenterFlags>();
-            else
-                _flags = flags;
+            _flags = flags ?? new HashSet<DocumenterFlags>();
         }
 
         private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();

@@ -4,12 +4,10 @@
 
     public class TestDatabaseSimpleNoNameProvided : DatabaseDeclaration
     {
-        public static LazySqlTable Company = new LazySqlTable(() =>
+        public SqlTable Company { get; } = AddTable(table =>
         {
-            var company = new SqlTable();
-            company.AddInt32("Id").SetPK().SetIdentity();
-            company.AddNVarChar("Name", 100);
-            return company;
+            table.AddInt32("Id").SetPK().SetIdentity();
+            table.AddNVarChar("Name", 100);
         });
     }
 }

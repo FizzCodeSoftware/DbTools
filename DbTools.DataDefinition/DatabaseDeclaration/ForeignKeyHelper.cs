@@ -28,7 +28,6 @@ namespace FizzCode.DbTools.DataDefinition
 
             var fk = new ForeignKeyToPrimaryKey(table, referredTableNameWithSchema, isNullable, prefix, fkName, map);
             table.Properties.Add(fk);
-
             return table;
         }
     }

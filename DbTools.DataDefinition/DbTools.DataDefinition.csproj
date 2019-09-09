@@ -64,7 +64,6 @@
     <Compile Include="DatabaseDeclaration\DescriptionHelper.cs" />
     <Compile Include="Column\Properties\SqlColumnDescription.cs" />
     <Compile Include="Column\Properties\SqlTableDescription.cs" />
-    <Compile Include="DatabaseDeclaration\LazySqlTable.cs" />
     <Compile Include="DatabaseDeclaration\NamingStrategiesDictionary.cs" />
     <Compile Include="DatabaseDeclaration\NamingStrategies\ForeignKeyNamingDefaultStrategy.cs" />
     <Compile Include="DatabaseDeclaration\NamingStrategies\ForeignKeyNamingMsSqlDefaultStrategy.cs" />

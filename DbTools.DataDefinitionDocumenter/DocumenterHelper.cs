@@ -6,6 +6,7 @@
     public class DocumenterHelper
     {
         protected Settings Settings { get; set; }
+
         public DocumenterHelper(Settings settings)
         {
             Settings = settings;

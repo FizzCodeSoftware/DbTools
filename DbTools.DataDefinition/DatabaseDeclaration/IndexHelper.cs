@@ -10,7 +10,6 @@
                 index.SqlColumns.Add(new ColumnAndOrder(table.Columns[columnName], AscDesc.Asc));
 
             table.Properties.Add(index);
-
             return table;
         }
     }

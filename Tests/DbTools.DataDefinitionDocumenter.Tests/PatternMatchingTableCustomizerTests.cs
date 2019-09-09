@@ -1,16 +1,13 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FizzCode.DbTools.DataDefinitionDocumenter;
-
-namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
+﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using FizzCode.DbTools.DataDefinitionDocumenter;
     using System.Configuration;
     using System.IO;
-    using FizzCode.DbTools.DataDefinition.Tests;
-    using FizzCode.DbTools.TestBase;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Tests;
+    using FizzCode.DbTools.DataDefinitionDocumenter;
+    using FizzCode.DbTools.TestBase;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class PatternMatchingTableCustomizerTests
@@ -88,7 +85,7 @@ namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
         {
             // Pattern; PatternExcept; ShouldSkipIfMatch; CategoryIfMatch; BackGroundColorIfMatch
 
-            var patternContent = "skip*;;1;";
+            const string patternContent = "skip*;;1;";
 
             var customizer = PatternMatchingTableCustomizerFromPatterns.FromString(patternContent);
 
@@ -107,7 +104,7 @@ namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
         {
             // Pattern; PatternExcept; ShouldSkipIfMatch; CategoryIfMatch; BackGroundColorIfMatch
 
-            var patternContent = "skip*;;1;";
+            const string patternContent = "skip*;;1;";
 
             var customizer = PatternMatchingTableCustomizerFromPatterns.FromString(patternContent);
 

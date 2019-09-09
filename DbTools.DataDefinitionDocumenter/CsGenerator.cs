@@ -11,6 +11,7 @@
     public class CsGenerator : DocumenterBase
     {
         private readonly string _namespace;
+
         public CsGenerator(Settings settings, string databaseName, string @namespace, ITableCustomizer tableCustomizer = null) : base(settings, databaseName, tableCustomizer)
         {
             _namespace = @namespace;
@@ -82,9 +83,9 @@
             // TODO
             // - format schema and table name
             // - configure use of default schema
-            sb.Append("\t\tpublic static LazySqlTable ").Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString())).AppendLine(" = new LazySqlTable(() =>")
+            sb.Append("\t\tpublic SqlTable ").Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString())).AppendLine(" {get;} = InitTable(() =>")
                 .AppendLine("\t\t{")
-                .AppendLine("\t\t\tvar table = new SqlTable();");
+                .AppendLine("\t\t\t");
 
             var pkColumns = table.Columns.Values
                 .Where(column => column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
@@ -181,7 +182,7 @@
                     DocumenterWriter.Write(table.Name, includeColumn.Name);
             }*/
 
-            sb.AppendLine("\t\t\treturn table;");
+            sb.AppendLine("\t\t\t");
             sb.AppendLine("\t\t});");
             sb.AppendLine("\t}");
             sb.AppendLine("}");
