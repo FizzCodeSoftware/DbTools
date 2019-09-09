@@ -56,7 +56,7 @@
             }
         }
 
-        private void AddAutoNaming()
+        protected void AddAutoNaming()
         {
             var pkNaming = NamingStrategies.GetNamingStrategy<IPrimaryKeyNamingStrategy>();
             var indexNaming = NamingStrategies.GetNamingStrategy<IIndexNamingStrategy>();
