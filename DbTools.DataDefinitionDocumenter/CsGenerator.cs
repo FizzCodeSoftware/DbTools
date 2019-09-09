@@ -92,16 +92,8 @@
 
             foreach (var column in pkColumns)
             {
-                var line = ColumnCreationHelper.GetColumnCreation(column);
-                sb.Append(line);
-
-                var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
-                if (!string.IsNullOrEmpty(descriptionProperty?.Description))
-                {
-                    sb.Append(" // ").Append(descriptionProperty.Description.Replace("\r", string.Empty).Replace("\n", string.Empty));
-                }
-
-                sb.AppendLine();
+                var columnCreation = ColumnCreationHelper.GetColumnCreation(column);
+                sb.AppendLine(columnCreation);
             }
 
             var regularColumns = table.Columns.Values
@@ -109,18 +101,8 @@
 
             foreach (var column in regularColumns)
             {
-                // TODO Type as ISqlTypeMapper
-
-                var line = ColumnCreationHelper.GetColumnCreation(column);
-                sb.Append(line);
-
-                var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
-                if (!string.IsNullOrEmpty(descriptionProperty?.Description))
-                {
-                    sb.Append(" // ").Append(descriptionProperty.Description.Replace("\r", string.Empty).Replace("\n", string.Empty));
-                }
-
-                sb.AppendLine();
+                var columnCreation = ColumnCreationHelper.GetColumnCreation(column);
+                sb.AppendLine(columnCreation);
             }
 
             // TODO Indexes + config
