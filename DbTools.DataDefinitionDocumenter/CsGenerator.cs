@@ -83,7 +83,10 @@
             // TODO
             // - format schema and table name
             // - configure use of default schema
-            sb.Append(2, "public SqlTable ").Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString())).AppendLine(" {get;} = AddTable(() =>")
+            sb
+                .Append(2, "public SqlTable ")
+                .Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString()))
+                .AppendLine(" { get; } = AddTable((table) =>")
                 .AppendLine(2, "{");
 
             var pkColumns = table.Columns.Values
@@ -97,7 +100,8 @@
             }
 
             var regularColumns = table.Columns.Values
-                .Where(x => !pkColumns.Contains(x)).ToList();
+                .Where(x => !pkColumns.Contains(x))
+                .ToList();
 
             foreach (var column in regularColumns)
             {
