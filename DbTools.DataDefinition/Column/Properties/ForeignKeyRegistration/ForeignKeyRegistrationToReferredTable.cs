@@ -2,7 +2,6 @@
 
 namespace FizzCode.DbTools.DataDefinition
 {
-
     public class ForeignKeyRegistrationToReferredTable : ForeignKeyRegistrationBase
     {
         public bool IsNullable { get; set; }

@@ -82,6 +82,7 @@
             var connection = OpenConnection();
             var command = PrepareSqlCommand(sqlStatementWithParameters);
             command.Connection = connection;
+            command.CommandTimeout = 60 * 60;
             try
             {
                 command.ExecuteNonQuery();

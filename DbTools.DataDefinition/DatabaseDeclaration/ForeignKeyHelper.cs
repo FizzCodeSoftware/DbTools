@@ -35,11 +35,11 @@
             return table;
         }
 
-        public static SqlTable AddForeignKey(this SqlTable table, string referredTableName, string singleFlColumnName, bool isNullable = false, string fkName = null)
+        public static SqlTable AddForeignKey(this SqlTable table, string referredTableName, string singleFkColumnName, bool isNullable = false, string fkName = null)
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
 
-            var fk = new ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn(table, referredTableNameWithSchema, singleFlColumnName, isNullable, fkName);
+            var fk = new ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn(table, referredTableNameWithSchema, singleFkColumnName, isNullable, fkName);
 
             table.Properties.Add(fk);
 
