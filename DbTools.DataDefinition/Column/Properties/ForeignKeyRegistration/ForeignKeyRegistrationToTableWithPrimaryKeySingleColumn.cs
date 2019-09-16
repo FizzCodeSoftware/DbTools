@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    public class ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn : ForeignKeyRegistrationBase
+    internal class ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn : ForeignKeyRegistrationBase
     {
         public string SingleFkColumnName { get; set; }
         public bool IsNullable { get; set; }

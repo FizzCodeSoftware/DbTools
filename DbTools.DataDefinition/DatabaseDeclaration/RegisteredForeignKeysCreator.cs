@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace FizzCode.DbTools.DataDefinition
 {
-    internal class RegisteredForeignKeysCreator
+    internal static class RegisteredForeignKeysCreator
     {
         internal static void PrimaryKeySingleColum(Tables tables, SqlTable sqlTable, ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn fkRegistration)
         {
@@ -12,7 +12,7 @@ namespace FizzCode.DbTools.DataDefinition
 
             var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
-            var pkColumn = referredPk.SqlColumns.First().SqlColumn;
+            var pkColumn = referredPk.SqlColumns[0].SqlColumn;
 
             var col = new SqlColumn();
             pkColumn.CopyTo(col);
@@ -54,7 +54,7 @@ namespace FizzCode.DbTools.DataDefinition
 
             var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
-            var pkColumn = referredPk.SqlColumns.First().SqlColumn;
+            var pkColumn = referredPk.SqlColumns[0].SqlColumn;
             fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkRegistration.SingleFkColumn, pkColumn));
         }
 

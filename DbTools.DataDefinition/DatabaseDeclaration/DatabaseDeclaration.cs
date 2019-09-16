@@ -39,20 +39,29 @@
             foreach (var sqlTable in Tables)
             {
                 foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn>(sqlTable))
+                {
                     RegisteredForeignKeysCreator.PrimaryKeySingleColum(Tables, sqlTable, fkRegistration);
+                }
 
                 foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithPrimaryKey>(sqlTable))
+                {
                     RegisteredForeignKeysCreator.PrimaryKey(Tables, sqlTable, fkRegistration, fkNaming);
+                }
 
-                foreach (var fkRegistration in
-                    GetProperties<ForeignKeyRegistrationToTableWithPrimaryKeyExistingColumn>(sqlTable))
+                foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithPrimaryKeyExistingColumn>(sqlTable))
+                {
                     RegisteredForeignKeysCreator.PrimaryKeyExistingColumn(Tables, sqlTable, fkRegistration);
+                }
 
                 foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToReferredTableExistingColumns>(sqlTable))
+                {
                     RegisteredForeignKeysCreator.ReferredTableExistingColumns(Tables, sqlTable, fkRegistration);
+                }
 
                 foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToReferredTable>(sqlTable))
+                {
                     RegisteredForeignKeysCreator.ReferredTable(Tables, sqlTable, fkRegistration);
+                }
             }
         }
 

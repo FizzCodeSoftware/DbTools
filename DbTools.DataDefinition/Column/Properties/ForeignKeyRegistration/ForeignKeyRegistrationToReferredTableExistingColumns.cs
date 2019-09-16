@@ -2,7 +2,7 @@
 
 namespace FizzCode.DbTools.DataDefinition
 {
-    public class ForeignKeyRegistrationToReferredTableExistingColumns : ForeignKeyRegistrationBase
+    internal class ForeignKeyRegistrationToReferredTableExistingColumns : ForeignKeyRegistrationBase
     {
         public List<ColumnReference> Map { get; set; }
 
