@@ -96,6 +96,12 @@
             }
         }
 
+        public void DropAllViews()
+        {
+            var sql = _executer.Generator.DropAllViews();
+            _executer.ExecuteNonQuery(sql);
+        }
+
         public void DropAllTables()
         {
             var sql = _executer.Generator.DropAllTables();

@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
-    using System;
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.Common;
@@ -268,6 +267,8 @@
         }
 
         protected abstract string GuardKeywords(string name);
+
+        public abstract string DropAllViews();
 
         public abstract string DropAllTables();
 

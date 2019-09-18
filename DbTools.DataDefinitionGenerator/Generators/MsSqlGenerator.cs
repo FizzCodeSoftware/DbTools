@@ -36,8 +36,7 @@
 
         public override string DropAllTables()
         {
-            return @"
-DECLARE @sql nvarchar(2000)
+            return @"DECLARE @sql nvarchar(2000)
 
 -- DROP FKs
 WHILE(EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS where CONSTRAINT_TYPE='FOREIGN KEY'))
@@ -55,13 +54,25 @@ BEGIN
     FROM INFORMATION_SCHEMA.TABLES
     WHERE TABLE_TYPE = 'BASE TABLE'
     EXEC (@sql)
-END
-";
+END";
             // Azure misses sp_MSforeachtable and sp_MSdropconstraints, thus the above
             /* return @"
 exec sp_MSforeachtable ""declare @name nvarchar(max); set @name = parsename('?', 1); exec sp_MSdropconstraints @name"";
 exec sp_MSforeachtable ""drop table ?"";";
             */
+        }
+
+        public override string DropAllViews()
+        {
+            return @"DECLARE @sql nvarchar(2000)
+
+-- DROP Views
+WHILE(EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.VIEWS))
+BEGIN
+    SELECT TOP 1 @sql=('DROP VIEW ' + TABLE_SCHEMA + '.[' + TABLE_NAME + ']')
+    FROM INFORMATION_SCHEMA.VIEWS
+    EXEC (@sql)
+END";
         }
 
         public override string DropAllIndexes()
