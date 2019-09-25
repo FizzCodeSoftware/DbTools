@@ -8,10 +8,10 @@
         private readonly Dictionary<string, ConnectionStringWithProvider> _connectionStrings = new Dictionary<string, ConnectionStringWithProvider>();
         public IEnumerable<ConnectionStringWithProvider> All => _connectionStrings.Values;
 
-        public void LoadFromConfiguration(IConfigurationRoot configuration, string path = "ConnectionStrings")
+        public void LoadFromConfiguration(IConfigurationRoot configuration, string section = "ConnectionStrings")
         {
             var connectionStrings = configuration
-                .GetSection(path)
+                .GetSection(section)
                 .Get<ConnectionStringWithProvider[]>();
 
             if (connectionStrings == null)
