@@ -25,13 +25,14 @@
 
         public void Add(ConnectionStringWithProvider connectionString)
         {
-            _connectionStrings[connectionString.Name] = connectionString;
+            _connectionStrings[connectionString.Name.ToLowerInvariant()] = connectionString;
         }
 
         public ConnectionStringWithProvider this[string name]
         {
             get
             {
+                name = name.ToLowerInvariant();
                 _connectionStrings.TryGetValue(name, out var value);
                 return value;
             }
