@@ -16,7 +16,7 @@
         {
         }
 
-        public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dds)
+        public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd)
         {
             DropDatabaseIfExists();
             CreateDatabase();

@@ -53,7 +53,7 @@
 
         private string GetIdentitySql(bool isPrimaryKey)
         {
-            return $@"
+            return @"
 SELECT schema_name(tab.schema_id) schema_name, 
     col.[name] as column_name, 
     tab.[name] as table_name

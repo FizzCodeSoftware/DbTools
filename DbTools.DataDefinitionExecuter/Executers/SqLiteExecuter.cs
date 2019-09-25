@@ -19,7 +19,7 @@
 
         protected override SqlDialect SqlDialect => SqlDialect.SqLite;
 
-        public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dds)
+        public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd)
         {
             if (dropIfExists)
                 DropDatabase();
@@ -45,7 +45,7 @@
         {
             if (_connection != null)
             {
-                if(_connection.State != System.Data.ConnectionState.Closed)
+                if (_connection.State != System.Data.ConnectionState.Closed)
                     _connection.Close();
 
                 _connection = null;

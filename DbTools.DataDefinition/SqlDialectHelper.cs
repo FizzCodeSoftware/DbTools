@@ -13,32 +13,24 @@
 
         public static SqlDialect GetSqlDialectFromProviderName(string providerName)
         {
-            switch (providerName)
+            return providerName switch
             {
-                case "System.Data.SqlClient":
-                    return SqlDialect.MsSql;
-                case "System.Data.SQLite":
-                    return SqlDialect.SqLite;
-                case "Oracle.ManagedDataAccess.Client":
-                    return SqlDialect.Oracle;
-                default:
-                    throw new NotImplementedException($"Unmapped connection string provider {providerName}");
-            }
+                "System.Data.SqlClient" => SqlDialect.MsSql,
+                "System.Data.SQLite" => SqlDialect.SqLite,
+                "Oracle.ManagedDataAccess.Client" => SqlDialect.Oracle,
+                _ => throw new NotImplementedException($"Unmapped connection string provider {providerName}"),
+            };
         }
 
         public static string GetProviderNameFromSqlDialect(SqlDialect sqlDialect)
         {
-            switch (sqlDialect)
+            return sqlDialect switch
             {
-                case SqlDialect.MsSql:
-                    return "System.Data.SqlClient";
-                case SqlDialect.SqLite:
-                    return "System.Data.SQLite";
-                case SqlDialect.Oracle:
-                    return "Oracle.ManagedDataAccess.Client";
-                default:
-                    throw new NotImplementedException($"Unmapped sqlDialect {sqlDialect}");
-            }
+                SqlDialect.MsSql => "System.Data.SqlClient",
+                SqlDialect.SqLite => "System.Data.SQLite",
+                SqlDialect.Oracle => "Oracle.ManagedDataAccess.Client",
+                _ => throw new NotImplementedException($"Unmapped sqlDialect {sqlDialect}"),
+            };
         }
     }
 }

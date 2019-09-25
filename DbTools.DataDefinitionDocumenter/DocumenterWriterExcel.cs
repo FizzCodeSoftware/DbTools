@@ -57,27 +57,27 @@
             return _sheets[sheetName];
         }
 
-        public void WriteLine(string name, params object[] content)
+        public void WriteLine(string sheetName, params object[] content)
         {
-            var sheetName = GetSheetName(name);
+            sheetName = GetSheetName(sheetName);
             Write(sheetName, content);
 
             Sheet(sheetName).LastRow++;
             Sheet(sheetName).LastColumn = 1;
         }
 
-        public void WriteLine(Color? backgroundColor, string name, params object[] content)
+        public void WriteLine(Color? backgroundColor, string sheetName, params object[] content)
         {
-            var sheetName = GetSheetName(name);
+            sheetName = GetSheetName(sheetName);
             Write(backgroundColor, sheetName, content);
 
             Sheet(sheetName, backgroundColor).LastRow++;
             Sheet(sheetName, backgroundColor).LastColumn = 1;
         }
 
-        public void Write(string name, params object[] content)
+        public void Write(string sheetName, params object[] content)
         {
-            Write(null, name, content);
+            Write(null, sheetName, content);
         }
 
         public void Write(Color? backgroundColor, string sheetName, params object[] content)
@@ -103,15 +103,13 @@
         private double GetRenderedTextHeight(string text, ExcelFont font, double width)
         {
             using (var bm = new Bitmap(1, 1))
+            using (var graphics = Graphics.FromImage(bm))
             {
-                using (var graphics = Graphics.FromImage(bm))
+                var pixelWidth = Convert.ToInt32(width * 7.5);
+                using (var drawingFont = new Font(font.Name, font.Size))
                 {
-                    var pixelWidth = Convert.ToInt32(width * 7.5);
-                    using (var drawingFont = new Font(font.Name, font.Size))
-                    {
-                        var size = graphics.MeasureString(text, drawingFont, pixelWidth);
-                        return Math.Min(Convert.ToDouble(size.Height) * 72 / 96, 409) * 1.2d;
-                    }
+                    var size = graphics.MeasureString(text, drawingFont, pixelWidth);
+                    return Math.Min(Convert.ToDouble(size.Height) * 72 / 96, 409) * 1.2d;
                 }
             }
         }

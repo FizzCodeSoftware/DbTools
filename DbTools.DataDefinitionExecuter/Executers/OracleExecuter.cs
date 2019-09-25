@@ -25,12 +25,12 @@
             throw new NotImplementedException("Oracle executer does not handle database name.");
         }
 
-        public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dds)
+        public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd)
         {
             var defaultSchema = GetSettings().SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
 
             if (dropIfExists && CheckIfUserExists(defaultSchema))
-                CleanupDatabase(dds);
+                CleanupDatabase(dd);
 
             ExecuteNonQuery($"CREATE USER \"{defaultSchema}\" IDENTIFIED BY sa123");
             ExecuteNonQuery($"GRANT CONNECT, DBA TO \"{defaultSchema}\"");
@@ -85,7 +85,7 @@
                 }
                 var sqlStatementTrimEnd = sqlStatementWithParameters.Statement.TrimEnd();
 
-                if (count == 1 && sqlStatementTrimEnd[sqlStatementTrimEnd.Length - 1] == ';')
+                if (count == 1 && sqlStatementTrimEnd[^1] == ';')
                 {
                     sqlStatementWithParameters.Statement = sqlStatementTrimEnd.Remove(sqlStatementTrimEnd.Length - 1);
                 }
@@ -93,8 +93,8 @@
                 {
                     foreach (var subStatement in sqlStatementWithParameters.Statement.Split(';'))
                     {
-                        if(subStatement.Trim().Length > 0)
-                        base.ExecuteNonQuery(new SqlStatementWithParameters(subStatement, sqlStatementWithParameters.Parameters));
+                        if (subStatement.Trim().Length > 0)
+                            base.ExecuteNonQuery(new SqlStatementWithParameters(subStatement, sqlStatementWithParameters.Parameters));
                     }
                 }
                 else

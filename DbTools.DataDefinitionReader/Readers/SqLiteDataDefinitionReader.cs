@@ -105,21 +105,15 @@
 
         private SqlType MapSqlType(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "int":
-                    return SqlType.Int32;
-                case "smallint":
-                    return SqlType.Int16;
-                case "decimal":
-                    return SqlType.Decimal;
-                case "nvarchar":
-                    return SqlType.NVarchar;
-                case "nchar":
-                    return SqlType.NChar;
-                default:
-                    throw new NotImplementedException($"Unmapped SqlType: {type}.");
-            }
+                "int" => SqlType.Int32,
+                "smallint" => SqlType.Int16,
+                "decimal" => SqlType.Decimal,
+                "nvarchar" => SqlType.NVarchar,
+                "nchar" => SqlType.NChar,
+                _ => throw new NotImplementedException($"Unmapped SqlType: {type}."),
+            };
         }
     }
 }

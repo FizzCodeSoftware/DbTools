@@ -66,19 +66,14 @@
 
         private GeneratorBase GetDefaultGenerator(SqlColumn column)
         {
-            switch (column.Type)
+            return column.Type switch
             {
-                case SqlType.NVarchar:
-                    return new GeneratorString(1, column.Length.Value + 1);
-                case SqlType.Int32:
-                    return new GeneratorInt32();
-                case SqlType.Date:
-                    return new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1));
-                case SqlType.DateTime:
-                    return new GeneratorDateTimeMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1));
-                default:
-                    throw new NotImplementedException($"Unhandled SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
-            }
+                SqlType.NVarchar => new GeneratorString(1, column.Length.Value + 1),
+                SqlType.Int32 => new GeneratorInt32(),
+                SqlType.Date => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
+                SqlType.DateTime => new GeneratorDateTimeMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
+                _ => throw new NotImplementedException($"Unhandled SqlType: {Enum.GetName(typeof(SqlType), column.Type)}"),
+            };
         }
     }
 }

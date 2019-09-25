@@ -1,107 +1,24 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{DA2F3610-73C6-4F4A-9927-82332F91E957}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FizzCode.DbTools.DataDefinitionGenerator</RootNamespace>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <PackageId>FizzCode.DbTools.DataDefinitionGenerator</PackageId>
+    <Authors>FizzCode Ltd.</Authors>
+    <Product>FizzCode DbTools</Product>
+    <Description>Database creation sql generator for Fizzcode DbTools project</Description>
+    <Copyright>Copyright © 2019 FizzCode Ltd.</Copyright>
+    <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
+    <Platforms>AnyCPU</Platforms>
+    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>FizzCode.DbTools.DataDefinitionGenerator</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <RootNamespace>FizzCode.DbTools.DataDefinitionGenerator</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Integration|AnyCPU'">
-    <OutputPath>bin\Integration\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Integration|x64'">
-    <OutputPath>bin\x64\Integration\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
+    <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\Global\AssemblyInfo.Global.cs">
-      <Link>Properties\AssemblyInfo.Global.cs</Link>
-    </Compile>
-    <Compile Include="Generators\OracleGenerator.cs" />
-    <Compile Include="Generators\SqLiteGenerator.cs" />
-    <Compile Include="Generators\MsSqlGenerator.cs" />
-    <Compile Include="ISqlGeneratorDropAndCreateDatabase.cs" />
-    <Compile Include="SqlStatementWithParams.cs" />
-    <Compile Include="SqlTypeMapper\OracleTypeMapper.cs" />
-    <Compile Include="SqlTypeMapper\SqLiteTypeMapper.cs" />
-    <Compile Include="SqlTypeMapper\MsSqlTypeMapper.cs" />
-    <Compile Include="SqlTypeMapper\GenericSqlTypeMapper.cs" />
-    <Compile Include="ISqlGenerator.cs" />
-    <Compile Include="ISqlTypeMapper.cs" />
-    <Compile Include="Generators\GenericSqlGenerator.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlGeneratorFactory.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj">
-      <Project>{cfcc1e6d-003e-405f-8ade-674594343e63}</Project>
-      <Name>DbTools.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj">
-      <Project>{626e2bd9-8e64-4c06-b47e-a9a911e90e56}</Project>
-      <Name>DbTools.DataDefinition</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>

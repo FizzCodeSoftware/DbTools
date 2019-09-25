@@ -1,100 +1,29 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{56C6D12A-8FF5-4871-A5A7-3E6AB70ADDF7}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>FizzCode.DbTools.Console</RootNamespace>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <PackageId>FizzCode.DbTools.Console</PackageId>
+    <Authors>FizzCode Ltd.</Authors>
+    <Product>FizzCode DbTools</Product>
+    <Description>Console project which accepts commands to execute DbTools features.</Description>
+    <Copyright>Copyright © 2019 FizzCode Ltd.</Copyright>
+    <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
+    <Platforms>AnyCPU</Platforms>
+    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>FizzCode.DbTools.Console</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
+    <RootNamespace>FizzCode.DbTools.Console</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <Prefer32Bit>true</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinitionDocumenter\DbTools.DataDefinitionDocumenter.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinitionReader\DbTools.DataDefinitionReader.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Program.cs" />
-    <Compile Include="..\Global\AssemblyInfo.Global.cs">
-      <Link>Properties\AssemblyInfo.Global.cs</Link>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj">
-      <Project>{cfcc1e6d-003e-405f-8ade-674594343e63}</Project>
-      <Name>DbTools.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DbTools.DataDefinitionDocumenter\DbTools.DataDefinitionDocumenter.csproj">
-      <Project>{1c37ee97-4cc3-4c73-b2bc-1c98bc45abd2}</Project>
-      <Name>DbTools.DataDefinitionDocumenter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DbTools.DataDefinitionExecuter\DbTools.DataDefinitionExecuter.csproj">
-      <Project>{4ab49f19-8e03-4944-b104-4dfde056231f}</Project>
-      <Name>DbTools.DataDefinitionExecuter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DbTools.DataDefinitionReader\DbTools.DataDefinitionReader.csproj">
-      <Project>{0a3caaa7-8d7e-4b9f-b6ef-9ac4f06c0e01}</Project>
-      <Name>DbTools.DataDefinitionReader</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj">
-      <Project>{626e2bd9-8e64-4c06-b47e-a9a911e90e56}</Project>
-      <Name>DbTools.DataDefinition</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
   <Import Project="..\Global\TransformConfig.targets" />
+
 </Project>

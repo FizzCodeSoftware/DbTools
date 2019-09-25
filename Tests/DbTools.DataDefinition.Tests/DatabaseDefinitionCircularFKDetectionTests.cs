@@ -8,57 +8,57 @@ namespace FizzCode.DbTools.DataDefinition.Tests
 
     public class TestDatabaseOtherChainIsCircular : DatabaseDeclaration
     {
-        public SqlTable Start {get;} = AddTable(table =>
-        {
-            table.AddInt32("StartId").SetPK().SetIdentity();
-            table.AddForeignKey(nameof(FK1));
-        });
+        public SqlTable Start { get; } = AddTable(table =>
+          {
+              table.AddInt32("StartId").SetPK().SetIdentity();
+              table.AddForeignKey(nameof(FK1));
+          });
 
-        public SqlTable FK1 {get;} = AddTable(table =>
-        {
-            table.AddInt32("FK1Id").SetPK().SetIdentity();
-            table.AddForeignKey(nameof(FK2));
-        });
+        public SqlTable FK1 { get; } = AddTable(table =>
+          {
+              table.AddInt32("FK1Id").SetPK().SetIdentity();
+              table.AddForeignKey(nameof(FK2));
+          });
 
-        public SqlTable FK2 {get;} = AddTable(table =>
-        {
-            table.AddInt32("FK2Id").SetPK().SetIdentity();
-            table.AddForeignKey(nameof(FK1));
-        });
+        public SqlTable FK2 { get; } = AddTable(table =>
+          {
+              table.AddInt32("FK2Id").SetPK().SetIdentity();
+              table.AddForeignKey(nameof(FK1));
+          });
     }
 
     public class TestDatabaseOtherTwoChainsAreCircular : DatabaseDeclaration
     {
-        public SqlTable Start {get;} = AddTable(table =>
-        {
-            table.AddInt32("StartId").SetPK().SetIdentity();
-            table.AddForeignKey(nameof(FKA1));
-            table.AddForeignKey(nameof(FKB1));
-        });
+        public SqlTable Start { get; } = AddTable(table =>
+          {
+              table.AddInt32("StartId").SetPK().SetIdentity();
+              table.AddForeignKey(nameof(FKA1));
+              table.AddForeignKey(nameof(FKB1));
+          });
 
-        public SqlTable FKA1 {get;} = AddTable(table =>
-        {
-            table.AddInt32("FKA1Id").SetPK().SetIdentity();
-            table.AddForeignKey(nameof(FKA2));
-        });
+        public SqlTable FKA1 { get; } = AddTable(table =>
+          {
+              table.AddInt32("FKA1Id").SetPK().SetIdentity();
+              table.AddForeignKey(nameof(FKA2));
+          });
 
-        public SqlTable FKA2 {get;} = AddTable(table =>
-        {
-            table.AddInt32("FKA2Id").SetPK().SetIdentity();
-            table.AddForeignKey(nameof(FKA1));
-        });
+        public SqlTable FKA2 { get; } = AddTable(table =>
+          {
+              table.AddInt32("FKA2Id").SetPK().SetIdentity();
+              table.AddForeignKey(nameof(FKA1));
+          });
 
-        public SqlTable FKB1 {get;} = AddTable(table =>
-        {
-            table.AddInt32("FKB1Id").SetPK().SetIdentity();
-            table.AddForeignKey(nameof(FKB2));
-        });
+        public SqlTable FKB1 { get; } = AddTable(table =>
+          {
+              table.AddInt32("FKB1Id").SetPK().SetIdentity();
+              table.AddForeignKey(nameof(FKB2));
+          });
 
-        public SqlTable FKB2 {get;} = AddTable(table =>
-        {
-            table.AddInt32("FKB2Id").SetPK().SetIdentity();
-            table.AddForeignKey(nameof(FKB1));
-        });
+        public SqlTable FKB2 { get; } = AddTable(table =>
+          {
+              table.AddInt32("FKB2Id").SetPK().SetIdentity();
+              table.AddForeignKey(nameof(FKB1));
+          });
     }
 
     [TestClass]
@@ -237,8 +237,7 @@ namespace FizzCode.DbTools.DataDefinition.Tests
         public void TestDatabaseSelfFK()
         {
             var dd = new TestDatabaseSelfFK();
-
-            var company = dd.GetTable("Company");
+            dd.GetTable("Company");
         }
     }
 }

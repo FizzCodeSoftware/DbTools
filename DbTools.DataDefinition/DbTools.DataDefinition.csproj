@@ -1,120 +1,27 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{626E2BD9-8E64-4C06-B47E-A9A911E90E56}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>FizzCode.DbTools.DataDefinition</RootNamespace>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <PackageId>FizzCode.DbTools.DataDefinition</PackageId>
+    <Authors>FizzCode Ltd.</Authors>
+    <Product>FizzCode DbTools</Product>
+    <Description>Database definition for Fizzcode DbTools project</Description>
+    <Copyright>Copyright © 2019 FizzCode Ltd.</Copyright>
+    <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
+    <Platforms>AnyCPU</Platforms>
+    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>FizzCode.DbTools.DataDefinition</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
+    <RootNamespace>FizzCode.DbTools.DataDefinition</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x64\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>bin\x64\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.6.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="Column\Properties\DefaultValue.cs" />
-    <Compile Include="Column\Properties\ColumnReference.cs" />
-    <Compile Include="Column\Properties\ForeignKeyRegistration\ForeignKeyRegistrationBase.cs" />
-    <Compile Include="Column\Properties\ForeignKeyRegistration\ForeignKeyRegistrationToReferredTable.cs" />
-    <Compile Include="Column\Properties\ForeignKeyRegistration\ForeignKeyRegistrationToReferredTableExistingColumns.cs" />
-    <Compile Include="Column\Properties\ForeignKeyRegistration\ForeignKeyRegistrationToTableWithPrimaryKey.cs" />
-    <Compile Include="Column\Properties\ForeignKeyRegistration\ForeignKeyRegistrationToTableWithPrimaryKeyExistingColumn.cs" />
-    <Compile Include="Column\Properties\ForeignKeyRegistration\ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn.cs" />
-    <Compile Include="DatabaseDeclaration\DefaultValueHelper.cs" />
-    <Compile Include="DatabaseDeclaration\DescriptionHelper.cs" />
-    <Compile Include="Column\Properties\SqlColumnDescription.cs" />
-    <Compile Include="Column\Properties\SqlTableDescription.cs" />
-    <Compile Include="DatabaseDeclaration\NamingStrategiesDictionary.cs" />
-    <Compile Include="DatabaseDeclaration\NamingStrategies\ForeignKeyNamingDefaultStrategy.cs" />
-    <Compile Include="DatabaseDeclaration\NamingStrategies\ForeignKeyNamingMsSqlDefaultStrategy.cs" />
-    <Compile Include="DatabaseDeclaration\NamingStrategies\IForeignKeyNamingStrategy.cs" />
-    <Compile Include="DatabaseDeclaration\NamingStrategies\IIndexNamingStrategy.cs" />
-    <Compile Include="DatabaseDeclaration\NamingStrategies\INamingStrategy.cs" />
-    <Compile Include="DatabaseDeclaration\NamingStrategies\IndexNamingMsSqlDefaultStrategy.cs" />
-    <Compile Include="DatabaseDeclaration\NamingStrategies\IPrimaryKeyNamingStrategy.cs" />
-    <Compile Include="DatabaseDeclaration\NamingStrategies\PrimaryKeyNamingDefaultStrategy.cs" />
-    <Compile Include="DatabaseDeclaration\ForeignKeyHelper.cs" />
-    <Compile Include="DatabaseDeclaration\RegisteredForeignKeysCreator.cs" />
-    <Compile Include="SchemaAndTableName.cs" />
-    <Compile Include="SqlDialectHelper.cs" />
-    <Compile Include="Table\CircularFKDetector.cs" />
-    <Compile Include="Table\Tables.cs" />
-    <Compile Include="Table\TableSorter.cs" />
-    <Compile Include="Column\Properties\AscDesc.cs" />
-    <Compile Include="Column\Properties\CircularFK.cs" />
-    <Compile Include="Column\Properties\ColumnAndOrder.cs" />
-    <Compile Include="Column\Properties\ForeignKey.cs" />
-    <Compile Include="Column\Properties\ForeignKeyRegistration\ForeignKeyColumnMap.cs" />
-    <Compile Include="Column\Properties\Identity.cs" />
-    <Compile Include="Column\Properties\Index.cs" />
-    <Compile Include="Column\Properties\IndexBase.cs" />
-    <Compile Include="DatabaseDeclaration\IndexHelper.cs" />
-    <Compile Include="Column\Properties\PrimaryKey.cs" />
-    <Compile Include="DatabaseDeclaration\PrimaryKeyHelper.cs" />
-    <Compile Include="Column\Properties\SqlColumnCustomProperty.cs" />
-    <Compile Include="Column\Properties\SqlColumnProperty.cs" />
-    <Compile Include="Column\Properties\SqlTableProperty.cs" />
-    <Compile Include="Column\SqlColumn.cs" />
-    <Compile Include="Column\SqlColumnHelper.cs" />
-    <Compile Include="DatabaseDeclaration\DatabaseDeclaration.cs" />
-    <Compile Include="DatabaseDefinition.cs" />
-    <Compile Include="..\Global\AssemblyInfo.Global.cs">
-      <Link>Properties\AssemblyInfo.Global.cs</Link>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SqlTable.cs" />
-    <Compile Include="SqlType.cs" />
+    <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj">
-      <Project>{cfcc1e6d-003e-405f-8ade-674594343e63}</Project>
-      <Name>DbTools.Common</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+
 </Project>

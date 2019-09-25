@@ -25,8 +25,8 @@
         {
             if (!string.IsNullOrEmpty(schemaName))
                 return $"CREATE SCHEMA {schemaName}";
-            else
-                return "";
+
+            return "";
         }
 
         protected string CreateTableInternal(SqlTable table, bool withForeignKey)
@@ -276,7 +276,7 @@
 
         public virtual SqlStatementWithParameters TableExists(SqlTable table)
         {
-            return new SqlStatementWithParameters($@"
+            return new SqlStatementWithParameters(@"
 SELECT
     CASE WHEN EXISTS(SELECT * FROM information_schema.tables WHERE table_schema = @ShemaName AND table_name = @TableName)
         THEN 1
@@ -286,7 +286,7 @@ SELECT
 
         public SqlStatementWithParameters SchmaExists(SqlTable table)
         {
-            return new SqlStatementWithParameters($@"
+            return new SqlStatementWithParameters(@"
 SELECT
     CASE WHEN EXISTS(SELECT schema_name FROM information_schema.schemata WHERE schema_name = @SchemaName)
         THEN 1
@@ -314,8 +314,8 @@ SELECT
 
             if (schema != null)
                 return GuardKeywords(schema) + "." + GuardKeywords(tableName);
-            else
-                return GuardKeywords(tableName);
+
+            return GuardKeywords(tableName);
         }
 
         public Settings GetSettings()

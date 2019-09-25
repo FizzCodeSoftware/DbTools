@@ -14,21 +14,21 @@
             _patterns.Add(new PatternMatchingTableCustomizerItem(pattern, patternExcept, shouldSkip, category, backGroundColor));
         }
 
-        public string BackGroundColor(SchemaAndTableName schemaAndTableName)
+        public string BackGroundColor(SchemaAndTableName tableName)
         {
-            var item = GetPatternMatching(schemaAndTableName);
+            var item = GetPatternMatching(tableName);
             return item?.BackGroundColorIfMatch;
         }
 
-        public string Category(SchemaAndTableName schemaAndTableName)
+        public string Category(SchemaAndTableName tableName)
         {
-            var item = GetPatternMatching(schemaAndTableName);
+            var item = GetPatternMatching(tableName);
             return item?.CategoryIfMatch;
         }
 
-        public bool ShouldSkip(SchemaAndTableName schemaAndTableName)
+        public bool ShouldSkip(SchemaAndTableName tableName)
         {
-            var item = GetPatternMatching(schemaAndTableName);
+            var item = GetPatternMatching(tableName);
             return item?.ShouldSkipIfMatch == true;
         }
 
@@ -70,11 +70,9 @@
                 return !Regex.Match(schemaAndTableName.SchemaAndName, regexPatternExcept).Success
                     && !Regex.Match(schemaAndTableName.TableName, regexPatternExcept).Success;
             }
-            else
-            {
-                return !string.Equals(item.PatternExcept, schemaAndTableName.SchemaAndName, StringComparison.InvariantCultureIgnoreCase)
-                    && !string.Equals(item.PatternExcept, schemaAndTableName.TableName, StringComparison.InvariantCultureIgnoreCase);
-            }
+
+            return !string.Equals(item.PatternExcept, schemaAndTableName.SchemaAndName, StringComparison.InvariantCultureIgnoreCase)
+                && !string.Equals(item.PatternExcept, schemaAndTableName.TableName, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private bool IsRegex(string pattern)

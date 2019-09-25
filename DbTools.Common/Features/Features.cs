@@ -23,8 +23,8 @@
             {
                 if (_features.ContainsKey(name) && _features[name].Support.ContainsKey(sqlDialect))
                     return _features[name].Support[sqlDialect];
-                else
-                    return new FeatureSupport(Support.Unknown, null);
+
+                return new FeatureSupport(Support.Unknown, null);
             }
         }
     }

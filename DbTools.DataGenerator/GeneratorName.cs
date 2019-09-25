@@ -1,13 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataGenerator
 {
-    using System;
-
     public class GeneratorName : GeneratorTypizedText
     {
-        public GeneratorName()
-        {
-        }
-
         public override object Get()
         {
             var personNames = new PersonNames();

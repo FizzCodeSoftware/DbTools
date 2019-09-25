@@ -27,8 +27,8 @@
 
             if (schema != null)
                 return schema + separator + tableName;
-            else
-                return tableName;
+
+            return tableName;
         }
     }
 }

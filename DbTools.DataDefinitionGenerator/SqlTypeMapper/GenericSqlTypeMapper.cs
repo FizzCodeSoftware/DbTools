@@ -7,61 +7,38 @@
     {
         public virtual string GetType(SqlType type)
         {
-            switch (type)
+            return type switch
             {
-                case SqlType.Boolean:
-                    return "BIT";
-                case SqlType.Byte:
-                    return "TINYINT";
-                case SqlType.Int16:
-                    return "SMALLINT";
-                case SqlType.Int32:
-                    return "INT";
-                case SqlType.Int64:
-                    return "BIGINT";
+                SqlType.Boolean => "BIT",
+                SqlType.Byte => "TINYINT",
+                SqlType.Int16 => "SMALLINT",
+                SqlType.Int32 => "INT",
+                SqlType.Int64 => "BIGINT",
 
-                case SqlType.NVarchar:
-                    return "NVARCHAR";
-                case SqlType.Varchar:
-                    return "VARCHAR";
-                case SqlType.NChar:
-                    return "NCHAR";
-                case SqlType.Char:
-                    return "CHAR";
+                SqlType.NVarchar => "NVARCHAR",
+                SqlType.Varchar => "VARCHAR",
+                SqlType.NChar => "NCHAR",
+                SqlType.Char => "CHAR",
 
-                case SqlType.Date:
-                    return "DATE";
+                SqlType.Date => "DATE",
 
                 // TODO Datetime2 / offset?
-                case SqlType.DateTime:
-                    return "DATETIME";
-                case SqlType.DateTimeOffset:
-                    return "DATETIMEOFFSET";
+                SqlType.DateTime => "DATETIME",
+                SqlType.DateTimeOffset => "DATETIMEOFFSET",
 
-                case SqlType.Decimal:
-                    return "DECIMAL";
-                case SqlType.Double:
-                    return "FLOAT";
-                case SqlType.Money:
-                    return "MONEY";
+                SqlType.Decimal => "DECIMAL",
+                SqlType.Double => "FLOAT",
+                SqlType.Money => "MONEY",
 
-                case SqlType.Xml:
-                    return "XML";
-                case SqlType.Guid:
-                    return "UNIQUEIDENTIFIER";
-                case SqlType.Binary:
-                    return "BINARY";
-                case SqlType.VarBinary:
-                    return "VARBINARY";
-                case SqlType.Image:
-                    return "IMAGE";
-                case SqlType.NText:
-                    return "NTEXT";
-                case SqlType.Single:
-                    return "REAL";
-                default:
-                    throw new NotImplementedException($"Unmapped SqlType: {Enum.GetName(typeof(SqlType), type)}");
-            }
+                SqlType.Xml => "XML",
+                SqlType.Guid => "UNIQUEIDENTIFIER",
+                SqlType.Binary => "BINARY",
+                SqlType.VarBinary => "VARBINARY",
+                SqlType.Image => "IMAGE",
+                SqlType.NText => "NTEXT",
+                SqlType.Single => "REAL",
+                _ => throw new NotImplementedException($"Unmapped SqlType: {Enum.GetName(typeof(SqlType), type)}"),
+            };
         }
     }
 }

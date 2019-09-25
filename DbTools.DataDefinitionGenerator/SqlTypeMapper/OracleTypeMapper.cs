@@ -6,14 +6,12 @@
     {
         public override string GetType(SqlType type)
         {
-            switch (type)
+            return type switch
             {
-                case SqlType.NVarchar:
-                    return "VARCHAR2";
+                SqlType.NVarchar => "VARCHAR2",
 
-                default:
-                    return base.GetType(type);
-            }
+                _ => base.GetType(type),
+            };
         }
     }
 }

@@ -11,11 +11,10 @@
         {
             var sb = new StringBuilder();
 
-            sb.Append(3, "table.");
+            sb.Append(3, "table.")
+                .Append(GetColumnCreationMethod(column));
 
             // TODO Type as ISqlTypeMapper
-
-            sb.Append(GetColumnCreationMethod(column));
 
             if (column.IsNullable)
                 sb.Append(", true");
@@ -80,45 +79,29 @@
 
         public static string GetColumnCreationMethod(SqlColumn column)
         {
-            switch (column.Type)
+            return column.Type switch
             {
-                case SqlType.Boolean:
-                    return $"AddBoolean(\"{column.Name}\"";
-                case SqlType.Byte:
-                    return $"AddByte(\"{column.Name}\"";
-                case SqlType.Int16:
-                    return $"AddInt16(\"{column.Name}\"";
-                case SqlType.Int32:
-                    return $"AddInt32(\"{column.Name}\"";
-                case SqlType.Int64:
-                    return $"AddInt64(\"{column.Name}\"";
+                SqlType.Boolean => $"AddBoolean(\"{column.Name}\"",
+                SqlType.Byte => $"AddByte(\"{column.Name}\"",
+                SqlType.Int16 => $"AddInt16(\"{column.Name}\"",
+                SqlType.Int32 => $"AddInt32(\"{column.Name}\"",
+                SqlType.Int64 => $"AddInt64(\"{column.Name}\"",
 
-                case SqlType.NVarchar:
-                    return $"AddNVarChar(\"{column.Name}\", {column.Length}";
-                case SqlType.Varchar:
-                    return $"AddVarChar(\"{column.Name}\", {column.Length}";
-                case SqlType.NChar:
-                    return $"AddNChar(\"{column.Name}\", {column.Length}";
-                case SqlType.Char:
-                    return $"AddChar(\"{column.Name}\", {column.Length}";
-                case SqlType.Date:
-                    return $"AddDate(\"{column.Name}\"";
+                SqlType.NVarchar => $"AddNVarChar(\"{column.Name}\", {column.Length}",
+                SqlType.Varchar => $"AddVarChar(\"{column.Name}\", {column.Length}",
+                SqlType.NChar => $"AddNChar(\"{column.Name}\", {column.Length}",
+                SqlType.Char => $"AddChar(\"{column.Name}\", {column.Length}",
+                SqlType.Date => $"AddDate(\"{column.Name}\"",
 
                 // TODO Datetime2 / offset?
-                case SqlType.DateTime:
-                    return $"AddDateTime(\"{column.Name}\"";
-                case SqlType.DateTimeOffset:
-                    return $"AddDateTimeOffset(\"{column.Name}\", " + column.Precision;
+                SqlType.DateTime => $"AddDateTime(\"{column.Name}\"",
+                SqlType.DateTimeOffset => $"AddDateTimeOffset(\"{column.Name}\", " + column.Precision,
 
-                case SqlType.Decimal:
-                    return $"AddDecimal(\"{column.Name}\", " + (column.Length != null ? column.Length.ToString() : "null") + "," + (column.Precision != null ? column.Precision.ToString() : "null");
-                case SqlType.Double:
-                    return $"AddDouble(\"{column.Name}\", " + (column.Length != null ? column.Length.ToString() : "null");
+                SqlType.Decimal => $"AddDecimal(\"{column.Name}\", " + (column.Length != null ? column.Length.ToString() : "null") + "," + (column.Precision != null ? column.Precision.ToString() : "null"),
+                SqlType.Double => $"AddDouble(\"{column.Name}\", " + (column.Length != null ? column.Length.ToString() : "null"),
 
-                case SqlType.Image:
-                    return $"AddImage(\"{column.Name}\"";
-                case SqlType.Guid:
-                    return $"AddGuid(\"{column.Name}\"";
+                SqlType.Image => $"AddImage(\"{column.Name}\"",
+                SqlType.Guid => $"AddGuid(\"{column.Name}\"",
                 /*case SqlType.Binary:
                     return "BINARY";
                 case SqlType.VarBinary:
@@ -127,9 +110,8 @@
                     return "IMAGE";
                 case SqlType.NText:
                     return "NTEXT";*/
-                default:
-                    throw new NotImplementedException($"Unmapped SqlType: {Enum.GetName(typeof(SqlType), column.Type)}");
-            }
+                _ => throw new NotImplementedException($"Unmapped SqlType: {Enum.GetName(typeof(SqlType), column.Type)}"),
+            };
         }
     }
 
@@ -139,15 +121,15 @@
 
         public static StringBuilder Append(this StringBuilder sb, int level, string value)
         {
-            sb.Append(new string(' ', level * indentationSpaces));
-            sb.Append(value);
+            sb.Append(new string(' ', level * indentationSpaces))
+                .Append(value);
             return sb;
         }
 
         public static StringBuilder AppendLine(this StringBuilder sb, int level, string value)
         {
-            sb.Append(new string(' ', level * indentationSpaces));
-            sb.AppendLine(value);
+            sb.Append(new string(' ', level * indentationSpaces))
+                .AppendLine(value);
             return sb;
         }
     }

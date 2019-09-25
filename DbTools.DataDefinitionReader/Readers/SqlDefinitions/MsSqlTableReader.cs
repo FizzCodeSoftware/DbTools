@@ -57,55 +57,32 @@ FROM INFORMATION_SCHEMA.COLUMNS
 
         private SqlType MapSqlType(string type)
         {
-            switch (type)
+            return type switch
             {
-                case "int":
-                    return SqlType.Int32;
-                case "smallint":
-                    return SqlType.Int16;
-                case "tinyint":
-                    return SqlType.Byte;
-                case "bigint":
-                    return SqlType.Int64;
-                case "decimal":
-                    return SqlType.Decimal;
-                case "money":
-                    return SqlType.Money;
-                case "nvarchar":
-                    return SqlType.NVarchar;
-                case "nchar":
-                    return SqlType.NChar;
-                case "varchar":
-                    return SqlType.Varchar;
-                case "char":
-                    return SqlType.Char;
-                case "datetime":
-                    return SqlType.DateTime;
-                case "datetimeoffset":
-                    return SqlType.DateTimeOffset;
-                case "date":
-                    return SqlType.Date;
-                case "bit":
-                    return SqlType.Boolean;
-                case "real":
-                    return SqlType.Single;
-                case "float":
-                    return SqlType.Double;
-                case "xml":
-                    return SqlType.Xml;
-                case "uniqueidentifier":
-                    return SqlType.Guid;
-                case "binary":
-                    return SqlType.Binary;
-                case "image":
-                    return SqlType.Image;
-                case "varbinary":
-                    return SqlType.VarBinary;
-                case "ntext":
-                    return SqlType.NText;
-                default:
-                    throw new NotImplementedException($"Unmapped SqlType: {type}.");
-            }
+                "int" => SqlType.Int32,
+                "smallint" => SqlType.Int16,
+                "tinyint" => SqlType.Byte,
+                "bigint" => SqlType.Int64,
+                "decimal" => SqlType.Decimal,
+                "money" => SqlType.Money,
+                "nvarchar" => SqlType.NVarchar,
+                "nchar" => SqlType.NChar,
+                "varchar" => SqlType.Varchar,
+                "char" => SqlType.Char,
+                "datetime" => SqlType.DateTime,
+                "datetimeoffset" => SqlType.DateTimeOffset,
+                "date" => SqlType.Date,
+                "bit" => SqlType.Boolean,
+                "real" => SqlType.Single,
+                "float" => SqlType.Double,
+                "xml" => SqlType.Xml,
+                "uniqueidentifier" => SqlType.Guid,
+                "binary" => SqlType.Binary,
+                "image" => SqlType.Image,
+                "varbinary" => SqlType.VarBinary,
+                "ntext" => SqlType.NText,
+                _ => throw new NotImplementedException($"Unmapped SqlType: {type}."),
+            };
         }
 
         private SqlColumn CreateSqlColumn(SqlType type, Row row)

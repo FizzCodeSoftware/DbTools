@@ -1,9 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataGenerator.Tests
 {
     using System;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataGenerator;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class GeneratorTests
@@ -21,7 +21,7 @@
         [TestMethod]
         public void Date()
         {
-            var generator = new Generator(new GeneratorContext(new RandomBasic(0), new DateTime(2019,7,24)));
+            var generator = new Generator(new GeneratorContext(new RandomBasic(0), new DateTime(2019, 7, 24)));
             var row = generator.Generate(new GeneratorTestDateDb().GetTable("Table"));
 
             Assert.IsTrue(row["Date"] != null);
@@ -52,7 +52,7 @@
 
     public class GeneratorTestSimpleDb : DatabaseDeclaration
     {
-        public SqlTable Table {get;} = AddTable(table =>
+        public SqlTable Table { get; } = AddTable(table =>
         {
             table.AddInt32("Number");
             table.AddNVarChar("Text", 10);
@@ -61,7 +61,7 @@
 
     public class GeneratorTestDateDb : DatabaseDeclaration
     {
-        public SqlTable Table {get;} = AddTable(table =>
+        public SqlTable Table { get; } = AddTable(table =>
         {
             table.AddDate("Date");
             table.AddDateTime("DateTime");
@@ -70,10 +70,12 @@
 
     public class GeneratorTestNameDb : DatabaseDeclaration
     {
-        public SqlTable Table {get;} = AddTable(table =>
+        public SqlTable Table { get; } = AddTable(table =>
+#pragma warning disable RCS1021 // Simplify lambda expression.
         {
             table.AddNVarChar("Name", 200).AddDataGenerator(new GeneratorName());
         });
+#pragma warning restore RCS1021 // Simplify lambda expression.
     }
 
     public static class GeneratorHelper

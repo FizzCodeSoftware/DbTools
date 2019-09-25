@@ -6,14 +6,12 @@
     {
         public override string GetType(SqlType type)
         {
-            switch (type)
+            return type switch
             {
-                case SqlType.DateTime:
-                    return "TEXT /* datetime */";
+                SqlType.DateTime => "TEXT /* datetime */",
 
-                default:
-                    return base.GetType(type);
-            }
+                _ => base.GetType(type),
+            };
         }
     }
 }

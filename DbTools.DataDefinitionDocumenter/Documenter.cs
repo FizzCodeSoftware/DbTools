@@ -264,12 +264,13 @@
                     else
                         DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Value.Name, sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
                 }
+                else if (!_flags.Contains(DocumenterFlags.NoInternalDataTypes))
+                {
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
+                }
                 else
                 {
-                    if (!_flags.Contains(DocumenterFlags.NoInternalDataTypes))
-                        DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
-                    else
-                        DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Value.Name, sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Value.Name, sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
                 }
 
                 if (isPk)

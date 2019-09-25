@@ -3,7 +3,8 @@
     public class GeneratorInt16 : GeneratorMinMax<short>
     {
         public GeneratorInt16() : base(0, short.MaxValue)
-        { }
+        {
+        }
 
         public GeneratorInt16(short min, short max) : base(min, max)
         {

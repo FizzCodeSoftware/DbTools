@@ -47,13 +47,12 @@
                 .AppendLine(_namespace)
                 .AppendLine("{")
                 .AppendLine("\tusing FizzCode.DbTools.DataDefinition;")
-                .AppendLine();
-
-            sb.Append(1, "public partial class ").Append(_databaseName).AppendLine(" : DatabaseDeclaration");
+                .AppendLine()
+                .Append(1, "public partial class ").Append(_databaseName).AppendLine(" : DatabaseDeclaration");
             sb.AppendLine(1, "{");
 
-            sb.AppendLine(1, "}");
-            sb.AppendLine("}");
+            sb.AppendLine(1, "}")
+                .AppendLine("}");
 
             var path = ConfigurationManager.AppSettings["WorkingDirectory"]
                 + _databaseName + "/" + _databaseName + ".cs";
@@ -111,9 +110,9 @@
 
             // TODO Indexes + config
 
-            sb.AppendLine(2, "});");
-            sb.AppendLine(1, "}");
-            sb.AppendLine("}");
+            sb.AppendLine(2, "});")
+                .AppendLine(1, "}")
+                .AppendLine("}");
 
             // TODO handle illegal chars
             var categoryInPath = category;

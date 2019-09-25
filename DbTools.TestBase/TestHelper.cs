@@ -27,13 +27,11 @@
             if (ShouldForceIntegrationTests())
                 return true;
 
-            switch (providerName)
+            return providerName switch
             {
-                case "System.Data.SqlClient":
-                    return false;
-                default:
-                    return true;
-            }
+                "System.Data.SqlClient" => false,
+                _ => true,
+            };
         }
 
         public static bool ShouldRunIntegrationTest(SqlDialect sqlDialect)
@@ -41,13 +39,11 @@
             if (ShouldForceIntegrationTests())
                 return true;
 
-            switch (sqlDialect)
+            return sqlDialect switch
             {
-                case SqlDialect.MsSql:
-                    return false;
-                default:
-                    return true;
-            }
+                SqlDialect.MsSql => false,
+                _ => true,
+            };
         }
 
         public static Settings GetDefaultTestSettings(SqlDialect sqlDialect)
@@ -108,6 +104,10 @@
 
         private static void CheckAndRegisterInstalledProviders()
         {
+            DbProviderFactories.RegisterFactory("System.Data.SqlClient", System.Data.SqlClient.SqlClientFactory.Instance);
+            DbProviderFactories.RegisterFactory("System.Data.SQLite", System.Data.SQLite.SQLiteFactory.Instance);
+            DbProviderFactories.RegisterFactory("MySql.Data.MySqlClient", MySql.Data.MySqlClient.MySqlClientFactory.Instance);
+
             lock (syncRoot)
             {
                 if (_sqlDialectWithInstalledProviders == null)
@@ -119,16 +119,10 @@
                     {
                         var providerName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect);
 
-                        try
+                        if (DbProviderFactories.TryGetFactory(providerName, out var dbf))
                         {
-                            var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect));
+                            _sqlDialectWithInstalledProviders.Add(sqlDialect);
                         }
-                        catch (ConfigurationException ex) when (ex.BareMessage == "Failed to find or load the registered .Net Framework Data Provider.")
-                        {
-                            break;
-                        }
-
-                        _sqlDialectWithInstalledProviders.Add(sqlDialect);
                     }
                 }
             }

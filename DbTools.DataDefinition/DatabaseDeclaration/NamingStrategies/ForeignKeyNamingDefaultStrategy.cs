@@ -18,10 +18,8 @@
             {
                 return $"{prefix}{referredColumn.Name}";
             }
-            else
-            {
-                return $"{referredColumn.Table.SchemaAndTableName}{referredColumn.Name}";
-            }
+
+            return $"{referredColumn.Table.SchemaAndTableName}{referredColumn.Name}";
         }
     }
 }

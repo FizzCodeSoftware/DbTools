@@ -7,17 +7,13 @@
     {
         public static ISqlGenerator CreateGenerator(SqlDialect dialect, Settings settings)
         {
-            switch (dialect)
+            return dialect switch
             {
-                case SqlDialect.SqLite:
-                    return new SqLiteGenerator(settings);
-                case SqlDialect.MsSql:
-                    return new MsSqlGenerator(settings);
-                case SqlDialect.Oracle:
-                    return new OracleGenerator(settings);
-                default:
-                    throw new NotImplementedException($"Not implemented {dialect}.");
-            }
+                SqlDialect.SqLite => new SqLiteGenerator(settings),
+                SqlDialect.MsSql => new MsSqlGenerator(settings),
+                SqlDialect.Oracle => new OracleGenerator(settings),
+                _ => throw new NotImplementedException($"Not implemented {dialect}."),
+            };
         }
     }
 }

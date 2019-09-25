@@ -12,17 +12,13 @@
         {
             var dialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
 
-            switch (dialect)
+            return dialect switch
             {
-                case SqlDialect.SqLite:
-                    return new SqLiteExecuter(connectionStringSettings, sqlGenerator);
-                case SqlDialect.MsSql:
-                    return new MsSqlExecuter(connectionStringSettings, sqlGenerator);
-                case SqlDialect.Oracle:
-                    return new OracleExecuter(connectionStringSettings, sqlGenerator);
-                default:
-                    throw new NotImplementedException($"Not implemented {dialect}.");
-            }
+                SqlDialect.SqLite => new SqLiteExecuter(connectionStringSettings, sqlGenerator),
+                SqlDialect.MsSql => new MsSqlExecuter(connectionStringSettings, sqlGenerator),
+                SqlDialect.Oracle => new OracleExecuter(connectionStringSettings, sqlGenerator),
+                _ => throw new NotImplementedException($"Not implemented {dialect}."),
+            };
         }
     }
 }

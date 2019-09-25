@@ -13,9 +13,9 @@
 
         public bool IsReadOnly => false;
 
-        public void Add(SqlTable table)
+        public void Add(SqlTable item)
         {
-            byName.Add(table.SchemaAndTableName, table);
+            byName.Add(item.SchemaAndTableName, item);
         }
 
         public void Clear()
@@ -40,10 +40,10 @@
             return _sorted.Values.GetEnumerator();
         }
 
-        public bool Remove(SqlTable table)
+        public bool Remove(SqlTable item)
         {
-            _sorted.RemoveAt(_sorted.IndexOfValue(table));
-            return byName.Remove(table.SchemaAndTableName);
+            _sorted.RemoveAt(_sorted.IndexOfValue(item));
+            return byName.Remove(item.SchemaAndTableName);
         }
 
         IEnumerator IEnumerable.GetEnumerator()

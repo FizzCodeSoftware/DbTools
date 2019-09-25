@@ -20,15 +20,12 @@
 
         public static IDataDefinitionReader CreateDataDefinitionReader(SqlDialect sqlDialect, SqlExecuter sqlExecuter)
         {
-            switch (sqlDialect)
+            return sqlDialect switch
             {
-                case SqlDialect.MsSql:
-                    return new MsSqlDataDefinitionReader(sqlExecuter);
-                case SqlDialect.SqLite:
-                    return new SqLiteDataDefinitionReader(sqlExecuter);
-                default:
-                    throw new NotImplementedException($"Not implemented {sqlDialect}.");
-            }
+                SqlDialect.MsSql => new MsSqlDataDefinitionReader(sqlExecuter),
+                SqlDialect.SqLite => new SqLiteDataDefinitionReader(sqlExecuter),
+                _ => throw new NotImplementedException($"Not implemented {sqlDialect}."),
+            };
         }
     }
 }
