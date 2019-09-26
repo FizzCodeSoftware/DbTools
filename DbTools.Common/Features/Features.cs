@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.Common
 {
-    public sealed class Features
+    public static class Features
     {
         static Features()
         {
@@ -9,23 +9,14 @@
             _features["ReadDdl"].Add(SqlDialect.Oracle, Support.NotImplementedYet);
         }
 
-        private Features()
-        {
-        }
-
-        public static Features Instance { get; } = new Features();
-
         private static readonly FeatureList _features = new FeatureList();
 
-        public FeatureSupport this[SqlDialect sqlDialect, string name]
+        public static FeatureSupport GetSupport(SqlDialect sqlDialect, string name)
         {
-            get
-            {
-                if (_features.ContainsKey(name) && _features[name].Support.ContainsKey(sqlDialect))
-                    return _features[name].Support[sqlDialect];
+            if (_features.ContainsKey(name) && _features[name].Support.ContainsKey(sqlDialect))
+                return _features[name].Support[sqlDialect];
 
-                return new FeatureSupport(Support.Unknown, null);
-            }
+            return new FeatureSupport(Support.Unknown, null);
         }
     }
 }

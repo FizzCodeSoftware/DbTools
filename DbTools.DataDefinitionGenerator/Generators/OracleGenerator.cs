@@ -45,7 +45,7 @@
                 .Append(")");
         }
 
-        public SqlStatementWithParameters IfExists(string table, string column, object value)
+        public static SqlStatementWithParameters IfExists(string table, string column, object value)
         {
             return new SqlStatementWithParameters($@"
 SELECT CASE WHEN MAX({column}) IS NULL THEN 1 ELSE 0 END

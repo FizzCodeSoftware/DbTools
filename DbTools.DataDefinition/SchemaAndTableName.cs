@@ -9,7 +9,7 @@
 
         public SchemaAndTableName(string tableName)
         {
-            if (tableName.IndexOf(DatabaseDeclaration.SchemaTableNameSeparator) == -1)
+            if (tableName.IndexOf(DatabaseDeclaration.SchemaTableNameSeparator, StringComparison.InvariantCultureIgnoreCase) == -1)
             {
                 TableName = tableName;
             }
@@ -89,8 +89,8 @@
             unchecked
             {
                 var hash = 17;
-                hash = (hash * 23) + Schema?.GetHashCode() ?? 0;
-                hash = (hash * 23) + TableName.GetHashCode();
+                hash = (hash * 23) + Schema?.GetHashCode(StringComparison.CurrentCultureIgnoreCase) ?? 0;
+                hash = (hash * 23) + TableName.GetHashCode(StringComparison.CurrentCultureIgnoreCase);
                 return hash;
             }
         }

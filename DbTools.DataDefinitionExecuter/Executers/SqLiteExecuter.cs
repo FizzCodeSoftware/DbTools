@@ -8,14 +8,16 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
+#pragma warning disable CA1001 // Types that own disposable fields should be disposable
     public class SqLiteExecuter : SqlExecuter, ISqlExecuterDropAndCreateDatabase
+#pragma warning restore CA1001 // Types that own disposable fields should be disposable
     {
         public SqLiteExecuter(ConnectionStringSettings connectionStringSettings, ISqlGenerator sqlGenerator = null)
             : base(connectionStringSettings, sqlGenerator)
         {
         }
 
-        protected SQLiteConnection _connection;
+        private SQLiteConnection _connection;
 
         protected override SqlDialect SqlDialect => SqlDialect.SqLite;
 

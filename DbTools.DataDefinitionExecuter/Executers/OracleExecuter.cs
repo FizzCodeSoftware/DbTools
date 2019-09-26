@@ -47,7 +47,7 @@
 
         public bool CheckIfUserExists(string userName)
         {
-            var result = ExecuteScalar(((OracleGenerator)Generator).IfExists("dba_users", "username", userName));
+            var result = ExecuteScalar(OracleGenerator.IfExists("dba_users", "username", userName));
             return (decimal)result == 0;
         }
 
@@ -62,18 +62,16 @@
             ExecuteQuery($"DROP USER \"{defaultSchema}\" CASCADE");
         }
 
-        private readonly OracleDbCommandPreparer _oracleSqlCommandPreparer = new OracleDbCommandPreparer();
-
         public override DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
         {
             var dbCommand = base.PrepareSqlCommand(sqlStatementWithParameters);
-            return _oracleSqlCommandPreparer.PrepareSqlCommand(dbCommand);
+            return OracleDbCommandPreparer.PrepareSqlCommand(dbCommand);
         }
 
         public override void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
-            if (!(sqlStatementWithParameters.Statement.Trim().StartsWith("BEGIN")
-                && sqlStatementWithParameters.Statement.Trim().EndsWith("END;")))
+            if (!(sqlStatementWithParameters.Statement.Trim().StartsWith("BEGIN", StringComparison.CurrentCultureIgnoreCase)
+                && sqlStatementWithParameters.Statement.Trim().EndsWith("END;", StringComparison.CurrentCultureIgnoreCase)))
             {
                 var count = 0;
                 foreach (var c in sqlStatementWithParameters.Statement)

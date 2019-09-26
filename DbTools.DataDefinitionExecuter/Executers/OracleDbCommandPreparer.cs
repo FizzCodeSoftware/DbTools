@@ -1,19 +1,22 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
+    using System;
     using System.Data.Common;
 
-    public class OracleDbCommandPreparer
+    public static class OracleDbCommandPreparer
     {
-        public DbCommand PrepareSqlCommand(DbCommand dbCommand)
+        public static DbCommand PrepareSqlCommand(DbCommand dbCommand)
         {
             dbCommand.GetType().GetProperty("BindByName").SetValue(dbCommand, true, null);
             ReplaceNamedParameterPrefixes(dbCommand);
             return dbCommand;
         }
 
-        private void ReplaceNamedParameterPrefixes(DbCommand dbCommand)
+        private static void ReplaceNamedParameterPrefixes(DbCommand dbCommand)
         {
-            dbCommand.CommandText = dbCommand.CommandText.Replace(" @", " :"); //replace named parameter indicators
+#pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
+            dbCommand.CommandText = dbCommand.CommandText.Replace(" @", " :", StringComparison.CurrentCultureIgnoreCase); //replace named parameter indicators
+#pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
 
             foreach (var paramter in dbCommand.Parameters)
             {

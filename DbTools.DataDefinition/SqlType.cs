@@ -4,6 +4,7 @@
     /// Enumeration of possible sql data types.
     /// </summary>
     /// <remarks>Keeping close to <see cref="System.Data.SqlTypes"/>.</remarks>
+#pragma warning disable CA1720 // Identifier contains type name
     public enum SqlType
     {
         Unknown,
@@ -37,4 +38,5 @@
         VarBinary,
         NText
     }
+#pragma warning restore CA1720 // Identifier contains type name
 }

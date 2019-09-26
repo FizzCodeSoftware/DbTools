@@ -52,7 +52,9 @@
             var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(SqlDialect));
 
             var command = dbf.CreateCommand();
+#pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
             command.CommandText = sqlStatementWithParameters.Statement;
+#pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
 
             foreach (var parameter in sqlStatementWithParameters.Parameters)
             {

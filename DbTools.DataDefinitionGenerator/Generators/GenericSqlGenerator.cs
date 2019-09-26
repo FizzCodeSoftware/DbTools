@@ -284,7 +284,7 @@ SELECT
     END", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName);
         }
 
-        public SqlStatementWithParameters SchmaExists(SqlTable table)
+        public static SqlStatementWithParameters SchmaExists(SqlTable table)
         {
             return new SqlStatementWithParameters(@"
 SELECT

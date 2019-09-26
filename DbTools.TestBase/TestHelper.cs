@@ -64,10 +64,10 @@
                 var initialAssembly = callerAssemblies.Last();
 
                 var assemblyName = initialAssembly.GetName().Name;
-                if (assemblyName.StartsWith("FizzCode.DbTools."))
+                if (assemblyName.StartsWith("FizzCode.DbTools.", StringComparison.CurrentCultureIgnoreCase))
                     assemblyName = assemblyName.Substring("FizzCode.DbTools.".Length);
 
-                var schemaName = assemblyName.Replace(".", "_");
+                var schemaName = assemblyName.Replace(".", "_", StringComparison.CurrentCultureIgnoreCase);
 
                 sqlDialectSpecificSettings["DefaultSchema"] = schemaName;
             }
@@ -84,7 +84,7 @@
 
         public static void CheckFeature(SqlDialect sqlDialect, string feature)
         {
-            var featureSupport = Features.Instance[sqlDialect, feature];
+            var featureSupport = Features.GetSupport(sqlDialect, feature);
             if (featureSupport.Support == Support.NotSupported)
                 Assert.Inconclusive($"Test is skipped, feature {feature} is not supported. ({featureSupport.Description}).");
             if (featureSupport.Support == Support.NotImplementedYet)
@@ -98,7 +98,7 @@
                 Assert.Inconclusive($"Test is skipped, .Net Framework Data Provider is not installed for {sqlDialect.ToString()} dialect, provier name: {SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect)}");
         }
 
-        public static List<SqlDialect> _sqlDialectWithInstalledProviders;
+        private static List<SqlDialect> _sqlDialectWithInstalledProviders;
 
         private static readonly object syncRoot = new object();
 

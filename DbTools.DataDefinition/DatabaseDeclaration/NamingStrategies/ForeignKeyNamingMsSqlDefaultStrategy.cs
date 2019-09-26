@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
+    using System;
     using System.Linq;
 
     public class ForeignKeyNamingMsSqlDefaultStrategy : ForeignKeyNamingDefaultStrategy
@@ -13,7 +14,7 @@
 
             var sameNameFks = fk.SqlTable.Properties.OfType<ForeignKey>().Where(fk1 =>
                 fk1 != fk
-                && fk1.Name?.StartsWith(fkName) == true
+                && fk1.Name?.StartsWith(fkName, StringComparison.CurrentCultureIgnoreCase) == true
             ).ToList();
 
             var i = 1;

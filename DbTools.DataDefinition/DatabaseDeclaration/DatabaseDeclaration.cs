@@ -131,7 +131,7 @@
             }
         }
 
-        private SchemaAndTableName SchemaAndTableNameFromDefinitionName(string methodName)
+        private static SchemaAndTableName SchemaAndTableNameFromDefinitionName(string methodName)
         {
             var schemaAndTableName = methodName.Split(SchemaTableNameSeparator);
 
