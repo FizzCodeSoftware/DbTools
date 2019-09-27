@@ -8,18 +8,18 @@
         private readonly Dictionary<string, ConnectionStringWithProvider> _connectionStrings = new Dictionary<string, ConnectionStringWithProvider>();
         public IEnumerable<ConnectionStringWithProvider> All => _connectionStrings.Values;
 
-        public void LoadFromConfiguration(IConfigurationRoot configuration, string section = "ConnectionStrings")
+        public void LoadFromConfiguration(IConfigurationRoot configuration, string sectionKey = "ConnectionStrings")
         {
-            var connectionStrings = configuration
-                .GetSection(section)
-                .Get<ConnectionStringWithProvider[]>();
+            var children = configuration
+                .GetSection(sectionKey)
+                .GetChildren();
 
-            if (connectionStrings == null)
-                return;
-
-            foreach (var connectionString in connectionStrings)
+            foreach (var child in children)
             {
-                Add(connectionString);
+                Add(new ConnectionStringWithProvider(
+                    name: child.Key,
+                    providerName: child.GetValue<string>("ProviderName"),
+                    connectionString: child.GetValue<string>("ConnectionString")));
             }
         }
 
