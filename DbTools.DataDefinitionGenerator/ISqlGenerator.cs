@@ -19,6 +19,7 @@
         string DropTable(SqlTable table);
 
         string DropAllViews();
+        string DropAllForeignKeys();
         string DropAllTables();
 
         ISqlTypeMapper SqlTypeMapper { get; }

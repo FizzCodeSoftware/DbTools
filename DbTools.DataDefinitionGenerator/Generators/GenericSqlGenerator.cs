@@ -268,6 +268,8 @@
 
         protected abstract string GuardKeywords(string name);
 
+        public abstract string DropAllForeignKeys();
+
         public abstract string DropAllViews();
 
         public abstract string DropAllTables();

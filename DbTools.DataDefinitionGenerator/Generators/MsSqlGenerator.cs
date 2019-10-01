@@ -34,10 +34,9 @@
             return new SqlStatementWithParameters($"IF EXISTS(select * from sys.databases where name = @DatabaseName)\r\n\t{DropDatabase(databaseName)}", databaseName);
         }
 
-        public override string DropAllTables()
+        public override string DropAllForeignKeys()
         {
             return @"DECLARE @sql nvarchar(2000)
-
 -- DROP FKs
 WHILE(EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS where CONSTRAINT_TYPE='FOREIGN KEY'))
 BEGIN
@@ -45,8 +44,12 @@ BEGIN
     FROM information_schema.table_constraints
     WHERE CONSTRAINT_TYPE = 'FOREIGN KEY'
     EXEC (@sql)
-END
+END";
+        }
 
+        public override string DropAllTables()
+        {
+            return @"DECLARE @sql nvarchar(2000)
 -- DROP Tables
 WHILE(EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES where TABLE_TYPE = 'BASE TABLE'))
 BEGIN

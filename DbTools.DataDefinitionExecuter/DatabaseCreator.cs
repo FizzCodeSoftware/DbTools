@@ -102,6 +102,12 @@
             _executer.ExecuteNonQuery(sql);
         }
 
+        public void DropAllForeignKeys()
+        {
+            var sql = _executer.Generator.DropAllForeignKeys();
+            _executer.ExecuteNonQuery(sql);
+        }
+
         public void DropAllTables()
         {
             var sql = _executer.Generator.DropAllTables();

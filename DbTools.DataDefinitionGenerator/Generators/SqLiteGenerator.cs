@@ -16,6 +16,11 @@
             return $"\"{name}\"";
         }
 
+        public override string DropAllForeignKeys()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override string DropAllViews()
         {
             throw new System.NotImplementedException();
