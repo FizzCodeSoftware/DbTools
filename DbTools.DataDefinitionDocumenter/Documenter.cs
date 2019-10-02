@@ -1,13 +1,17 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using System.Collections.Generic;
-    using System.Configuration;
     using System.Drawing;
     using System.IO;
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
+
+    public class DocumenterSettings
+    {
+        public string WorkingDirectory { get; set; }
+    }
 
     public class Documenter : DocumenterBase
     {
@@ -17,12 +21,12 @@
         private readonly string _fileName;
         private readonly HashSet<DocumenterFlags> _flags;
 
-        public Documenter(Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlags> flags = null)
-            : this(new DocumenterWriterExcel(), settings, databaseName, tableCustomizer, fileName, flags)
+        public Documenter(DocumenterSettings documenterSettings, Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlags> flags = null)
+            : this(new DocumenterWriterExcel(), documenterSettings, settings, databaseName, tableCustomizer, fileName, flags)
         {
         }
 
-        public Documenter(IDocumenterWriter documenterWriter, Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlags> flags = null) : base(settings, databaseName, tableCustomizer)
+        public Documenter(IDocumenterWriter documenterWriter, DocumenterSettings documenterSettings, Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlags> flags = null) : base(documenterSettings, settings, databaseName, tableCustomizer)
         {
             DocumenterWriter = documenterWriter;
             _fileName = fileName;
@@ -165,7 +169,7 @@
 
             var fileName = _fileName ?? (_databaseName?.Length == 0 ? "Database.xlsx" : _databaseName + ".xlsx");
 
-            var path = ConfigurationManager.AppSettings["WorkingDirectory"];
+            var path = DocumenterSettings?.WorkingDirectory;
             if (!string.IsNullOrEmpty(path))
             {
                 fileName = Path.Combine(path, fileName);

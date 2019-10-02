@@ -24,9 +24,7 @@
 
         public void CreateDatabase()
         {
-            var builder = GetConnectionStringBuilder();
-            builder.ConnectionString = ConnectionString;
-            var sql = ((ISqlGeneratorDropAndCreateDatabase)Generator).CreateDatabase(GetDatabase(builder));
+            var sql = ((ISqlGeneratorDropAndCreateDatabase)Generator).CreateDatabase(GetDatabase());
             ExecuteNonQueryMaster(sql);
         }
 
@@ -37,17 +35,13 @@
 
         public virtual void DropDatabaseIfExists()
         {
-            var builder = GetConnectionStringBuilder();
-            builder.ConnectionString = ConnectionString;
-            var sql = ((ISqlGeneratorDropAndCreateDatabase)Generator).DropDatabaseIfExists(GetDatabase(builder));
+            var sql = ((ISqlGeneratorDropAndCreateDatabase)Generator).DropDatabaseIfExists(GetDatabase());
             ExecuteNonQueryMaster(sql);
         }
 
         public virtual void DropDatabase()
         {
-            var builder = GetConnectionStringBuilder();
-            builder.ConnectionString = ConnectionString;
-            var sql = ((ISqlGeneratorDropAndCreateDatabase)Generator).DropDatabase(GetDatabase(builder));
+            var sql = ((ISqlGeneratorDropAndCreateDatabase)Generator).DropDatabase(GetDatabase());
             ExecuteNonQueryMaster(sql);
         }
 
@@ -71,24 +65,27 @@
 
         public override DbConnection OpenConnectionMaster()
         {
-            var connection = new SqlConnection(ChangeInitialCatalog(ConnectionString, string.Empty));
+            var connection = new SqlConnection(ChangeInitialCatalog(string.Empty));
             connection.Open();
 
             return connection;
         }
 
-        private string ChangeInitialCatalog(string connectionString, string newInitialCatalog)
+        private string ChangeInitialCatalog(string newInitialCatalog)
         {
-            var builder = new SqlConnectionStringBuilder(connectionString);
+            var builder = GetConnectionStringBuilder();
             if (newInitialCatalog != null)
-                builder.InitialCatalog = newInitialCatalog;
+                builder[InitialCatalog] = newInitialCatalog;
 
             return builder.ConnectionString;
         }
 
-        public override string GetDatabase(DbConnectionStringBuilder builder)
+        public const string InitialCatalog = "Initial Catalog";
+
+        public override string GetDatabase()
         {
-            return builder.ValueOfKey<string>("Initial Catalog");
+            var builder = GetConnectionStringBuilder();
+            return builder.ValueOfKey<string>(InitialCatalog);
         }
     }
 }

@@ -38,7 +38,6 @@
 
         public virtual DbConnection OpenConnectionMaster()
         {
-            // TODO Oracle?
             var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(SqlDialect));
 
             var connection = dbf.CreateConnection();
@@ -73,7 +72,7 @@
             return dbf.CreateConnectionStringBuilder();
         }
 
-        public abstract string GetDatabase(DbConnectionStringBuilder builder);
+        public abstract string GetDatabase();
 
         public abstract void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd);
 

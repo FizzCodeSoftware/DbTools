@@ -75,8 +75,8 @@
             }
 
             var db = new TestDatabaseFks();
-            var patternMatching = PatternMatchingTableCustomizerFromPatterns.FromCsv("TestDatabaseFks");
-            var documenter = new Documenter(TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks", patternMatching);
+            var patternMatching = PatternMatchingTableCustomizerFromPatterns.FromCsv("TestDatabaseFks", null);
+            var documenter = new Documenter(null, TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks", patternMatching);
             documenter.Document(db);
         }
 

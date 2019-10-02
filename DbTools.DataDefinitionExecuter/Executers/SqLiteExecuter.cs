@@ -134,7 +134,7 @@
             }
         }
 
-        public override string GetDatabase(DbConnectionStringBuilder builder)
+        public override string GetDatabase()
         {
             throw new NotImplementedException();
         }

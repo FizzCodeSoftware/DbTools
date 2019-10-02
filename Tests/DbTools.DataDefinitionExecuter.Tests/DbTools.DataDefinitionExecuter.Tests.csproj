@@ -32,7 +32,7 @@
 
   <Import Project="..\..\Global\TransformConfig.targets" />
 
-  <Target Name="CopyCustomContent" AfterTargets="AfterBuild">
+  <Target Name="CopyCustomContent" AfterTargets="App_config_AfterCompile3">
     <Copy SourceFiles="app.config" DestinationFiles="$(OutDir)\testhost.dll.config" />
   </Target>
 

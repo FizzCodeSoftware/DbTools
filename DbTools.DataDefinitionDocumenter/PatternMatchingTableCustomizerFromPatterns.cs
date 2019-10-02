@@ -1,16 +1,15 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using System;
-    using System.Configuration;
     using System.IO;
 
     public static class PatternMatchingTableCustomizerFromPatterns
     {
-        public static PatternMatchingTableCustomizer FromCsv(string fileName)
+        public static PatternMatchingTableCustomizer FromCsv(string fileName, DocumenterSettings documenterSettings)
         {
             var customizer = new PatternMatchingTableCustomizer();
 
-            var path = ConfigurationManager.AppSettings["WorkingDirectory"] ?? "";
+            var path = documenterSettings?.WorkingDirectory ?? "";
 
             // default name <dbname>.DbTools.Patterns.csv
             if (!fileName.EndsWith(".csv"))

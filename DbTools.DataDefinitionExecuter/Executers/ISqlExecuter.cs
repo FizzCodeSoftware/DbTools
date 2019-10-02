@@ -16,7 +16,7 @@
         Reader ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters);
         object ExecuteScalar(SqlStatementWithParameters sqlStatementWithParameters);
         DbConnectionStringBuilder GetConnectionStringBuilder();
-        string GetDatabase(DbConnectionStringBuilder builder);
+        string GetDatabase();
         DbConnection OpenConnection();
         DbConnection OpenConnectionMaster();
         DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters);

@@ -5,101 +5,83 @@
     using System.Configuration;
     using System.Data.SqlClient;
     using System.Linq;
+    using CommandDotNet;
+    using CommandDotNet.Models;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionDocumenter;
     using FizzCode.DbTools.DataDefinitionReader;
+    using Microsoft.Extensions.Configuration;
 
     public static class Program
     {
+        public static bool Terminated { get; set; }
+
+        public static IConfigurationRoot Configuration { get; private set; }
+
         public static void Main(string[] args)
         {
-            var command = args[0];
+            var configuration = new ConfigurationBuilder()
+                .AddJsonFile("config.json", false)
+                .AddJsonFile("config-local.json", true)
+                .Build();
 
-            switch (command.ToLower())
+            DbProviderFactoryRegistrator.LoadFromConfiguration(configuration);
+
+            Configuration = configuration;
+
+            if (args.Length > 0)
             {
-                case "doc":
-                    {
-                        string patternFileName = null;
-                        if (args.Length > 3)
-                            patternFileName = args[3].Trim();
+                var runner = new AppRunner<AppCommands>(GetAppSettings());
+                runner.Run(args);
+            }
 
-                        var flags = (args.Length > 4)
-                            ? args[4].Trim().Split(',').Select(x => (DocumenterFlags)Enum.Parse(typeof(DocumenterFlags), x)).Distinct().ToHashSet()
-                            : new HashSet<DocumenterFlags>();
+            DisplayHelp();
 
-                        Document(args[1], (SqlDialect)Enum.Parse(typeof(SqlDialect), args[2]), patternFileName, flags);
-                        break;
-                    }
-                case "gen":
-                    {
-                        string patternFileName = null;
-                        if (args.Length > 5)
-                            patternFileName = args[5].Trim();
-                        Generate(args[1], (SqlDialect)Enum.Parse(typeof(SqlDialect), args[2]), args[3], args[4], patternFileName);
-                        break;
-                    }
-                default:
-                    Console.WriteLine("Unknown command");
-                    break;
+            while (!Terminated)
+            {
+                Console.Write("> ");
+                var commandLine = Console.ReadLine();
+                if (string.IsNullOrEmpty(commandLine))
+                    continue;
+
+                var lineArguments = commandLine.Split(' ');
+                var runner = new AppRunner<AppCommands>(GetAppSettings());
+                runner.Run(lineArguments);
+
+                Console.WriteLine();
             }
         }
 
-        public static void Document(string connectionString, SqlDialect sqlDialect, string patternFileName, HashSet<DocumenterFlags> flags, IDocumenterWriter documenterWriter = null)
+        internal static void DisplayHelp(string command = null)
         {
-            var connectionStringSettings = new ConnectionStringSettings
+            var runner = new AppRunner<AppCommands>(GetAppSettings());
+
+            if (string.IsNullOrEmpty(command))
             {
-                ConnectionString = connectionString,
-
-                ProviderName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect)
-            };
-
-            // TODO provider-specific ConnectionStringBuilder class
-            var builder = new SqlConnectionStringBuilder(connectionString);
-            var databaseName = builder.InitialCatalog;
-
-            // TODO accept from argument
-            var settings = Helper.GetDefaultSettings(sqlDialect);
-
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings, settings);
-
-            var dd = ddlReader.GetDatabaseDefinition();
-
-            ITableCustomizer customizer = null;
-
-            if (patternFileName != null)
-                customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName);
-
-            var documenter = documenterWriter == null
-                ? new Documenter(settings, databaseName, customizer, null, flags)
-                : new Documenter(documenterWriter, settings, databaseName, customizer, null, flags);
-
-            documenter.Document(dd);
+                runner.Run("--help");
+            }
+            else
+            {
+                var args = command.Split(' ').ToList();
+                args.Add("--help");
+                runner.Run(args.ToArray());
+            }
         }
 
-        public static void Generate(string connectionString, SqlDialect sqlDialect, string @namespace, string newDatabaseName, string patternFileName)
+        private static AppSettings GetAppSettings()
         {
-            var connectionStringSettings = new ConnectionStringSettings
+            return new AppSettings()
             {
-                ConnectionString = connectionString,
-
-                ProviderName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect)
+                EnableVersionOption = false,
+                Case = Case.KebabCase,
+                Help = new AppHelpSettings()
+                {
+                    TextStyle = HelpTextStyle.Basic,
+                    UsageAppNameStyle = UsageAppNameStyle.GlobalTool,
+                },
             };
-
-            var settings = Helper.GetDefaultSettings(sqlDialect);
-
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings, settings);
-
-            var dd = ddlReader.GetDatabaseDefinition();
-
-            ITableCustomizer customizer = null;
-
-            if (patternFileName != null)
-                customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv (patternFileName);
-
-            var generator = new CsGenerator(settings, newDatabaseName, @namespace, customizer);
-
-            generator.Generate(dd);
         }
     }
 }
