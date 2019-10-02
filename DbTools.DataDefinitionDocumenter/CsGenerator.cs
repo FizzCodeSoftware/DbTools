@@ -53,7 +53,7 @@
             sb.AppendLine(1, "}")
                 .AppendLine("}");
 
-            var path = DocumenterSettings.WorkingDirectory
+            var path = DocumenterSettings?.WorkingDirectory
                 + _databaseName + "/" + _databaseName + ".cs";
 
             var fileInfo = new FileInfo(path);
@@ -123,7 +123,7 @@
 
             categoryInPath = categoryInPath.Replace('?', '？');
 
-            var path = DocumenterSettings.WorkingDirectory
+            var path = DocumenterSettings?.WorkingDirectory
                 + _databaseName + "/" + categoryInPath + "/" + Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, ".") + ".cs";
 
             var fileInfo = new FileInfo(path);
