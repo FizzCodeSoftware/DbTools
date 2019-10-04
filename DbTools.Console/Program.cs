@@ -1,17 +1,10 @@
 ﻿namespace FizzCode.DbTools.Console
 {
     using System;
-    using System.Collections.Generic;
-    using System.Configuration;
-    using System.Data.SqlClient;
     using System.Linq;
     using CommandDotNet;
     using CommandDotNet.Models;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
-    using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinitionDocumenter;
-    using FizzCode.DbTools.DataDefinitionReader;
     using Microsoft.Extensions.Configuration;
 
     public static class Program
@@ -22,14 +15,8 @@
 
         public static void Main(string[] args)
         {
-            var configuration = new ConfigurationBuilder()
-                .AddJsonFile("config.json", false)
-                .AddJsonFile("config-local.json", true)
-                .Build();
-
-            DbProviderFactoryRegistrator.LoadFromConfiguration(configuration);
-
-            Configuration = configuration;
+            Configuration = Common.Configuration.Load("config");
+            DbProviderFactoryRegistrator.LoadFromConfiguration(Configuration);
 
             if (args.Length > 0)
             {
