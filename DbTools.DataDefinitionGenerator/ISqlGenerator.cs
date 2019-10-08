@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
+    using System.Collections.Generic;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
@@ -23,6 +24,7 @@
         string DropAllViews();
         string DropAllForeignKeys();
         string DropAllTables();
+        string DropSchemas(List<string> schemaNames);
 
         ISqlTypeMapper SqlTypeMapper { get; }
 

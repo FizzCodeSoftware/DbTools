@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
     using System.Configuration;
+    using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
@@ -111,6 +112,16 @@
         public void DropAllTables()
         {
             var sql = _executer.Generator.DropAllTables();
+            _executer.ExecuteNonQuery(sql);
+        }
+
+        public void DropAllSchemas()
+        {
+            var schemaNames = DatabaseDefinition
+                .GetSchemaNames()
+                .ToList();
+
+            var sql = _executer.Generator.DropSchemas(schemaNames);
             _executer.ExecuteNonQuery(sql);
         }
 

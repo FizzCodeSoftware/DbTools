@@ -1,5 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
@@ -64,6 +66,11 @@ END";
 exec sp_MSforeachtable ""declare @name nvarchar(max); set @name = parsename('?', 1); exec sp_MSdropconstraints @name"";
 exec sp_MSforeachtable ""drop table ?"";";
             */
+        }
+
+        public override string DropSchemas(List<string> schemaNames)
+        {
+            return string.Join(Environment.NewLine, schemaNames.Select(x => "DROP SCHEMA IF EXISTS " + x + ";"));
         }
 
         public override string DropAllViews()

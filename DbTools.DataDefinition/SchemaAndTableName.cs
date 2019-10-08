@@ -4,7 +4,7 @@
 
     public class SchemaAndTableName : IComparable, IEquatable<SchemaAndTableName>
     {
-        public string Schema { get; protected set; }
+        public string Schema { get; set; }
         public string TableName { get; protected set; }
 
         public SchemaAndTableName(string tableName)

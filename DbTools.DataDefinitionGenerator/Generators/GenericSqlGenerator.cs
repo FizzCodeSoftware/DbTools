@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.Common;
@@ -276,6 +277,8 @@
 
         public abstract string DropAllIndexes();
 
+        public abstract string DropSchemas(List<string> schemaNames);
+
         public virtual SqlStatementWithParameters TableExists(SqlTable table)
         {
             return new SqlStatementWithParameters(@"
@@ -313,7 +316,7 @@ SELECT
                 return GuardKeywords(defaultSchema) + "." + GuardKeywords(tableName);
             }
 
-            if (!string.IsNullOrEmpty(schema) && !string.IsNullOrEmpty(defaultSchema) && !string.Equals(schema, defaultSchema, System.StringComparison.InvariantCultureIgnoreCase))
+            if (!string.IsNullOrEmpty(schema) && (string.IsNullOrEmpty(defaultSchema) || !string.Equals(schema, defaultSchema, System.StringComparison.InvariantCultureIgnoreCase)))
             {
                 return GuardKeywords(schema) + "." + GuardKeywords(tableName);
             }
