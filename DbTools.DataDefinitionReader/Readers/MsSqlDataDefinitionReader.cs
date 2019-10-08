@@ -67,7 +67,7 @@ WHERE type = 'U'");
 
         public void AddColumnDocumentation(SqlTable table)
         {
-            var defaultSchema = _executer.GetSettings().SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = _executer.Generator.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
 
             var reader = _executer.ExecuteQuery(new SqlStatementWithParameters(@"
 SELECT

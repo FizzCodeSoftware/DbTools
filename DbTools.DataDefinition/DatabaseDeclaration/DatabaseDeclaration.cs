@@ -143,7 +143,7 @@
             {
                 if (!string.IsNullOrEmpty(DefaultSchema))
                 {
-                    return new SchemaAndTableName(DefaultSchema, parts[1]);
+                    return new SchemaAndTableName(DefaultSchema, parts[0]);
                 }
 
                 return new SchemaAndTableName(parts[0]);
