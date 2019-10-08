@@ -31,7 +31,11 @@
 
         public IEnumerable<string> GetSchemaNames()
         {
-            var schemas = GetTables().Select(t => t.SchemaAndTableName.Schema).Distinct().Where(sn => !string.IsNullOrEmpty(sn));
+            var schemas = GetTables()
+                .Select(t => t.SchemaAndTableName.Schema)
+                .Distinct()
+                .Where(sn => !string.IsNullOrEmpty(sn));
+
             return schemas;
         }
     }

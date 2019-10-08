@@ -9,12 +9,14 @@
     {
         public NamingStrategiesDictionary NamingStrategies { get; }
         public const char SchemaTableNameSeparator = 'ꜗ';
+        public string DefaultSchema { get; set; }
 
         public DatabaseDeclaration() : this(new NamingStrategiesDictionary())
         {
         }
 
-        public DatabaseDeclaration(params INamingStrategy[] namingStrategies) : this(new NamingStrategiesDictionary(namingStrategies))
+        public DatabaseDeclaration(params INamingStrategy[] namingStrategies)
+            : this(new NamingStrategiesDictionary(namingStrategies))
         {
         }
 
@@ -131,17 +133,24 @@
             }
         }
 
-        private static SchemaAndTableName SchemaAndTableNameFromDefinitionName(string methodName)
+        private SchemaAndTableName SchemaAndTableNameFromDefinitionName(string propertyName)
         {
-            var schemaAndTableName = methodName.Split(SchemaTableNameSeparator);
+            var parts = propertyName.Split(SchemaTableNameSeparator);
 
-            if (schemaAndTableName.Length == 1)
-                return new SchemaAndTableName(schemaAndTableName[0]);
+            if (parts.Length == 1)
+            {
+                if (!string.IsNullOrEmpty(DefaultSchema))
+                {
+                    return new SchemaAndTableName(DefaultSchema, parts[1]);
+                }
 
-            if (schemaAndTableName.Length == 2)
-                return new SchemaAndTableName(schemaAndTableName[0], schemaAndTableName[1]);
+                return new SchemaAndTableName(parts[0]);
+            }
 
-            throw new ArgumentException("Method name contains invalid number of SchemaTableNameSeparator", nameof(methodName));
+            if (parts.Length == 2)
+                return new SchemaAndTableName(parts[0], parts[1]);
+
+            throw new ArgumentException("Method name contains invalid number of SchemaTableNameSeparator", nameof(propertyName));
         }
 
         protected static SqlTable AddTable(Action<SqlTable> configurator)
