@@ -18,6 +18,21 @@
             }
         }
 
+        public T GetAs<T>(string name, T defaultValue)
+        {
+            if (!ContainsKey(name))
+                return defaultValue;
+
+            try
+            {
+                return (T)this[name];
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidCastException($"Invalid cast, from: {this[name].GetType().Name} to {typeof(T).Name}, column name: {name}", ex);
+            }
+        }
+
         public T GetAsByIndex<T>(int i)
         {
             try

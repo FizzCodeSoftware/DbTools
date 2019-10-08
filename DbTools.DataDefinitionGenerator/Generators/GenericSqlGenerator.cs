@@ -9,11 +9,11 @@
     {
         public virtual ISqlTypeMapper SqlTypeMapper { get; } = new GenericSqlTypeMapper();
 
-        private readonly Settings _settings;
+        public Settings Settings { get; }
 
         protected GenericSqlGenerator(Settings settings)
         {
-            _settings = settings;
+            Settings = settings;
         }
 
         public virtual string CreateTable(SqlTable table)
@@ -306,23 +306,19 @@ SELECT
             var schema = schemaAndTableName.Schema;
             var tableName = schemaAndTableName.TableName;
 
-            var defaultSchema = _settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema", null);
 
-            if (_settings.Options.ShouldUseDefaultSchema && schema == null)
+            if (!string.IsNullOrEmpty(defaultSchema) && Settings.Options.ShouldUseDefaultSchema && string.IsNullOrEmpty(schema))
+            {
                 return GuardKeywords(defaultSchema) + "." + GuardKeywords(tableName);
+            }
 
-            if (!_settings.Options.ShouldUseDefaultSchema && schema == defaultSchema)
-                return GuardKeywords(tableName);
-
-            if (schema != null)
+            if (!string.IsNullOrEmpty(schema) && !string.IsNullOrEmpty(defaultSchema) && !string.Equals(schema, defaultSchema, System.StringComparison.InvariantCultureIgnoreCase))
+            {
                 return GuardKeywords(schema) + "." + GuardKeywords(tableName);
+            }
 
             return GuardKeywords(tableName);
-        }
-
-        public Settings GetSettings()
-        {
-            return _settings;
         }
     }
 }

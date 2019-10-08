@@ -5,6 +5,8 @@
 
     public interface ISqlGenerator
     {
+        Settings Settings { get; }
+
         string CreateSchema(string schemaName);
 
         string CreateTable(SqlTable table);
@@ -26,7 +28,5 @@
 
         SqlStatementWithParameters TableExists(SqlTable table);
         string TableNotEmpty(SqlTable table);
-
-        Settings GetSettings();
     }
 }

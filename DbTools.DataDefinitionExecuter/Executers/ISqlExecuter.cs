@@ -2,7 +2,6 @@
 {
     using System.Configuration;
     using System.Data.Common;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
@@ -22,6 +21,5 @@
         DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters);
         void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd);
         void CleanupDatabase(params DatabaseDefinition[] dds);
-        Settings GetSettings();
     }
 }

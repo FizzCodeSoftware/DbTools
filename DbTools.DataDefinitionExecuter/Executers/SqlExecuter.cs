@@ -165,10 +165,5 @@
 
             return result;
         }
-
-        public Settings GetSettings()
-        {
-            return Generator.GetSettings();
-        }
     }
 }
