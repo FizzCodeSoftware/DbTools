@@ -9,19 +9,21 @@
     {
         public NamingStrategiesDictionary NamingStrategies { get; }
         public const char SchemaTableNameSeparator = 'ꜗ';
-        public string DefaultSchema { get; set; }
+        public string DefaultSchema { get; }
 
-        public DatabaseDeclaration() : this(new NamingStrategiesDictionary())
+        public DatabaseDeclaration(string defaultSchema = null)
+            : this(defaultSchema, new NamingStrategiesDictionary())
         {
         }
 
-        public DatabaseDeclaration(params INamingStrategy[] namingStrategies)
-            : this(new NamingStrategiesDictionary(namingStrategies))
+        public DatabaseDeclaration(string defaultSchema, params INamingStrategy[] namingStrategies)
+            : this(defaultSchema, new NamingStrategiesDictionary(namingStrategies))
         {
         }
 
-        protected DatabaseDeclaration(NamingStrategiesDictionary namingStrategies)
+        protected DatabaseDeclaration(string defaultSchema, NamingStrategiesDictionary namingStrategies)
         {
+            DefaultSchema = defaultSchema;
             NamingStrategies = namingStrategies;
 
             AddDeclaredTables();
