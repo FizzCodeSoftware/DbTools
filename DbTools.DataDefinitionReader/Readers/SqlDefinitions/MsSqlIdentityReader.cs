@@ -8,28 +8,13 @@
 
     public class MsSqlIdentityReader
     {
+        private readonly SqlExecuter _executer;
+        private List<Row> _queryResult;
+        private List<Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetStatement()).Rows);
+
         public MsSqlIdentityReader(SqlExecuter sqlExecuter)
         {
             _executer = sqlExecuter;
-        }
-
-        protected readonly SqlExecuter _executer;
-
-        private List<Row> _queryResult;
-
-        private List<Row> QueryResult
-        {
-            get
-            {
-                if (_queryResult == null)
-                {
-                    var reader = _executer.ExecuteQuery(GetIdentitySql(true));
-
-                    _queryResult = reader.Rows;
-                }
-
-                return _queryResult;
-            }
         }
 
         public void GetIdentity(DatabaseDefinition dd)
@@ -40,7 +25,10 @@
 
         public void GetIdentity(SqlTable table)
         {
-            foreach (var row in QueryResult.Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table)))
+            var rows = QueryResult
+                .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table));
+
+            foreach (var row in rows)
             {
                 var column = table.Columns[row.GetAs<string>("column_name")];
 
@@ -51,7 +39,7 @@
             }
         }
 
-        private string GetIdentitySql(bool isPrimaryKey)
+        private static string GetStatement()
         {
             return @"
 SELECT schema_name(tab.schema_id) schema_name, 

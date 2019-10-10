@@ -39,14 +39,10 @@ WHERE type = 'U'");
         }
 
         private MsSqlTableReader _tableReader;
+        private MsSqlTableReader TableReader => _tableReader ?? (_tableReader = new MsSqlTableReader(_executer));
 
-        private MsSqlTableReader TableReader
-        {
-            get
-            {
-                return _tableReader ?? (_tableReader = new MsSqlTableReader(_executer));
-            }
-        }
+        private MsSqlColumnDocumentationReader _columnDocumentationReader;
+        private MsSqlColumnDocumentationReader ColumnDocumentationReader => _columnDocumentationReader ?? (_columnDocumentationReader = new MsSqlColumnDocumentationReader(_executer));
 
         public override SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition = true)
         {
@@ -60,43 +56,12 @@ WHERE type = 'U'");
                 AddTableDocumentation(sqlTable);
             }
 
-            AddColumnDocumentation(sqlTable);
+            var defaultSchema = _executer.Generator.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+            ColumnDocumentationReader.GetColumnDocumentation(defaultSchema, sqlTable);
 
             return sqlTable;
         }
 
-        public void AddColumnDocumentation(SqlTable table)
-        {
-            var defaultSchema = _executer.Generator.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
-
-            var reader = _executer.ExecuteQuery(new SqlStatementWithParameters(@"
-SELECT
-    c.name ColumnName,
-    p.value Property
-FROM
-    sys.tables t
-    INNER JOIN sys.all_columns c ON c.object_id = t.object_id
-    INNER JOIN sys.extended_properties p ON p.major_id = t.object_id AND p.minor_id = c.column_id AND p.class = 1
-WHERE
-    p.name = 'MS_Description'
-    AND SCHEMA_NAME(t.schema_id) = @SchemaName
-    AND t.name = @TableName", table.SchemaAndTableName.Schema ?? defaultSchema, table.SchemaAndTableName.TableName));
-
-            foreach (var row in reader.Rows)
-            {
-                var column = table.Columns.FirstOrDefault(c => c.Key == row.GetAs<string>("ColumnName")).Value;
-                if (column != null)
-                {
-                    var description = row.GetAs<string>("Property");
-                    if (!string.IsNullOrEmpty(description))
-                    {
-                        description = description.Replace("\\n", "\n").Trim();
-                        var descriptionProperty = new SqlColumnDescription(column, description);
-                        column.Properties.Add(descriptionProperty);
-                    }
-                }
-            }
-        }
 
         private readonly string SqlGetTableDocumentation = @"
 SELECT

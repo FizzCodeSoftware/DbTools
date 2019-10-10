@@ -9,32 +9,13 @@
 
     public class MsSqlTableReader
     {
+        private readonly SqlExecuter _executer;
+        private List<Row> _queryResult;
+        private List<Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetStatement()).Rows);
+
         public MsSqlTableReader(SqlExecuter sqlExecuter)
         {
             _executer = sqlExecuter;
-        }
-
-        protected readonly SqlExecuter _executer;
-
-        private List<Row> _queryResult;
-
-        private List<Row> QueryResult
-        {
-            get
-            {
-                if (_queryResult == null)
-                {
-                    var reader = _executer.ExecuteQuery(@"
-SELECT TABLE_NAME, TABLE_SCHEMA, ORDINAL_POSITION, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE, IS_NULLABLE, DATETIME_PRECISION
-FROM INFORMATION_SCHEMA.COLUMNS
---WHERE TABLE_NAME = ''
---ORDER BY ORDINAL_POSITION");
-
-                    _queryResult = reader.Rows;
-                }
-
-                return _queryResult;
-            }
         }
 
         public SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName)
@@ -133,6 +114,13 @@ FROM INFORMATION_SCHEMA.COLUMNS
                 column.IsNullable = true;
 
             return column;
+        }
+
+        private static string GetStatement()
+        {
+            return @"
+SELECT TABLE_NAME, TABLE_SCHEMA, ORDINAL_POSITION, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE, IS_NULLABLE, DATETIME_PRECISION
+FROM INFORMATION_SCHEMA.COLUMNS";
         }
     }
 }
