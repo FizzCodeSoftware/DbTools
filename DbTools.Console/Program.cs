@@ -97,9 +97,9 @@
             if (patternFileName != null)
                 customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName);
 
-            var generator = new CsGenerator(settings, newDatabaseName, @namespace, ConfigurationManager.AppSettings["WorkingDirectory"], customizer);
+            var generator = new CsGenerator(settings, newDatabaseName, @namespace, customizer);
 
-            generator.Generate(dd);
+            generator.GenerateMultiFile(dd, ConfigurationManager.AppSettings["WorkingDirectory"]);
         }
     }
 }

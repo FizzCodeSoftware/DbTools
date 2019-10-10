@@ -11,6 +11,11 @@
         public const char SchemaTableNameSeparator = 'ꜗ';
         public string DefaultSchema { get; }
 
+        public DatabaseDeclaration()
+            : this(null, new NamingStrategiesDictionary())
+        {
+        }
+
         public DatabaseDeclaration(string defaultSchema = null)
             : this(defaultSchema, new NamingStrategiesDictionary())
         {
