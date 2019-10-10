@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using System.Collections.Generic;
-    using System.Configuration;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -11,9 +10,12 @@
     public class CsGenerator : DocumenterBase
     {
         private readonly string _namespace;
+        private readonly string _workingDirectory;
 
-        public CsGenerator(Settings settings, string databaseName, string @namespace, ITableCustomizer tableCustomizer = null) : base(settings, databaseName, tableCustomizer)
+        public CsGenerator(Settings settings, string databaseName, string @namespace, string workingDirectory, ITableCustomizer tableCustomizer = null)
+            : base(settings, databaseName, tableCustomizer)
         {
+            _workingDirectory = workingDirectory;
             _namespace = @namespace;
         }
 
@@ -54,12 +56,9 @@
             sb.AppendLine(1, "}")
                 .AppendLine("}");
 
-            var path = ConfigurationManager.AppSettings["WorkingDirectory"]
-                + _databaseName + "/" + _databaseName + ".cs";
-
-            var fileInfo = new FileInfo(path);
-            fileInfo.Directory.Create();
-            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
+            var folder = Path.Combine(_workingDirectory, _databaseName);
+            Directory.CreateDirectory(folder);
+            File.WriteAllText(Path.Combine(folder, _databaseName + ".cs"), sb.ToString(), Encoding.UTF8);
         }
 
         protected void GenerateTable(string category, SqlTable table)
@@ -124,12 +123,9 @@
 
             categoryInPath = categoryInPath.Replace('?', '？');
 
-            var path = ConfigurationManager.AppSettings["WorkingDirectory"]
-                + _databaseName + "/" + categoryInPath + "/" + Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, ".") + ".cs";
-
-            var fileInfo = new FileInfo(path);
-            fileInfo.Directory.Create();
-            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
+            var folder = Path.Combine(_workingDirectory, _databaseName, categoryInPath);
+            Directory.CreateDirectory(folder);
+            File.WriteAllText(Path.Combine(folder, Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, ".") + ".cs"), sb.ToString(), Encoding.UTF8);
         }
     }
 }

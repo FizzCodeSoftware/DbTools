@@ -41,16 +41,18 @@
         {
             CreateSchemas(DatabaseDefinition);
 
-            foreach (var sqlTable in DatabaseDefinition.GetTables())
+            var tables = DatabaseDefinition.GetTables();
+
+            foreach (var sqlTable in tables)
                 CreateTable(sqlTable);
 
-            foreach (var sqlTable in DatabaseDefinition.GetTables())
+            foreach (var sqlTable in tables)
                 CreateForeignkeys(sqlTable);
 
-            foreach (var sqlTable in DatabaseDefinition.GetTables())
+            foreach (var sqlTable in tables)
                 CreateIndexes(sqlTable);
 
-            foreach (var sqlTable in DatabaseDefinition.GetTables())
+            foreach (var sqlTable in tables)
                 CreateDbDescriptions(sqlTable);
         }
 

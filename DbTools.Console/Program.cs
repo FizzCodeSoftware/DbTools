@@ -95,9 +95,9 @@
             ITableCustomizer customizer = null;
 
             if (patternFileName != null)
-                customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv (patternFileName);
+                customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName);
 
-            var generator = new CsGenerator(settings, newDatabaseName, @namespace, customizer);
+            var generator = new CsGenerator(settings, newDatabaseName, @namespace, ConfigurationManager.AppSettings["WorkingDirectory"], customizer);
 
             generator.Generate(dd);
         }
