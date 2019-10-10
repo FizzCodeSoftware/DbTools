@@ -12,7 +12,7 @@
         ISqlGenerator Generator { get; }
 
         void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters);
-        Reader ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters);
+        RowSet ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters);
         object ExecuteScalar(SqlStatementWithParameters sqlStatementWithParameters);
         DbConnectionStringBuilder GetConnectionStringBuilder();
         string GetDatabase(DbConnectionStringBuilder builder);

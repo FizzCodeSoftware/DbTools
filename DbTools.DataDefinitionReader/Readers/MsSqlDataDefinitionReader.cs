@@ -31,11 +31,12 @@
 
         public override List<SchemaAndTableName> GetSchemaAndTableNames()
         {
-            var reader = _executer.ExecuteQuery(@"
-SELECT ss.name as 'schema', so.name FROM sys.objects so
+            return _executer.ExecuteQuery(@"
+SELECT ss.name schemaName, so.name tableName FROM sys.objects so
 INNER JOIN sys.schemas ss ON ss.schema_id = so.schema_id
-WHERE type = 'U'");
-            return reader.GetRows<string, string>().Select((item) => new SchemaAndTableName(item.Item1, item.Item2)).ToList();
+WHERE type = 'U'").Rows
+                .Select(row => new SchemaAndTableName(row.GetAs<string>("schemaName"), row.GetAs<string>("tableName")))
+                .ToList();
         }
 
         private MsSqlTableReader _tableReader;
@@ -61,7 +62,6 @@ WHERE type = 'U'");
 
             return sqlTable;
         }
-
 
         private readonly string SqlGetTableDocumentation = @"
 SELECT

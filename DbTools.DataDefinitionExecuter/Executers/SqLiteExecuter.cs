@@ -78,11 +78,11 @@
             }
         }
 
-        public override Reader ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters)
+        public override RowSet ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
             using (var command = PrepareSqlCommand(sqlStatementWithParameters))
             {
-                var reader = new Reader();
+                var rowSet = new RowSet();
                 using (var sqlReader = command.ExecuteReader())
                 {
                     try
@@ -95,10 +95,10 @@
                                 row.Add(sqlReader.GetName(i), sqlReader[i]);
                             }
 
-                            reader.Rows.Add(row);
+                            rowSet.Rows.Add(row);
                         }
 
-                        return reader;
+                        return rowSet;
                     }
                     catch (SQLiteException ex)
                     {
