@@ -9,17 +9,26 @@
     {
         public NamingStrategiesDictionary NamingStrategies { get; }
         public const char SchemaTableNameSeparator = 'ꜗ';
+        public string DefaultSchema { get; }
 
-        public DatabaseDeclaration() : this(new NamingStrategiesDictionary())
+        public DatabaseDeclaration()
+            : this(null, new NamingStrategiesDictionary())
         {
         }
 
-        public DatabaseDeclaration(params INamingStrategy[] namingStrategies) : this(new NamingStrategiesDictionary(namingStrategies))
+        public DatabaseDeclaration(string defaultSchema = null)
+            : this(defaultSchema, new NamingStrategiesDictionary())
         {
         }
 
-        protected DatabaseDeclaration(NamingStrategiesDictionary namingStrategies)
+        public DatabaseDeclaration(string defaultSchema, params INamingStrategy[] namingStrategies)
+            : this(defaultSchema, new NamingStrategiesDictionary(namingStrategies))
         {
+        }
+
+        protected DatabaseDeclaration(string defaultSchema, NamingStrategiesDictionary namingStrategies)
+        {
+            DefaultSchema = defaultSchema;
             NamingStrategies = namingStrategies;
 
             AddDeclaredTables();
@@ -40,27 +49,42 @@
             {
                 foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn>(sqlTable))
                 {
-                    RegisteredForeignKeysCreator.PrimaryKeySingleColum(Tables, sqlTable, fkRegistration);
+                    if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
+                        fkRegistration.ReferredTableName.Schema = DefaultSchema;
+
+                    RegisteredForeignKeysCreator.PrimaryKeySingleColum(this, sqlTable, fkRegistration);
                 }
 
                 foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithPrimaryKey>(sqlTable))
                 {
-                    RegisteredForeignKeysCreator.PrimaryKey(Tables, sqlTable, fkRegistration, fkNaming);
+                    if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
+                        fkRegistration.ReferredTableName.Schema = DefaultSchema;
+
+                    RegisteredForeignKeysCreator.PrimaryKey(this, sqlTable, fkRegistration, fkNaming);
                 }
 
                 foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithPrimaryKeyExistingColumn>(sqlTable))
                 {
-                    RegisteredForeignKeysCreator.PrimaryKeyExistingColumn(Tables, sqlTable, fkRegistration);
+                    if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
+                        fkRegistration.ReferredTableName.Schema = DefaultSchema;
+
+                    RegisteredForeignKeysCreator.PrimaryKeyExistingColumn(this, sqlTable, fkRegistration);
                 }
 
                 foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToReferredTableExistingColumns>(sqlTable))
                 {
-                    RegisteredForeignKeysCreator.ReferredTableExistingColumns(Tables, sqlTable, fkRegistration);
+                    if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
+                        fkRegistration.ReferredTableName.Schema = DefaultSchema;
+
+                    RegisteredForeignKeysCreator.ReferredTableExistingColumns(this, sqlTable, fkRegistration);
                 }
 
                 foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToReferredTable>(sqlTable))
                 {
-                    RegisteredForeignKeysCreator.ReferredTable(Tables, sqlTable, fkRegistration);
+                    if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
+                        fkRegistration.ReferredTableName.Schema = DefaultSchema;
+
+                    RegisteredForeignKeysCreator.ReferredTable(this, sqlTable, fkRegistration);
                 }
             }
         }
@@ -131,17 +155,24 @@
             }
         }
 
-        private static SchemaAndTableName SchemaAndTableNameFromDefinitionName(string methodName)
+        private SchemaAndTableName SchemaAndTableNameFromDefinitionName(string propertyName)
         {
-            var schemaAndTableName = methodName.Split(SchemaTableNameSeparator);
+            var parts = propertyName.Split(SchemaTableNameSeparator);
 
-            if (schemaAndTableName.Length == 1)
-                return new SchemaAndTableName(schemaAndTableName[0]);
+            if (parts.Length == 1)
+            {
+                if (!string.IsNullOrEmpty(DefaultSchema))
+                {
+                    return new SchemaAndTableName(DefaultSchema, parts[0]);
+                }
 
-            if (schemaAndTableName.Length == 2)
-                return new SchemaAndTableName(schemaAndTableName[0], schemaAndTableName[1]);
+                return new SchemaAndTableName(parts[0]);
+            }
 
-            throw new ArgumentException("Method name contains invalid number of SchemaTableNameSeparator", nameof(methodName));
+            if (parts.Length == 2)
+                return new SchemaAndTableName(parts[0], parts[1]);
+
+            throw new ArgumentException("Method name contains invalid number of SchemaTableNameSeparator", nameof(propertyName));
         }
 
         protected static SqlTable AddTable(Action<SqlTable> configurator)

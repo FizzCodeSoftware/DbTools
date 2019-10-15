@@ -1,12 +1,15 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
     public class MsSqlGenerator : GenericSqlGenerator, ISqlGeneratorDropAndCreateDatabase
     {
-        public MsSqlGenerator(Settings settings) : base(settings)
+        public MsSqlGenerator(Settings settings)
+            : base(settings)
         {
         }
 
@@ -65,6 +68,11 @@ exec sp_MSforeachtable ""drop table ?"";";
             */
         }
 
+        public override string DropSchemas(List<string> schemaNames)
+        {
+            return string.Join(Environment.NewLine, schemaNames.Select(x => "DROP SCHEMA IF EXISTS " + x + ";"));
+        }
+
         public override string DropAllViews()
         {
             return @"DECLARE @sql nvarchar(2000)
@@ -105,7 +113,7 @@ EXEC sp_executesql @sql";
 
             sqlStatementWithParameters.Parameters.Add("@Description", sqlTableDescription.Description);
 
-            sqlStatementWithParameters.Parameters.Add("@SchemaName", table.SchemaAndTableName.Schema ?? GetSettings().SqlDialectSpecificSettings.GetAs<string>("DefaultSchema"));
+            sqlStatementWithParameters.Parameters.Add("@SchemaName", table.SchemaAndTableName.Schema ?? Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema"));
             sqlStatementWithParameters.Parameters.Add("@TableName", table.SchemaAndTableName.TableName);
 
             return sqlStatementWithParameters;
@@ -119,7 +127,7 @@ EXEC sp_executesql @sql";
 
             var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=@SchemaName, @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
 
-            var defaultSchema = GetSettings().SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
 
             sqlStatementWithParameters.Parameters.Add("@Description", sqlColumnDescription.Description);
             sqlStatementWithParameters.Parameters.Add("@SchemaName", column.Table.SchemaAndTableName.Schema ?? defaultSchema);

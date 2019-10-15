@@ -27,7 +27,7 @@
 
         public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd)
         {
-            var defaultSchema = GetSettings().SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = Generator.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
 
             if (dropIfExists && CheckIfUserExists(defaultSchema))
                 CleanupDatabase(dd);
@@ -53,7 +53,7 @@
 
         public override void CleanupDatabase(params DatabaseDefinition[] dds)
         {
-            var defaultSchema = GetSettings().SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = Generator.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
             // TODO - DROP ALL Schemas - in current DD
 
             var currentUser = ExecuteQuery("select user from dual").Rows[0].GetAs<string>("USER");

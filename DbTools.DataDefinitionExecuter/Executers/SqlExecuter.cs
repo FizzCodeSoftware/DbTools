@@ -100,7 +100,7 @@
             }
         }
 
-        public virtual Reader ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters)
+        public virtual RowSet ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
             var connection = OpenConnection();
 
@@ -109,8 +109,7 @@
 
             try
             {
-                var reader = new Reader();
-
+                var rowSet = new RowSet();
                 using (var sqlReader = command.ExecuteReader())
                 {
                     while (sqlReader.Read())
@@ -121,11 +120,11 @@
                             row.Add(sqlReader.GetName(i), sqlReader[i]);
                         }
 
-                        reader.Rows.Add(row);
+                        rowSet.Rows.Add(row);
                     }
                 }
 
-                return reader;
+                return rowSet;
             }
             catch (DbException ex)
             {
@@ -163,11 +162,6 @@
             }
 
             return result;
-        }
-
-        public Settings GetSettings()
-        {
-            return Generator.GetSettings();
         }
     }
 }

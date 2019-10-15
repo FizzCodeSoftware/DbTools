@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
+    using System.Configuration;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Tests;
@@ -14,6 +15,7 @@
         {
             var db = new TestDatabaseFks();
             var documenter = new Documenter(null, TestHelper.GetDefaultTestSettings(SqlDialect.MsSql),  "TestDatabaseFks");
+
             documenter.Document(db);
         }
 
@@ -61,24 +63,27 @@
         public void GeneratorTestDatabaseFks()
         {
             var db = new TestDatabaseFks();
+
             var generator = new CsGenerator(null, TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks", "FizzCode.DbTools.DataDefinitionDocumenter.Tests", new TableCustomizer());
-            generator.Generate(db);
+            generator.GenerateMultiFile(db, ConfigurationManager.AppSettings["WorkingDirectory"]);
         }
 
         [TestMethod]
         public void GeneratorForeignKeyCompositeTestsDb()
         {
             var db = new ForeignKeyCompositeTestsDb();
+
             var generator = new CsGenerator(null, TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
-            generator.Generate(db);
+            generator.GenerateMultiFile(db, ConfigurationManager.AppSettings["WorkingDirectory"]);
         }
 
         [TestMethod]
         public void GeneratorForeignKeyCompositeTestsDb1()
         {
             var db = new ForeignKeyCompositeTestsDb();
+
             var generator = new CsGenerator(null, TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "ForeignKeyCompositeTestsDb", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
-            generator.Generate(db);
+            generator.GenerateMultiFile(db, ConfigurationManager.AppSettings["WorkingDirectory"]);
         }
 
         [TestMethod]
@@ -86,7 +91,7 @@
         {
             var db = new ForeignKeyCompositeSetForeignKeyToTestDb();
             var generator = new CsGenerator(null, TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "ForeignKeyCompositeSetForeignKeyToTestDb", "FizzCode.DbTools.DataDefinitionDocumenter.Tests", new TableCustomizer());
-            generator.Generate(db);
+            generator.GenerateMultiFile(db, ConfigurationManager.AppSettings["WorkingDirectory"]);
         }
     }
 }

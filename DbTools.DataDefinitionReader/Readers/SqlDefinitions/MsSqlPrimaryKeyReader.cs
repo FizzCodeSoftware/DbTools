@@ -8,28 +8,18 @@
 
     public class MsSqlPrimaryKeyReader
     {
+        private readonly SqlExecuter _executer;
+        private List<Row> _queryResult;
+
+        private List<Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetKeySql()).Rows
+                        .OrderBy(row => row.GetAs<string>("schema_name"))
+                        .ThenBy(row => row.GetAs<string>("index_name"))
+                        .ThenBy(row => row.GetAs<int>("index_column_id"))
+                        .ToList());
+
         public MsSqlPrimaryKeyReader(SqlExecuter sqlExecuter)
         {
             _executer = sqlExecuter;
-        }
-
-        protected readonly SqlExecuter _executer;
-
-        private List<Row> _queryResult;
-
-        private List<Row> QueryResult
-        {
-            get
-            {
-                if (_queryResult == null)
-                {
-                    var reader = _executer.ExecuteQuery(GetKeySql(true));
-
-                    _queryResult = reader.Rows;
-                }
-
-                return _queryResult;
-            }
         }
 
         public void GetPrimaryKey(DatabaseDefinition dd)
@@ -40,34 +30,36 @@
 
         public void GetPrimaryKey(SqlTable table)
         {
-            var pk = new PrimaryKey(table, null);
-            foreach (var row in QueryResult.Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table)).OrderBy(row => row.GetAs<string>("schema_name")).ThenBy(row => row.GetAs<string>("index_name")).ThenBy(row => row.GetAs<int>("index_column_id")))
+            PrimaryKey pk = null;
+
+            var rows = QueryResult
+                .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table));
+
+            foreach (var row in rows)
             {
                 if (row.GetAs<int>("index_column_id") == 1)
                 {
-                    pk = new PrimaryKey(table, row.GetAs<string>("index_name"));
-
-                    if (row.GetAs<byte>("type") == 1)
-                        pk.Clustered = true;
+                    pk = new PrimaryKey(table, row.GetAs<string>("index_name"))
+                    {
+                        Clustered = row.GetAs<byte>("type") == 1,
+                    };
 
                     table.Properties.Add(pk);
                 }
 
                 var column = table.Columns[row.GetAs<string>("column_name")];
 
-                var ascDesc = AscDesc.Asc;
-                if (row.GetAs<bool>("is_descending_key"))
-                    ascDesc = AscDesc.Desc;
+                var ascDesc = row.GetAs<bool>("is_descending_key")
+                    ? AscDesc.Desc
+                    : AscDesc.Asc;
 
-                var columnAndOrder = new ColumnAndOrder(column, ascDesc);
-
-                pk.SqlColumns.Add(columnAndOrder);
+                pk.SqlColumns.Add(new ColumnAndOrder(column, ascDesc));
             }
         }
 
-        private string GetKeySql(bool isPrimaryKey)
+        private string GetKeySql()
         {
-            return $@"
+            return @"
 SELECT schema_name(tab.schema_id) schema_name, 
     i.[name] index_name,
     ic.index_column_id,
@@ -85,11 +77,7 @@ FROM sys.tables tab
     INNER JOIN sys.columns col
         ON i.object_id = col.object_id
         and col.column_id = ic.column_id
-WHERE is_primary_key = {(isPrimaryKey ? 1 : 0)}
-    --AND tab.[name] = ''
---ORDER BY schema_name(tab.schema_id),
---    i.[name],
---    ic.index_column_id";
+WHERE is_primary_key = 1";
         }
     }
 }

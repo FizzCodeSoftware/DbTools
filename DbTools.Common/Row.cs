@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     public class Row : Dictionary<string, object>
     {
@@ -18,15 +17,18 @@
             }
         }
 
-        public T GetAsByIndex<T>(int i)
+        public T GetAs<T>(string name, T defaultValue)
         {
+            if (!ContainsKey(name))
+                return defaultValue;
+
             try
             {
-                return (T)this.ElementAt(i).Value;
+                return (T)this[name];
             }
             catch (Exception ex)
             {
-                throw new InvalidCastException("error raised during a cast operation", ex);
+                throw new InvalidCastException($"Invalid cast, from: {this[name].GetType().Name} to {typeof(T).Name}, column name: {name}", ex);
             }
         }
     }

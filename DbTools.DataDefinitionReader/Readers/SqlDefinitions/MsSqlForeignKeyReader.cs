@@ -8,12 +8,14 @@
 
     public class MsSqlForeignKeyReader
     {
+        private readonly SqlExecuter _executer;
+        private List<Row> _queryResult;
+        private List<Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetStatement()).Rows);
+
         public MsSqlForeignKeyReader(SqlExecuter sqlExecuter)
         {
             _executer = sqlExecuter;
         }
-
-        protected readonly SqlExecuter _executer;
 
         public void GetForeignKeys(DatabaseDefinition dd)
         {
@@ -21,15 +23,9 @@
                 GetForeignKeys(table);
         }
 
-        private List<Row> _queryResult;
-
-        private List<Row> QueryResult
+        private static string GetStatement()
         {
-            get
-            {
-                if (_queryResult == null)
-                {
-                    var reader = _executer.ExecuteQuery(@"
+            return @"
 SELECT
      KCU1.CONSTRAINT_NAME AS FK_CONSTRAINT_NAME
     ,KCU1.CONSTRAINT_SCHEMA as FK_CONSTRAINT_SCHEMA
@@ -55,19 +51,17 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
     AND KCU2.ORDINAL_POSITION = KCU1.ORDINAL_POSITION
 
 --WHERE KCU1.TABLE_NAME = ''
---ORDER BY KCU1.ORDINAL_POSITION");
-
-                    _queryResult = reader.Rows;
-                }
-
-                return _queryResult;
-            }
+--ORDER BY KCU1.ORDINAL_POSITION";
         }
 
         public void GetForeignKeys(SqlTable table)
         {
-            foreach (var row in QueryResult.Where(r =>
-            DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "FK_CONSTRAINT_SCHEMA", "FK_TABLE_NAME")).OrderBy(row => row.GetAs<string>("FK_CONSTRAINT_NAME")).ThenBy(row => row.GetAs<int>("FK_ORDINAL_POSITION")))
+            var rows = QueryResult
+                .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "FK_CONSTRAINT_SCHEMA", "FK_TABLE_NAME"))
+                .OrderBy(row => row.GetAs<string>("FK_CONSTRAINT_NAME"))
+                .ThenBy(row => row.GetAs<int>("FK_ORDINAL_POSITION"));
+
+            foreach (var row in rows)
             {
                 var fkColumn = table.Columns[row.GetAs<string>("FK_COLUMN_NAME")];
 

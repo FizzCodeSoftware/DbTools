@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
@@ -9,40 +8,23 @@
 
     public class MsSqlTableReader
     {
+        private readonly SqlExecuter _executer;
+        private ILookup<string, Row> _queryResult;
+        private ILookup<string, Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetStatement()).Rows.ToLookup(x => x.GetAs<string>("SchemaAndTableName")));
+
         public MsSqlTableReader(SqlExecuter sqlExecuter)
         {
             _executer = sqlExecuter;
-        }
-
-        protected readonly SqlExecuter _executer;
-
-        private List<Row> _queryResult;
-
-        private List<Row> QueryResult
-        {
-            get
-            {
-                if (_queryResult == null)
-                {
-                    var reader = _executer.ExecuteQuery(@"
-SELECT TABLE_NAME, TABLE_SCHEMA, ORDINAL_POSITION, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE, IS_NULLABLE, DATETIME_PRECISION
-FROM INFORMATION_SCHEMA.COLUMNS
---WHERE TABLE_NAME = ''
---ORDER BY ORDINAL_POSITION");
-
-                    _queryResult = reader.Rows;
-                }
-
-                return _queryResult;
-            }
         }
 
         public SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName)
         {
             var sqlTable = new SqlTable(schemaAndTableName);
 
-            foreach (var row in QueryResult.Where(r => r.GetAs<string>("TABLE_NAME") == schemaAndTableName.TableName
-                && (string.IsNullOrEmpty(schemaAndTableName.Schema) || r.GetAs<string>("TABLE_SCHEMA") == schemaAndTableName.Schema)).OrderBy(r => r.GetAs<int>("ORDINAL_POSITION")))
+            var rows = QueryResult[schemaAndTableName.SchemaAndName]
+                .OrderBy(r => r.GetAs<int>("ORDINAL_POSITION"));
+
+            foreach (var row in rows)
             {
                 var type = MapSqlType(row.GetAs<string>("DATA_TYPE"));
                 var column = CreateSqlColumn(type, row);
@@ -133,6 +115,16 @@ FROM INFORMATION_SCHEMA.COLUMNS
                 column.IsNullable = true;
 
             return column;
+        }
+
+        private static string GetStatement()
+        {
+            return @"
+SELECT
+    CONCAT(TABLE_SCHEMA, '.', TABLE_NAME) SchemaAndTableName,
+    ORDINAL_POSITION, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE, IS_NULLABLE, DATETIME_PRECISION
+FROM
+    INFORMATION_SCHEMA.COLUMNS";
         }
     }
 }

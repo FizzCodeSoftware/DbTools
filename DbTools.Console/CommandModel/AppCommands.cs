@@ -95,9 +95,7 @@
 
             var generator = new CsGenerator(documenterSettings, settings, newDatabaseName, @namespace, customizer);
 
-            generator.Generate(dd);
+            generator.GenerateMultiFile(dd, ConfigurationManager.AppSettings["WorkingDirectory"]);
         }
-
-        
     }
 }

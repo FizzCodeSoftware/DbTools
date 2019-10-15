@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
+    using System.Collections.Generic;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
@@ -27,6 +28,11 @@
         }
 
         public override string DropAllTables()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override string DropSchemas(List<string> schemaNames)
         {
             throw new System.NotImplementedException();
         }

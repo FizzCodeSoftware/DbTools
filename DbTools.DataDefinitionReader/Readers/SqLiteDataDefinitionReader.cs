@@ -36,8 +36,10 @@
         public override List<SchemaAndTableName> GetSchemaAndTableNames()
         {
             // TODO this is not working in in memory mode?
-            var reader = _executer.ExecuteQuery("SELECT * FROM sqlite_master WHERE type = 'table'");
-            return reader.GetRows<string>().Select(item => new SchemaAndTableName(item)).ToList();
+            return _executer
+                .ExecuteQuery("SELECT name FROM sqlite_master WHERE type = 'table'").Rows
+                .Select(row => new SchemaAndTableName(row.GetAs<string>("name")))
+                .ToList();
         }
 
         public override SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition = true)
