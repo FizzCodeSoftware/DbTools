@@ -265,3 +265,4 @@ Local*.sln
 Local*.csproj
 App.Local.config
 App.Local.Global.config
+*-local.json

@@ -25,18 +25,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="App.config">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
     <None Update="testconfig.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-
-  <Import Project="..\..\Global\TransformConfig.targets" />
-
-  <Target Name="CopyCustomContent" AfterTargets="App_config_AfterCompile3">
-    <Copy SourceFiles="app.config" DestinationFiles="$(OutDir)\testhost.dll.config" />
-  </Target>
 
 </Project>
