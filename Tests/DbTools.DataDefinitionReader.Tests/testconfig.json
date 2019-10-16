@@ -1,0 +1,18 @@
+﻿{
+  "forceIntegrationTests": "false",
+  "Oracle_Database_Name": "DbTools_DataDefinitionExecuter_Tests",
+  "connectionStrings": {
+    "SqLite": {
+      "ProviderName": "System.Data.SQLite",
+      "ConnectionString": "FullUri=file::memory:?cache=shared;"
+    },
+    "MsSql": {
+      "ProviderName": "System.Data.SqlClient",
+      "ConnectionString": "Data Source=(local);Initial Catalog=DbTools_DataDefinitionExecuter_Tests;Integrated Security=SSPI;Connection Timeout=5"
+    },
+    "Oracle": {
+      "ProviderName": "Oracle.ManagedDataAccess.Client",
+      "ConnectionString": ""
+    }
+  }
+}
