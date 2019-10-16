@@ -27,10 +27,10 @@
 
         public void GenerateDatabase(DatabaseDefinition dd, string connectionStringKey, bool isIntegrationTest = true)
         {
-            if (isIntegrationTest && !TestHelper.ShouldForceIntegrationTests())
-                Assert.Inconclusive("Test is skipped, integration tests are not running.");
-
             var connectionStringWithProvider = SetupAssemblyInitializer.ConnectionStrings[connectionStringKey];
+
+            if (isIntegrationTest && !TestHelper.ShouldRunIntegrationTest(connectionStringWithProvider.ProviderName))
+                Assert.Inconclusive("Test is skipped, integration tests are not running.");
 
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
 

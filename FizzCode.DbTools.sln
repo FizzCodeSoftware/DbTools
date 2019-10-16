@@ -8,7 +8,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{0445F7
 		.editorconfig = .editorconfig
 		FizzCode.ruleset = FizzCode.ruleset
 		README.md = README.md
-		Global\TransformConfig.targets = Global\TransformConfig.targets
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FC2D850B-2168-44E5-9A58-A3EE132A3F8D}"
@@ -43,7 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionReade
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataGenerator.Tests", "Tests\DbTools.DataGenerator.Tests\DbTools.DataGenerator.Tests.csproj", "{16204090-4BA5-490C-898C-C94EF54FC9FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTools.Configuration", "DbTools.Configuration\DbTools.Configuration.csproj", "{2A9A416E-9EFE-4928-BDFB-A5FF074C9002}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.Configuration", "DbTools.Configuration\DbTools.Configuration.csproj", "{2A9A416E-9EFE-4928-BDFB-A5FF074C9002}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -39,6 +39,7 @@
             return providerName switch
             {
                 "System.Data.SqlClient" => false,
+                "Oracle.ManagedDataAccess.Client" => false,
                 _ => true,
             };
         }
@@ -51,6 +52,7 @@
             return sqlDialect switch
             {
                 SqlDialect.MsSql => false,
+                SqlDialect.Oracle => false,
                 _ => true,
             };
         }
