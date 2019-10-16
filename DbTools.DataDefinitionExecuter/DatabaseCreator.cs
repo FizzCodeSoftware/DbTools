@@ -1,8 +1,8 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
-    using System.Configuration;
     using System.Linq;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
@@ -17,12 +17,12 @@
             _executer = sqlExecuter;
         }
 
-        public static DatabaseCreator FromConnectionStringSettings(DatabaseDefinition databaseDefinition, ConnectionStringSettings connectionStringSettings, Settings settings)
+        public static DatabaseCreator FromConnectionStringSettings(DatabaseDefinition databaseDefinition, ConnectionStringWithProvider connectionStringWithProvider, Settings settings)
         {
-            var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
+            var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
             var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, settings);
 
-            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
+            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
 
             return new DatabaseCreator(databaseDefinition, executer);
         }

@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
-    using System.Configuration;
     using System.IO;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
@@ -64,9 +63,8 @@
         [TestMethod]
         public void PatternMatchingTableCustomizerFromCsvTest()
         {
-            var path = ConfigurationManager.AppSettings["WorkingDirectory"];
             using (var file =
-            new StreamWriter(path + "TestDatabaseFks.DbTools.Patterns.csv"))
+            new StreamWriter("TestDatabaseFks.DbTools.Patterns.csv"))
             {
                 file.WriteLine("Pattern;PatternExcept;ShouldSkipIfMatch;CategoryIfMatch;BackGroundColorIfMatch");
                 file.WriteLine("Parent;;0;Parent;606060");
@@ -76,7 +74,7 @@
 
             var db = new TestDatabaseFks();
             var patternMatching = PatternMatchingTableCustomizerFromPatterns.FromCsv("TestDatabaseFks", null);
-            var documenter = new Documenter(null, TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks", patternMatching);
+            var documenter = new Documenter(new DocumenterSettings(), TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks", patternMatching);
             documenter.Document(db);
         }
 

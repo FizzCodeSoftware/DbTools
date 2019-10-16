@@ -16,13 +16,13 @@
             _namespace = @namespace;
         }
 
-        public void GenerateMultiFile(DatabaseDefinition databaseDefinition, string workingDirectory)
+        public void GenerateMultiFile(DatabaseDefinition databaseDefinition)
         {
             var sb = new StringBuilder();
             WritePartialMainClassHeader(sb);
             sb.AppendLine("}");
 
-            var folder = Path.Combine(workingDirectory ?? @".\", _databaseName);
+            var folder = Path.Combine(DocumenterSettings.WorkingDirectory ?? @".\", _databaseName);
             Directory.CreateDirectory(folder);
             File.WriteAllText(Path.Combine(folder, _databaseName + ".cs"), sb.ToString(), Encoding.UTF8);
 
@@ -54,7 +54,7 @@
 
                 categoryInPath = categoryInPath.Replace('?', '？');
 
-                folder = Path.Combine(workingDirectory ?? @".\", _databaseName, categoryInPath);
+                folder = Path.Combine(DocumenterSettings.WorkingDirectory ?? @".\", _databaseName, categoryInPath);
                 Directory.CreateDirectory(folder);
                 File.WriteAllText(Path.Combine(folder, Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, ".") + ".cs"), sb.ToString(), Encoding.UTF8);
             }

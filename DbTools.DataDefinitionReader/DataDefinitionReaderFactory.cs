@@ -1,19 +1,19 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
     using System;
-    using System.Configuration;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
     public static class DataDefinitionReaderFactory
     {
-        public static IDataDefinitionReader CreateDataDefinitionReader(ConnectionStringSettings connectionStringSettings, Settings settings)
+        public static IDataDefinitionReader CreateDataDefinitionReader(ConnectionStringWithProvider connectionStringWithProvider, Settings settings)
         {
-            var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
+            var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
             var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, settings);
-            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
+            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
 
             return CreateDataDefinitionReader(sqlDialect, executer);
         }

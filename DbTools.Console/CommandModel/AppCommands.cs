@@ -1,9 +1,9 @@
 ﻿namespace FizzCode.DbTools.Console
 {
     using System.Collections.Generic;
-    using System.Configuration;
     using CommandDotNet.Attributes;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionDocumenter;
     using FizzCode.DbTools.DataDefinitionExecuter;
@@ -30,21 +30,16 @@
             [Option(LongName = "flags", ShortName = "f")]
             List<DocumenterFlags> flags)
         {
-            var connectionStringSettings = new ConnectionStringSettings
-            {
-                ConnectionString = connectionString,
-
-                ProviderName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect)
-            };
+            var connectionStringWithProvider = new ConnectionStringWithProvider(sqlDialect.ToString(), SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect), connectionString);
 
             // TODO provider-specific ConnectionStringBuilder class
-            var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, null);
+            var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, null);
             var databaseName = sqlExecuter.GetDatabase();
 
             // TODO accept from argument
             var settings = Helper.GetDefaultSettings(sqlDialect);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings, settings);
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -73,16 +68,16 @@
             [Option(LongName = "patternFileName", ShortName = "p")]
             string patternFileName)
         {
-            var connectionStringSettings = new ConnectionStringSettings
-            {
-                ConnectionString = connectionString,
-
-                ProviderName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect)
-            };
+            var connectionStringWithProvider = new ConnectionStringWithProvider
+            (
+                sqlDialect.ToString(),
+                SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect),
+                connectionString
+            );
 
             var settings = Helper.GetDefaultSettings(sqlDialect);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringSettings, settings);
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -95,7 +90,7 @@
 
             var generator = new CsGenerator(documenterSettings, settings, newDatabaseName, @namespace, customizer);
 
-            generator.GenerateMultiFile(dd, ConfigurationManager.AppSettings["WorkingDirectory"]);
+            generator.GenerateMultiFile(dd);
         }
     }
 }

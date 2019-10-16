@@ -1,9 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
-    using System.Configuration;
     using System.Data.Common;
     using System.Data.SqlClient;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
@@ -11,8 +11,8 @@
     {
         protected override SqlDialect SqlDialect => SqlDialect.MsSql;
 
-        public MsSqlExecuter(ConnectionStringSettings connectionStringSettings, ISqlGenerator sqlGenerator)
-            : base(connectionStringSettings, sqlGenerator)
+        public MsSqlExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
+            : base(connectionStringWithProvider, sqlGenerator)
         {
         }
 

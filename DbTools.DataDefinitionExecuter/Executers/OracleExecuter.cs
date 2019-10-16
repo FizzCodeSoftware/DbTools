@@ -1,9 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
     using System;
-    using System.Configuration;
     using System.Data.Common;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
@@ -11,7 +11,7 @@
     {
         protected override SqlDialect SqlDialect => SqlDialect.Oracle;
 
-        public OracleExecuter(ConnectionStringSettings connectionStringSettings, ISqlGenerator sqlGenerator) : base(connectionStringSettings, sqlGenerator)
+        public OracleExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator) : base(connectionStringWithProvider, sqlGenerator)
         {
         }
 

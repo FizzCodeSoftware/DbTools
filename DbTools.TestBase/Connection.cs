@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Configuration;
     using System.Reflection;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -11,7 +10,9 @@
     {
         public IEnumerable<object[]> GetData(MethodInfo methodInfo)
         {
-            foreach (ConnectionStringSettings c in ConfigurationManager.ConnectionStrings)
+            StaticConfiguration.Initialize("testconfig");
+
+            foreach (var c in StaticConfiguration.ConnectionStrings)
             {
                 if (TestHelper.ShouldRunIntegrationTest(c.ProviderName))
                     yield return new[] { c.Name };

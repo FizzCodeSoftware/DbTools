@@ -2,35 +2,38 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Configuration;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
-    public class SqlExecuterTestAdapter
+    public class SqlExecuterTestAdapter : ConfigurationBase
     {
         private readonly Dictionary<string, (SqlExecuter SqlExecuter, SqlDialect SqlDialect)> sqlExecutersAndDialects = new Dictionary<string, (SqlExecuter, SqlDialect)>();
 
         private readonly List<DatabaseDefinition> _dds = new List<DatabaseDefinition>();
 
-        public ConnectionStringSettings InitializeAndCheck(SqlDialect sqlDialect, params DatabaseDefinition[] dds)
+        public override string ConfigurationFileName => "testconfig";
+
+        public ConnectionStringWithProvider InitializeAndCheck(SqlDialect sqlDialect, params DatabaseDefinition[] dds)
         {
             TestHelper.CheckProvider(sqlDialect);
             return Initialize(sqlDialect.ToString(), dds);
         }
 
-        public ConnectionStringSettings Initialize(string connectionStringKey, params DatabaseDefinition[] dds)
+        public ConnectionStringWithProvider Initialize(string connectionStringKey, params DatabaseDefinition[] dds)
         {
             _dds.AddRange(dds);
-            var connectionStringSettings = ConfigurationManager.ConnectionStrings[connectionStringKey];
 
-            var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
+            var connectionStringWithProvider = ConnectionStrings[connectionStringKey];
+
+            var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
 
             if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
             {
                 var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, TestHelper.GetDefaultTestSettings(sqlDialect));
-                var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
+                var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
                 sqlExecutersAndDialects.Add(connectionStringKey, (sqlExecuter, sqlDialect));
 
                 var shouldCreate = TestHelper.ShouldRunIntegrationTest(sqlDialect);
@@ -40,7 +43,7 @@
                 }
             }
 
-            return connectionStringSettings;
+            return connectionStringWithProvider;
         }
 
         public void Cleanup()
@@ -67,9 +70,9 @@
 
         public string ExecuteNonQuery(string connectionStringKey, string query)
         {
-            var connectionStringSettings = Initialize(connectionStringKey);
+            var connectionStringWithProvider = Initialize(connectionStringKey);
 
-            var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
+            var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
 
             if (!TestHelper.ShouldRunIntegrationTest(sqlDialect))
                 return "Query execution is skipped, integration tests are not running.";

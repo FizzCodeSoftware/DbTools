@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Configuration;
     using System.Data.Common;
     using System.Diagnostics;
     using System.Linq;
@@ -13,13 +12,23 @@
 
     public static class TestHelper
     {
+        private static readonly bool _forceIntegrationTests;
+
+#pragma warning disable CA1810 // Initialize reference type static fields inline
+        static TestHelper()
+#pragma warning restore CA1810 // Initialize reference type static fields inline
+        {
+            var configuration = Configuration.Load("testconfig", true);
+            var forceIntegrationTests = configuration["forceIntegrationTests"];
+            _forceIntegrationTests = forceIntegrationTests == "true";
+        }
+
         public static bool ShouldForceIntegrationTests()
         {
 #if INTEGRATION
             return true;
 #endif
-            var setting = ConfigurationManager.AppSettings["forceIntegrationTests"];
-            return setting == "true";
+            return _forceIntegrationTests;
         }
 
         public static bool ShouldRunIntegrationTest(string providerName)

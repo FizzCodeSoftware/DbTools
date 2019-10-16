@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter.Tests
 {
     using System;
-    using System.Configuration;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Tests;
@@ -31,13 +30,13 @@
             if (isIntegrationTest && !TestHelper.ShouldForceIntegrationTests())
                 Assert.Inconclusive("Test is skipped, integration tests are not running.");
 
-            var connectionStringSettings = ConfigurationManager.ConnectionStrings[connectionStringKey];
+            var connectionStringWithProvider = SetupAssemblyInitializer.ConnectionStrings[connectionStringKey];
 
-            var sqlDialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
+            var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
 
             TestHelper.CheckProvider(sqlDialect);
 
-            var databaseCreator = DatabaseCreator.FromConnectionStringSettings(dd, connectionStringSettings, TestHelper.GetDefaultTestSettings(sqlDialect));
+            var databaseCreator = DatabaseCreator.FromConnectionStringSettings(dd, connectionStringWithProvider, TestHelper.GetDefaultTestSettings(sqlDialect));
 
             try
             {
@@ -45,9 +44,9 @@
             }
             finally
             {
-                var generator = SqlGeneratorFactory.CreateGenerator(SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings), TestHelper.GetDefaultTestSettings(sqlDialect));
+                var generator = SqlGeneratorFactory.CreateGenerator(SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName), TestHelper.GetDefaultTestSettings(sqlDialect));
 
-                var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringSettings, generator);
+                var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
                 executer.CleanupDatabase(dd);
             }
         }

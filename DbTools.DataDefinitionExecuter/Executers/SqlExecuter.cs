@@ -1,9 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
     using System;
-    using System.Configuration;
     using System.Data.Common;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
@@ -11,16 +11,15 @@
     {
         protected abstract SqlDialect SqlDialect { get; }
 
-        public ConnectionStringSettings ConnectionStringSettings { get; }
+        public ConnectionStringWithProvider ConnectionStringWithProvider { get; }
         public ISqlGenerator Generator { get; }
-        public string ConnectionString { get; }
 
-        protected SqlExecuter(ConnectionStringSettings connectionStringSettings, ISqlGenerator sqlGenerator)
+        
+        protected SqlExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
         {
             Generator = sqlGenerator;
 
-            ConnectionStringSettings = connectionStringSettings;
-            ConnectionString = ConnectionStringSettings.ConnectionString;
+            ConnectionStringWithProvider = connectionStringWithProvider;
         }
 
         protected abstract void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters);
@@ -30,7 +29,7 @@
             var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(SqlDialect));
 
             var connection = dbf.CreateConnection();
-            connection.ConnectionString = ConnectionString;
+            connection.ConnectionString = ConnectionStringWithProvider.ConnectionString;
             connection.Open();
 
             return connection;

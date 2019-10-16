@@ -1,15 +1,21 @@
-﻿namespace DbTools.DataDefinitionExecuter.Tests
+﻿namespace FizzCode.DbTools.DataDefinitionExecuter.Tests
 {
-    using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class SetupAssemblyInitializer
     {
+        public static IConfigurationRoot Configuration { get; private set; }
+        public static ConnectionStringCollection ConnectionStrings { get; private set; }
+
         [AssemblyInitialize]
         public static void AssemblyInit(TestContext context)
         {
-            Configuration.Load("testconfig");
+            Configuration = Common.Configuration.Load("testconfig");
+            ConnectionStrings = new ConnectionStringCollection();
+            ConnectionStrings.LoadFromConfiguration(Configuration);
         }
     }
 }

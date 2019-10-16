@@ -1,16 +1,10 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System;
-    using System.Configuration;
     using FizzCode.DbTools.Common;
 
     public static class SqlDialectHelper
     {
-        public static SqlDialect GetSqlDialectFromConnectionStringSettings(ConnectionStringSettings connectionStringSettings)
-        {
-            return GetSqlDialectFromProviderName(connectionStringSettings.ProviderName);
-        }
-
         public static SqlDialect GetSqlDialectFromProviderName(string providerName)
         {
             return providerName switch

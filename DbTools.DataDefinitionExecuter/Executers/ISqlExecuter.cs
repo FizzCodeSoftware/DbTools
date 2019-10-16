@@ -1,14 +1,13 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
-    using System.Configuration;
     using System.Data.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
     public interface ISqlExecuter
     {
-        string ConnectionString { get; }
-        ConnectionStringSettings ConnectionStringSettings { get; }
+        ConnectionStringWithProvider ConnectionStringWithProvider { get; }
         ISqlGenerator Generator { get; }
 
         void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters);

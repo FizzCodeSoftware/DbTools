@@ -1,22 +1,22 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
     using System;
-    using System.Configuration;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
     public static class SqlExecuterFactory
     {
-        public static SqlExecuter CreateSqlExecuter(ConnectionStringSettings connectionStringSettings, ISqlGenerator sqlGenerator)
+        public static SqlExecuter CreateSqlExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
         {
-            var dialect = SqlDialectHelper.GetSqlDialectFromConnectionStringSettings(connectionStringSettings);
+            var dialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
 
             return dialect switch
             {
-                SqlDialect.SqLite => new SqLiteExecuter(connectionStringSettings, sqlGenerator),
-                SqlDialect.MsSql => new MsSqlExecuter(connectionStringSettings, sqlGenerator),
-                SqlDialect.Oracle => new OracleExecuter(connectionStringSettings, sqlGenerator),
+                SqlDialect.SqLite => new SqLiteExecuter(connectionStringWithProvider, sqlGenerator),
+                SqlDialect.MsSql => new MsSqlExecuter(connectionStringWithProvider, sqlGenerator),
+                SqlDialect.Oracle => new OracleExecuter(connectionStringWithProvider, sqlGenerator),
                 _ => throw new NotImplementedException($"Not implemented {dialect}."),
             };
         }

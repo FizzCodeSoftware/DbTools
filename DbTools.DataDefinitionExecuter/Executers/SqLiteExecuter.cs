@@ -1,10 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
     using System;
-    using System.Configuration;
-    using System.Data.Common;
     using System.Data.SQLite;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
@@ -12,8 +11,8 @@
     public class SqLiteExecuter : SqlExecuter, ISqlExecuterDropAndCreateDatabase
 #pragma warning restore CA1001 // Types that own disposable fields should be disposable
     {
-        public SqLiteExecuter(ConnectionStringSettings connectionStringSettings, ISqlGenerator sqlGenerator = null)
-            : base(connectionStringSettings, sqlGenerator)
+        public SqLiteExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator = null)
+            : base(connectionStringWithProvider, sqlGenerator)
         {
         }
 
@@ -34,7 +33,7 @@
             if (_connection != null)
                 throw new Exception("Database already connected.");
 
-            _connection = new SQLiteConnection(ConnectionString);
+            _connection = new SQLiteConnection(ConnectionStringWithProvider.ConnectionString);
             _connection.Open();
         }
 

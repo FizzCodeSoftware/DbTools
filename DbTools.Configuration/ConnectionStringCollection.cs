@@ -28,6 +28,11 @@
             _connectionStrings[connectionString.Name.ToLowerInvariant()] = connectionString;
         }
 
+        public IEnumerator<ConnectionStringWithProvider> GetEnumerator()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public ConnectionStringWithProvider this[string name]
         {
             get
