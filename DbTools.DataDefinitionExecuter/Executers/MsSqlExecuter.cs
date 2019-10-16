@@ -66,7 +66,7 @@
         public override DbConnection OpenConnectionMaster()
         {
             var connection = new SqlConnection(ChangeInitialCatalog(string.Empty));
-            connection.Open();
+            connection.Open(); 
 
             return connection;
         }
@@ -74,6 +74,7 @@
         private string ChangeInitialCatalog(string newInitialCatalog)
         {
             var builder = GetConnectionStringBuilder();
+            builder.ConnectionString = ConnectionStringWithProvider.ConnectionString;
             if (newInitialCatalog != null)
                 builder[InitialCatalog] = newInitialCatalog;
 
@@ -85,6 +86,7 @@
         public override string GetDatabase()
         {
             var builder = GetConnectionStringBuilder();
+            builder.ConnectionString = ConnectionStringWithProvider.ConnectionString;
             return builder.ValueOfKey<string>(InitialCatalog);
         }
     }
