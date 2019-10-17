@@ -72,7 +72,7 @@
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return GetEnumerator();
         }
 
         public bool Contains(TValue item)
