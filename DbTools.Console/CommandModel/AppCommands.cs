@@ -107,7 +107,7 @@
             string connectionString,
             [Option(LongName = "sqlDialect", ShortName = "d")]
             SqlDialect sqlDialect,
-            [Option(LongName = "databaseName", ShortName = "dbn")]
+            [Option(LongName = "databaseName", ShortName = "b")]
             string databaseName,
             [Option(LongName = "patternFileName", ShortName = "p")]
             string patternFileName)

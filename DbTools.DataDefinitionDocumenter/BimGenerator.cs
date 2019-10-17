@@ -29,6 +29,8 @@
                 column.Name = columndefinition.Name;
                 column.DataType = columndefinition.Type.ToString();
                 column.SourceColumn = columndefinition.Name;
+
+                table.Columns.Add(column);
             }
 
             var json = JsonSerializer.Serialize(table);
