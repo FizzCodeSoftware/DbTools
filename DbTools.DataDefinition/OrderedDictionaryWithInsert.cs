@@ -124,5 +124,10 @@
             var order = _order.FirstOrDefault(i => i.Value.Equals(key)).Key;
             return order;
         }
+
+        public bool ContainsKey(TKey key)
+        {
+            return _dictionary.ContainsKey(key);
+        }
     }
 }
