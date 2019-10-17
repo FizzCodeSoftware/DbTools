@@ -14,7 +14,6 @@
         public ConnectionStringWithProvider ConnectionStringWithProvider { get; }
         public ISqlGenerator Generator { get; }
 
-        
         protected SqlExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
         {
             Generator = sqlGenerator;
