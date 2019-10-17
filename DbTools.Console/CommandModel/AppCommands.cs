@@ -69,9 +69,9 @@
             string connectionString,
             [Option(LongName = "sqlDialect", ShortName = "d")]
             SqlDialect sqlDialect,
-            [Option(LongName = "namespace", ShortName = "ns")]
+            [Option(LongName = "namespace", ShortName = "n")]
             string @namespace,
-            [Option(LongName = "newDatabaseName", ShortName = "dbn")]
+            [Option(LongName = "newDatabaseName", ShortName = "b")]
             string newDatabaseName,
             [Option(LongName = "patternFileName", ShortName = "p")]
             string patternFileName)
