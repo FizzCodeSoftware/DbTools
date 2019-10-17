@@ -50,7 +50,15 @@
             if (patternFileName != null)
                 customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
 
-            var documenter = new Documenter(documenterSettings, settings, databaseName, customizer, null, new HashSet<DocumenterFlags>(flags));
+
+            HashSet<DocumenterFlags> flagsSet;
+
+            if (flags == null)
+                flagsSet = new HashSet<DocumenterFlags>();
+            else
+                flagsSet = new HashSet<DocumenterFlags>(flags);
+
+            var documenter = new Documenter(documenterSettings, settings, databaseName, customizer, null, flagsSet);
 
             documenter.Document(dd);
         }

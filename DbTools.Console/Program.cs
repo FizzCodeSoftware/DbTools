@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using CommandDotNet;
     using CommandDotNet.Models;
     using FizzCode.DbTools.Configuration;
@@ -26,6 +27,8 @@
 
             DisplayHelp();
 
+            var regEx = new Regex("(?<=\")[^\"]*(?=\")|[^\" ]+");
+
             while (!Terminated)
             {
                 Console.Write("> ");
@@ -33,7 +36,11 @@
                 if (string.IsNullOrEmpty(commandLine))
                     continue;
 
-                var lineArguments = commandLine.Split(' ');
+                var lineArguments = regEx
+                    .Matches(commandLine.Trim())
+                    .Select(x => x.Value)
+                    .ToArray();
+
                 var runner = new AppRunner<AppCommands>(GetAppSettings());
                 runner.Run(lineArguments);
 
