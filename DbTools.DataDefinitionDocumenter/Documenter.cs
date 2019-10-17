@@ -213,32 +213,32 @@
             foreach (var column in table.Columns)
             {
                 // TODO Create ISqlTypeMapper according to SqlDialect
-                var sqlType = SqlTypeMapper.GetType(column.Value.Type);
-                var descriptionProperty = column.Value.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
+                var sqlType = SqlTypeMapper.GetType(column.Type);
+                var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
                 var description = string.Empty;
                 if (descriptionProperty != null)
                     description = descriptionProperty.Description;
 
-                var isPk = pks.Any(pk => pk.SqlColumns.Any(cao => cao.SqlColumn == column.Value));
+                var isPk = pks.Any(pk => pk.SqlColumns.Any(cao => cao.SqlColumn == column));
 
                 if (!_flags.Contains(DocumenterFlags.NoInternalDataTypes))
-                    Write(table.SchemaAndTableName, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
+                    Write(table.SchemaAndTableName, column.Name, column.Type.ToString(), sqlType, column.Length, column.Precision, column.IsNullable);
                 else
-                    Write(table.SchemaAndTableName, column.Value.Name, sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
+                    Write(table.SchemaAndTableName, column.Name, sqlType, column.Length, column.Precision, column.IsNullable);
 
                 if (isPk)
                     Write(table.SchemaAndTableName, true);
                 else
                     Write(table.SchemaAndTableName, "");
 
-                var identity = column.Value.Properties.OfType<Identity>().FirstOrDefault();
+                var identity = column.Properties.OfType<Identity>().FirstOrDefault();
 
                 if (identity != null)
                     Write(table.SchemaAndTableName, $"IDENTITY ({identity.Seed}, {identity.Increment})");
                 else
                     Write(table.SchemaAndTableName, "");
 
-                var defaultValue = column.Value.Properties.OfType<DefaultValue>().FirstOrDefault();
+                var defaultValue = column.Properties.OfType<DefaultValue>().FirstOrDefault();
 
                 if (defaultValue != null)
                     Write(table.SchemaAndTableName, defaultValue);
@@ -248,7 +248,7 @@
                 Write(table.SchemaAndTableName, description.Trim());
 
                 // "Foreign Key name", "Priary Key table", "Priary Key column"
-                var fkOnColumn = table.Properties.OfType<ForeignKey>().FirstOrDefault(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn == column.Value));
+                var fkOnColumn = table.Properties.OfType<ForeignKey>().FirstOrDefault(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn == column));
 
                 if (fkOnColumn != null)
                 {
@@ -256,7 +256,7 @@
                     Write(table.SchemaAndTableName,
                         Helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName));
                     WriteLink(table.SchemaAndTableName, "link", fkOnColumn.ReferredTable.SchemaAndTableName);
-                    Write(table.SchemaAndTableName, fkOnColumn.ForeignKeyColumns.First(fkc => fkc.ForeignKeyColumn == column.Value).ReferredColumn.Name);
+                    Write(table.SchemaAndTableName, fkOnColumn.ForeignKeyColumns.First(fkc => fkc.ForeignKeyColumn == column).ReferredColumn.Name);
                 }
 
                 WriteLine(table.SchemaAndTableName);
@@ -264,17 +264,17 @@
                 if (hasCategories)
                 {
                     if (!_flags.Contains(DocumenterFlags.NoInternalDataTypes))
-                        DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
+                        DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, column.Type.ToString(), sqlType, column.Length, column.Precision, column.IsNullable);
                     else
-                        DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Value.Name, sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
+                        DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType, column.Length, column.Precision, column.IsNullable);
                 }
                 else if (!_flags.Contains(DocumenterFlags.NoInternalDataTypes))
                 {
-                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Value.Name, column.Value.Type.ToString(), sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, column.Type.ToString(), sqlType, column.Length, column.Precision, column.IsNullable);
                 }
                 else
                 {
-                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Value.Name, sqlType, column.Value.Length, column.Value.Precision, column.Value.IsNullable);
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType, column.Length, column.Precision, column.IsNullable);
                 }
 
                 if (isPk)

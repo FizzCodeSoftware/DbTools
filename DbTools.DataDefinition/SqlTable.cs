@@ -30,11 +30,11 @@
 
         public override string ToString()
         {
-            return SchemaAndTableName.SchemaAndName;
+            return SchemaAndTableName?.SchemaAndName ?? "";
         }
 
         public List<SqlTableProperty> Properties { get; } = new List<SqlTableProperty>();
-        public Dictionary<string, SqlColumn> Columns { get; } = new Dictionary<string, SqlColumn>();
+        public ColumnsOrdered Columns { get; } = new ColumnsOrdered();
 
         public SqlColumn this[string columnName] => Columns[columnName];
     }

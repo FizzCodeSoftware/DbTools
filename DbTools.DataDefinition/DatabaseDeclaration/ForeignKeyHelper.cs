@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     public static class ForeignKeyHelper
     {
@@ -41,6 +42,9 @@
 
             var fk = new ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn(table, referredTableNameWithSchema, singleFkColumnName, isNullable, fkName);
 
+            var placeHolderColumnName = $"*{referredTableNameWithSchema}.{singleFkColumnName}.{table.Columns.Count}";
+            table.Columns.Add(new SqlColumnFKRegistration(placeHolderColumnName, fk));
+
             table.Properties.Add(fk);
 
             return table;
@@ -53,6 +57,11 @@
             var fk = new ForeignKeyRegistrationToReferredTable(table, referredTableNameWithSchema, isNullable, fkName, map);
             table.Properties.Add(fk);
 
+            var mapColumnNames = string.Join("_", map.Select(m => m.ColumnName).ToList());
+
+            var placeHolderColumnName = $"*{referredTableNameWithSchema}.{mapColumnNames}.{table.Columns.Count}";
+            table.Columns.Add(new SqlColumnFKRegistration(placeHolderColumnName, fk));
+
             return table;
         }
 
@@ -61,6 +70,10 @@
             var referredTableNameWithSchema = new SchemaAndTableName(nameOfReferredTableWithPrimaryKey);
 
             var fk = new ForeignKeyRegistrationToTableWithPrimaryKey(table, referredTableNameWithSchema, isNullable, prefix, fkName);
+
+            var placeHolderColumnName = $"*{referredTableNameWithSchema}.{table.Columns.Count}";
+            table.Columns.Add(new SqlColumnFKRegistration(placeHolderColumnName, fk));
+
             table.Properties.Add(fk);
             return table;
         }

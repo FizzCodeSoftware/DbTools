@@ -2,15 +2,12 @@
 
 namespace FizzCode.DbTools.DataDefinition
 {
-    internal class ForeignKeyRegistrationToReferredTable : ForeignKeyRegistrationBase
+    internal class ForeignKeyRegistrationToReferredTable : ForeignKeyRegistrationNonExsistingColumn
     {
-        public bool IsNullable { get; set; }
         public List<ColumnReference> Map { get; set; }
 
-        public ForeignKeyRegistrationToReferredTable(SqlTable table, SchemaAndTableName referredTableName, bool isNullable, string fkName, List<ColumnReference> map)
-            : base(table, referredTableName, fkName)
+        public ForeignKeyRegistrationToReferredTable(SqlTable table, SchemaAndTableName referredTableName, bool isNullable, string fkName, List<ColumnReference> map) : base(table, referredTableName, isNullable,  fkName)
         {
-            IsNullable = isNullable;
             Map = map;
         }
     }

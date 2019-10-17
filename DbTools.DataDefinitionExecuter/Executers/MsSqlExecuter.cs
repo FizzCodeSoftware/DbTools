@@ -66,7 +66,7 @@
         public override DbConnection OpenConnectionMaster()
         {
             var connection = new SqlConnection(ChangeInitialCatalog(string.Empty));
-            connection.Open(); 
+            connection.Open();
 
             return connection;
         }

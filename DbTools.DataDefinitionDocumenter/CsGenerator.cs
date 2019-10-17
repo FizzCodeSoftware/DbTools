@@ -148,7 +148,7 @@
                 .AppendLine(" { get; } = AddTable((table) =>")
                 .AppendLine(2, "{");
 
-            var pkColumns = table.Columns.Values
+            var pkColumns = table.Columns
                 .Where(column => column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
                 .ToList();
 
@@ -158,7 +158,7 @@
                 sb.AppendLine(columnCreation);
             }
 
-            var regularColumns = table.Columns.Values
+            var regularColumns = table.Columns
                 .Where(x => !pkColumns.Contains(x))
                 .ToList();
 

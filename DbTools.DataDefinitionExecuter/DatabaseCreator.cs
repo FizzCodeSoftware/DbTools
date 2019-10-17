@@ -91,7 +91,7 @@
             if (sqlStatementWithParameters != null)
                 _executer.ExecuteNonQuery(sqlStatementWithParameters);
 
-            foreach (var column in table.Columns.Values)
+            foreach (var column in table.Columns)
             {
                 sqlStatementWithParameters = _executer.Generator.CreateDbColumnDescription(column);
                 if (sqlStatementWithParameters != null)

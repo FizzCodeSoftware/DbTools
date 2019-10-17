@@ -43,7 +43,7 @@
                 if (idx++ > 0)
                     sb.AppendLine(",");
 
-                sb.Append(GenerateCreateColumn(column.Value));
+                sb.Append(GenerateCreateColumn(column));
             }
 
             sb.AppendLine();

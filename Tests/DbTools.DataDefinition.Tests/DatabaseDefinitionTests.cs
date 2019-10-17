@@ -9,14 +9,6 @@
     public class DatabaseDefinitionTests
     {
         [TestMethod]
-        public void TestDatabaseSimpleNoNamePrivided()
-        {
-            var tables = new TestDatabaseSimpleNoNameProvided().GetTables();
-            Assert.AreEqual(1, tables.Count);
-            Assert.AreEqual("Company", tables[0].SchemaAndTableName.TableName);
-        }
-
-        [TestMethod]
         public void TestDatabaseSimple()
         {
             var tables = new TestDatabaseSimple().GetTables();

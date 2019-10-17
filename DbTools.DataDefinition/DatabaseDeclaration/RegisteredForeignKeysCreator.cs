@@ -21,6 +21,12 @@ namespace FizzCode.DbTools.DataDefinition
             col.IsNullable = fkRegistration.IsNullable;
             col.Name = fkRegistration.SingleFkColumnName;
 
+            var placeHolderColumn = sqlTable.Columns.OfType<SqlColumnFKRegistration>().Where(c => c.FKRegistration == fkRegistration).FirstOrDefault();
+            var order = sqlTable.Columns.GetOrder(placeHolderColumn.Name);
+            sqlTable.Columns.Remove(placeHolderColumn.Name);
+
+            sqlTable.Columns.Add(col.Name, col, order);
+
             fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(col, pkColumn));
         }
 
@@ -30,6 +36,10 @@ namespace FizzCode.DbTools.DataDefinition
             var referredPk = GetReferredPK(referredTable);
 
             var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
+
+            var placeHolderColumn = sqlTable.Columns.OfType<SqlColumnFKRegistration>().Where(c => c.FKRegistration == fkRegistration).FirstOrDefault();
+            var order = sqlTable.Columns.GetOrder(placeHolderColumn.Name);
+            sqlTable.Columns.Remove(placeHolderColumn.Name);
 
             foreach (var pkColumn in referredPk.SqlColumns.Select(x => x.SqlColumn))
             {
@@ -41,7 +51,7 @@ namespace FizzCode.DbTools.DataDefinition
 
                 col.Name = fkNaming.GetFkToPkColumnName(pkColumn, fkRegistration.NamePrefix);
 
-                sqlTable.Columns.Add(col.Name, col);
+                sqlTable.Columns.Add(col.Name, col, order++);
 
                 fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(col, pkColumn));
             }
@@ -76,6 +86,10 @@ namespace FizzCode.DbTools.DataDefinition
 
             var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
+            var placeHolderColumn = sqlTable.Columns.OfType<SqlColumnFKRegistration>().Where(c => c.FKRegistration == fkRegistration).FirstOrDefault();
+            var order = sqlTable.Columns.GetOrder(placeHolderColumn.Name);
+            sqlTable.Columns.Remove(placeHolderColumn.Name);
+
             foreach (var fkGroup in fkRegistration.Map)
             {
                 var col = new SqlColumn();
@@ -86,7 +100,7 @@ namespace FizzCode.DbTools.DataDefinition
 
                 col.Name = fkGroup.ColumnName;
 
-                sqlTable.Columns.Add(col.Name, col);
+                sqlTable.Columns.Add(col.Name, col, order++);
 
                 fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(col, referredTable[fkGroup.ReferredColumnName]));
             }

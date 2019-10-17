@@ -37,7 +37,7 @@
         {
             var row = new Row();
 
-            foreach (var column in table.Columns.Values)
+            foreach (var column in table.Columns)
             {
                 GenerateValue(row, column);
             }
