@@ -36,8 +36,6 @@
                 if (string.IsNullOrEmpty(commandLine))
                     continue;
 
-                //var lineArguments = Regex.Matches(commandLine, @"[\""].+?[\""]|[^ ]+")
-
                 var lineArguments = regEx
                     .Matches(commandLine.Trim())
                     .Select(x => x.Value)
