@@ -17,7 +17,7 @@
             var schema = schemaAndTableName.Schema;
             var tableName = schemaAndTableName.TableName;
 
-            var defaultSchema = Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema", null);
 
             if (Settings.Options.ShouldUseDefaultSchema && schema == null)
                 return defaultSchema + separator + tableName;

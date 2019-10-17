@@ -11,7 +11,8 @@
     {
         private readonly string _namespace;
 
-        public CsGenerator(DocumenterSettings documenterSettings, Settings settings, string databaseName, string @namespace, ITableCustomizer tableCustomizer = null) : base(documenterSettings, settings, databaseName, tableCustomizer)
+        public CsGenerator(DocumenterSettings documenterSettings, Settings settings, string databaseName, string @namespace, ITableCustomizer tableCustomizer = null)
+            : base(documenterSettings, settings, databaseName, tableCustomizer)
         {
             _namespace = @namespace;
         }
