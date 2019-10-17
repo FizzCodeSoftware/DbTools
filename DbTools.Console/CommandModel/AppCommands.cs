@@ -56,7 +56,7 @@
         }
 
         [ApplicationMetadata(Name = "generate", Description = "Generate database definition into cs files.")]
-        public static void Generate(
+        public void Generate(
             [Option(LongName = "connectionString", ShortName = "c")]
             string connectionString,
             [Option(LongName = "sqlDialect", ShortName = "d")]
@@ -91,6 +91,42 @@
             var generator = new CsGenerator(documenterSettings, settings, newDatabaseName, @namespace, customizer);
 
             generator.GenerateMultiFile(dd);
+        }
+
+        [ApplicationMetadata(Name = "bim", Description = "Generate database definition into bim (analysis services Model.bim xml) file.")]
+        public void Bim(
+            [Option(LongName = "connectionString", ShortName = "c")]
+            string connectionString,
+            [Option(LongName = "sqlDialect", ShortName = "d")]
+            SqlDialect sqlDialect,
+            [Option(LongName = "databaseName", ShortName = "dbn")]
+            string databaseName,
+            [Option(LongName = "patternFileName", ShortName = "p")]
+            string patternFileName)
+        {
+            var connectionStringWithProvider = new ConnectionStringWithProvider
+            (
+                sqlDialect.ToString(),
+                SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect),
+                connectionString
+            );
+
+            var settings = Helper.GetDefaultSettings(sqlDialect);
+
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings);
+
+            var dd = ddlReader.GetDatabaseDefinition();
+
+            ITableCustomizer customizer = null;
+
+            var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
+
+            if (patternFileName != null)
+                customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
+
+            var generator = new BimGenerator(documenterSettings, settings, databaseName, customizer);
+
+            generator.Generate(dd);
         }
     }
 }

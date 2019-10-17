@@ -8,11 +8,6 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
-    public class DocumenterSettings
-    {
-        public string WorkingDirectory { get; set; }
-    }
-
     public class Documenter : DocumenterBase
     {
         protected IDocumenterWriter DocumenterWriter { get; }
