@@ -33,15 +33,15 @@
             KnownProvider = null;
 
             if (string.Equals(ProviderName, "System.Data.SqlClient", StringComparison.InvariantCultureIgnoreCase))
-                KnownProvider = Configuration.KnownProvider.MsSql;
+                KnownProvider = Configuration.KnownProvider.SqlServer;
             else if (string.Equals(ProviderName, "System.Data.SQLite", StringComparison.InvariantCultureIgnoreCase))
-                KnownProvider = Configuration.KnownProvider.SqLite;
+                KnownProvider = Configuration.KnownProvider.SQLite;
             else if (string.Equals(ProviderName, "Oracle.ManagedDataAccess.Client", StringComparison.InvariantCultureIgnoreCase))
-                KnownProvider = Configuration.KnownProvider.Oracle;
+                KnownProvider = Configuration.KnownProvider.OracleSql;
             else if (string.Equals(ProviderName, "MySql.Data.MySqlClient", StringComparison.InvariantCultureIgnoreCase))
                 KnownProvider = Configuration.KnownProvider.MySql;
             else if (string.Equals(ProviderName, "Npgsql", StringComparison.InvariantCultureIgnoreCase))
-                KnownProvider = Configuration.KnownProvider.PgSql;
+                KnownProvider = Configuration.KnownProvider.PostgreSql;
         }
 
         public ConnectionStringFields GetKnownConnectionStringFields()
@@ -94,6 +94,14 @@
                 }
             }
             return result;
+        }
+
+        public string GetFriendlyProviderName()
+        {
+            if (KnownProvider != null)
+                return KnownProvider.ToString();
+
+            return ProviderName;
         }
     }
 }
