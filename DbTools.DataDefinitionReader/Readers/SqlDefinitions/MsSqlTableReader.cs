@@ -52,6 +52,8 @@
                 "varchar" => SqlType.Varchar,
                 "char" => SqlType.Char,
                 "datetime" => SqlType.DateTime,
+                // TODO losing special data type?
+                "datetime2" => SqlType.DateTime,
                 "datetimeoffset" => SqlType.DateTimeOffset,
                 "date" => SqlType.Date,
                 "bit" => SqlType.Boolean,

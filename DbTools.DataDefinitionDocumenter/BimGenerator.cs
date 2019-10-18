@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
+    using System;
     using System.IO;
     using System.Text;
     using System.Text.Encodings.Web;
@@ -24,27 +25,35 @@
 
             foreach (var tabledefeinition in databaseDefinition.GetTables())
             {
-                var table = new BimDTO.Table();
-                // TODO name wih schema
-                table.Name = tabledefeinition.SchemaAndTableName.TableName;
-
-                foreach (var columndefinition in tabledefeinition.Columns)
-                {
-                    var column = new BimDTO.Column();
-                    // TODO mapping
-                    column.Name = columndefinition.Name;
-                    column.DataType = columndefinition.Type.ToString();
-                    column.SourceColumn = columndefinition.Name;
-
-                    table.Columns.Add(column);
-                }
-
-                BimHelper.SetDefaultPartition(table, tabledefeinition, DatabaseName);
-
-                root.Model.Tables.Add(table);
+                root.Model.Tables.Add(GenerateTable(tabledefeinition));
             }
 
             ToJson(root);
+        }
+
+        private BimDTO.Table GenerateTable(SqlTable tabledefeinition)
+        {
+            var table = new BimDTO.Table();
+            // TODO name wih schema
+            table.Name = tabledefeinition.SchemaAndTableName.TableName;
+
+            foreach (var columndefinition in tabledefeinition.Columns)
+            {
+                var column = new BimDTO.Column();
+                // TODO mapping
+                column.Name = columndefinition.Name;
+
+                column.DataType = BimHelper.MapType(columndefinition.Type);
+                column.SourceColumn = columndefinition.Name;
+
+                table.Columns.Add(column);
+            }
+
+            BimHelper.SetDefaultPartition(table, tabledefeinition, DatabaseName);
+
+            
+
+            return table;
         }
 
         private void ToJson(BimDTO.BimGeneratorRoot root)

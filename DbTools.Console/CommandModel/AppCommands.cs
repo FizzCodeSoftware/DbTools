@@ -7,6 +7,7 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionDocumenter;
     using FizzCode.DbTools.DataDefinitionExecuter;
+    using FizzCode.DbTools.DataDefinitionGenerator;
     using FizzCode.DbTools.DataDefinitionReader;
     using Microsoft.Extensions.Configuration;
 
@@ -136,6 +137,27 @@
             var generator = new BimGenerator(documenterSettings, settings, databaseName, customizer);
 
             generator.Generate(dd);
+        }
+
+        [ApplicationMetadata(Name = "dropall", Description = "Drop every object from a database.")]
+        public void DropAll(
+            [Option(LongName = "connectionString", ShortName = "c")]
+            string connectionString,
+            [Option(LongName = "sqlDialect", ShortName = "d")]
+            SqlDialect sqlDialect
+            )
+        {
+            var providerName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect);
+            var connectionStringWithProvider = new ConnectionStringWithProvider("", providerName, connectionString);
+            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, Helper.GetDefaultSettings(sqlDialect));
+            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
+            var dc = new DatabaseCreator(null, executer);
+
+            dc.DropAllViews();
+            dc.DropAllForeignKeys();
+            dc.DropAllTables();
+            // TODO needs databasedefinition
+            // dc.DropAllSchemas();
         }
     }
 }

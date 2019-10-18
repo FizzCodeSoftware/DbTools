@@ -1,4 +1,5 @@
-﻿using FizzCode.DbTools.DataDefinition;
+﻿using System;
+using FizzCode.DbTools.DataDefinition;
 
 namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
@@ -75,6 +76,41 @@ namespace FizzCode.DbTools.DataDefinitionDocumenter
             partitionSource.Expression.Add($"     {sqlTable.SchemaAndTableName.Schema}_{sqlTable.SchemaAndTableName.TableName}");
 
             partition.Source = partitionSource;
+        }
+
+        public static string MapType(SqlType type)
+        {
+            return type switch
+            {
+                SqlType.Int32 => "int64",
+                SqlType.Int16 => "int64",
+                SqlType.Byte => "int64",
+                SqlType.Int64 => "int64",
+                SqlType.Decimal => "decimal",
+                SqlType.Money => "currency",
+                SqlType.NVarchar => "string",
+                SqlType.NChar => "string",
+                SqlType.Varchar => "string",
+                SqlType.Char => "string",
+                // TODO ragne outside is used as string
+                // https://docs.microsoft.com/en-us/analysis-services/tabular-models/data-types-supported-ssas-tabular
+                SqlType.DateTime => "dateTime",
+                // TODO
+                SqlType.DateTimeOffset => "string",
+                SqlType.Date => "string",
+                SqlType.Boolean => "boolean",
+                // TODO normally "decimal"
+                SqlType.Single => "currency",
+                SqlType.Double => "currency",
+
+                /*"xml" => SqlType.Xml,
+                "uniqueidentifier" => SqlType.Guid,
+                "binary" => SqlType.Binary,
+                "image" => SqlType.Image,
+                "varbinary" => SqlType.VarBinary,
+                "ntext" => SqlType.NText,*/
+                _ => throw new NotImplementedException($"Unmapped SqlType: {type}."),
+            };
         }
     }
 }
