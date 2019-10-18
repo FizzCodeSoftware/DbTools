@@ -20,6 +20,7 @@
     {
         public string Name { get; set; }
         public string DataView { get; set; }
+        public PartitionSource Source { get; set; }
     }
 
     public class PartitionSource

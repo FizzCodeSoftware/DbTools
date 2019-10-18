@@ -2,6 +2,7 @@
 {
     using System.IO;
     using System.Text;
+    using System.Text.Encodings.Web;
     using System.Text.Json;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
@@ -38,6 +39,8 @@
                     table.Columns.Add(column);
                 }
 
+                BimHelper.SetDefaultPartition(table, tabledefeinition, DatabaseName);
+
                 root.Model.Tables.Add(table);
             }
 
@@ -48,6 +51,7 @@
         {
             var jsonOptions = new JsonSerializerOptions();
             jsonOptions.WriteIndented = true;
+            jsonOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
             jsonOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 
             var json = JsonSerializer.Serialize(root, jsonOptions);
