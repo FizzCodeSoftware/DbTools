@@ -13,7 +13,13 @@
     {
         public string Name { get; set; }
         public string DataType { get; set; }
+        // TODO needs on PK?
+        public bool IsKey { get; set; }
         public string SourceColumn { get; set; }
+        // TODO leave out if null
+        public string FormatString { get; set; }
+        // TODO leave out if null
+        public List<Annotation> Annotations { get; } = new List<Annotation>();
     }
 
     public class Partition

@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
-    using System;
     using System.IO;
     using System.Text;
     using System.Text.Encodings.Web;

@@ -86,8 +86,19 @@ namespace FizzCode.DbTools.DataDefinitionDocumenter
                 SqlType.Int16 => "int64",
                 SqlType.Byte => "int64",
                 SqlType.Int64 => "int64",
-                SqlType.Decimal => "decimal",
-                SqlType.Money => "currency",
+                SqlType.Decimal => "double",
+                // SqlType.Money => "currency",
+                // TODO 
+/*
+"formatString": "#,0.00 \"Ft\";-#,0.00 \"Ft\";#,0.00 \"Ft\"",
+"annotations": [
+    {
+    "name": "Format",
+    "value": "<Format Format=\"Currency\" Accuracy=\"2\" ThousandSeparator=\"True\"><Currency LCID=\"1038\" DisplayName=\"Ft Hungarian (Hungary)\" Symbol=\"Ft\" PositivePattern=\"3\" NegativePattern=\"8\" /></Format>"
+    }
+] 
+*/
+                // SqlType.Money => "decimal",
                 SqlType.NVarchar => "string",
                 SqlType.NChar => "string",
                 SqlType.Varchar => "string",
