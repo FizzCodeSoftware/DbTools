@@ -11,6 +11,7 @@
     using Microsoft.Extensions.Configuration;
 
     [ApplicationMetadata(Name = ">")]
+#pragma warning disable CA1812
     internal class AppCommands
     {
         [ApplicationMetadata(Name = "exit", Description = "Exit from the command-line utility.")]
@@ -28,7 +29,7 @@
             [Option(LongName = "patternFileName", ShortName = "p")]
             string patternFileName,
             [Option(LongName = "flags", ShortName = "f")]
-            List<DocumenterFlags> flags)
+            List<DocumenterFlag> flags)
         {
             var connectionStringWithProvider = new ConnectionStringWithProvider(sqlDialect.ToString(), SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect), connectionString);
 
@@ -51,12 +52,12 @@
                 customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
 
 
-            HashSet<DocumenterFlags> flagsSet;
+            HashSet<DocumenterFlag> flagsSet;
 
             if (flags == null)
-                flagsSet = new HashSet<DocumenterFlags>();
+                flagsSet = new HashSet<DocumenterFlag>();
             else
-                flagsSet = new HashSet<DocumenterFlags>(flags);
+                flagsSet = new HashSet<DocumenterFlag>(flags);
 
             var documenter = new Documenter(documenterSettings, settings, databaseName, customizer, null, flagsSet);
 

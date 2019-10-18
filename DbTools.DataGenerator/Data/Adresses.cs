@@ -1,7 +1,9 @@
-﻿namespace FizzCode.DbTools.DataGenerator
+﻿#pragma warning disable CA1051 // Do not declare visible instance fields
+namespace FizzCode.DbTools.DataGenerator
 {
     public class Adresses
     {
+
         public string[] Cities = new[] {
             "Adonis",
             "Aether",

@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Globalization;
     using System.Linq;
     using OfficeOpenXml;
     using OfficeOpenXml.Style;
@@ -36,7 +37,7 @@
                 var number = 1;
                 while (_sheetNames.Any(i => string.Equals(i.Value, uniqueName, StringComparison.OrdinalIgnoreCase)))
                 {
-                    uniqueName = name.Substring(0, 31 - number.ToString().Length) + number++.ToString();
+                    uniqueName = name.Substring(0, 31 - number.ToString(CultureInfo.InvariantCulture).Length) + number++.ToString(CultureInfo.InvariantCulture);
                 }
             }
 

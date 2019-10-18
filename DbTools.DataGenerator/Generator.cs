@@ -64,7 +64,7 @@
             }
         }
 
-        private GeneratorBase GetDefaultGenerator(SqlColumn column)
+        private static GeneratorBase GetDefaultGenerator(SqlColumn column)
         {
             return column.Type switch
             {

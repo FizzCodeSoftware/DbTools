@@ -33,9 +33,13 @@
                 table.Columns.Add(column);
             }
 
-            var json = JsonSerializer.Serialize(table);
+            var jsonOptions = new JsonSerializerOptions();
+            jsonOptions.WriteIndented = true;
+            jsonOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 
-            var folder = Path.Combine(DocumenterSettings.WorkingDirectory ?? @".\", _databaseName);
+            var json = JsonSerializer.Serialize(table, jsonOptions);
+
+            var folder = Path.Combine(DocumenterSettings.WorkingDirectory ?? @".\", DatabaseName);
             Directory.CreateDirectory(folder);
             File.WriteAllText(Path.Combine(folder, "Model.bim"), json, Encoding.UTF8);
         }

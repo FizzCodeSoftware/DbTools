@@ -2,16 +2,17 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Text.RegularExpressions;
     using FizzCode.DbTools.DataDefinition;
 
     public class PatternMatchingTableCustomizer : ITableCustomizer
     {
-        protected List<PatternMatchingTableCustomizerItem> _patterns = new List<PatternMatchingTableCustomizerItem>();
+        protected List<PatternMatchingTableCustomizerItem> Patterns { get; } = new List<PatternMatchingTableCustomizerItem>();
 
         public void AddPattern(string pattern, string patternExcept, bool shouldSkip, string category, string backGroundColor)
         {
-            _patterns.Add(new PatternMatchingTableCustomizerItem(pattern, patternExcept, shouldSkip, category, backGroundColor));
+            Patterns.Add(new PatternMatchingTableCustomizerItem(pattern, patternExcept, shouldSkip, category, backGroundColor));
         }
 
         public string BackGroundColor(SchemaAndTableName tableName)
@@ -35,11 +36,11 @@
         private PatternMatchingTableCustomizerItem GetPatternMatching(SchemaAndTableName schemaAndTableName)
         {
             PatternMatchingTableCustomizerItem matchingItem = null;
-            foreach (var item in _patterns)
+            foreach (var item in Patterns)
             {
                 if (IsRegex(item.Pattern))
                 {
-                    var regexPattern = "^" + Regex.Escape(item.Pattern).Replace(@"\*", ".*").Replace(@"\?", ".").Replace("#", @"\d");
+                    var regexPattern = "^" + Regex.Escape(item.Pattern).Replace(@"\*", ".*", StringComparison.OrdinalIgnoreCase).Replace(@"\?", ".", StringComparison.OrdinalIgnoreCase).Replace("#", @"\d", StringComparison.OrdinalIgnoreCase);
                     if ((Regex.Match(schemaAndTableName.SchemaAndName, regexPattern).Success
                         || Regex.Match(schemaAndTableName.TableName, regexPattern).Success)
                         && ShouldNotSkipPatternExcept(item, schemaAndTableName))
@@ -62,11 +63,11 @@
             return matchingItem;
         }
 
-        private bool ShouldNotSkipPatternExcept(PatternMatchingTableCustomizerItem item, SchemaAndTableName schemaAndTableName)
+        private static bool ShouldNotSkipPatternExcept(PatternMatchingTableCustomizerItem item, SchemaAndTableName schemaAndTableName)
         {
             if (IsRegex(item.PatternExcept))
             {
-                var regexPatternExcept = Regex.Escape(item.PatternExcept).Replace(@"\*", ".*").Replace(@"\?", ".").Replace("#", @"\d");
+                var regexPatternExcept = Regex.Escape(item.PatternExcept).Replace(@"\*", ".*", StringComparison.OrdinalIgnoreCase).Replace(@"\?", ".", StringComparison.OrdinalIgnoreCase).Replace("#", @"\d", StringComparison.OrdinalIgnoreCase);
                 return !Regex.Match(schemaAndTableName.SchemaAndName, regexPatternExcept).Success
                     && !Regex.Match(schemaAndTableName.TableName, regexPatternExcept).Success;
             }
@@ -75,12 +76,12 @@
                 && !string.Equals(item.PatternExcept, schemaAndTableName.TableName, StringComparison.InvariantCultureIgnoreCase);
         }
 
-        private bool IsRegex(string pattern)
+        private static bool IsRegex(string pattern)
         {
             if (pattern == null)
                 return false;
 
-            return pattern.Contains("*") || pattern.Contains("?") || pattern.Contains("#");
+            return pattern.Contains("*", StringComparison.OrdinalIgnoreCase) || pattern.Contains("?", StringComparison.OrdinalIgnoreCase) || pattern.Contains("#", StringComparison.OrdinalIgnoreCase);
         }
     }
 }
