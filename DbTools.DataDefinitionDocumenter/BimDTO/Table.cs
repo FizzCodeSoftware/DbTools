@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace FizzCode.DbTools.DataDefinitionDocumenter.BimDTO
+﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.BimDTO
 {
+    using System.Collections.Generic;
+
     public class Table
     {
-        public string Name { get;  set; }
+        public string Name { get; set; }
         public List<Column> Columns { get; } = new List<Column>();
         public List <Partition> Partitions { get; } = new List<Partition>();
     }

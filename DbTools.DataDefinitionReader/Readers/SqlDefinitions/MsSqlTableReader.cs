@@ -37,7 +37,7 @@
             return sqlTable;
         }
 
-        private SqlType MapSqlType(string type)
+        private static SqlType MapSqlType(string type)
         {
             return type switch
             {
@@ -67,7 +67,7 @@
             };
         }
 
-        private SqlColumn CreateSqlColumn(SqlType type, Row row)
+        private static SqlColumn CreateSqlColumn(SqlType type, Row row)
         {
             SqlColumn column;
             switch (type)

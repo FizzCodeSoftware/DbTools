@@ -15,30 +15,48 @@
 
         public void Generate(DatabaseDefinition databaseDefinition)
         {
-            // Test one table now
-            var tabledefeinition = databaseDefinition.GetTables()[0];
+            var root = new BimDTO.BimGeneratorRoot();
+            root.Model = new BimDTO.BimGeneratorModel();
 
-            var table = new BimDTO.Table();
-            // TODO name wih schema
-            table.Name = tabledefeinition.SchemaAndTableName.TableName;
+            BimHelper.SetDefaultAnnotations(root.Model);
+            BimHelper.SetDefaultDataSources(root.Model, DatabaseName);
 
-            foreach (var columndefinition in tabledefeinition.Columns)
+            foreach (var tabledefeinition in databaseDefinition.GetTables())
             {
-                var column = new BimDTO.Column();
-                // TODO mapping
-                column.Name = columndefinition.Name;
-                column.DataType = columndefinition.Type.ToString();
-                column.SourceColumn = columndefinition.Name;
+                var table = new BimDTO.Table();
+                // TODO name wih schema
+                table.Name = tabledefeinition.SchemaAndTableName.TableName;
 
-                table.Columns.Add(column);
+                foreach (var columndefinition in tabledefeinition.Columns)
+                {
+                    var column = new BimDTO.Column();
+                    // TODO mapping
+                    column.Name = columndefinition.Name;
+                    column.DataType = columndefinition.Type.ToString();
+                    column.SourceColumn = columndefinition.Name;
+
+                    table.Columns.Add(column);
+                }
+
+                root.Model.Tables.Add(table);
             }
 
+            ToJson(root);
+        }
+
+        private void ToJson(BimDTO.BimGeneratorRoot root)
+        {
             var jsonOptions = new JsonSerializerOptions();
             jsonOptions.WriteIndented = true;
             jsonOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 
-            var json = JsonSerializer.Serialize(table, jsonOptions);
+            var json = JsonSerializer.Serialize(root, jsonOptions);
 
+            WriteJson(json);
+        }
+
+        private void WriteJson(string json)
+        {
             var folder = Path.Combine(DocumenterSettings.WorkingDirectory ?? @".\", DatabaseName);
             Directory.CreateDirectory(folder);
             File.WriteAllText(Path.Combine(folder, "Model.bim"), json, Encoding.UTF8);
