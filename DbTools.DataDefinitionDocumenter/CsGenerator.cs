@@ -71,9 +71,7 @@
             var index = 0;
             foreach (var table in tables)
             {
-                if (index > 0)
-                    sb.AppendLine();
-
+                sb.AppendLine();
                 GenerateTable(sb, table);
                 index++;
             }
@@ -106,7 +104,15 @@
             .Append(1, "public class ")
             .Append(_databaseName)
             .AppendLine(" : DatabaseDeclaration")
-            .AppendLine(1, "{");
+            .AppendLine(1, "{")
+            .AppendLine(2, "public " + _databaseName + "()")
+            .AppendLine(2, "{")
+            .AppendLine(2, "}")
+            .AppendLine()
+            .AppendLine(2, "public " + _databaseName + "(string defaultSchema)")
+            .AppendLine(3, ": base(defaultSchema)")
+            .AppendLine(2, "{")
+            .AppendLine(2, "}");
         }
 
         private void WriteSingleFileFooter(StringBuilder sb)
