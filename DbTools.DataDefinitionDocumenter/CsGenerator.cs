@@ -108,11 +108,11 @@
             .Append(DatabaseName)
             .AppendLine(" : DatabaseDeclaration")
             .AppendLine(1, "{")
-            .AppendLine(2, "public " + _databaseName + "()")
+            .AppendLine(2, "public " + DatabaseName + "()")
             .AppendLine(2, "{")
             .AppendLine(2, "}")
             .AppendLine()
-            .AppendLine(2, "public " + _databaseName + "(string defaultSchema)")
+            .AppendLine(2, "public " + DatabaseName + "(string defaultSchema)")
             .AppendLine(3, ": base(defaultSchema)")
             .AppendLine(2, "{")
             .AppendLine(2, "}");
