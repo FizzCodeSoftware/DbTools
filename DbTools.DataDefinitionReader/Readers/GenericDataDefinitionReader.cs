@@ -8,10 +8,9 @@
     {
         protected GenericDataDefinitionReader(SqlExecuter sqlExecuter)
         {
-            _executer = sqlExecuter;
+            Executer = sqlExecuter;
         }
-
-        protected readonly SqlExecuter _executer;
+        protected SqlExecuter Executer { get; }
 
         public abstract List<SchemaAndTableName> GetSchemaAndTableNames();
         public abstract SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition);

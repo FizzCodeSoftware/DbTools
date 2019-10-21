@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -23,16 +24,16 @@
             WritePartialMainClassHeader(sb);
             sb.AppendLine("}");
 
-            var folder = Path.Combine(DocumenterSettings.WorkingDirectory ?? @".\", _databaseName);
+            var folder = Path.Combine(DocumenterSettings.WorkingDirectory ?? @".\", DatabaseName);
             Directory.CreateDirectory(folder);
-            File.WriteAllText(Path.Combine(folder, _databaseName + ".cs"), sb.ToString(), Encoding.UTF8);
+            File.WriteAllText(Path.Combine(folder, DatabaseName + ".cs"), sb.ToString(), Encoding.UTF8);
 
             var sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
             foreach (var table in databaseDefinition.GetTables())
             {
-                if (!_tableCustomizer.ShouldSkip(table.SchemaAndTableName))
+                if (!TableCustomizer.ShouldSkip(table.SchemaAndTableName))
                 {
-                    sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndTableName), table));
+                    sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(TableCustomizer.Category(table.SchemaAndTableName), table));
                 }
             }
 
@@ -45,6 +46,8 @@
                 var category = tableKvp.Key;
                 var table = tableKvp.Value;
 
+                sb = new StringBuilder();
+
                 WritePartialTableFileHeader(sb);
                 GenerateTable(sb, table);
                 WritePartialTableFileFooter(sb);
@@ -55,7 +58,7 @@
 
                 categoryInPath = categoryInPath.Replace('?', '？');
 
-                folder = Path.Combine(DocumenterSettings.WorkingDirectory ?? @".\", _databaseName, categoryInPath);
+                folder = Path.Combine(DocumenterSettings.WorkingDirectory ?? @".\", DatabaseName, categoryInPath);
                 Directory.CreateDirectory(folder);
                 File.WriteAllText(Path.Combine(folder, Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, ".") + ".cs"), sb.ToString(), Encoding.UTF8);
             }
@@ -66,7 +69,7 @@
             var sb = new StringBuilder();
             WriteSingleFileHeader(sb);
 
-            var tables = databaseDefinition.GetTables().Where(x => !_tableCustomizer.ShouldSkip(x.SchemaAndTableName));
+            var tables = databaseDefinition.GetTables().Where(x => !TableCustomizer.ShouldSkip(x.SchemaAndTableName));
 
             var index = 0;
             foreach (var table in tables)
@@ -85,10 +88,10 @@
             sb.Append("namespace ")
             .AppendLine(_namespace)
             .AppendLine("{")
-            .AppendLine("\tusing FizzCode.DbTools.DataDefinition;")
+            .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
             .AppendLine()
             .Append(1, "public partial class ")
-            .Append(_databaseName)
+            .Append(DatabaseName)
             .AppendLine(" : DatabaseDeclaration")
             .AppendLine(1, "{")
             .AppendLine(1, "}");
@@ -102,7 +105,7 @@
             .AppendLine("\tusing FizzCode.DbTools.DataDefinition;")
             .AppendLine()
             .Append(1, "public class ")
-            .Append(_databaseName)
+            .Append(DatabaseName)
             .AppendLine(" : DatabaseDeclaration")
             .AppendLine(1, "{")
             .AppendLine(2, "public " + _databaseName + "()")
@@ -115,7 +118,7 @@
             .AppendLine(2, "}");
         }
 
-        private void WriteSingleFileFooter(StringBuilder sb)
+        private static void WriteSingleFileFooter(StringBuilder sb)
         {
             sb.AppendLine(1, "}")
                 .Append("}");
@@ -128,11 +131,11 @@
                 .AppendLine("{")
                 .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
                 .AppendLine()
-                .Append(1, "public partial class ").AppendLine(_databaseName)
+                .Append(1, "public partial class ").AppendLine(DatabaseName)
                 .AppendLine(1, "{");
         }
 
-        private void WritePartialTableFileFooter(StringBuilder sb)
+        private static void WritePartialTableFileFooter(StringBuilder sb)
         {
             sb.AppendLine(1, "}")
                 .AppendLine("}");
@@ -151,7 +154,7 @@
             // - configure use of default schema
             sb
                 .Append(2, "public SqlTable ")
-                .Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString()))
+                .Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
                 .AppendLine(" { get; } = AddTable((table) =>")
                 .AppendLine(2, "{");
 

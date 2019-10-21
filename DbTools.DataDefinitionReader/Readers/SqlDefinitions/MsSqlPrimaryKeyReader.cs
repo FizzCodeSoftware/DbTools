@@ -57,7 +57,7 @@
             }
         }
 
-        private string GetKeySql()
+        private static string GetKeySql()
         {
             return @"
 SELECT schema_name(tab.schema_id) schema_name, 

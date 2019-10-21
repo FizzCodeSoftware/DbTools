@@ -36,7 +36,7 @@
         public override List<SchemaAndTableName> GetSchemaAndTableNames()
         {
             // TODO this is not working in in memory mode?
-            return _executer
+            return Executer
                 .ExecuteQuery("SELECT name FROM sqlite_master WHERE type = 'table'").Rows
                 .Select(row => new SchemaAndTableName(row.GetAs<string>("name")))
                 .ToList();
@@ -47,7 +47,7 @@
             var sqlTable = new SqlTable(schemaAndTableName);
 
             // TODO not working / not possible with in memory
-            var reader = _executer.ExecuteQuery($"PRAGMA table_info({schemaAndTableName.TableName}");
+            var reader = Executer.ExecuteQuery($"PRAGMA table_info({schemaAndTableName.TableName}");
             // cid, name, type, notnull, dflt_value, pk
             // type in the form varchar(20)
 

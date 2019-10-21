@@ -12,7 +12,7 @@
             var path = documenterSettings?.WorkingDirectory ?? "";
 
             // default name <dbname>.DbTools.Patterns.csv
-            if (!fileName.EndsWith(".csv"))
+            if (!fileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
                 fileName += ".DbTools.Patterns.csv";
 
             fileName = Path.Combine(path, fileName);

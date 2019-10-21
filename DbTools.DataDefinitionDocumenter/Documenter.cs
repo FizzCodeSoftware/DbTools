@@ -8,32 +8,27 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
-    public class DocumenterSettings
-    {
-        public string WorkingDirectory { get; set; }
-    }
-
     public class Documenter : DocumenterBase
     {
         protected IDocumenterWriter DocumenterWriter { get; }
         protected ISqlTypeMapper SqlTypeMapper { get; } = new GenericSqlTypeMapper();
 
         private readonly string _fileName;
-        private readonly HashSet<DocumenterFlags> _flags;
+        private readonly HashSet<DocumenterFlag> _flags;
 
-        public Documenter(DocumenterSettings documenterSettings, Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlags> flags = null)
+        public Documenter(DocumenterSettings documenterSettings, Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlag> flags = null)
             : this(new DocumenterWriterExcel(), documenterSettings, settings, databaseName, tableCustomizer, fileName, flags)
         {
         }
 
-        public Documenter(IDocumenterWriter documenterWriter, DocumenterSettings documenterSettings, Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlags> flags = null) : base(documenterSettings, settings, databaseName, tableCustomizer)
+        public Documenter(IDocumenterWriter documenterWriter, DocumenterSettings documenterSettings, Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlag> flags = null) : base(documenterSettings, settings, databaseName, tableCustomizer)
         {
             DocumenterWriter = documenterWriter;
             _fileName = fileName;
 
             Helper = new DocumenterHelper(settings);
 
-            _flags = flags ?? new HashSet<DocumenterFlags>();
+            _flags = flags ?? new HashSet<DocumenterFlag>();
         }
 
         private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
@@ -42,7 +37,7 @@
         private Color? GetColor(SchemaAndTableName schemaAndTableName)
         {
             // TODO coloring to incude schema
-            var hexColor = _tableCustomizer.BackGroundColor(schemaAndTableName);
+            var hexColor = TableCustomizer.BackGroundColor(schemaAndTableName);
 
             if (hexColor == null)
                 return null;
@@ -56,17 +51,17 @@
 
             foreach (var table in tables)
             {
-                if (!_tableCustomizer.ShouldSkip(table.SchemaAndTableName))
-                    _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndTableName), table));
+                if (!TableCustomizer.ShouldSkip(table.SchemaAndTableName))
+                    _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(TableCustomizer.Category(table.SchemaAndTableName), table));
                 else
-                    _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(_tableCustomizer.Category(table.SchemaAndTableName), table));
+                    _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(TableCustomizer.Category(table.SchemaAndTableName), table));
             }
 
             var hasCategories = _sqlTablesByCategory.Any(x => !string.IsNullOrEmpty(x.Key));
 
-            WriteLine("Database", "Database name", _databaseName);
-            WriteLine("Database", "Number of documented tables", databaseDefinition.GetTables().Count(t => !_tableCustomizer.ShouldSkip(t.SchemaAndTableName)));
-            WriteLine("Database", "Number of skipped tables", databaseDefinition.GetTables().Count(t => _tableCustomizer.ShouldSkip(t.SchemaAndTableName)));
+            WriteLine("Database", "Database name", DatabaseName);
+            WriteLine("Database", "Number of documented tables", databaseDefinition.GetTables().Count(t => !TableCustomizer.ShouldSkip(t.SchemaAndTableName)));
+            WriteLine("Database", "Number of skipped tables", databaseDefinition.GetTables().Count(t => TableCustomizer.ShouldSkip(t.SchemaAndTableName)));
             WriteLine("Database", "Number of tables", databaseDefinition.GetTables().Count);
 
             if (hasCategories)
@@ -92,7 +87,7 @@
 
                 WriteLine("Tables", "Category", "Schema", "Table Name", "Link", "Number of columns", "Description");
 
-                if (!_flags.Contains(DocumenterFlags.NoInternalDataTypes))
+                if (!_flags.Contains(DocumenterFlag.NoInternalDataTypes))
                 {
                     WriteLine("All columns", "Category", "Schema", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
                 }
@@ -104,7 +99,7 @@
             else
             {
                 WriteLine("Tables", "Schema", "Table Name", "Number of columns", "Description");
-                if (!_flags.Contains(DocumenterFlags.NoInternalDataTypes))
+                if (!_flags.Contains(DocumenterFlag.NoInternalDataTypes))
                 {
                     WriteLine("All columns", "Schema", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
                 }
@@ -124,7 +119,7 @@
                 if (sheetColor != null)
                     DocumenterWriter.SetSheetColor(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName), sheetColor.Value);
 
-                var mergeAmount = !_flags.Contains(DocumenterFlags.NoInternalDataTypes) ? 12 : 11;
+                var mergeAmount = !_flags.Contains(DocumenterFlag.NoInternalDataTypes) ? 12 : 11;
 
                 WriteColor(table.SchemaAndTableName, "Schema");
                 WriteAndMerge(table.SchemaAndTableName, mergeAmount, table.SchemaAndTableName.Schema);
@@ -148,7 +143,7 @@
 
                 WriteLine(table.SchemaAndTableName);
 
-                if (!_flags.Contains(DocumenterFlags.NoInternalDataTypes))
+                if (!_flags.Contains(DocumenterFlag.NoInternalDataTypes))
                     WriteLine(table.SchemaAndTableName, "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key Name", "Referenced Table", "Link", "Referenced Column");
                 else
                     WriteLine(table.SchemaAndTableName, "Column Name", "Data Type", "Column Length", "Column Precision", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key Name", "Referenced Table", "Link", "Referenced Column");
@@ -167,7 +162,7 @@
 
             var content = DocumenterWriter.GetContent();
 
-            var fileName = _fileName ?? (_databaseName?.Length == 0 ? "Database.xlsx" : _databaseName + ".xlsx");
+            var fileName = _fileName ?? (DatabaseName?.Length == 0 ? "Database.xlsx" : DatabaseName + ".xlsx");
 
             var path = DocumenterSettings?.WorkingDirectory;
             if (!string.IsNullOrEmpty(path))
@@ -178,7 +173,7 @@
             File.WriteAllBytes(fileName, content);
         }
 
-        private List<SqlTable> RemoveKnownTechnicalTables(List<SqlTable> list)
+        private static List<SqlTable> RemoveKnownTechnicalTables(List<SqlTable> list)
         {
             // TODO MS Sql specific
             return list.Where(x =>
@@ -221,7 +216,7 @@
 
                 var isPk = pks.Any(pk => pk.SqlColumns.Any(cao => cao.SqlColumn == column));
 
-                if (!_flags.Contains(DocumenterFlags.NoInternalDataTypes))
+                if (!_flags.Contains(DocumenterFlag.NoInternalDataTypes))
                     Write(table.SchemaAndTableName, column.Name, column.Type.ToString(), sqlType, column.Length, column.Precision, column.IsNullable);
                 else
                     Write(table.SchemaAndTableName, column.Name, sqlType, column.Length, column.Precision, column.IsNullable);
@@ -263,12 +258,12 @@
 
                 if (hasCategories)
                 {
-                    if (!_flags.Contains(DocumenterFlags.NoInternalDataTypes))
+                    if (!_flags.Contains(DocumenterFlag.NoInternalDataTypes))
                         DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, column.Type.ToString(), sqlType, column.Length, column.Precision, column.IsNullable);
                     else
                         DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType, column.Length, column.Precision, column.IsNullable);
                 }
-                else if (!_flags.Contains(DocumenterFlags.NoInternalDataTypes))
+                else if (!_flags.Contains(DocumenterFlag.NoInternalDataTypes))
                 {
                     DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, column.Type.ToString(), sqlType, column.Length, column.Precision, column.IsNullable);
                 }
@@ -291,7 +286,7 @@
                 DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), "All columns", description);
             }
 
-            if (!_flags.Contains(DocumenterFlags.NoDetailedForeignKeys))
+            if (!_flags.Contains(DocumenterFlag.NoDetailedForeignKeys))
             {
                 WriteLine(table.SchemaAndTableName);
                 WriteLine(table.SchemaAndTableName, "Foreign keys");
@@ -315,7 +310,7 @@
                     WriteLine(table.SchemaAndTableName);
             }
 
-            if (!_flags.Contains(DocumenterFlags.NoDetailedIndexes))
+            if (!_flags.Contains(DocumenterFlag.NoDetailedIndexes))
             {
                 WriteLine(table.SchemaAndTableName);
                 WriteLine(table.SchemaAndTableName, "Indexes");

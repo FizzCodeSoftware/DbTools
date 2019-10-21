@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.DataDefinition;
@@ -22,16 +23,16 @@
 
             AddTableDocumentation(dd);
 
-            new MsSqlIdentityReader(_executer).GetIdentity(dd);
-            new MsSqlPrimaryKeyReader(_executer).GetPrimaryKey(dd);
-            new MsSqlForeignKeyReader(_executer).GetForeignKeys(dd);
+            new MsSqlIdentityReader(Executer).GetIdentity(dd);
+            new MsSqlPrimaryKeyReader(Executer).GetPrimaryKey(dd);
+            new MsSqlForeignKeyReader(Executer).GetForeignKeys(dd);
 
             return dd;
         }
 
         public override List<SchemaAndTableName> GetSchemaAndTableNames()
         {
-            return _executer.ExecuteQuery(@"
+            return Executer.ExecuteQuery(@"
 SELECT ss.name schemaName, so.name tableName FROM sys.objects so
 INNER JOIN sys.schemas ss ON ss.schema_id = so.schema_id
 WHERE type = 'U'").Rows
@@ -40,10 +41,10 @@ WHERE type = 'U'").Rows
         }
 
         private MsSqlTableReader _tableReader;
-        private MsSqlTableReader TableReader => _tableReader ?? (_tableReader = new MsSqlTableReader(_executer));
+        private MsSqlTableReader TableReader => _tableReader ?? (_tableReader = new MsSqlTableReader(Executer));
 
         private MsSqlColumnDocumentationReader _columnDocumentationReader;
-        private MsSqlColumnDocumentationReader ColumnDocumentationReader => _columnDocumentationReader ?? (_columnDocumentationReader = new MsSqlColumnDocumentationReader(_executer));
+        private MsSqlColumnDocumentationReader ColumnDocumentationReader => _columnDocumentationReader ?? (_columnDocumentationReader = new MsSqlColumnDocumentationReader(Executer));
 
         public override SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition = true)
         {
@@ -51,13 +52,13 @@ WHERE type = 'U'").Rows
 
             if (fullDefinition)
             {
-                new MsSqlPrimaryKeyReader(_executer).
+                new MsSqlPrimaryKeyReader(Executer).
                 GetPrimaryKey(sqlTable);
-                new MsSqlForeignKeyReader(_executer).GetForeignKeys(sqlTable);
+                new MsSqlForeignKeyReader(Executer).GetForeignKeys(sqlTable);
                 AddTableDocumentation(sqlTable);
             }
 
-            var defaultSchema = _executer.Generator.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = Executer.Generator.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
             ColumnDocumentationReader.GetColumnDocumentation(defaultSchema, sqlTable);
 
             return sqlTable;
@@ -74,7 +75,7 @@ FROM
 
         public void AddTableDocumentation(SqlTable table)
         {
-            var reader = _executer.ExecuteQuery(new SqlStatementWithParameters(
+            var reader = Executer.ExecuteQuery(new SqlStatementWithParameters(
             SqlGetTableDocumentation + " AND SCHEMA_NAME(t.schema_id) = @SchemaName AND t.name = @TableName", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName));
 
             foreach (var row in reader.Rows)
@@ -82,7 +83,7 @@ FROM
                 var description = row.GetAs<string>("Property");
                 if (!string.IsNullOrEmpty(description))
                 {
-                    description = description.Replace("\\n", "\n").Trim();
+                    description = description.Replace("\\n", "\n", StringComparison.OrdinalIgnoreCase).Trim();
                     var descriptionProperty = new SqlTableDescription(table, description);
                     table.Properties.Add(descriptionProperty);
                 }
@@ -91,7 +92,7 @@ FROM
 
         public void AddTableDocumentation(DatabaseDefinition dd)
         {
-            var reader = _executer.ExecuteQuery(@"
+            var reader = Executer.ExecuteQuery(@"
 SELECT
     SCHEMA_NAME(t.schema_id) as SchemaName,
     t.name AS TableName, 
@@ -112,7 +113,7 @@ FROM
                     var description = row.GetAs<string>("Property");
                     if (!string.IsNullOrEmpty(description))
                     {
-                        description = description.Replace("\\n", "\n").Trim();
+                        description = description.Replace("\\n", "\n", StringComparison.OrdinalIgnoreCase).Trim();
                         var descriptionProperty = new SqlTableDescription(table, description);
                         table.Properties.Add(descriptionProperty);
                     }

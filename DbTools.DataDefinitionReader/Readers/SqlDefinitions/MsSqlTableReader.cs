@@ -37,7 +37,7 @@
             return sqlTable;
         }
 
-        private SqlType MapSqlType(string type)
+        private static SqlType MapSqlType(string type)
         {
             return type switch
             {
@@ -52,6 +52,8 @@
                 "varchar" => SqlType.Varchar,
                 "char" => SqlType.Char,
                 "datetime" => SqlType.DateTime,
+                // TODO losing special data type?
+                "datetime2" => SqlType.DateTime,
                 "datetimeoffset" => SqlType.DateTimeOffset,
                 "date" => SqlType.Date,
                 "bit" => SqlType.Boolean,
@@ -67,7 +69,7 @@
             };
         }
 
-        private SqlColumn CreateSqlColumn(SqlType type, Row row)
+        private static SqlColumn CreateSqlColumn(SqlType type, Row row)
         {
             SqlColumn column;
             switch (type)

@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
+    using System;
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
@@ -29,7 +30,7 @@
                     var description = row.GetAs<string>("Property");
                     if (!string.IsNullOrEmpty(description))
                     {
-                        description = description.Replace("\\n", "\n").Trim();
+                        description = description.Replace("\\n", "\n", StringComparison.OrdinalIgnoreCase).Trim();
                         var descriptionProperty = new SqlColumnDescription(column, description);
                         column.Properties.Add(descriptionProperty);
                     }

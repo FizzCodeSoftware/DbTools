@@ -57,7 +57,7 @@
 
             foreach (var v in values)
             {
-                var idx = v.IndexOf("=");
+                var idx = v.IndexOf("=", StringComparison.OrdinalIgnoreCase);
                 if (idx == -1)
                     continue;
 

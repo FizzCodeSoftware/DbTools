@@ -7,10 +7,12 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionDocumenter;
     using FizzCode.DbTools.DataDefinitionExecuter;
+    using FizzCode.DbTools.DataDefinitionGenerator;
     using FizzCode.DbTools.DataDefinitionReader;
     using Microsoft.Extensions.Configuration;
 
     [ApplicationMetadata(Name = ">")]
+#pragma warning disable CA1812
     internal class AppCommands
     {
         [ApplicationMetadata(Name = "exit", Description = "Exit from the command-line utility.")]
@@ -28,7 +30,7 @@
             [Option(LongName = "patternFileName", ShortName = "p")]
             string patternFileName,
             [Option(LongName = "flags", ShortName = "f")]
-            List<DocumenterFlags> flags)
+            List<DocumenterFlag> flags)
         {
             var connectionStringWithProvider = new ConnectionStringWithProvider(sqlDialect.ToString(), SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect), connectionString);
 
@@ -51,12 +53,12 @@
                 customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
 
 
-            HashSet<DocumenterFlags> flagsSet;
+            HashSet<DocumenterFlag> flagsSet;
 
             if (flags == null)
-                flagsSet = new HashSet<DocumenterFlags>();
+                flagsSet = new HashSet<DocumenterFlag>();
             else
-                flagsSet = new HashSet<DocumenterFlags>(flags);
+                flagsSet = new HashSet<DocumenterFlag>(flags);
 
             var documenter = new Documenter(documenterSettings, settings, databaseName, customizer, null, flagsSet);
 
@@ -99,6 +101,63 @@
             var generator = new CsGenerator(documenterSettings, settings, newDatabaseName, @namespace, customizer);
 
             generator.GenerateMultiFile(dd);
+        }
+
+        [ApplicationMetadata(Name = "bim", Description = "Generate database definition into bim (analysis services Model.bim xml) file.")]
+        public void Bim(
+            [Option(LongName = "connectionString", ShortName = "c")]
+            string connectionString,
+            [Option(LongName = "sqlDialect", ShortName = "d")]
+            SqlDialect sqlDialect,
+            [Option(LongName = "databaseName", ShortName = "b")]
+            string databaseName,
+            [Option(LongName = "patternFileName", ShortName = "p")]
+            string patternFileName)
+        {
+            var connectionStringWithProvider = new ConnectionStringWithProvider
+            (
+                sqlDialect.ToString(),
+                SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect),
+                connectionString
+            );
+
+            var settings = Helper.GetDefaultSettings(sqlDialect);
+
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings);
+
+            var dd = ddlReader.GetDatabaseDefinition();
+
+            ITableCustomizer customizer = null;
+
+            var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
+
+            if (patternFileName != null)
+                customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
+
+            var generator = new BimGenerator(documenterSettings, settings, databaseName, customizer);
+
+            generator.Generate(dd);
+        }
+
+        [ApplicationMetadata(Name = "dropall", Description = "Drop every object from a database.")]
+        public void DropAll(
+            [Option(LongName = "connectionString", ShortName = "c")]
+            string connectionString,
+            [Option(LongName = "sqlDialect", ShortName = "d")]
+            SqlDialect sqlDialect
+            )
+        {
+            var providerName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect);
+            var connectionStringWithProvider = new ConnectionStringWithProvider("", providerName, connectionString);
+            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, Helper.GetDefaultSettings(sqlDialect));
+            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
+            var dc = new DatabaseCreator(null, executer);
+
+            dc.DropAllViews();
+            dc.DropAllForeignKeys();
+            dc.DropAllTables();
+            // TODO needs databasedefinition
+            // dc.DropAllSchemas();
         }
     }
 }

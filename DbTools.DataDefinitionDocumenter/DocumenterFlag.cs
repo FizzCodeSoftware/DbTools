@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
-    public enum DocumenterFlags
+    public enum DocumenterFlag
     {
         None,
         NoDetailedForeignKeys,
