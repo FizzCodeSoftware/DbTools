@@ -46,6 +46,8 @@
                 var category = tableKvp.Key;
                 var table = tableKvp.Value;
 
+                sb = new StringBuilder();
+
                 WritePartialTableFileHeader(sb);
                 GenerateTable(sb, table);
                 WritePartialTableFileFooter(sb);
@@ -88,7 +90,7 @@
             sb.Append("namespace ")
             .AppendLine(_namespace)
             .AppendLine("{")
-            .AppendLine("\tusing FizzCode.DbTools.DataDefinition;")
+            .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
             .AppendLine()
             .Append(1, "public partial class ")
             .Append(DatabaseName)
