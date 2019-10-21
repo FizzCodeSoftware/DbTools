@@ -1,9 +1,11 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
+    using System;
     using System.IO;
     using System.Text;
     using System.Text.Encodings.Web;
     using System.Text.Json;
+    using System.Text.RegularExpressions;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
@@ -27,7 +29,10 @@
                 root.Model.Tables.Add(GenerateTable(tabledefeinition));
             }
 
-            ToJson(root);
+            var jsonString = ToJson(root);
+            jsonString = RemoveInvalidEmptyItems(jsonString);
+            WriteJson(jsonString);
+
         }
 
         private BimDTO.Table GenerateTable(SqlTable tabledefeinition)
@@ -55,16 +60,26 @@
             return table;
         }
 
-        private void ToJson(BimDTO.BimGeneratorRoot root)
+        private static string ToJson(BimDTO.BimGeneratorRoot root)
         {
-            var jsonOptions = new JsonSerializerOptions();
-            jsonOptions.WriteIndented = true;
-            jsonOptions.Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
-            jsonOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            var jsonOptions = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
 
             var json = JsonSerializer.Serialize(root, jsonOptions);
 
-            WriteJson(json);
+            return json;
+        }
+
+        private static string RemoveInvalidEmptyItems(string jsonString)
+        {
+            jsonString = Regex.Replace(jsonString, ".*\"formatString\": null[,]?\r\n", "");
+            jsonString = Regex.Replace(jsonString, ".*\"annotations\": \\[\\][,]?\r\n", "");
+
+            return jsonString;
         }
 
         private void WriteJson(string json)

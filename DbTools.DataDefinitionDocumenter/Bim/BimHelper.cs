@@ -40,10 +40,11 @@ namespace FizzCode.DbTools.DataDefinitionDocumenter
 
             dataSource.ConnectionDetails = connectionDetails;
 
-            var credential = new BimDTO.Credential();
-
-            credential.Path = $"{connectionDetails.Address.Server};{database}";
-            credential.Username = "sa";
+            var credential = new BimDTO.Credential
+            {
+                Path = $"{connectionDetails.Address.Server};{database}",
+                Username = "sa"
+            };
 
             dataSource.Credential = credential;
 
@@ -110,9 +111,9 @@ namespace FizzCode.DbTools.DataDefinitionDocumenter
                 SqlType.DateTimeOffset => "string",
                 SqlType.Date => "string",
                 SqlType.Boolean => "boolean",
-                // TODO normally "decimal"
-                SqlType.Single => "currency",
-                SqlType.Double => "currency",
+                // TODO check ranges
+                SqlType.Single => "decimal",
+                SqlType.Double => "decimal",
 
                 /*"xml" => SqlType.Xml,
                 "uniqueidentifier" => SqlType.Guid,
