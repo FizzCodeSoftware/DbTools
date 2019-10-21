@@ -46,7 +46,7 @@
                 var category = tableKvp.Key;
                 var table = tableKvp.Value;
 
-                sb = new StringBuilder();
+                sb.Clear();
 
                 WritePartialTableFileHeader(sb);
                 GenerateTable(sb, table);
