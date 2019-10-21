@@ -30,28 +30,9 @@ Generates data, typically for testing purposes, based on DatabaseDefinition.
 Contains helper classes for unit testing DbTools.
 
 ## Development setup
-### .config files
-You can use local config values to override content of App.config files, which are local (developer specific), or not desired to be included in source control (for example, a connection string with username and password to an internal environment).
+### Config files
+Configuration values are stored in config.json files.
+Configuration values for tests are stored in testconfig.json files.
 
-Project specific:
-App.Local.config
-
-Global:
-\Global\App.Local.Global.config 
-
-using TransformXml build task.
-
-Typically test projects (integration tests, using database to create or read for testing purposes) have App.config files with connections and developers can have their own overrides in App.Local.config or App.Local.Global.config.
-
-The forceIntegrationTests config value conrtrols whether database test, other than in memory SqLite version should run. This config value is typically overridden in the App.Local.Global.config file.
-
-\Global\App.Local.Global.config example:
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<configuration xmlns:xdt="http://schemas.microsoft.com/XML-Document-Transform">
-  <appSettings>
-    <add key="forceIntegrationTests" value="true" xdt:Transform="Replace" xdt:Locator="Match(key)"/>
-  </appSettings>
-</configuration>
-```
+You can use local config values to override content of these files, which are local (developer specific), or not desired to be included in source control (for example, a connection string with username and password to an internal environment).
+Use naming as config-local.json and testconfig-local.json.
