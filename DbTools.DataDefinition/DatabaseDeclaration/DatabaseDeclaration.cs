@@ -33,7 +33,7 @@
 
             AddDeclaredTables();
             CreateRegisteredForeignKeys();
-            AddAutoNaming();
+            AddAutoNaming(GetTables());
         }
 
         private IEnumerable<T> GetProperties<T>(SqlTable sqlTable)
@@ -89,13 +89,13 @@
             }
         }
 
-        protected void AddAutoNaming()
+        public void AddAutoNaming(List<SqlTable> tables)
         {
             var pkNaming = NamingStrategies.GetNamingStrategy<IPrimaryKeyNamingStrategy>();
             var indexNaming = NamingStrategies.GetNamingStrategy<IIndexNamingStrategy>();
             var fkNaming = NamingStrategies.GetNamingStrategy<IForeignKeyNamingStrategy>();
 
-            foreach (var sqlTable in Tables)
+            foreach (var sqlTable in tables)
             {
                 if (pkNaming != null)
                 {
@@ -137,7 +137,12 @@
 
                 if (table.SchemaAndTableName == null)
                 {
-                    var schemaAndTableName = SchemaAndTableNameFromDefinitionName(property.Name);
+                    var schemaAndTableName = new SchemaAndTableName(property.Name);
+                    if (string.IsNullOrEmpty(schemaAndTableName.Schema) && !string.IsNullOrEmpty(DefaultSchema))
+                    {
+                        schemaAndTableName.Schema = DefaultSchema;
+                    }
+
                     table.SchemaAndTableName = schemaAndTableName;
                 }
 
@@ -153,26 +158,6 @@
             {
                 throw new InvalidOperationException(nameof(DatabaseDeclaration) + " is only compatible with tabled defined in public properties. Please review the following fields: " + string.Join(", ", fields.Select(fi => fi.Name)));
             }
-        }
-
-        private SchemaAndTableName SchemaAndTableNameFromDefinitionName(string propertyName)
-        {
-            var parts = propertyName.Split(SchemaTableNameSeparator);
-
-            if (parts.Length == 1)
-            {
-                if (!string.IsNullOrEmpty(DefaultSchema))
-                {
-                    return new SchemaAndTableName(DefaultSchema, parts[0]);
-                }
-
-                return new SchemaAndTableName(parts[0]);
-            }
-
-            if (parts.Length == 2)
-                return new SchemaAndTableName(parts[0], parts[1]);
-
-            throw new ArgumentException("Method name contains invalid number of SchemaTableNameSeparator", nameof(propertyName));
         }
 
         protected static SqlTable AddTable(Action<SqlTable> configurator)

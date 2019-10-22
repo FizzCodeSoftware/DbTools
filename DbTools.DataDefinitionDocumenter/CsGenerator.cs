@@ -69,7 +69,11 @@
             var sb = new StringBuilder();
             WriteSingleFileHeader(sb);
 
-            var tables = databaseDefinition.GetTables().Where(x => !TableCustomizer.ShouldSkip(x.SchemaAndTableName));
+            var tables = databaseDefinition
+                .GetTables()
+                .Where(x => !TableCustomizer.ShouldSkip(x.SchemaAndTableName))
+                .OrderBy(x => x.SchemaAndTableName.Schema)
+                .ThenBy(x => x.SchemaAndTableName.TableName);
 
             var index = 0;
             foreach (var table in tables)
