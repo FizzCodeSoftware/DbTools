@@ -102,6 +102,7 @@
 
                 SqlType.Image => $"AddImage(\"{column.Name}\"",
                 SqlType.Guid => $"AddGuid(\"{column.Name}\"",
+                SqlType.Xml => $"AddXml(\"{column.Name}\"",
                 /*case SqlType.Binary:
                     return "BINARY";
                 case SqlType.VarBinary:

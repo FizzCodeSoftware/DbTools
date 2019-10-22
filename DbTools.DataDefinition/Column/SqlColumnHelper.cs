@@ -128,5 +128,13 @@
             table.Columns.Add(name, column);
             return column;
         }
+
+        public static SqlColumn AddXml(this SqlTable table, string name, bool isNullable = false)
+        {
+            var column = new SqlColumn { Type = SqlType.Xml, Name = name, IsNullable = isNullable };
+            column.Table = table;
+            table.Columns.Add(name, column);
+            return column;
+        }
     }
 }

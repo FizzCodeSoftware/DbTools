@@ -33,23 +33,30 @@
             return customizer;
         }
 
+        private static string EmptyStringAsNull(string value)
+        {
+            return value.Length == 0 ? null : value;
+        }
+
         private static void ProcessPatternContentLine(PatternMatchingTableCustomizer customizer, string line)
         {
             var values = line.Split(';');
 
-            var pattern = values[0];
-            var patternExcept = values[1];
-            var shouldSkip = values[2] != "0";
+            var patternSchema = EmptyStringAsNull(values[0]);
+            var patternTableName = values[1];
+            var patternExceptSchema = EmptyStringAsNull(values[2]);
+            var patternExceptTableName = EmptyStringAsNull(values[3]);
+            var shouldSkip = values[4] != "0";
             string category = null;
             string backgroundColor = null;
 
-            if (values.Length >= 4)
-                category = values[3];
+            if (values.Length >= 6)
+                category = values[5];
 
-            if (values.Length >= 5)
-                backgroundColor = values[4];
+            if (values.Length >= 7)
+                backgroundColor = values[6];
 
-            customizer.AddPattern(pattern, patternExcept, shouldSkip, category, backgroundColor);
+            customizer.AddPattern(patternSchema, patternTableName, patternExceptSchema, patternExceptTableName, shouldSkip, category, backgroundColor);
         }
 
         public static PatternMatchingTableCustomizer FromString(string patternMatchingContent)

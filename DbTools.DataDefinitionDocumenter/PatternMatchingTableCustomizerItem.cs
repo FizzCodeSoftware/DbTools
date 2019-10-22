@@ -1,8 +1,10 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
+﻿using FizzCode.DbTools.DataDefinition;
+
+namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     public class PatternMatchingTableCustomizerItem
     {
-        public PatternMatchingTableCustomizerItem(string pattern, string patternExcept, bool shouldSkip, string category, string backGroundColor)
+        public PatternMatchingTableCustomizerItem(SchemaAndTableName pattern, SchemaAndTableName patternExcept, bool shouldSkip, string category, string backGroundColor)
         {
             Pattern = pattern;
             ShouldSkipIfMatch = shouldSkip;
@@ -11,9 +13,9 @@
             PatternExcept = patternExcept;
         }
 
-        public string Pattern { get; set; }
+        public SchemaAndTableName Pattern { get; set; }
 
-        public string PatternExcept { get; set; }
+        public SchemaAndTableName PatternExcept { get; set; }
 
         public bool ShouldSkipIfMatch { get; set; }
 

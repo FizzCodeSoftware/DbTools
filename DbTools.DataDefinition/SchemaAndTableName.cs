@@ -1,7 +1,14 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System;
+    using System.Diagnostics;
 
+    /// <summary>
+    /// Represents the Schema and Table name of SQL tables.
+    /// Example: dbo.MyTable
+    /// Use null for Schema if the database engine does not support Schema names, or to use the default Schema name (example: dbo in Microsoft SQL Server).
+    /// </summary>
+    [DebuggerDisplay("{ToString(),nq}")]
     public class SchemaAndTableName : IComparable, IEquatable<SchemaAndTableName>
     {
         public string Schema { get; set; }
@@ -27,6 +34,9 @@
             TableName = tableName;
         }
 
+        /// <summary>
+        /// Returns <see cref="Schema"/> and <see cref="TableName"/> joined with a . (dot), or the <see cref="TableName"/> if <see cref="Schema"/> is null.
+        /// </summary>
         public string SchemaAndName
         {
             get
