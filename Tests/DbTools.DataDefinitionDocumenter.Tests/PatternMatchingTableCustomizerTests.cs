@@ -82,10 +82,27 @@
         }
 
         [TestMethod]
-        public void PatternMatching_Schema_And_Table_Except()
+        public void PatternMatching_Schema_And_Table_Except_WildCard()
         {
             var pm = new PatternMatchingTableCustomizer();
             pm.AddPattern("horus*", "apple*", "horusExcept*", "appleExcept*", true, null, null);
+
+            Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("apple", "anything")));
+            Assert.IsTrue(pm.ShouldSkip(new SchemaAndTableName("horus", "apple")));
+            Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("horus", "horus")));
+
+            Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("horusExcept1", "nothing")));
+
+            Assert.IsTrue(pm.ShouldSkip(new SchemaAndTableName("horusExcept", "appleExcept")));
+            Assert.IsTrue(pm.ShouldSkip(new SchemaAndTableName("horusExcept1", "appleExcept1")));
+            Assert.IsTrue(pm.ShouldSkip(new SchemaAndTableName("horusExcept2", "appleExcept2")));
+        }
+
+        [TestMethod]
+        public void PatternMatching_Schema_And_Table_Except()
+        {
+            var pm = new PatternMatchingTableCustomizer();
+            pm.AddPattern("horus*", "apple*", "horusExcept", "appleExcept", true, null, null);
 
             Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("apple", "anything")));
             Assert.IsTrue(pm.ShouldSkip(new SchemaAndTableName("horus", "apple")));
@@ -121,7 +138,7 @@
         {
             // Pattern; PatternExcept; ShouldSkipIfMatch; CategoryIfMatch; BackGroundColorIfMatch
 
-            const string patternContent = ";skip*;;;;1;";
+            const string patternContent = ";skip*;;;1;";
 
             var customizer = PatternMatchingTableCustomizerFromPatterns.FromString(patternContent);
 

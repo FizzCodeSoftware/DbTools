@@ -37,73 +37,62 @@
             PatternMatchingTableCustomizerItem matchingItem = null;
             foreach (var item in Patterns)
             {
-                if (IsRegex(item.Pattern))
+                var isPatternMatch = CheckMatch(schemaAndTableName, item.Pattern);
+                var isPatternExceptMatch = CheckMatch(schemaAndTableName, item.PatternExcept);
+
+                if (isPatternMatch)
                 {
-                    var regexPatternSchema = RegexFormFromWildCharForm(item.Pattern.Schema);
-                    if (regexPatternSchema != null)
-                        regexPatternSchema = "^" + regexPatternSchema;
-
-                    var regexPatternTableName = RegexFormFromWildCharForm(item.Pattern.TableName);
-                    if (regexPatternTableName != null)
-                        regexPatternTableName = "^" + regexPatternTableName;
-
-                    if (CheckMatchRegex(schemaAndTableName, regexPatternSchema, regexPatternTableName)
-                        && ShouldNotSkipPatternExcept(item, schemaAndTableName))
+                    if (IsRegex(item.Pattern.Schema) || IsRegex(item.Pattern.TableName))
                     {
                         if (matchingItem == null)
                             matchingItem = item;
                         else
                             throw new ApplicationException($"Multiple patterns are matching for {schemaAndTableName.SchemaAndName}.");
                     }
-                }
-                else if (CheckMatchString(item.Pattern, schemaAndTableName)
-                    && ShouldNotSkipPatternExcept(item, schemaAndTableName))
-                {
-                    matchingItem = item;
-                    break;
+                    else
+                    {
+                        matchingItem = item;
+                        break;
+                    }
                 }
             }
 
             return matchingItem;
         }
-
-        private static bool CheckMatchString(SchemaAndTableName schemaAndTableNamePattern, SchemaAndTableName schemaAndTableNameActual)
+        
+        private static bool CheckMatch(SchemaAndTableName schemaAndTableNameActual, SchemaAndTableName schemaAndTableNamePattern)
         {
-            if (schemaAndTableNamePattern.Schema == null)
-                return string.Equals(schemaAndTableNamePattern.TableName, schemaAndTableNameActual.TableName, StringComparison.InvariantCultureIgnoreCase);
+            if (schemaAndTableNamePattern.TableName == null && schemaAndTableNamePattern.Schema == null)
+                return false;
 
+            bool isTableNameMatch;
             if (schemaAndTableNamePattern.TableName == null)
-                return string.Equals(schemaAndTableNamePattern.Schema, schemaAndTableNameActual.Schema, StringComparison.InvariantCultureIgnoreCase);
-
-            return schemaAndTableNamePattern == schemaAndTableNameActual;
-        }
-
-        private static bool CheckMatchRegex(SchemaAndTableName schemaAndTableName, string regexPatternSchema, string regexPatternTableName)
-        {
-            if (regexPatternSchema == null)
-                return Regex.Match(schemaAndTableName.TableName, regexPatternTableName).Success;
-
-            if (regexPatternTableName == null)
-                return Regex.Match(schemaAndTableName.Schema, regexPatternSchema).Success;
-
-            return Regex.Match(schemaAndTableName.TableName, regexPatternTableName).Success
-                && Regex.Match(schemaAndTableName.Schema, regexPatternSchema).Success;
-        }
-
-        private static bool ShouldNotSkipPatternExcept(PatternMatchingTableCustomizerItem item, SchemaAndTableName schemaAndTableName)
-        {
-            if (IsRegex(item.PatternExcept))
-            {
-                var regexPatternExceptSchema = RegexFormFromWildCharForm(item.PatternExcept.Schema);
-                var regexPatternExceptTableName = RegexFormFromWildCharForm(item.PatternExcept.TableName);
-
-                return !CheckMatchRegex(schemaAndTableName, regexPatternExceptSchema, regexPatternExceptTableName);
-            }
-
-            if (item.PatternExcept.Schema == null && item.PatternExcept.TableName == null)
-                return true;
+                isTableNameMatch = true;
             else
-                return !CheckMatchString(item.PatternExcept, schemaAndTableName);
+                isTableNameMatch = CheckMatchRegexOrString(schemaAndTableNameActual.TableName, schemaAndTableNamePattern.TableName);
+
+            if (schemaAndTableNamePattern.Schema == null)
+                return isTableNameMatch;
+
+            var isSchemaMatch = CheckMatchRegexOrString(schemaAndTableNameActual.Schema, schemaAndTableNamePattern.Schema);
+
+            return isTableNameMatch && isSchemaMatch;
+        }
+
+        private static bool CheckMatchRegexOrString(string actual, string regexOrString)
+        {
+            if (IsRegex(regexOrString))
+            {
+                var regexPattern = RegexFormFromWildCharForm(regexOrString);
+                if (regexPattern != null)
+                    regexPattern = "^" + regexPattern;
+
+                return Regex.Match(actual, regexPattern).Success;
+            }
+            else
+            {
+                return string.Equals(actual, regexOrString, StringComparison.InvariantCultureIgnoreCase);
+            }
         }
 
         private static string RegexFormFromWildCharForm(string schemaOrTableName)
