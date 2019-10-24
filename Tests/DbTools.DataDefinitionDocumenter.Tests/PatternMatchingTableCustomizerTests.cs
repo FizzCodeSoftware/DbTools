@@ -153,22 +153,23 @@
         }
 
         [TestMethod()]
-        public void ShouldSkipDefaultSchemaTest()
+        public void ShouldSkipTest2()
         {
-            // Pattern; PatternExcept; ShouldSkipIfMatch; CategoryIfMatch; BackGroundColorIfMatch
-
-            const string patternContent = ";skip*;;;1;";
+            const string patternContent = "staging;;;;1";
 
             var customizer = PatternMatchingTableCustomizerFromPatterns.FromString(patternContent);
 
-            var schemaAndTableName1 = new SchemaAndTableName(null, "skipMe");
-            var schemaAndTableName2 = new SchemaAndTableName(null, "dontSkipMe");
+            var schemaAndTableName1 = new SchemaAndTableName("staging", "apple");
+            var schemaAndTableName2 = new SchemaAndTableName("staging", "");
+            var schemaAndTableName3 = new SchemaAndTableName("staging", null);
 
             var shouldSkip1 = customizer.ShouldSkip(schemaAndTableName1);
             var shouldSkip2 = customizer.ShouldSkip(schemaAndTableName2);
+            var shouldSkip3 = customizer.ShouldSkip(schemaAndTableName3);
 
             Assert.IsTrue(shouldSkip1);
-            Assert.IsFalse(shouldSkip2);
+            Assert.IsTrue(shouldSkip2);
+            Assert.IsTrue(shouldSkip3);
         }
     }
 }

@@ -24,9 +24,10 @@
             BimHelper.SetDefaultAnnotations(root.Model);
             BimHelper.SetDefaultDataSources(root.Model, DatabaseName);
 
-            foreach (var tabledefeinition in databaseDefinition.GetTables())
+            foreach (var tableDefinition in databaseDefinition.GetTables())
             {
-                root.Model.Tables.Add(GenerateTable(tabledefeinition));
+                if (!TableCustomizer.ShouldSkip(tableDefinition.SchemaAndTableName))
+                    root.Model.Tables.Add(GenerateTable(tableDefinition));
             }
 
             var jsonString = ToJson(root);

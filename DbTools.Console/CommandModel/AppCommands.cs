@@ -52,7 +52,6 @@
             if (patternFileName != null)
                 customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
 
-
             HashSet<DocumenterFlag> flagsSet;
 
             if (flags == null)

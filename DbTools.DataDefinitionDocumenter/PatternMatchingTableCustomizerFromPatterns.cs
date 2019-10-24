@@ -43,7 +43,7 @@
             var values = line.Split(';');
 
             var patternSchema = EmptyStringAsNull(values[0]);
-            var patternTableName = values[1];
+            var patternTableName = EmptyStringAsNull(values[1]);
             var patternExceptSchema = EmptyStringAsNull(values[2]);
             var patternExceptTableName = EmptyStringAsNull(values[3]);
             var shouldSkip = values[4] != "0";
