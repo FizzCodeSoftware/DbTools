@@ -82,14 +82,14 @@
                         Length = row.GetAs<byte>("NUMERIC_PRECISION")
                     };
                     break;
-                case SqlType.Int16:
+                /*case SqlType.Int16:
                 case SqlType.Int32:
                 case SqlType.Int64:
                     column = new SqlColumn
                     {
                         Length = row.GetAs<byte>("NUMERIC_PRECISION")
                     };
-                    break;
+                    break;*/
                 case SqlType.DateTimeOffset:
                     column = new SqlColumn
                     {
