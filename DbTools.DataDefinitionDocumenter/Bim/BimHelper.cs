@@ -21,8 +21,10 @@ namespace FizzCode.DbTools.DataDefinitionDocumenter
 
         public static BimDTO.DataSource GetDefaultDataSource(string database, string server = null)
         {
-            var dataSource = new BimDTO.DataSource();
-            dataSource.Type = "structured";
+            var dataSource = new BimDTO.DataSource
+            {
+                Type = "structured"
+            };
 
             var connectionDetails = new BimDTO.ConnectionDetails();
 
@@ -66,8 +68,10 @@ namespace FizzCode.DbTools.DataDefinitionDocumenter
 
         public static void SetDefaultPartitionSource(BimDTO.Partition partition, SqlTable sqlTable, string database, string server = null)
         {
-            var partitionSource = new BimDTO.PartitionSource();
-            partitionSource.Type = "m";
+            var partitionSource = new BimDTO.PartitionSource
+            {
+                Type = "m"
+            };
 
             partitionSource.Expression.Add("let");
             // TODO SQL

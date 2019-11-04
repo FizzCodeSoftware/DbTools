@@ -33,6 +33,5 @@
     {
         public string Type { get; set; }
         public List<string> Expression { get; } = new List<string>();
-
     }
 }

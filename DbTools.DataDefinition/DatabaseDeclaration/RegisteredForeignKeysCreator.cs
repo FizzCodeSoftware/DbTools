@@ -21,7 +21,11 @@ namespace FizzCode.DbTools.DataDefinition
             col.IsNullable = fkRegistration.IsNullable;
             col.Name = fkRegistration.SingleFkColumnName;
 
-            var placeHolderColumn = sqlTable.Columns.OfType<SqlColumnFKRegistration>().Where(c => c.FKRegistration == fkRegistration).FirstOrDefault();
+            var placeHolderColumn = sqlTable
+                .Columns
+                .OfType<SqlColumnFKRegistration>()
+                .FirstOrDefault(c => c.FKRegistration == fkRegistration);
+
             var order = sqlTable.Columns.GetOrder(placeHolderColumn.Name);
             sqlTable.Columns.Remove(placeHolderColumn.Name);
 
@@ -37,7 +41,7 @@ namespace FizzCode.DbTools.DataDefinition
 
             var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
-            var placeHolderColumn = sqlTable.Columns.OfType<SqlColumnFKRegistration>().Where(c => c.FKRegistration == fkRegistration).FirstOrDefault();
+            var placeHolderColumn = sqlTable.Columns.OfType<SqlColumnFKRegistration>().FirstOrDefault(c => c.FKRegistration == fkRegistration);
             var order = sqlTable.Columns.GetOrder(placeHolderColumn.Name);
             sqlTable.Columns.Remove(placeHolderColumn.Name);
 
@@ -86,7 +90,7 @@ namespace FizzCode.DbTools.DataDefinition
 
             var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
-            var placeHolderColumn = sqlTable.Columns.OfType<SqlColumnFKRegistration>().Where(c => c.FKRegistration == fkRegistration).FirstOrDefault();
+            var placeHolderColumn = sqlTable.Columns.OfType<SqlColumnFKRegistration>().FirstOrDefault(c => c.FKRegistration == fkRegistration);
             var order = sqlTable.Columns.GetOrder(placeHolderColumn.Name);
             sqlTable.Columns.Remove(placeHolderColumn.Name);
 

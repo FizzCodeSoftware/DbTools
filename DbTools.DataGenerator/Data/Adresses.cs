@@ -3,7 +3,6 @@ namespace FizzCode.DbTools.DataGenerator
 {
     public class Adresses
     {
-
         public string[] Cities = new[] {
             "Adonis",
             "Aether",

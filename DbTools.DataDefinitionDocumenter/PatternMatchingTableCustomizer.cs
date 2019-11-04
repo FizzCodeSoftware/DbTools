@@ -20,15 +20,15 @@
             return item?.BackGroundColorIfMatch;
         }
 
-        public string Category(SchemaAndTableName schemaAndTableName)
+        public string Category(SchemaAndTableName tableName)
         {
-            var item = GetPatternMatching(schemaAndTableName);
+            var item = GetPatternMatching(tableName);
             return item?.CategoryIfMatch;
         }
 
-        public bool ShouldSkip(SchemaAndTableName schemaAndTableName)
+        public bool ShouldSkip(SchemaAndTableName tableName)
         {
-            var item = GetPatternMatching(schemaAndTableName);
+            var item = GetPatternMatching(tableName);
             return item?.ShouldSkipIfMatch == true;
         }
 
@@ -59,17 +59,14 @@
 
             return matchingItem;
         }
-        
+
         private static bool CheckMatch(SchemaAndTableName schemaAndTableNameActual, SchemaAndTableName schemaAndTableNamePattern)
         {
             if (schemaAndTableNamePattern.TableName == null && schemaAndTableNamePattern.Schema == null)
                 return false;
 
-            bool isTableNameMatch;
-            if (schemaAndTableNamePattern.TableName == null)
-                isTableNameMatch = true;
-            else
-                isTableNameMatch = CheckMatchRegexOrString(schemaAndTableNameActual.TableName, schemaAndTableNamePattern.TableName);
+            var isTableNameMatch = schemaAndTableNamePattern.TableName == null
+                || CheckMatchRegexOrString(schemaAndTableNameActual.TableName, schemaAndTableNamePattern.TableName);
 
             if (schemaAndTableNamePattern.Schema == null)
                 return isTableNameMatch;
@@ -89,10 +86,8 @@
 
                 return Regex.Match(actual, regexPattern).Success;
             }
-            else
-            {
-                return string.Equals(actual, regexOrString, StringComparison.InvariantCultureIgnoreCase);
-            }
+
+            return string.Equals(actual, regexOrString, StringComparison.InvariantCultureIgnoreCase);
         }
 
         private static string RegexFormFromWildCharForm(string schemaOrTableName)

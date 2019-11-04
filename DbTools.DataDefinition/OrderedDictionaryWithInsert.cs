@@ -9,9 +9,9 @@
     {
         private readonly Dictionary<TKey, TValue> _dictionary = new Dictionary<TKey, TValue>();
         private readonly SortedDictionary<int, TKey> _order = new SortedDictionary<int, TKey>();
-        private int _maxOrder = 0;
+        private int _maxOrder;
 
-        public abstract void Add(TValue value);
+        public abstract void Add(TValue item);
 
         public void Add(TKey key, TValue value)
         {
@@ -92,7 +92,6 @@
 
         public bool Remove(TKey key)
         {
-
             if (_dictionary.ContainsKey(key))
             {
                 lock (syncRoot)
@@ -100,10 +99,11 @@
                     _dictionary.Remove(key);
                     _order.Remove(GetOrder(key));
                 }
+
                 return true;
             }
-            else
-                return false;
+
+            return false;
         }
 
         public TValue this[TKey key]

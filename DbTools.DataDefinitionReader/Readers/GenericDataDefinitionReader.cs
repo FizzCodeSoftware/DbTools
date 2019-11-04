@@ -10,6 +10,7 @@
         {
             Executer = sqlExecuter;
         }
+
         protected SqlExecuter Executer { get; }
 
         public abstract List<SchemaAndTableName> GetSchemaAndTableNames();

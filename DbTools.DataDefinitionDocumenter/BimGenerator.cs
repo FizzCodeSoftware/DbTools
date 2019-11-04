@@ -18,8 +18,10 @@
 
         public void Generate(DatabaseDefinition databaseDefinition)
         {
-            var root = new BimDTO.BimGeneratorRoot();
-            root.Model = new BimDTO.BimGeneratorModel();
+            var root = new BimDTO.BimGeneratorRoot
+            {
+                Model = new BimDTO.BimGeneratorModel()
+            };
 
             BimHelper.SetDefaultAnnotations(root.Model);
             BimHelper.SetDefaultDataSources(root.Model, DatabaseName);
@@ -33,30 +35,31 @@
             var jsonString = ToJson(root);
             jsonString = RemoveInvalidEmptyItems(jsonString);
             WriteJson(jsonString);
-
         }
 
         private BimDTO.Table GenerateTable(SqlTable tabledefeinition)
         {
-            var table = new BimDTO.Table();
-            // TODO name wih schema
-            table.Name = tabledefeinition.SchemaAndTableName.TableName;
+            var table = new BimDTO.Table
+            {
+                // TODO name wih schema
+                Name = tabledefeinition.SchemaAndTableName.TableName
+            };
 
             foreach (var columndefinition in tabledefeinition.Columns)
             {
-                var column = new BimDTO.Column();
-                // TODO mapping
-                column.Name = columndefinition.Name;
+                var column = new BimDTO.Column
+                {
+                    // TODO mapping
+                    Name = columndefinition.Name,
 
-                column.DataType = BimHelper.MapType(columndefinition.Type);
-                column.SourceColumn = columndefinition.Name;
+                    DataType = BimHelper.MapType(columndefinition.Type),
+                    SourceColumn = columndefinition.Name
+                };
 
                 table.Columns.Add(column);
             }
 
             BimHelper.SetDefaultPartition(table, tabledefeinition, DatabaseName);
-
-            
 
             return table;
         }

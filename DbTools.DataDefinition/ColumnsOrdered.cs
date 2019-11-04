@@ -2,9 +2,9 @@
 {
     public class ColumnsOrdered : OrderedDictionaryWithInsert<string, SqlColumn>
     {
-        public override void Add(SqlColumn column)
+        public override void Add(SqlColumn item)
         {
-            Add(column.Name, column);
+            Add(item.Name, item);
         }
     }
 }
