@@ -20,6 +20,7 @@
     <ProjectReference Include="..\..\DbTools.Common\DbTools.Common.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinitionDocumenter\DbTools.DataDefinitionDocumenter.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
+    <ProjectReference Include="..\..\DbTools.Tabular\DbTools.Tabular.csproj" />
     <ProjectReference Include="..\..\DbTools.TestBase\DbTools.TestBase.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition.Tests\DbTools.DataDefinition.Tests.csproj" />
   </ItemGroup>

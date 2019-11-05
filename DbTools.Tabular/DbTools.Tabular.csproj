@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <AssemblyName>FizzCode.DbTools.Tabular</AssemblyName>
+    <RootNamespace>FizzCode.DbTools.Tabular</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
+  </ItemGroup>
+
+</Project>

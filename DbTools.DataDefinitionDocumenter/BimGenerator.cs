@@ -1,7 +1,8 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
-    using System;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using System.Text.Encodings.Web;
     using System.Text.Json;
@@ -18,6 +19,8 @@
 
         public void Generate(DatabaseDefinition databaseDefinition)
         {
+            var sqlTables = new List<SqlTable>();
+
             var root = new BimDTO.BimGeneratorRoot
             {
                 Model = new BimDTO.BimGeneratorModel()
@@ -26,15 +29,30 @@
             BimHelper.SetDefaultAnnotations(root.Model);
             BimHelper.SetDefaultDataSources(root.Model, DatabaseName);
 
-            foreach (var tableDefinition in databaseDefinition.GetTables())
+            foreach (var sqlTable in databaseDefinition.GetTables())
             {
-                if (!TableCustomizer.ShouldSkip(tableDefinition.SchemaAndTableName))
-                    root.Model.Tables.Add(GenerateTable(tableDefinition));
+                if (!TableCustomizer.ShouldSkip(sqlTable.SchemaAndTableName))
+                {
+                    root.Model.Tables.Add(GenerateTable(sqlTable));
+                    AddReferencedTables(sqlTable, root.Model.Tables);
+                }
             }
 
             var jsonString = ToJson(root);
             jsonString = RemoveInvalidEmptyItems(jsonString);
             WriteJson(jsonString);
+        }
+
+        private void AddReferencedTables(SqlTable sqlTable, List<BimDTO.Table> tables)
+        {
+            // TODO circular dependencies
+
+            var fks = sqlTable.Properties.OfType<ForeignKey>();
+            foreach (var fk in fks)
+            {
+                tables.Add(GenerateTable(fk.ReferredTable));
+                AddReferencedTables(fk.ReferredTable, tables);
+            }
         }
 
         private BimDTO.Table GenerateTable(SqlTable tabledefeinition)
@@ -51,7 +69,6 @@
                 {
                     // TODO mapping
                     Name = columndefinition.Name,
-
                     DataType = BimHelper.MapType(columndefinition.Type),
                     SourceColumn = columndefinition.Name
                 };
