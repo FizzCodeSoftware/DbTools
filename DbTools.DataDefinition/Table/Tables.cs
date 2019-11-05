@@ -7,7 +7,7 @@
     internal class Tables : ICollection<SqlTable>
     {
         private SortedList<int, SqlTable> _sorted = new SortedList<int, SqlTable>();
-        private readonly Dictionary<SchemaAndTableName, SqlTable> byName = new Dictionary<SchemaAndTableName, SqlTable>();
+        private readonly Dictionary<string, SqlTable> byName = new Dictionary<string, SqlTable>();
 
         public int Count => byName.Count;
 
@@ -15,7 +15,7 @@
 
         public void Add(SqlTable item)
         {
-            byName.Add(item.SchemaAndTableName, item);
+            byName.Add(item.SchemaAndTableName.SchemaAndName, item);
         }
 
         public void Clear()
@@ -43,7 +43,7 @@
         public bool Remove(SqlTable item)
         {
             _sorted.RemoveAt(_sorted.IndexOfValue(item));
-            return byName.Remove(item.SchemaAndTableName);
+            return byName.Remove(item.SchemaAndTableName.SchemaAndName);
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -52,7 +52,7 @@
             return _sorted.Values.GetEnumerator();
         }
 
-        public SqlTable this[SchemaAndTableName schemaAndTableName] => byName[schemaAndTableName];
+        public SqlTable this[string schemaAndTableName] => byName[schemaAndTableName];
 
         private void EnsureSorted()
         {

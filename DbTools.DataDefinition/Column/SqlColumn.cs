@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class SqlColumn
     {
@@ -41,6 +42,12 @@
         {
             Properties.Add(new Identity(this));
             return this;
+        }
+
+        public bool HasProperty<T>()
+            where T : SqlColumnProperty
+        {
+            return Properties.Any(x => x is T);
         }
     }
 }

@@ -21,12 +21,17 @@
 
         public SqlTable GetTable(string schema, string tableName)
         {
-            return Tables[new SchemaAndTableName(schema, tableName)];
+            return Tables[SchemaAndTableName.Concat(schema, tableName)];
+        }
+
+        public SqlTable GetTable(string tableName)
+        {
+            return Tables[tableName];
         }
 
         public SqlTable GetTable(SchemaAndTableName schemaAndTableName)
         {
-            return Tables[schemaAndTableName];
+            return Tables[schemaAndTableName.SchemaAndName];
         }
 
         public IEnumerable<string> GetSchemaNames()
