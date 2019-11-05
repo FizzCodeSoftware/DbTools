@@ -79,33 +79,33 @@
             return relation;
         }
 
-        private BimDTO.Table GenerateTable(SqlTable tabledefeinition)
+        private Table GenerateTable(SqlTable sqlTable)
         {
             var table = new Table
             {
-                // TODO name wih schema
-                Name = tabledefeinition.SchemaAndTableName.TableName
+                // TODO name with schema
+                Name = sqlTable.SchemaAndTableName.TableName
             };
 
-            foreach (var columndefinition in tabledefeinition.Columns)
+            foreach (var sqlColumn in sqlTable.Columns)
             {
                 var column = new Column
                 {
                     // TODO mapping
-                    Name = columndefinition.Name,
-                    DataType = BimHelper.MapType(columndefinition.Type),
-                    SourceColumn = columndefinition.Name
+                    Name = sqlColumn.Name,
+                    DataType = BimHelper.MapType(sqlColumn.Type),
+                    SourceColumn = sqlColumn.Name
                 };
 
                 table.Columns.Add(column);
             }
 
-            BimHelper.SetDefaultPartition(table, tabledefeinition, DatabaseName);
+            BimHelper.SetDefaultPartition(table, sqlTable, DatabaseName);
 
             return table;
         }
 
-        private static string ToJson(BimDTO.BimGeneratorRoot root)
+        private static string ToJson(BimGeneratorRoot root)
         {
             var jsonOptions = new JsonSerializerOptions
             {
