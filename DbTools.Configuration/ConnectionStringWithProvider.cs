@@ -124,7 +124,7 @@
             throw new NotSupportedException();
         }
 
-        public string EscapedName(string dbObject, string schema = null)
+        public string Escape(string dbObject, string schema = null)
         {
             if (KnownProvider == null)
                 throw new NotSupportedException();
@@ -137,19 +137,16 @@
                 case Configuration.KnownProvider.PostgreSql:
                 case Configuration.KnownProvider.OracleSql:
                     if (!string.IsNullOrEmpty(schema))
-                        return Escape(schema) + "." + Escape(dbObject);
+                        return EscapeIdentifier(schema) + "." + EscapeIdentifier(dbObject);
 
-                    return Escape(dbObject);
+                    return EscapeIdentifier(dbObject);
             }
 
             throw new NotSupportedException();
         }
 
-        public string Escape(string identifier)
+        private string EscapeIdentifier(string identifier)
         {
-            if (KnownProvider == null)
-                throw new NotSupportedException();
-
             switch (KnownProvider)
             {
                 case Configuration.KnownProvider.SqlServer:
@@ -179,19 +176,17 @@
             switch (KnownProvider)
             {
                 case Configuration.KnownProvider.SqlServer:
-                    return identifier.StartsWith('[') && identifier.EndsWith(']')
-                         ? identifier[1..^1]
-                         : identifier;
+                    return identifier
+                        .Replace("[", string.Empty, StringComparison.InvariantCulture)
+                        .Replace("]", string.Empty, StringComparison.InvariantCulture);
                 case Configuration.KnownProvider.SQLite:
                 case Configuration.KnownProvider.PostgreSql:
                 case Configuration.KnownProvider.OracleSql:
-                    return identifier.StartsWith('\"') && identifier.EndsWith('\"')
-                        ? identifier[1..^1]
-                        : identifier;
+                    return identifier
+                        .Replace("\"", string.Empty, StringComparison.InvariantCulture);
                 case Configuration.KnownProvider.MySql:
-                    return identifier.StartsWith('`') && identifier.EndsWith('`')
-                        ? identifier[1..^1]
-                        : identifier;
+                    return identifier
+                        .Replace("`", string.Empty, StringComparison.InvariantCulture);
             }
 
             throw new NotSupportedException();
