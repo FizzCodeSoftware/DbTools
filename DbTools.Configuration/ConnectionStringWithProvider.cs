@@ -103,5 +103,98 @@
 
             return ProviderName;
         }
+
+        public bool IsEscaped(string identifier)
+        {
+            if (KnownProvider == null)
+                throw new NotSupportedException();
+
+            switch (KnownProvider)
+            {
+                case Configuration.KnownProvider.SqlServer:
+                    return identifier.StartsWith('[') && identifier.EndsWith(']');
+                case Configuration.KnownProvider.SQLite:
+                case Configuration.KnownProvider.PostgreSql:
+                case Configuration.KnownProvider.OracleSql:
+                    return identifier.StartsWith('\"') && identifier.EndsWith('\"');
+                case Configuration.KnownProvider.MySql:
+                    return identifier.StartsWith('`') && identifier.EndsWith('`');
+            }
+
+            throw new NotSupportedException();
+        }
+
+        public string EscapedName(string dbObject, string schema = null)
+        {
+            if (KnownProvider == null)
+                throw new NotSupportedException();
+
+            switch (KnownProvider)
+            {
+                case Configuration.KnownProvider.SqlServer:
+                case Configuration.KnownProvider.SQLite:
+                case Configuration.KnownProvider.MySql:
+                case Configuration.KnownProvider.PostgreSql:
+                case Configuration.KnownProvider.OracleSql:
+                    if (!string.IsNullOrEmpty(schema))
+                        return Escape(schema) + "." + Escape(dbObject);
+
+                    return Escape(dbObject);
+            }
+
+            throw new NotSupportedException();
+        }
+
+        public string Escape(string identifier)
+        {
+            if (KnownProvider == null)
+                throw new NotSupportedException();
+
+            switch (KnownProvider)
+            {
+                case Configuration.KnownProvider.SqlServer:
+                    return !identifier.StartsWith('[') && identifier.EndsWith(']')
+                         ? '[' + identifier + ']'
+                         : identifier;
+                case Configuration.KnownProvider.SQLite:
+                case Configuration.KnownProvider.PostgreSql:
+                case Configuration.KnownProvider.OracleSql:
+                    return identifier.StartsWith('\"') && identifier.EndsWith('\"')
+                        ? '\"' + identifier + '\"'
+                        : identifier;
+                case Configuration.KnownProvider.MySql:
+                    return identifier.StartsWith('`') && identifier.EndsWith('`')
+                        ? '`' + identifier + '`'
+                        : identifier;
+            }
+
+            throw new NotSupportedException();
+        }
+
+        public string Unescape(string identifier)
+        {
+            if (KnownProvider == null)
+                throw new NotSupportedException();
+
+            switch (KnownProvider)
+            {
+                case Configuration.KnownProvider.SqlServer:
+                    return identifier.StartsWith('[') && identifier.EndsWith(']')
+                         ? identifier[1..^1]
+                         : identifier;
+                case Configuration.KnownProvider.SQLite:
+                case Configuration.KnownProvider.PostgreSql:
+                case Configuration.KnownProvider.OracleSql:
+                    return identifier.StartsWith('\"') && identifier.EndsWith('\"')
+                        ? identifier[1..^1]
+                        : identifier;
+                case Configuration.KnownProvider.MySql:
+                    return identifier.StartsWith('`') && identifier.EndsWith('`')
+                        ? identifier[1..^1]
+                        : identifier;
+            }
+
+            throw new NotSupportedException();
+        }
     }
 }
