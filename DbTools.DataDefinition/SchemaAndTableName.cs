@@ -12,7 +12,7 @@
     public class SchemaAndTableName : IComparable, IEquatable<SchemaAndTableName>
     {
         public string Schema { get; set; }
-        public string TableName { get; protected set; }
+        public string TableName { get; }
 
         public SchemaAndTableName(string tableName)
         {
@@ -34,19 +34,18 @@
             TableName = tableName;
         }
 
+        public static string Concat(string schema, string tableName)
+        {
+            if (schema == null)
+                return tableName;
+
+            return schema + "." + tableName;
+        }
+
         /// <summary>
         /// Returns <see cref="Schema"/> and <see cref="TableName"/> joined with a . (dot), or the <see cref="TableName"/> if <see cref="Schema"/> is null.
         /// </summary>
-        public string SchemaAndName
-        {
-            get
-            {
-                if (Schema == null)
-                    return TableName;
-
-                return Schema + "." + TableName;
-            }
-        }
+        public string SchemaAndName => Concat(Schema, TableName);
 
         public override string ToString()
         {
