@@ -9,6 +9,7 @@
     using System.Text.RegularExpressions;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinitionDocumenter.BimDTO;
 
     public class BimGenerator : DocumenterBase
     {
@@ -21,9 +22,9 @@
         {
             var sqlTables = new List<SqlTable>();
 
-            var root = new BimDTO.BimGeneratorRoot
+            var root = new BimGeneratorRoot
             {
-                Model = new BimDTO.BimGeneratorModel()
+                Model = new BimGeneratorModel()
             };
 
             BimHelper.SetDefaultAnnotations(root.Model);
@@ -33,8 +34,11 @@
             {
                 if (!TableCustomizer.ShouldSkip(sqlTable.SchemaAndTableName))
                 {
-                    root.Model.Tables.Add(GenerateTable(sqlTable));
-                    AddReferencedTables(sqlTable, root.Model.Tables);
+                    if (!root.Model.Tables.Any(t => t.Name == sqlTable.SchemaAndTableName.TableName))
+                    {
+                        root.Model.Tables.Add(GenerateTable(sqlTable));
+                        AddReferencedTables(sqlTable, root.Model);
+                    }
                 }
             }
 
@@ -43,21 +47,41 @@
             WriteJson(jsonString);
         }
 
-        private void AddReferencedTables(SqlTable sqlTable, List<BimDTO.Table> tables)
+        private void AddReferencedTables(SqlTable sqlTable, BimGeneratorModel model)
         {
             // TODO circular dependencies
 
             var fks = sqlTable.Properties.OfType<ForeignKey>();
             foreach (var fk in fks)
             {
-                tables.Add(GenerateTable(fk.ReferredTable));
-                AddReferencedTables(fk.ReferredTable, tables);
+                if (!model.Tables.Any(t => t.Name == fk.ReferredTable.SchemaAndTableName.TableName))
+                {
+                    model.Tables.Add(GenerateTable(fk.ReferredTable));
+                    model.Relationships.Add(GenerateReference(fk, sqlTable));
+                    AddReferencedTables(fk.ReferredTable, model);
+                }
             }
+        }
+
+        private Relationship GenerateReference(ForeignKey fk, SqlTable sqlTable)
+        {
+            // TODO handle TabularRelationProperty
+            // TODO handle N:1 referrences - COPY tables
+
+            var relation = new Relationship
+            {
+                FromTable = fk.SqlTable.SchemaAndTableName.TableName,
+                FromColumn = fk.ForeignKeyColumns.First().ForeignKeyColumn.Name,
+                ToTable = fk.ReferredTable.SchemaAndTableName.TableName,
+                ToColumn = fk.ForeignKeyColumns.First().ReferredColumn.Name
+            };
+            
+            return relation;
         }
 
         private BimDTO.Table GenerateTable(SqlTable tabledefeinition)
         {
-            var table = new BimDTO.Table
+            var table = new Table
             {
                 // TODO name wih schema
                 Name = tabledefeinition.SchemaAndTableName.TableName
@@ -65,7 +89,7 @@
 
             foreach (var columndefinition in tabledefeinition.Columns)
             {
-                var column = new BimDTO.Column
+                var column = new Column
                 {
                     // TODO mapping
                     Name = columndefinition.Name,
