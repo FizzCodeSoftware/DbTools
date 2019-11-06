@@ -9,7 +9,7 @@
             if (fk.SqlTable.SchemaAndTableName == null)
                 return;
 
-            fk.Name = $"FK_{fk.SqlTable.SchemaAndTableName}__{string.Join("__", fk.ForeignKeyColumns.Select(y => y.ForeignKeyColumn.Name))}";
+            fk.Name = $"FK_{fk.SqlTable.SchemaAndTableName.TableName}__{string.Join("__", fk.ForeignKeyColumns.Select(y => y.ForeignKeyColumn.Name))}";
         }
 
         public virtual string GetFkToPkColumnName(SqlColumn referredColumn, string prefix)
