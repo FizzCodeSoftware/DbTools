@@ -66,7 +66,7 @@
             var pm = new PatternMatchingTableCustomizer();
             pm.AddPattern("apple", null, null, null, true, null, null);
 
-            Assert.IsTrue(pm.ShouldSkip( new SchemaAndTableName("apple", "anything")));
+            Assert.IsTrue(pm.ShouldSkip(new SchemaAndTableName("apple", "anything")));
             Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("horus", "apple")));
         }
 

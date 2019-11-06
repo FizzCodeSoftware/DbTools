@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using FizzCode.DbTools.DataDefinitionDocumenter;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class DocumenterWriterExcelTests

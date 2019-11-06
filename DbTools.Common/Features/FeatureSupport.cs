@@ -1,7 +1,5 @@
 ﻿namespace FizzCode.DbTools.Common
 {
-    using System.Collections.Generic;
-
     public class FeatureSupport
     {
         public FeatureSupport(Support support, string description)

@@ -13,16 +13,10 @@
                 _configuration = new ConfigurationBase(configurationFileName);
             else
                 if (configurationFileName != _configuration.ConfigurationFileName)
-                    throw new System.InvalidOperationException("Already initialized.");
+                throw new System.InvalidOperationException("Already initialized.");
         }
 
-        public static IConfigurationRoot Configuration
-        {
-            get
-            {
-                return _configuration.Configuration;
-            }
-        }
+        public static IConfigurationRoot Configuration => _configuration.Configuration;
 
         public static ConnectionStringCollection ConnectionStrings { get; } = new ConnectionStringCollection();
     }

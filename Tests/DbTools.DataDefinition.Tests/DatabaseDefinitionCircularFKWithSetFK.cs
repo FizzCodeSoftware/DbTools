@@ -6,17 +6,17 @@
 
     public class TestDatabaseCircularFKSetPK : DatabaseDeclaration
     {
-        public SqlTable FK1 {get;} = AddTable(table =>
-        {
-            table.AddInt32("FK1Id").SetPK().SetIdentity();
-            table.AddForeignKey(nameof(FK2));
-        });
+        public SqlTable FK1 { get; } = AddTable(table =>
+          {
+              table.AddInt32("FK1Id").SetPK().SetIdentity();
+              table.AddForeignKey(nameof(FK2));
+          });
 
-        public SqlTable FK2 {get;} = AddTable(table =>
-        {
-            table.AddInt32("FK2Id").SetPK().SetIdentity();
-            table.AddForeignKey(nameof(FK1));
-        });
+        public SqlTable FK2 { get; } = AddTable(table =>
+          {
+              table.AddInt32("FK2Id").SetPK().SetIdentity();
+              table.AddForeignKey(nameof(FK1));
+          });
     }
 
     [TestClass]

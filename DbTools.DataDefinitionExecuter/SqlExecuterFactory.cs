@@ -1,8 +1,8 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
     using System;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 

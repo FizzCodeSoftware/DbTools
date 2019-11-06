@@ -107,7 +107,9 @@ EXEC sp_executesql @sql";
         {
             var sqlTableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
             if (sqlTableDescription == null)
+            {
                 return null;
+            }
 
             var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name = @SchemaName, @level1type=N'TABLE', @level1name = @TableName");
 
