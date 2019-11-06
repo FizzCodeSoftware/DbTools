@@ -5,7 +5,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class SetupAssemblyInitializer
+    public static class SetupAssemblyInitializer
     {
         public static IConfigurationRoot Configuration { get; private set; }
         public static ConnectionStringCollection ConnectionStrings { get; private set; }

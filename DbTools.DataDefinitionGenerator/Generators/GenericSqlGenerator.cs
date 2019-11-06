@@ -233,6 +233,7 @@
                     sb.Append("MAX");
                 else
                     sb.Append(column.Length);
+
                 sb.Append(")");
             }
 

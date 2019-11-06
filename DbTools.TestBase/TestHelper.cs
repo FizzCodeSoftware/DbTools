@@ -98,6 +98,7 @@
             var featureSupport = Features.GetSupport(sqlDialect, feature);
             if (featureSupport.Support == Support.NotSupported)
                 Assert.Inconclusive($"Test is skipped, feature {feature} is not supported. ({featureSupport.Description}).");
+
             if (featureSupport.Support == Support.NotImplementedYet)
                 Assert.Inconclusive($"Test is skipped, feature {feature} is not implemented (yet). ({featureSupport.Description}).");
         }
