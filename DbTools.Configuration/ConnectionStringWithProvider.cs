@@ -178,16 +178,16 @@
             {
                 case Configuration.KnownProvider.SqlServer:
                     return identifier
-                        .Replace("[", string.Empty, StringComparison.InvariantCulture)
-                        .Replace("]", string.Empty, StringComparison.InvariantCulture);
+                        .Replace("[", "", StringComparison.InvariantCulture)
+                        .Replace("]", "", StringComparison.InvariantCulture);
                 case Configuration.KnownProvider.SQLite:
                 case Configuration.KnownProvider.PostgreSql:
                 case Configuration.KnownProvider.OracleSql:
                     return identifier
-                        .Replace("\"", string.Empty, StringComparison.InvariantCulture);
+                        .Replace("\"", "", StringComparison.InvariantCulture);
                 case Configuration.KnownProvider.MySql:
                     return identifier
-                        .Replace("`", string.Empty, StringComparison.InvariantCulture);
+                        .Replace("`", "", StringComparison.InvariantCulture);
             }
 
             throw new NotSupportedException();

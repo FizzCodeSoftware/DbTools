@@ -4,11 +4,13 @@ namespace FizzCode.DbTools.DataGenerator
 {
     public class GeneratorInt32 : GeneratorMinMax<int>
     {
-        public GeneratorInt32() : base(0, int.MaxValue)
+        public GeneratorInt32()
+            : base(0, int.MaxValue)
         {
         }
 
-        public GeneratorInt32(int min, int max) : base(min, max)
+        public GeneratorInt32(int min, int max)
+            : base(min, max)
         {
         }
 
@@ -27,7 +29,8 @@ namespace FizzCode.DbTools.DataGenerator
 
     public class GeneratorParameterMinMax<T> : GeneratorParameters
     {
-        public GeneratorParameterMinMax(Type generatorType) : base(generatorType)
+        public GeneratorParameterMinMax(Type generatorType)
+            : base(generatorType)
         {
         }
     }

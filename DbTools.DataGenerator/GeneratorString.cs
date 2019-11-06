@@ -4,7 +4,8 @@
 
     public class GeneratorString : GeneratorMinMaxLength<string>
     {
-        public GeneratorString(int minLength, int maxLength) : base(minLength, maxLength)
+        public GeneratorString(int minLength, int maxLength)
+            : base(minLength, maxLength)
         {
         }
 

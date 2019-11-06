@@ -7,7 +7,8 @@
 
     public class OracleGenerator : MsSqlGenerator
     {
-        public OracleGenerator(Settings settings) : base(settings)
+        public OracleGenerator(Settings settings)
+            : base(settings)
         {
         }
 

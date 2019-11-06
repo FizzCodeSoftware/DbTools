@@ -4,11 +4,13 @@
 
     public class GeneratorDateMinMax : GeneratorMinMax<DateTime>
     {
-        public GeneratorDateMinMax(int pastNYears, int futureNYears = 0) : base(DateTime.Now.AddYears(-pastNYears), DateTime.Now.AddYears(futureNYears))
+        public GeneratorDateMinMax(int pastNYears, int futureNYears = 0)
+            : base(DateTime.Now.AddYears(-pastNYears), DateTime.Now.AddYears(futureNYears))
         {
         }
 
-        public GeneratorDateMinMax(DateTime min, DateTime max) : base(min, max)
+        public GeneratorDateMinMax(DateTime min, DateTime max)
+            : base(min, max)
         {
         }
 

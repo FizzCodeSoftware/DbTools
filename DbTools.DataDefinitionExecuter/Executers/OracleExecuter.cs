@@ -11,7 +11,8 @@
     {
         protected override SqlDialect SqlDialect => SqlDialect.Oracle;
 
-        public OracleExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator) : base(connectionStringWithProvider, sqlGenerator)
+        public OracleExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
+            : base(connectionStringWithProvider, sqlGenerator)
         {
         }
 
