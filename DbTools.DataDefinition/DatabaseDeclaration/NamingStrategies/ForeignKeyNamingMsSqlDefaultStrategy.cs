@@ -10,12 +10,12 @@
             if (fk.SqlTable.SchemaAndTableName == null || fk.ReferredTable.SchemaAndTableName == null)
                 return;
 
-            var fkName = $"{fk.SqlTable.SchemaAndTableName}{fk.ReferredTable.SchemaAndTableName}";
+            var fkName = fk.SqlTable.SchemaAndTableName.TableName + fk.ReferredTable.SchemaAndTableName.TableName;
 
-            var sameNameFks = fk.SqlTable.Properties.OfType<ForeignKey>().Where(fk1 =>
-                fk1 != fk
-                && fk1.Name?.StartsWith(fkName, StringComparison.CurrentCultureIgnoreCase) == true
-            ).ToList();
+            var sameNameFks = fk.SqlTable.Properties
+                .OfType<ForeignKey>()
+                .Where(fk1 => fk1 != fk && fk1.Name?.StartsWith(fkName, StringComparison.CurrentCultureIgnoreCase) == true)
+                .ToList();
 
             var i = 1;
             foreach (var sameFk in sameNameFks)

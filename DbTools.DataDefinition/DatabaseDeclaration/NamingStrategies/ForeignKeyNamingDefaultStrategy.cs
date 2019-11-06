@@ -16,7 +16,7 @@
         {
             if (prefix != null)
             {
-                return $"{prefix}{referredColumn.Name}";
+                return prefix + referredColumn.Name;
             }
 
             return $"{referredColumn.Table.SchemaAndTableName}{referredColumn.Name}";

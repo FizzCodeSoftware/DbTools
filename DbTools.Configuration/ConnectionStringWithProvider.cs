@@ -150,19 +150,19 @@
             switch (KnownProvider)
             {
                 case Configuration.KnownProvider.SqlServer:
-                    return !identifier.StartsWith('[') && identifier.EndsWith(']')
-                         ? '[' + identifier + ']'
-                         : identifier;
+                    return identifier.StartsWith('[') && identifier.EndsWith(']')
+                         ? identifier
+                         : '[' + identifier + ']';
                 case Configuration.KnownProvider.SQLite:
                 case Configuration.KnownProvider.PostgreSql:
                 case Configuration.KnownProvider.OracleSql:
                     return identifier.StartsWith('\"') && identifier.EndsWith('\"')
-                        ? '\"' + identifier + '\"'
-                        : identifier;
+                        ? identifier
+                        : '\"' + identifier + '\"';
                 case Configuration.KnownProvider.MySql:
                     return identifier.StartsWith('`') && identifier.EndsWith('`')
-                        ? '`' + identifier + '`'
-                        : identifier;
+                        ? identifier
+                        : '`' + identifier + '`';
             }
 
             throw new NotSupportedException();
