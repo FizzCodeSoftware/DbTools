@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
-    using System.Collections.Generic;
+    using System;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -10,6 +10,7 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionDocumenter.BimDTO;
+    using FizzCode.DbTools.Tabular;
 
     public class BimGenerator : DocumenterBase
     {
@@ -20,8 +21,6 @@
 
         public void Generate(DatabaseDefinition databaseDefinition)
         {
-            var sqlTables = new List<SqlTable>();
-
             var root = new BimGeneratorRoot
             {
                 Model = new BimGeneratorModel()
@@ -30,62 +29,126 @@
             BimHelper.SetDefaultAnnotations(root.Model);
             BimHelper.SetDefaultDataSources(root.Model, DatabaseName);
 
+            var relationShipRegistrations = new RelationShipRegistrations();
+
             foreach (var sqlTable in databaseDefinition.GetTables())
             {
                 if (!TableCustomizer.ShouldSkip(sqlTable.SchemaAndTableName))
                 {
-                    if (!root.Model.Tables.Any(t => t.Name == sqlTable.SchemaAndTableName.TableName))
-                    {
-                        root.Model.Tables.Add(GenerateTable(sqlTable));
-                        AddReferencedTables(sqlTable, root.Model);
-                    }
+                    root.Model.Tables.Add(GenerateTable(sqlTable));
+                    GatherReferencedTables(relationShipRegistrations, sqlTable);
                 }
             }
+
+            GenerateReferences(relationShipRegistrations, root.Model);
 
             var jsonString = ToJson(root);
             jsonString = RemoveInvalidEmptyItems(jsonString);
             WriteJson(jsonString);
         }
 
-        private void AddReferencedTables(SqlTable sqlTable, BimGeneratorModel model)
+        private void GenerateReferences(RelationShipRegistrations relationShipRegistrations, BimGeneratorModel model)
         {
-            // TODO circular dependencies
+            // Create shadow copies where multiple FKs are on a source table
+            // Use same RelationShipIdentifier
+            //  Omit Source table if no other FK is pointing to it
 
-            var fks = sqlTable.Properties.OfType<ForeignKey>();
-            foreach (var fk in fks)
+            foreach (var fromTable in relationShipRegistrations.FromTables())
             {
-                if (!model.Tables.Any(t => t.Name == fk.ReferredTable.SchemaAndTableName.TableName))
+                var to = relationShipRegistrations.GetByFromTable(fromTable);
+                var i = 1;
+                var count = to.Values.Count;
+                foreach (var rr in to.Values)
                 {
-                    model.Tables.Add(GenerateTable(fk.ReferredTable));
-                    model.Relationships.Add(GenerateReference(fk, sqlTable));
-                    AddReferencedTables(fk.ReferredTable, model);
+                    var trp = rr.FromColumn.Properties.OfType<TabularRelationProperty>().FirstOrDefault();
+
+                    if (trp != null)
+                        rr.RelationshipIdentifier = trp.RelationshipIdentifier;
+
+                    if (count == 1)
+                    {
+                        model.Relationships.Add(GenerateRelationship(rr));
+                    }
+                    else
+                    {
+                        if (i > 1)
+                        {
+                            CreateTableCopyForReference(rr, model, i);
+                            model.Relationships.Add(GenerateRelationship(rr));
+                        }
+                        else
+                            model.Relationships.Add(GenerateRelationship(rr));
+                    }
+
+                    i++;
                 }
             }
         }
 
-        private Relationship GenerateReference(ForeignKey fk, SqlTable sqlTable)
+        private void CreateTableCopyForReference(BimRelationship rr, BimGeneratorModel model, int i)
         {
-            // TODO handle TabularRelationProperty
-            // TODO handle N:1 referrences - COPY tables
+            var dd = rr.FromColumn.Table.DatabaseDefinition;
+            var toSqlTable = dd.GetTable(rr.ToSchemaAndTableName);
 
+            var suffix = " " + i;
+            if(rr.RelationshipIdentifier != null)
+                suffix = " " + rr.RelationshipIdentifier;
+
+            var copyTableName = GetBimTableName(toSqlTable.SchemaAndTableName) + suffix;
+
+            var copySchemaAndTableName = new SchemaAndTableName(toSqlTable.SchemaAndTableName.Schema, copyTableName);
+            rr.ToSchemaAndTableName = copySchemaAndTableName;
+
+            if (!model.Tables.Any(t => t.Name == copySchemaAndTableName))
+                model.Tables.Add(GenerateTable(toSqlTable, copyTableName));
+        }
+
+        private static Relationship GenerateRelationship(BimRelationship rr)
+        {
             var relation = new Relationship
             {
-                FromTable = fk.SqlTable.SchemaAndTableName.TableName,
-                FromColumn = fk.ForeignKeyColumns.First().ForeignKeyColumn.Name,
-                ToTable = fk.ReferredTable.SchemaAndTableName.TableName,
-                ToColumn = fk.ForeignKeyColumns.First().ReferredColumn.Name
+                FromTable = GetBimTableName(rr.FromTableName),
+                FromColumn = rr.FromColumn.Name,
+                ToTable = GetBimTableName(rr.ToSchemaAndTableName),
+                ToColumn = rr.ToColumnName,
+                Name = Guid.NewGuid().ToString()
             };
-            
+
             return relation;
         }
 
-        private Table GenerateTable(SqlTable sqlTable)
+        private void GatherReferencedTables(RelationShipRegistrations relationShipRegistrations, SqlTable sqlTable)
+        {
+            // TODO circular dependencies
+
+            // TODO order of relationships from FKs should follow column (devlaration) order.
+            var fks = sqlTable.Properties.OfType<ForeignKey>();
+            foreach (var fk in fks)
+            {
+                var firstColumnMap = fk.ForeignKeyColumns.First();
+                relationShipRegistrations.Add(new BimRelationship(firstColumnMap.ForeignKeyColumn, firstColumnMap.ReferredColumn.Table.SchemaAndTableName, firstColumnMap.ReferredColumn.Name));
+                GatherReferencedTables(relationShipRegistrations, fk.ReferredTable);
+            }
+        }
+
+        private static string GetBimTableName(SchemaAndTableName schemaAndTableName)
+        {
+            // TODO A/ leave out default schema B/ option to leave out if all schema are the same C/ namingstrategy
+            if (string.IsNullOrEmpty(schemaAndTableName.Schema))
+                return schemaAndTableName.TableName;
+            else
+                return schemaAndTableName.Schema + " " + schemaAndTableName.TableName;
+        }
+
+        private Table GenerateTable(SqlTable sqlTable, string overrideName = null)
         {
             var table = new Table
             {
-                // TODO name with schema
-                Name = sqlTable.SchemaAndTableName.TableName
+                Name = GetBimTableName(sqlTable.SchemaAndTableName)
             };
+
+            if (overrideName != null)
+                table.Name = overrideName;
 
             foreach (var sqlColumn in sqlTable.Columns)
             {
