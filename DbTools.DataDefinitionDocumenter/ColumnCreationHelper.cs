@@ -71,7 +71,7 @@
             var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
             if (!string.IsNullOrEmpty(descriptionProperty?.Description))
             {
-                sb.Append(" // ").Append(descriptionProperty.Description.Replace("\r", string.Empty, StringComparison.OrdinalIgnoreCase).Replace("\n", string.Empty, StringComparison.OrdinalIgnoreCase));
+                sb.Append(" // ").Append(descriptionProperty.Description.Replace("\r", "", StringComparison.OrdinalIgnoreCase).Replace("\n", "", StringComparison.OrdinalIgnoreCase));
             }
 
             return sb.ToString();

@@ -10,7 +10,8 @@
     {
         public GeneratorBase Generator { get; }
 
-        public SqlColumnDataGenerator(SqlColumn sqlColumn, GeneratorBase generator) : base(sqlColumn)
+        public SqlColumnDataGenerator(SqlColumn sqlColumn, GeneratorBase generator)
+            : base(sqlColumn)
         {
             Generator = generator;
         }

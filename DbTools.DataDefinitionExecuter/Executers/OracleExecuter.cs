@@ -11,7 +11,8 @@
     {
         protected override SqlDialect SqlDialect => SqlDialect.Oracle;
 
-        public OracleExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator) : base(connectionStringWithProvider, sqlGenerator)
+        public OracleExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
+            : base(connectionStringWithProvider, sqlGenerator)
         {
         }
 
@@ -78,9 +79,11 @@
                 {
                     if (c == ';')
                         count++;
+
                     if (count > 1)
                         break;
                 }
+
                 var sqlStatementTrimEnd = sqlStatementWithParameters.Statement.TrimEnd();
 
                 if (count == 1 && sqlStatementTrimEnd[^1] == ';')

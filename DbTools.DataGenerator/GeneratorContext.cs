@@ -7,7 +7,8 @@
         public IRandom Random { get; }
         public DateTime Now { get; private set; }
 
-        public GeneratorContext(IRandom random) : this(random, DateTime.Now)
+        public GeneratorContext(IRandom random)
+            : this(random, DateTime.Now)
         {
         }
 

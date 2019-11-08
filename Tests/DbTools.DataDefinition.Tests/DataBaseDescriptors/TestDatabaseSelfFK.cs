@@ -4,11 +4,11 @@
 
     public class TestDatabaseSelfFK : DatabaseDeclaration
     {
-        public SqlTable Company {get;} = AddTable(table =>
-        {
-            table.AddInt32("Id").SetPK().SetIdentity();
-            table.AddForeignKey(nameof(Company), "Parent");
-            table.AddNVarChar("Name", 100);
-        });
+        public SqlTable Company { get; } = AddTable(table =>
+          {
+              table.AddInt32("Id").SetPK().SetIdentity();
+              table.AddForeignKey(nameof(Company), "Parent");
+              table.AddNVarChar("Name", 100);
+          });
     }
 }

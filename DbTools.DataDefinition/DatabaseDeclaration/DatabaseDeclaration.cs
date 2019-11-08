@@ -7,29 +7,14 @@
 
     public class DatabaseDeclaration : DatabaseDefinition
     {
-        public NamingStrategiesDictionary NamingStrategies { get; }
+        public NamingStrategies NamingStrategies { get; }
         public const char SchemaTableNameSeparator = 'ꜗ';
         public string DefaultSchema { get; }
 
-        public DatabaseDeclaration()
-            : this(null, new NamingStrategiesDictionary())
-        {
-        }
-
-        public DatabaseDeclaration(string defaultSchema = null)
-            : this(defaultSchema, new NamingStrategiesDictionary())
-        {
-        }
-
-        public DatabaseDeclaration(string defaultSchema, params INamingStrategy[] namingStrategies)
-            : this(defaultSchema, new NamingStrategiesDictionary(namingStrategies))
-        {
-        }
-
-        protected DatabaseDeclaration(string defaultSchema, NamingStrategiesDictionary namingStrategies)
+        protected DatabaseDeclaration(string defaultSchema = null, NamingStrategies namingStrategies = null)
         {
             DefaultSchema = defaultSchema;
-            NamingStrategies = namingStrategies;
+            NamingStrategies = namingStrategies ?? new NamingStrategies();
 
             AddDeclaredTables();
             CreateRegisteredForeignKeys();
@@ -43,8 +28,6 @@
 
         private void CreateRegisteredForeignKeys()
         {
-            var fkNaming = NamingStrategies.GetNamingStrategy<IForeignKeyNamingStrategy>();
-
             foreach (var sqlTable in Tables)
             {
                 foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn>(sqlTable))
@@ -60,7 +43,7 @@
                     if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
                         fkRegistration.ReferredTableName.Schema = DefaultSchema;
 
-                    RegisteredForeignKeysCreator.PrimaryKey(this, sqlTable, fkRegistration, fkNaming);
+                    RegisteredForeignKeysCreator.PrimaryKey(this, sqlTable, fkRegistration, NamingStrategies.ForeignKey);
                 }
 
                 foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithPrimaryKeyExistingColumn>(sqlTable))
@@ -91,34 +74,21 @@
 
         public void AddAutoNaming(List<SqlTable> tables)
         {
-            var pkNaming = NamingStrategies.GetNamingStrategy<IPrimaryKeyNamingStrategy>();
-            var indexNaming = NamingStrategies.GetNamingStrategy<IIndexNamingStrategy>();
-            var fkNaming = NamingStrategies.GetNamingStrategy<IForeignKeyNamingStrategy>();
-
             foreach (var sqlTable in tables)
             {
-                if (pkNaming != null)
+                foreach (var pk in sqlTable.Properties.OfType<PrimaryKey>().Where(pk => string.IsNullOrEmpty(pk.Name)))
                 {
-                    foreach (var pk in sqlTable.Properties.OfType<PrimaryKey>().Where(pk => string.IsNullOrEmpty(pk.Name)))
-                    {
-                        pkNaming.SetPrimaryKeyName(pk);
-                    }
+                    NamingStrategies.PrimaryKey.SetPrimaryKeyName(pk);
                 }
 
-                if (indexNaming != null)
+                foreach (var index in sqlTable.Properties.OfType<Index>().Where(idx => string.IsNullOrEmpty(idx.Name)))
                 {
-                    foreach (var index in sqlTable.Properties.OfType<Index>().Where(idx => string.IsNullOrEmpty(idx.Name)))
-                    {
-                        indexNaming.SetIndexName(index);
-                    }
+                    NamingStrategies.Index.SetIndexName(index);
                 }
 
-                if (fkNaming != null)
+                foreach (var fk in sqlTable.Properties.OfType<ForeignKey>().Where(fk => string.IsNullOrEmpty(fk.Name)))
                 {
-                    foreach (var fk in sqlTable.Properties.OfType<ForeignKey>().Where(fk => string.IsNullOrEmpty(fk.Name)))
-                    {
-                        fkNaming.SetFKName(fk);
-                    }
+                    NamingStrategies.ForeignKey.SetFKName(fk);
                 }
             }
 

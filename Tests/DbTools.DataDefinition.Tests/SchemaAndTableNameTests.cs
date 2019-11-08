@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Tests
 {
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
     using FizzCode.DbTools.DataDefinition;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class SchemaAndTableNameTests

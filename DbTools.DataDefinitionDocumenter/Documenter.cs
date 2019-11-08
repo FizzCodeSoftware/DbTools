@@ -21,7 +21,8 @@
         {
         }
 
-        public Documenter(IDocumenterWriter documenterWriter, DocumenterSettings documenterSettings, Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlag> flags = null) : base(documenterSettings, settings, databaseName, tableCustomizer)
+        public Documenter(IDocumenterWriter documenterWriter, DocumenterSettings documenterSettings, Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlag> flags = null)
+            : base(documenterSettings, settings, databaseName, tableCustomizer)
         {
             DocumenterWriter = documenterWriter;
             _fileName = fileName;
@@ -210,7 +211,7 @@
                 // TODO Create ISqlTypeMapper according to SqlDialect
                 var sqlType = SqlTypeMapper.GetType(column.Type);
                 var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
-                var description = string.Empty;
+                var description = "";
                 if (descriptionProperty != null)
                     description = descriptionProperty.Description;
 

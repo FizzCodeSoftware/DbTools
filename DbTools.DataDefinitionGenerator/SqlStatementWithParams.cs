@@ -34,12 +34,6 @@
             return new SqlStatementWithParameters(statement);
         }
 
-        public string DebuggerDisplay
-        {
-            get
-            {
-                return Statement;
-            }
-        }
+        public string DebuggerDisplay => Statement;
     }
 }

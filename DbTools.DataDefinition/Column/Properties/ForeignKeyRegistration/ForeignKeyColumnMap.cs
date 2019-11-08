@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition
 {
     public class ForeignKeyColumnMap
     {

@@ -122,7 +122,7 @@
                 var cells = sheet.Cells[sheet.Dimension.Address];
                 cells.AutoFitColumns(0, 100);
                 cells.Style.WrapText = true;
-                cells.Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
+                cells.Style.VerticalAlignment = ExcelVerticalAlignment.Center;
 
                 var start = sheet.Dimension.Start;
                 var end = sheet.Dimension.End;
@@ -138,7 +138,7 @@
                     if (hasValue)
                     {
                         foreach (var cell in sheet.Cells[row, 1, row, end.Column])
-                            cell.Style.Border.BorderAround(OfficeOpenXml.Style.ExcelBorderStyle.Thin);
+                            cell.Style.Border.BorderAround(ExcelBorderStyle.Thin);
                     }
                 }
 

@@ -115,6 +115,7 @@ namespace FizzCode.DbTools.DataDefinition
             var referredPk = referredTable.Properties.OfType<PrimaryKey>().FirstOrDefault();
             if (referredPk == null)
                 throw new Exception("Can't define ForeignKeyRegistrationToTableWithPrimaryKey against a table without primary key!");
+
             return referredPk;
         }
 

@@ -13,7 +13,7 @@
             var sqlTypeMapper = new GenericSqlTypeMapper();
             foreach (var sqlType in (SqlType[])Enum.GetValues(typeof(SqlType)))
             {
-                if(sqlType != SqlType.Unknown)
+                if (sqlType != SqlType.Unknown)
                     sqlTypeMapper.GetType(sqlType);
             }
         }

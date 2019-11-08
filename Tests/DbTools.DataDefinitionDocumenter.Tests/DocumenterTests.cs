@@ -13,7 +13,7 @@
         public void DocumentTest()
         {
             var db = new TestDatabaseFks();
-            var documenter = new Documenter(new DocumenterSettings(), TestHelper.GetDefaultTestSettings(SqlDialect.MsSql),  "TestDatabaseFks");
+            var documenter = new Documenter(new DocumenterSettings(), TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks");
 
             documenter.Document(db);
         }

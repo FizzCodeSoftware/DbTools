@@ -11,6 +11,7 @@
             ExcelWorksheet = excelPackage.Workbook.Worksheets.Add(name);
             if (tabColor.HasValue)
                 ExcelWorksheet.TabColor = tabColor.Value;
+
             LastRow = 1;
             LastColumn = 1;
         }

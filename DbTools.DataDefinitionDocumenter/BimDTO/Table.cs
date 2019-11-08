@@ -6,7 +6,7 @@
     {
         public string Name { get; set; }
         public List<Column> Columns { get; } = new List<Column>();
-        public List <Partition> Partitions { get; } = new List<Partition>();
+        public List<Partition> Partitions { get; } = new List<Partition>();
     }
 
     public class Column

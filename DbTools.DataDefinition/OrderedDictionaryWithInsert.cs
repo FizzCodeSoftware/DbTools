@@ -106,13 +106,7 @@
             return false;
         }
 
-        public TValue this[TKey key]
-        {
-            get
-            {
-                return _dictionary[key];
-            }
-        }
+        public TValue this[TKey key] => _dictionary[key];
 
         public bool TryGetValue(TKey key, out TValue value)
         {

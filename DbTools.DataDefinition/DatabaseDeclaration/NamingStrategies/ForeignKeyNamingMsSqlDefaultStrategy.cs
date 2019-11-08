@@ -10,22 +10,21 @@
             if (fk.SqlTable.SchemaAndTableName == null || fk.ReferredTable.SchemaAndTableName == null)
                 return;
 
-            var fkName = $"{fk.SqlTable.SchemaAndTableName}{fk.ReferredTable.SchemaAndTableName}";
+            var fkName = fk.SqlTable.SchemaAndTableName.TableName + "__" + fk.ReferredTable.SchemaAndTableName.TableName;
 
-            var sameNameFks = fk.SqlTable.Properties.OfType<ForeignKey>().Where(fk1 =>
-                fk1 != fk
-                && fk1.Name?.StartsWith(fkName, StringComparison.CurrentCultureIgnoreCase) == true
-            ).ToList();
+            var sameNameFks = fk.SqlTable.Properties
+                .OfType<ForeignKey>()
+                .Where(x => x != fk && x.Name?.StartsWith(fkName, StringComparison.CurrentCultureIgnoreCase) == true)
+                .ToList();
 
-            var i = 1;
             foreach (var sameFk in sameNameFks)
             {
-                if (sameFk.Name.Length <= fkName.Length)
-                    sameFk.Name = $"{sameFk.Name}_{i++}";
+                if (sameFk.Name == fkName)
+                    sameFk.Name += "_1";
             }
 
-            fk.Name = i > 1
-                ? $"{fkName}_{i}"
+            fk.Name = sameNameFks.Count > 0
+                ? $"{fkName}_{sameNameFks.Count + 1}"
                 : fkName;
         }
     }

@@ -93,6 +93,7 @@
                         break;
                 }
             }
+
             return result;
         }
 
@@ -150,19 +151,19 @@
             switch (KnownProvider)
             {
                 case Configuration.KnownProvider.SqlServer:
-                    return !identifier.StartsWith('[') && identifier.EndsWith(']')
-                         ? '[' + identifier + ']'
-                         : identifier;
+                    return identifier.StartsWith('[') && identifier.EndsWith(']')
+                         ? identifier
+                         : '[' + identifier + ']';
                 case Configuration.KnownProvider.SQLite:
                 case Configuration.KnownProvider.PostgreSql:
                 case Configuration.KnownProvider.OracleSql:
                     return identifier.StartsWith('\"') && identifier.EndsWith('\"')
-                        ? '\"' + identifier + '\"'
-                        : identifier;
+                        ? identifier
+                        : '\"' + identifier + '\"';
                 case Configuration.KnownProvider.MySql:
                     return identifier.StartsWith('`') && identifier.EndsWith('`')
-                        ? '`' + identifier + '`'
-                        : identifier;
+                        ? identifier
+                        : '`' + identifier + '`';
             }
 
             throw new NotSupportedException();
@@ -177,16 +178,16 @@
             {
                 case Configuration.KnownProvider.SqlServer:
                     return identifier
-                        .Replace("[", string.Empty, StringComparison.InvariantCulture)
-                        .Replace("]", string.Empty, StringComparison.InvariantCulture);
+                        .Replace("[", "", StringComparison.InvariantCulture)
+                        .Replace("]", "", StringComparison.InvariantCulture);
                 case Configuration.KnownProvider.SQLite:
                 case Configuration.KnownProvider.PostgreSql:
                 case Configuration.KnownProvider.OracleSql:
                     return identifier
-                        .Replace("\"", string.Empty, StringComparison.InvariantCulture);
+                        .Replace("\"", "", StringComparison.InvariantCulture);
                 case Configuration.KnownProvider.MySql:
                     return identifier
-                        .Replace("`", string.Empty, StringComparison.InvariantCulture);
+                        .Replace("`", "", StringComparison.InvariantCulture);
             }
 
             throw new NotSupportedException();

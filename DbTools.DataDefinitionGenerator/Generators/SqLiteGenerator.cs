@@ -6,7 +6,8 @@
 
     public class SqLiteGenerator : GenericSqlGenerator
     {
-        public SqLiteGenerator(Settings settings) : base(settings)
+        public SqLiteGenerator(Settings settings)
+            : base(settings)
         {
         }
 
