@@ -33,7 +33,9 @@
 
             foreach (var sqlTable in databaseDefinition.GetTables())
             {
-                if (!TableCustomizer.ShouldSkip(sqlTable.SchemaAndTableName))
+                if (!TableCustomizer.ShouldSkip(sqlTable.SchemaAndTableName)
+                    && !Documenter.ShouldSkipKnownTechnicalTable(sqlTable.SchemaAndTableName)
+                    )
                 {
                     root.Model.Tables.Add(GenerateTable(sqlTable));
                     GatherReferencedTables(relationShipRegistrations, sqlTable);
@@ -96,10 +98,10 @@
 
             var copyTableName = GetBimTableName(toSqlTable.SchemaAndTableName) + suffix;
 
-            var copySchemaAndTableName = new SchemaAndTableName(toSqlTable.SchemaAndTableName.Schema, copyTableName);
+            var copySchemaAndTableName = new SchemaAndTableName(toSqlTable.SchemaAndTableName.Schema, toSqlTable.SchemaAndTableName.TableName + suffix);
             rr.ToSchemaAndTableName = copySchemaAndTableName;
 
-            if (!model.Tables.Any(t => t.Name == copySchemaAndTableName))
+            if (!model.Tables.Any(t => t.Name == copyTableName))
                 model.Tables.Add(GenerateTable(toSqlTable, copyTableName));
         }
 
@@ -107,7 +109,7 @@
         {
             var relation = new Relationship
             {
-                FromTable = GetBimTableName(rr.FromTableName),
+                FromTable = GetBimTableName(rr.FromTableSchemaAndTableName),
                 FromColumn = rr.FromColumn.Name,
                 ToTable = GetBimTableName(rr.ToSchemaAndTableName),
                 ToColumn = rr.ToColumnName,
@@ -126,6 +128,12 @@
             foreach (var fk in fks)
             {
                 var firstColumnMap = fk.ForeignKeyColumns.First();
+
+                var bimRelationship = new BimRelationship(firstColumnMap.ForeignKeyColumn, firstColumnMap.ReferredColumn.Table.SchemaAndTableName, firstColumnMap.ReferredColumn.Name);
+
+                if (relationShipRegistrations.Contains(bimRelationship))
+                    continue;
+
                 relationShipRegistrations.Add(new BimRelationship(firstColumnMap.ForeignKeyColumn, firstColumnMap.ReferredColumn.Table.SchemaAndTableName, firstColumnMap.ReferredColumn.Name));
                 GatherReferencedTables(relationShipRegistrations, fk.ReferredTable);
             }

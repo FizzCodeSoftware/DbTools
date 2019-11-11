@@ -17,7 +17,7 @@
             RelationshipIdentifier = relationshipIdentifier;
         }
 
-        public string FromTableName
+        public SchemaAndTableName FromTableSchemaAndTableName
         {
             get
             {
@@ -25,7 +25,7 @@
             }
         }
 
-        public string ToTableName
+        public SchemaAndTableName ToTableSchemaAndTableName
         {
             get
             {
@@ -37,7 +37,7 @@
         {
             get
             {
-                return FromTableName + "/" + FromColumn.Name + "/" + ToTableName + "/" + ToColumnName;
+                return FromTableSchemaAndTableName + "/" + FromColumn.Name + "/" + ToTableSchemaAndTableName + "/" + ToColumnName;
             }
         }
 
@@ -48,7 +48,7 @@
                 if (RelationshipIdentifier == null)
                     return null;
                 
-                return ToTableName + "/" + RelationshipIdentifier;
+                return ToTableSchemaAndTableName + "/" + RelationshipIdentifier;
             }
         }
     }

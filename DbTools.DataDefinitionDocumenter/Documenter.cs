@@ -176,11 +176,16 @@
 
         private static List<SqlTable> RemoveKnownTechnicalTables(List<SqlTable> list)
         {
+            return list.Where(x => !ShouldSkipKnownTechnicalTable(x.SchemaAndTableName)).ToList();
+        }
+
+        public static bool ShouldSkipKnownTechnicalTable(SchemaAndTableName schemaAndTableName)
+        {
             // TODO MS Sql specific
-            return list.Where(x =>
-                x.SchemaAndTableName.SchemaAndName != "dbo.__RefactorLog"
-                && x.SchemaAndTableName.SchemaAndName != "dbo.sysdiagrams"
-                ).ToList();
+            // TODO Move
+            // TODO Options
+            return schemaAndTableName.SchemaAndName == "dbo.__RefactorLog"
+                || schemaAndTableName.SchemaAndName == "dbo.sysdiagrams";
         }
 
         protected void AddTableToTableList(string category, SqlTable table, bool hasCategories)

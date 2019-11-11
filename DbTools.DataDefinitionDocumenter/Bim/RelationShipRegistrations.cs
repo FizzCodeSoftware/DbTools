@@ -19,10 +19,23 @@
 
         public void Add(BimRelationship relationShipRegistration)
         {
-            if (!_fromTo.ContainsKey(relationShipRegistration.FromTableName))
-                _fromTo.Add(relationShipRegistration.FromTableName, new Dictionary<string, BimRelationship>());
+            if (!_fromTo.ContainsKey(relationShipRegistration.FromTableSchemaAndTableName))
+                _fromTo.Add(relationShipRegistration.FromTableSchemaAndTableName, new Dictionary<string, BimRelationship>());
 
-            _fromTo[relationShipRegistration.FromTableName].Add(relationShipRegistration.ToKey, relationShipRegistration);
+            _fromTo[relationShipRegistration.FromTableSchemaAndTableName].Add(relationShipRegistration.ToKey, relationShipRegistration);
+        }
+
+        public bool Contains(BimRelationship bimRelationship)
+        {
+            if (!_fromTo.Keys.Contains(bimRelationship.FromTableSchemaAndTableName.ToString()))
+                return false;
+
+            var tos = _fromTo[bimRelationship.FromTableSchemaAndTableName];
+
+            if(!tos.Keys.Contains(bimRelationship.ToKey))
+                return false;
+
+            return true;
         }
     }
 }
