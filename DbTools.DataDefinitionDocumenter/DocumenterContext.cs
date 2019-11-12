@@ -3,7 +3,7 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
 
-    public class Context
+    public class DocumenterContext
     {
         public DocumenterSettings DocumenterSettings { get; set; }
         public Settings Settings { get; set; }

@@ -2,6 +2,7 @@
 {
     using System;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.DataDefinitionExecuter;
@@ -36,7 +37,7 @@
 
             TestHelper.CheckProvider(sqlDialect);
 
-            var databaseCreator = DatabaseCreator.FromConnectionStringSettings(dd, connectionStringWithProvider, TestHelper.GetDefaultTestSettings(sqlDialect));
+            var databaseCreator = DatabaseCreator.FromConnectionStringSettings(dd, connectionStringWithProvider, TestHelper.GetDefaultTestSettings(sqlDialect), new Logger());
 
             try
             {
@@ -44,7 +45,13 @@
             }
             finally
             {
-                var generator = SqlGeneratorFactory.CreateGenerator(SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName), TestHelper.GetDefaultTestSettings(sqlDialect));
+                var context = new GeneratorContext
+                {
+                    Settings = TestHelper.GetDefaultTestSettings(sqlDialect),
+                    Logger = new Logger()
+                };
+
+                var generator = SqlGeneratorFactory.CreateGenerator(SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName), context);
 
                 var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
                 executer.CleanupDatabase(dd);

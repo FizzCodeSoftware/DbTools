@@ -11,7 +11,7 @@
     {
         private readonly string _namespace;
 
-        public CsGenerator(Context context, string databaseName, string @namespace)
+        public CsGenerator(DocumenterContext context, string databaseName, string @namespace)
             : base(context, databaseName)
         {
             _namespace = @namespace;

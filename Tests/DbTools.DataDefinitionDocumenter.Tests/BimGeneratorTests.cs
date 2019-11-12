@@ -10,9 +10,9 @@
 
     public static class DataDefinitionDocumenterTestsHelper
     {
-        public static Context CreateTestContext(ITableCustomizer customizer = null)
+        public static DocumenterContext CreateTestContext(ITableCustomizer customizer = null)
         {
-            var context = new Context
+            var context = new DocumenterContext
             {
                 Settings = TestHelper.GetDefaultTestSettings(SqlDialect.MsSql),
                 DocumenterSettings = new DocumenterSettings(),

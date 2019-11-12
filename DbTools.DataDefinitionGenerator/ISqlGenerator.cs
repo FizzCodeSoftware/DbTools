@@ -1,12 +1,11 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
     using System.Collections.Generic;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
     public interface ISqlGenerator
     {
-        Settings Settings { get; }
+        GeneratorContext Context { get; }
 
         string CreateSchema(string schemaName);
 

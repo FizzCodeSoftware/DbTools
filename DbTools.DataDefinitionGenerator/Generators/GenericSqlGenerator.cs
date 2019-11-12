@@ -4,17 +4,24 @@
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
+
+    public class GeneratorContext
+    {
+        public Settings Settings { get; set;  }
+        public Logger Logger { get; set; }
+    }
 
     public abstract class GenericSqlGenerator : ISqlGenerator
     {
         public virtual ISqlTypeMapper SqlTypeMapper { get; } = new GenericSqlTypeMapper();
+       
+        public GeneratorContext Context { get; }
 
-        public Settings Settings { get; }
-
-        protected GenericSqlGenerator(Settings settings)
+        protected GenericSqlGenerator(GeneratorContext context)
         {
-            Settings = settings;
+            Context = context;
         }
 
         public virtual string CreateTable(SqlTable table)
@@ -310,9 +317,9 @@ SELECT
             var schema = schemaAndTableName.Schema;
             var tableName = schemaAndTableName.TableName;
 
-            var defaultSchema = Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema", null);
+            var defaultSchema = Context.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema", null);
 
-            if (!string.IsNullOrEmpty(defaultSchema) && Settings.Options.ShouldUseDefaultSchema && string.IsNullOrEmpty(schema))
+            if (!string.IsNullOrEmpty(defaultSchema) && Context.Settings.Options.ShouldUseDefaultSchema && string.IsNullOrEmpty(schema))
             {
                 return GuardKeywords(defaultSchema) + "." + GuardKeywords(tableName);
             }

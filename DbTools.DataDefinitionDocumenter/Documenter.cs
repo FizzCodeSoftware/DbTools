@@ -16,12 +16,12 @@
         private readonly string _fileName;
         private readonly HashSet<DocumenterFlag> _flags;
 
-        public Documenter(Context context, string databaseName = "", string fileName = null, HashSet<DocumenterFlag> flags = null)
+        public Documenter(DocumenterContext context, string databaseName = "", string fileName = null, HashSet<DocumenterFlag> flags = null)
             : this(new DocumenterWriterExcel(), context, databaseName, fileName, flags)
         {
         }
 
-        public Documenter(IDocumenterWriter documenterWriter, Context context, string databaseName = "", string fileName = null, HashSet<DocumenterFlag> flags = null)
+        public Documenter(IDocumenterWriter documenterWriter, DocumenterContext context, string databaseName = "", string fileName = null, HashSet<DocumenterFlag> flags = null)
             : base(context, databaseName)
         {
             DocumenterWriter = documenterWriter;

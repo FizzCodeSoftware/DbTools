@@ -15,7 +15,7 @@
 
     public class BimGenerator : DocumenterBase
     {
-        public BimGenerator(Context context, string databaseName)
+        public BimGenerator(DocumenterContext context, string databaseName)
             : base(context, databaseName)
         {
         }
@@ -61,7 +61,7 @@
 
             foreach (var fromTable in relationShipRegistrations.FromTables())
             {
-                var toTables = new Dictionary<string, BimRelationship>();
+                var toTables = new Dictionary<string, int>();
                 var to = relationShipRegistrations.GetByFromTable(fromTable);
                 foreach (var rr in to)
                 {
@@ -84,13 +84,16 @@
                     //   if NO other reference exists (without RelationshipIdentifier or any other RelationshipIdentifier)
 
                     // same target on this table
-                    if (toTables.ContainsKey(rr.ToKey))
+                    if (!toTables.ContainsKey(rr.ToKey))
                     {
-                        var i = toTables.Count(k => k.Value.ToKey == rr.ToKey);
-                        CreateTableCopyForReference(rr, model, i);
+                        toTables.Add(rr.ToKey, 1);
                     }
+                    else
                     {
-                        toTables.Add(rr.ToKey, rr);
+                        toTables[rr.ToKey] += 1;
+                        var numberOfReferencesToTheSameTable = toTables[rr.ToKey];
+                        if (numberOfReferencesToTheSameTable > 1)
+                            CreateTableCopyForReference(rr, model, numberOfReferencesToTheSameTable);
                     }
 
                     model.Relationships.Add(GenerateRelationship(rr));

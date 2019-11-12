@@ -1,13 +1,12 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
     using System.Collections.Generic;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
     public class SqLiteGenerator : GenericSqlGenerator
     {
-        public SqLiteGenerator(Settings settings)
-            : base(settings)
+        public SqLiteGenerator(GeneratorContext context)
+            : base(context)
         {
         }
 

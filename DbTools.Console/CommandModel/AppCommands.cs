@@ -42,13 +42,13 @@
             // TODO accept from argument
             var settings = Helper.GetDefaultSettings(sqlDialect);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings);
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings, CreateLogger());
 
             var dd = ddlReader.GetDatabaseDefinition();
 
             var flagsSet = flags == null ? new HashSet<DocumenterFlag>() : new HashSet<DocumenterFlag>(flags);
 
-            var context = CreateContext(settings, patternFileName);
+            var context = CreateDocumenterContext(settings, patternFileName);
 
             var documenter = new Documenter(context, databaseName, null, flagsSet);
 
@@ -77,7 +77,7 @@
 
             var settings = Helper.GetDefaultSettings(sqlDialect);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings);
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings, CreateLogger());
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -88,7 +88,7 @@
             if (patternFileName != null)
                 customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
 
-            var context = CreateContext(settings, patternFileName);
+            var context = CreateDocumenterContext(settings, patternFileName);
 
             var generator = new CsGenerator(context, newDatabaseName, @namespace);
 
@@ -115,18 +115,18 @@
 
             var settings = Helper.GetDefaultSettings(sqlDialect);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings);
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings, CreateLogger());
 
             var dd = ddlReader.GetDatabaseDefinition();
 
-            var context = CreateContext(settings, patternFileName);
+            var context = CreateDocumenterContext(settings, patternFileName);
 
             var generator = new BimGenerator(context, databaseName);
 
             generator.Generate(dd);
         }
 
-        private static Context CreateContext(Settings settings, string patternFileName)
+        private static Logger CreateLogger()
         {
             var logger = new Logger();
 
@@ -138,6 +138,22 @@
 
             logger.LogEvent += consoleLogger.OnLog;
 
+            return logger;
+        }
+
+        private static GeneratorContext CreateGeneratorContext(SqlDialect sqlDialect)
+        {
+            var context = new GeneratorContext
+            {
+                Logger = CreateLogger(),
+                Settings = Helper.GetDefaultSettings(sqlDialect)
+            };
+
+            return context;
+        }
+
+        private static DocumenterContext CreateDocumenterContext(Settings settings, string patternFileName)
+        {
             var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
 
             ITableCustomizer customizer = null;
@@ -147,11 +163,11 @@
 
             customizer = customizer ?? new EmptyTableCustomizer();
 
-            var context = new Context
+            var context = new DocumenterContext
             {
                 DocumenterSettings = documenterSettings,
                 Settings = settings,
-                Logger = logger,
+                Logger = CreateLogger(),
                 Customizer = customizer
             };
             return context;
@@ -167,7 +183,11 @@
         {
             var providerName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect);
             var connectionStringWithProvider = new ConnectionStringWithProvider("", providerName, connectionString);
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, Helper.GetDefaultSettings(sqlDialect));
+
+            var context = CreateGeneratorContext(sqlDialect);
+
+            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);
+
             var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
             var dc = new DatabaseCreator(null, executer);
 

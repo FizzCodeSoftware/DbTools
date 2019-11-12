@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
     using FizzCode.DbTools.DataDefinitionGenerator;
@@ -18,13 +19,19 @@
         {
             var dd = new DatabaseDefinition();
 
+            Logger.Log(LogSeverity.Debug, "Reading table definitions from database.", "Reader");
+
             foreach (var schemaAndTableName in GetSchemaAndTableNames())
                 dd.AddTable(GetTableDefinition(schemaAndTableName, false));
 
+            Logger.Log(LogSeverity.Debug, "Reading table documentetion from database.", "Reader");
             AddTableDocumentation(dd);
 
+            Logger.Log(LogSeverity.Debug, "Reading table identities from database.", "Reader");
             new MsSqlIdentityReader(Executer).GetIdentity(dd);
+            Logger.Log(LogSeverity.Debug, "Reading table primary keys from database.", "Reader");
             new MsSqlPrimaryKeyReader(Executer).GetPrimaryKey(dd);
+            Logger.Log(LogSeverity.Debug, "Reading table foreign keys from database.", "Reader");
             new MsSqlForeignKeyReader(Executer).GetForeignKeys(dd);
 
             return dd;
@@ -58,7 +65,7 @@ WHERE type = 'U'").Rows
                 AddTableDocumentation(sqlTable);
             }
 
-            var defaultSchema = Executer.Generator.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = Executer.Generator.Context. Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
             ColumnDocumentationReader.GetColumnDocumentation(defaultSchema, sqlTable);
 
             return sqlTable;
