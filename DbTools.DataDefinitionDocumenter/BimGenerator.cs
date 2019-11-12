@@ -22,7 +22,7 @@
 
         public void Generate(DatabaseDefinition databaseDefinition)
         {
-            Context.Logger.Log(LogSeverity.Information, "{Module} starting on {DatabaseName}.", "BimGenerator", DatabaseName);
+            Context.Logger.Log(LogSeverity.Information, "Starting on {DatabaseName}.", "BimGenerator", DatabaseName);
 
             var root = new BimGeneratorRoot
             {
@@ -41,7 +41,8 @@
                     )
                 {
                     root.Model.Tables.Add(GenerateTable(sqlTable));
-                    GatherReferencedTables(relationShipRegistrations, sqlTable);
+                    Context.Logger.Log(LogSeverity.Debug, "Table {TableName} added to bim model.", "BimGenerator", sqlTable.SchemaAndTableName);
+                    GatherReferencedTablesByFK(relationShipRegistrations, sqlTable);
                 }
             }
 
@@ -64,10 +65,23 @@
                 var to = relationShipRegistrations.GetByFromTable(fromTable);
                 foreach (var rr in to)
                 {
+                    if(rr.FromTableSchemaAndTableName == rr.ToTableSchemaAndTableName)
+                    {
+                        Context.Logger.Log(LogSeverity.Warning, "Table {TableName} is referencing itself. SKIPPED.", "BimGenerator", fromTable);
+                        continue;
+                    }
+
                     var trp = rr.FromColumn.Properties.OfType<TabularRelationProperty>().FirstOrDefault();
 
                     if (trp != null)
                         rr.RelationshipIdentifier = trp.RelationshipIdentifier;
+
+                    // TODO TabularRelationProperty without FK should create replationship
+                    // TODO IF we have a RelationshipIdentifier
+                    //  A/ Create a Copy -> TableName + " " + RelationshipIdentifier
+                    //   if any other reference exists (without RelationshipIdentifier)
+                    //  B/ Rename existing TableName to TableName + " " + RelationshipIdentifier
+                    //   if NO other reference exists (without RelationshipIdentifier or any other RelationshipIdentifier)
 
                     // same target on this table
                     if (toTables.ContainsKey(rr.ToKey))
@@ -90,7 +104,7 @@
             var toSqlTable = dd.GetTable(rr.ToTableSchemaAndTableName);
 
             var suffix = " " + i;
-            if(rr.RelationshipIdentifier != null)
+            if (rr.RelationshipIdentifier != null)
                 suffix = " " + rr.RelationshipIdentifier;
 
             var copyTableName = GetBimTableName(toSqlTable.SchemaAndTableName) + suffix;
@@ -99,7 +113,10 @@
             rr.ToTableSchemaAndTableName = copySchemaAndTableName;
 
             if (!model.Tables.Any(t => t.Name == copyTableName))
+            {
+                Context.Logger.Log(LogSeverity.Information, "Table {TableName} COPIED to bim model, multiple references from {FromTable}", "BimGenerator", copySchemaAndTableName, rr.FromColumn.Table.SchemaAndTableName);
                 model.Tables.Add(GenerateTable(toSqlTable, copyTableName));
+            }
         }
 
         private static Relationship GenerateRelationship(BimRelationship rr)
@@ -116,11 +133,9 @@
             return relation;
         }
 
-        private void GatherReferencedTables(RelationShipRegistrations relationShipRegistrations, SqlTable sqlTable)
+        private void GatherReferencedTablesByFK(RelationShipRegistrations relationShipRegistrations, SqlTable sqlTable)
         {
-            // TODO circular dependencies
-
-            // TODO order of relationships from FKs should follow column (devlaration) order.
+            // TODO order of relationships from FKs should follow column (declaration) order.
             var fks = sqlTable.Properties.OfType<ForeignKey>();
             foreach (var fk in fks)
             {
@@ -132,7 +147,7 @@
                     continue;
 
                 relationShipRegistrations.Add(new BimRelationship(firstColumnMap.ForeignKeyColumn, firstColumnMap.ReferredColumn.Table.SchemaAndTableName, firstColumnMap.ReferredColumn.Name));
-                GatherReferencedTables(relationShipRegistrations, fk.ReferredTable);
+                GatherReferencedTablesByFK(relationShipRegistrations, fk.ReferredTable);
             }
         }
 
