@@ -5,15 +5,14 @@
     using System.IO;
     using System.Linq;
     using System.Text;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
     public class CsGenerator : DocumenterBase
     {
         private readonly string _namespace;
 
-        public CsGenerator(DocumenterSettings documenterSettings, Settings settings, string databaseName, string @namespace, ITableCustomizer tableCustomizer = null)
-            : base(documenterSettings, settings, databaseName, tableCustomizer)
+        public CsGenerator(Context context, string databaseName, string @namespace)
+            : base(context, databaseName)
         {
             _namespace = @namespace;
         }
@@ -24,16 +23,16 @@
             WritePartialMainClassHeader(sb);
             sb.AppendLine("}");
 
-            var folder = Path.Combine(DocumenterSettings.WorkingDirectory ?? @".\", DatabaseName);
+            var folder = Path.Combine(Context.DocumenterSettings.WorkingDirectory ?? @".\", DatabaseName);
             Directory.CreateDirectory(folder);
             File.WriteAllText(Path.Combine(folder, DatabaseName + ".cs"), sb.ToString(), Encoding.UTF8);
 
             var sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
             foreach (var table in databaseDefinition.GetTables())
             {
-                if (!TableCustomizer.ShouldSkip(table.SchemaAndTableName))
+                if (!Context.Customizer.ShouldSkip(table.SchemaAndTableName))
                 {
-                    sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(TableCustomizer.Category(table.SchemaAndTableName), table));
+                    sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(Context.Customizer.Category(table.SchemaAndTableName), table));
                 }
             }
 
@@ -58,7 +57,7 @@
 
                 categoryInPath = categoryInPath.Replace('?', '？');
 
-                folder = Path.Combine(DocumenterSettings.WorkingDirectory ?? @".\", DatabaseName, categoryInPath);
+                folder = Path.Combine(Context.DocumenterSettings.WorkingDirectory ?? @".\", DatabaseName, categoryInPath);
                 Directory.CreateDirectory(folder);
                 File.WriteAllText(Path.Combine(folder, Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, ".") + ".cs"), sb.ToString(), Encoding.UTF8);
             }
@@ -71,7 +70,7 @@
 
             var tables = databaseDefinition
                 .GetTables()
-                .Where(x => !TableCustomizer.ShouldSkip(x.SchemaAndTableName))
+                .Where(x => !Context.Customizer.ShouldSkip(x.SchemaAndTableName))
                 .OrderBy(x => x.SchemaAndTableName.Schema)
                 .ThenBy(x => x.SchemaAndTableName.TableName);
 

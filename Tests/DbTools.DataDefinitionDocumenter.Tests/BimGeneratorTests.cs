@@ -1,11 +1,28 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.Tabular;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    public static class DataDefinitionDocumenterTestsHelper
+    {
+        public static Context CreateTestContext(ITableCustomizer customizer = null)
+        {
+            var context = new Context
+            {
+                Settings = TestHelper.GetDefaultTestSettings(SqlDialect.MsSql),
+                DocumenterSettings = new DocumenterSettings(),
+                Customizer = customizer ?? new EmptyTableCustomizer(),
+                Logger = new Logger()
+            };
+
+            return context;
+        }
+    }
 
     [TestClass]
     public class BimGeneratorTests
@@ -15,7 +32,7 @@
         {
             var db = new TestDatabaseFks();
 
-            var generator = new BimGenerator(new DocumenterSettings(), TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks", new DocumenterTests.TableCustomizer());
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(new DocumenterTests.TableCustomizer()), "TestDatabaseFks");
             generator.Generate(db);
         }
 
@@ -24,7 +41,7 @@
         {
             var db = new ForeignKeyCompositeTestsDb();
 
-            var generator = new BimGenerator(new DocumenterSettings(), TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks");
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "TestDatabaseFks");
             generator.Generate(db);
         }
 
@@ -33,7 +50,7 @@
         {
             var db = new ForeignKeyCompositeTestsDb();
 
-            var generator = new BimGenerator(new DocumenterSettings(), TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "ForeignKeyCompositeTestsDb");
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "ForeignKeyCompositeTestsDb");
             generator.Generate(db);
         }
 
@@ -41,7 +58,7 @@
         public void GeneratorForeignKeyCompositeTestsDb2()
         {
             var db = new ForeignKeyCompositeSetForeignKeyToTestDb();
-            var generator = new BimGenerator(new DocumenterSettings(), TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "ForeignKeyCompositeSetForeignKeyToTestDb", new DocumenterTests.TableCustomizer());
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(new DocumenterTests.TableCustomizer()), "ForeignKeyCompositeSetForeignKeyToTestDb");
             generator.Generate(db);
         }
 
@@ -50,7 +67,7 @@
         {
             var db = new TabularRelationTestDb();
 
-            var generator = new BimGenerator(new DocumenterSettings(), TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TabularRelationTestDb");
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "TabularRelationTestDb");
             generator.Generate(db);
         }
     }

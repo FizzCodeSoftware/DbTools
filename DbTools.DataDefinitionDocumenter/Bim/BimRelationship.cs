@@ -29,7 +29,7 @@
         {
             get
             {
-                return FromTableSchemaAndTableName + "/" + FromColumn.Name + "/" + ToTableSchemaAndTableName + "/" + ToColumnName;
+                return ToTableSchemaAndTableName + "/" + ToColumnName;
             }
         }
 

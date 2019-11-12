@@ -1,23 +1,18 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
-    using FizzCode.DbTools.Common;
-
     public abstract class DocumenterBase
     {
-        protected DocumenterHelper Helper { get; set; }
+        protected Context Context { get; }
 
-        protected DocumenterSettings DocumenterSettings { get; }
+        protected DocumenterHelper Helper { get; set; }
 
         protected string DatabaseName { get; }
 
-        protected ITableCustomizer TableCustomizer { get; }
-
-        protected DocumenterBase(DocumenterSettings documenterSettings, Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null)
+        protected DocumenterBase(Context context, string databaseName = "")
         {
             DatabaseName = databaseName;
-            TableCustomizer = tableCustomizer ?? new EmptyTableCustomizer();
-            Helper = new DocumenterHelper(settings);
-            DocumenterSettings = documenterSettings;
+            Helper = new DocumenterHelper(context.Settings);
+            Context = context;
         }
     }
 }

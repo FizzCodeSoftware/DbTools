@@ -5,9 +5,9 @@
 
     public class RelationShipRegistrations
     {
-        private readonly Dictionary<string, Dictionary<string, BimRelationship>> _fromTo = new Dictionary<string, Dictionary<string, BimRelationship>>();
+        private readonly Dictionary<string, List<BimRelationship>> _fromTo = new Dictionary<string, List<BimRelationship>>();
 
-        public Dictionary<string, BimRelationship> GetByFromTable(string fromTableName)
+        public List<BimRelationship> GetByFromTable(string fromTableName)
         {
             return _fromTo[fromTableName];
         }
@@ -20,9 +20,9 @@
         public void Add(BimRelationship relationShipRegistration)
         {
             if (!_fromTo.ContainsKey(relationShipRegistration.FromTableSchemaAndTableName))
-                _fromTo.Add(relationShipRegistration.FromTableSchemaAndTableName, new Dictionary<string, BimRelationship>());
+                _fromTo.Add(relationShipRegistration.FromTableSchemaAndTableName, new List<BimRelationship>());
 
-            _fromTo[relationShipRegistration.FromTableSchemaAndTableName].Add(relationShipRegistration.ToKey, relationShipRegistration);
+            _fromTo[relationShipRegistration.FromTableSchemaAndTableName].Add(relationShipRegistration);
         }
 
         public bool Contains(BimRelationship bimRelationship)
@@ -32,7 +32,7 @@
 
             var tos = _fromTo[bimRelationship.FromTableSchemaAndTableName];
 
-            if(!tos.Keys.Contains(bimRelationship.ToKey))
+            if(!tos.Any(r => r.ToKey == bimRelationship.ToKey))
                 return false;
 
             return true;

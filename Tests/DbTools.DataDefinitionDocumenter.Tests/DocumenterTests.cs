@@ -1,9 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Tests;
-    using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -13,7 +11,7 @@
         public void DocumentTest()
         {
             var db = new TestDatabaseFks();
-            var documenter = new Documenter(new DocumenterSettings(), TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "TestDatabaseFks");
 
             documenter.Document(db);
         }
@@ -22,7 +20,7 @@
         public void TableCustomizerTest()
         {
             var db = new TestDatabaseFks();
-            var documenter = new Documenter(new DocumenterSettings(), TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "TestDatabaseFks", new TableCustomizer());
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(new TableCustomizer()), "TestDatabaseFks");
             documenter.Document(db);
         }
 
@@ -30,7 +28,7 @@
         public void DocumentTestForeignKeyComposite()
         {
             var db = new ForeignKeyCompositeTestsDb();
-            var documenter = new Documenter(new DocumenterSettings(), TestHelper.GetDefaultTestSettings(SqlDialect.MsSql), "ForeignKeyCompositeTestsDb");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "ForeignKeyCompositeTestsDb");
             documenter.Document(db);
         }
 

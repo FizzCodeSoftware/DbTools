@@ -1,26 +1,29 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
     using System.Text.Encodings.Web;
     using System.Text.Json;
     using System.Text.RegularExpressions;
-    using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionDocumenter.BimDTO;
     using FizzCode.DbTools.Tabular;
 
     public class BimGenerator : DocumenterBase
     {
-        public BimGenerator(DocumenterSettings documenterSettings, Settings settings, string databaseName, ITableCustomizer tableCustomizer = null)
-            : base(documenterSettings, settings, databaseName, tableCustomizer)
+        public BimGenerator(Context context, string databaseName)
+            : base(context, databaseName)
         {
         }
 
         public void Generate(DatabaseDefinition databaseDefinition)
         {
+            Context.Logger.Log(LogSeverity.Information, "{Module} starting on {DatabaseName}.", "BimGenerator", DatabaseName);
+
             var root = new BimGeneratorRoot
             {
                 Model = new BimGeneratorModel()
@@ -33,7 +36,7 @@
 
             foreach (var sqlTable in databaseDefinition.GetTables())
             {
-                if (!TableCustomizer.ShouldSkip(sqlTable.SchemaAndTableName)
+                if (!Context.Customizer.ShouldSkip(sqlTable.SchemaAndTableName)
                     && !Documenter.ShouldSkipKnownTechnicalTable(sqlTable.SchemaAndTableName)
                     )
                 {
@@ -57,35 +60,26 @@
 
             foreach (var fromTable in relationShipRegistrations.FromTables())
             {
+                var toTables = new Dictionary<string, BimRelationship>();
                 var to = relationShipRegistrations.GetByFromTable(fromTable);
-                var i = 1;
-                var count = to.Values.Count;
-                foreach (var rr in to.Values)
+                foreach (var rr in to)
                 {
-                    // TODO same target on this table
-                    // TODO do not create already existing "table N" if exists
-
                     var trp = rr.FromColumn.Properties.OfType<TabularRelationProperty>().FirstOrDefault();
 
                     if (trp != null)
                         rr.RelationshipIdentifier = trp.RelationshipIdentifier;
 
-                    if (count == 1)
+                    // same target on this table
+                    if (toTables.ContainsKey(rr.ToKey))
                     {
-                        model.Relationships.Add(GenerateRelationship(rr));
+                        var i = toTables.Count(k => k.Value.ToKey == rr.ToKey);
+                        CreateTableCopyForReference(rr, model, i);
                     }
-                    else
                     {
-                        if (i > 1)
-                        {
-                            CreateTableCopyForReference(rr, model, i);
-                            model.Relationships.Add(GenerateRelationship(rr));
-                        }
-                        else
-                            model.Relationships.Add(GenerateRelationship(rr));
+                        toTables.Add(rr.ToKey, rr);
                     }
 
-                    i++;
+                    model.Relationships.Add(GenerateRelationship(rr));
                 }
             }
         }
@@ -203,7 +197,7 @@
 
         private void WriteJson(string json)
         {
-            var folder = Path.Combine(DocumenterSettings.WorkingDirectory ?? @".\", DatabaseName);
+            var folder = Path.Combine(Context.DocumenterSettings.WorkingDirectory ?? @".\", DatabaseName);
             Directory.CreateDirectory(folder);
             File.WriteAllText(Path.Combine(folder, "Model.bim"), json, Encoding.UTF8);
         }

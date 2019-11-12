@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using CommandDotNet.Attributes;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionDocumenter;
@@ -45,16 +46,11 @@
 
             var dd = ddlReader.GetDatabaseDefinition();
 
-            ITableCustomizer customizer = null;
-
-            var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
-
-            if (patternFileName != null)
-                customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
-
             var flagsSet = flags == null ? new HashSet<DocumenterFlag>() : new HashSet<DocumenterFlag>(flags);
 
-            var documenter = new Documenter(documenterSettings, settings, databaseName, customizer, null, flagsSet);
+            var context = CreateContext(settings, patternFileName);
+
+            var documenter = new Documenter(context, databaseName, null, flagsSet);
 
             documenter.Document(dd);
         }
@@ -92,7 +88,9 @@
             if (patternFileName != null)
                 customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
 
-            var generator = new CsGenerator(documenterSettings, settings, newDatabaseName, @namespace, customizer);
+            var context = CreateContext(settings, patternFileName);
+
+            var generator = new CsGenerator(context, newDatabaseName, @namespace);
 
             generator.GenerateMultiFile(dd);
         }
@@ -121,16 +119,42 @@
 
             var dd = ddlReader.GetDatabaseDefinition();
 
-            ITableCustomizer customizer = null;
+            var context = CreateContext(settings, patternFileName);
+
+            var generator = new BimGenerator(context, databaseName);
+
+            generator.Generate(dd);
+        }
+
+        private static Context CreateContext(Settings settings, string patternFileName)
+        {
+            var logger = new Logger();
+
+            var iLogger = SerilogConfigurator.CreateLogger(null);
+            var iOpsLogger = SerilogConfigurator.CreateOpsLogger(null);
+
+            var consoleLogger = new ConsoleLogger();
+            consoleLogger.Init(iLogger, iOpsLogger);
+
+            logger.LogEvent += consoleLogger.OnLog;
 
             var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
+
+            ITableCustomizer customizer = null;
 
             if (patternFileName != null)
                 customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
 
-            var generator = new BimGenerator(documenterSettings, settings, databaseName, customizer);
+            customizer = customizer ?? new EmptyTableCustomizer();
 
-            generator.Generate(dd);
+            var context = new Context
+            {
+                DocumenterSettings = documenterSettings,
+                Settings = settings,
+                Logger = logger,
+                Customizer = customizer
+            };
+            return context;
         }
 
         [ApplicationMetadata(Name = "dropall", Description = "Drop every object from a database.")]

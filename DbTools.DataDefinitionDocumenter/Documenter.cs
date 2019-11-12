@@ -4,7 +4,7 @@
     using System.Drawing;
     using System.IO;
     using System.Linq;
-    using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
@@ -16,18 +16,18 @@
         private readonly string _fileName;
         private readonly HashSet<DocumenterFlag> _flags;
 
-        public Documenter(DocumenterSettings documenterSettings, Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlag> flags = null)
-            : this(new DocumenterWriterExcel(), documenterSettings, settings, databaseName, tableCustomizer, fileName, flags)
+        public Documenter(Context context, string databaseName = "", string fileName = null, HashSet<DocumenterFlag> flags = null)
+            : this(new DocumenterWriterExcel(), context, databaseName, fileName, flags)
         {
         }
 
-        public Documenter(IDocumenterWriter documenterWriter, DocumenterSettings documenterSettings, Settings settings, string databaseName = "", ITableCustomizer tableCustomizer = null, string fileName = null, HashSet<DocumenterFlag> flags = null)
-            : base(documenterSettings, settings, databaseName, tableCustomizer)
+        public Documenter(IDocumenterWriter documenterWriter, Context context, string databaseName = "", string fileName = null, HashSet<DocumenterFlag> flags = null)
+            : base(context, databaseName)
         {
             DocumenterWriter = documenterWriter;
             _fileName = fileName;
 
-            Helper = new DocumenterHelper(settings);
+            Helper = new DocumenterHelper(context.Settings);
 
             _flags = flags ?? new HashSet<DocumenterFlag>();
         }
@@ -38,7 +38,7 @@
         private Color? GetColor(SchemaAndTableName schemaAndTableName)
         {
             // TODO coloring to incude schema
-            var hexColor = TableCustomizer.BackGroundColor(schemaAndTableName);
+            var hexColor = Context.Customizer.BackGroundColor(schemaAndTableName);
 
             if (hexColor == null)
                 return null;
@@ -48,21 +48,23 @@
 
         public void Document(DatabaseDefinition databaseDefinition)
         {
+            Context.Logger.Log(LogSeverity.Information, "{Module} starting on {DatabaseName}.", "Documenter", DatabaseName);
+
             var tables = RemoveKnownTechnicalTables(databaseDefinition.GetTables());
 
             foreach (var table in tables)
             {
-                if (!TableCustomizer.ShouldSkip(table.SchemaAndTableName))
-                    _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(TableCustomizer.Category(table.SchemaAndTableName), table));
+                if (!Context.Customizer.ShouldSkip(table.SchemaAndTableName))
+                    _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(Context.Customizer.Category(table.SchemaAndTableName), table));
                 else
-                    _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(TableCustomizer.Category(table.SchemaAndTableName), table));
+                    _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(Context.Customizer.Category(table.SchemaAndTableName), table));
             }
 
             var hasCategories = _sqlTablesByCategory.Any(x => !string.IsNullOrEmpty(x.Key));
 
             WriteLine("Database", "Database name", DatabaseName);
-            WriteLine("Database", "Number of documented tables", databaseDefinition.GetTables().Count(t => !TableCustomizer.ShouldSkip(t.SchemaAndTableName)));
-            WriteLine("Database", "Number of skipped tables", databaseDefinition.GetTables().Count(t => TableCustomizer.ShouldSkip(t.SchemaAndTableName)));
+            WriteLine("Database", "Number of documented tables", databaseDefinition.GetTables().Count(t => !Context.Customizer.ShouldSkip(t.SchemaAndTableName)));
+            WriteLine("Database", "Number of skipped tables", databaseDefinition.GetTables().Count(t => Context.Customizer.ShouldSkip(t.SchemaAndTableName)));
             WriteLine("Database", "Number of tables", databaseDefinition.GetTables().Count);
 
             if (hasCategories)
@@ -165,7 +167,7 @@
 
             var fileName = _fileName ?? (DatabaseName?.Length == 0 ? "Database.xlsx" : DatabaseName + ".xlsx");
 
-            var path = DocumenterSettings?.WorkingDirectory;
+            var path = Context.DocumenterSettings?.WorkingDirectory;
             if (!string.IsNullOrEmpty(path))
             {
                 fileName = Path.Combine(path, fileName);
