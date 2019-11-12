@@ -62,6 +62,9 @@
                 var count = to.Values.Count;
                 foreach (var rr in to.Values)
                 {
+                    // TODO same target on this table
+                    // TODO do not create already existing "table N" if exists
+
                     var trp = rr.FromColumn.Properties.OfType<TabularRelationProperty>().FirstOrDefault();
 
                     if (trp != null)
@@ -90,7 +93,7 @@
         private void CreateTableCopyForReference(BimRelationship rr, BimGeneratorModel model, int i)
         {
             var dd = rr.FromColumn.Table.DatabaseDefinition;
-            var toSqlTable = dd.GetTable(rr.ToSchemaAndTableName);
+            var toSqlTable = dd.GetTable(rr.ToTableSchemaAndTableName);
 
             var suffix = " " + i;
             if(rr.RelationshipIdentifier != null)
@@ -99,7 +102,7 @@
             var copyTableName = GetBimTableName(toSqlTable.SchemaAndTableName) + suffix;
 
             var copySchemaAndTableName = new SchemaAndTableName(toSqlTable.SchemaAndTableName.Schema, toSqlTable.SchemaAndTableName.TableName + suffix);
-            rr.ToSchemaAndTableName = copySchemaAndTableName;
+            rr.ToTableSchemaAndTableName = copySchemaAndTableName;
 
             if (!model.Tables.Any(t => t.Name == copyTableName))
                 model.Tables.Add(GenerateTable(toSqlTable, copyTableName));
@@ -111,7 +114,7 @@
             {
                 FromTable = GetBimTableName(rr.FromTableSchemaAndTableName),
                 FromColumn = rr.FromColumn.Name,
-                ToTable = GetBimTableName(rr.ToSchemaAndTableName),
+                ToTable = GetBimTableName(rr.ToTableSchemaAndTableName),
                 ToColumn = rr.ToColumnName,
                 Name = Guid.NewGuid().ToString()
             };

@@ -64,5 +64,10 @@
         public string ToTable { get; set; }
         public string ToColumn { get; set; }
         public bool IsActive { get; set; }
+
+        public override string ToString()
+        {
+            return FromTable + "." + FromColumn + " -> " + ToTable + "." + ToColumn + " (" + IsActive + ")";
+        }
     }
 }

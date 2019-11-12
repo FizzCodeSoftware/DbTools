@@ -5,14 +5,14 @@
     public class BimRelationship
     {
         public SqlColumn FromColumn { get; set; }
-        public SchemaAndTableName ToSchemaAndTableName { get; set; }
+        public SchemaAndTableName ToTableSchemaAndTableName { get; set; }
         public string ToColumnName { get; set; }
         public string RelationshipIdentifier { get; set; }
 
-        public BimRelationship(SqlColumn fromColumn, SchemaAndTableName toSchemaAndTableName, string toColumnName, string relationshipIdentifier = null)
+        public BimRelationship(SqlColumn fromColumn, SchemaAndTableName toTableSchemaAndTableName, string toColumnName, string relationshipIdentifier = null)
         {
             FromColumn = fromColumn;
-            ToSchemaAndTableName = toSchemaAndTableName;
+            ToTableSchemaAndTableName = toTableSchemaAndTableName;
             ToColumnName = toColumnName;
             RelationshipIdentifier = relationshipIdentifier;
         }
@@ -22,14 +22,6 @@
             get
             {
                 return FromColumn.Table.SchemaAndTableName;
-            }
-        }
-
-        public SchemaAndTableName ToTableSchemaAndTableName
-        {
-            get
-            {
-                return ToSchemaAndTableName;
             }
         }
 
@@ -50,6 +42,11 @@
                 
                 return ToTableSchemaAndTableName + "/" + RelationshipIdentifier;
             }
+        }
+
+        public override string ToString()
+        {
+            return FromTableSchemaAndTableName + " -> " + ToTableSchemaAndTableName + " ("+ RelationshipIdentifier +")";
         }
     }
 }
