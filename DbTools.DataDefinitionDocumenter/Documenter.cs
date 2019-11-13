@@ -48,7 +48,7 @@
 
         public void Document(DatabaseDefinition databaseDefinition)
         {
-            Context.Logger.Log(LogSeverity.Information, "{Module} starting on {DatabaseName}.", "Documenter", DatabaseName);
+            Context.Logger.Log(LogSeverity.Information, "Starting on {DatabaseName}.", "Documenter", DatabaseName);
 
             var tables = RemoveKnownTechnicalTables(databaseDefinition.GetTables());
 
@@ -71,6 +71,8 @@
             {
                 WriteLine("Database");
                 WriteLine("Database", "Documented category", "Table count");
+
+                Context.Logger.Log(LogSeverity.Verbose, "Writing ltables by category.", "Documenter");
 
                 foreach (var category in _sqlTablesByCategory.Select(kvp => kvp.Key).Distinct().OrderBy(x => x))
                 {
@@ -114,6 +116,7 @@
 
             foreach (var tableKvp in _sqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName.Schema).ThenBy(t => t.Value.SchemaAndTableName.TableName))
             {
+                Context.Logger.Log(LogSeverity.Verbose, "Generating {TableName}.", "Documenter", tableKvp.Value.SchemaAndTableName);
                 var category = tableKvp.Key;
                 var table = tableKvp.Value;
                 AddTableToTableList(category, table, hasCategories);
@@ -168,6 +171,9 @@
             var fileName = _fileName ?? (DatabaseName?.Length == 0 ? "Database.xlsx" : DatabaseName + ".xlsx");
 
             var path = Context.DocumenterSettings?.WorkingDirectory;
+            
+            Context.Logger.Log(LogSeverity.Information, "Writing Document file {FileName} to folder {Folder}", "Documenter", fileName, path);
+
             if (!string.IsNullOrEmpty(path))
             {
                 fileName = Path.Combine(path, fileName);

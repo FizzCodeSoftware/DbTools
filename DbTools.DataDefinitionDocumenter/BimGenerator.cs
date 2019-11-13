@@ -216,6 +216,9 @@
         private void WriteJson(string json)
         {
             var folder = Path.Combine(Context.DocumenterSettings.WorkingDirectory ?? @".\", DatabaseName);
+
+            Context.Logger.Log(LogSeverity.Information, "Writing Json file {FileName} to folder {Folder}", "BimGenerator", "Model.bim", folder);
+
             Directory.CreateDirectory(folder);
             File.WriteAllText(Path.Combine(folder, "Model.bim"), json, Encoding.UTF8);
         }
