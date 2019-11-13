@@ -130,8 +130,10 @@
         {
             var logger = new Logger();
 
-            var iLogger = SerilogConfigurator.CreateLogger(null);
-            var iOpsLogger = SerilogConfigurator.CreateOpsLogger(null);
+            var logConfiguration = Program.Configuration.GetSection("Log").Get<LogConfiguration>();
+
+            var iLogger = SerilogConfigurator.CreateLogger(logConfiguration);
+            var iOpsLogger = SerilogConfigurator.CreateOpsLogger(logConfiguration);
 
             var consoleLogger = new ConsoleLogger();
             consoleLogger.Init(iLogger, iOpsLogger);

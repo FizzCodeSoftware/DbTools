@@ -33,6 +33,7 @@
             if (dropIfExists && CheckIfUserExists(defaultSchema))
                 CleanupDatabase(dd);
 
+            // TODO password
             ExecuteNonQuery($"CREATE USER \"{defaultSchema}\" IDENTIFIED BY sa123");
             ExecuteNonQuery($"GRANT CONNECT, DBA TO \"{defaultSchema}\"");
             ExecuteNonQuery($"GRANT CREATE SESSION TO \"{defaultSchema}\"");

@@ -15,5 +15,8 @@
   },
   "Documenter": {
     "WorkingDirectory": ""
+  },
+  "Log": {
+    "MinimumLogLevelOnConsole": "Verbose"
   }
 }

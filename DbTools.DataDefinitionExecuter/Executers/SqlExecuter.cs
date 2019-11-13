@@ -3,6 +3,7 @@
     using System;
     using System.Data.Common;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
@@ -13,6 +14,8 @@
 
         public ConnectionStringWithProvider ConnectionStringWithProvider { get; }
         public ISqlGenerator Generator { get; }
+
+        protected Logger Logger => Generator.Context.Logger;
 
         protected SqlExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
         {
@@ -25,6 +28,8 @@
 
         public DbConnection OpenConnection()
         {
+            // TODO log conn string without password?
+            Logger.Log(LogSeverity.Verbose, "Opening connection to {Database}.", "Executer", GetDatabase());
             var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(SqlDialect));
 
             var connection = dbf.CreateConnection();
@@ -101,6 +106,8 @@
         public virtual RowSet ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
             var connection = OpenConnection();
+
+            Logger.Log(LogSeverity.Verbose, "Executing query {Query}.", "Executer", sqlStatementWithParameters.Statement);
 
             var command = PrepareSqlCommand(sqlStatementWithParameters);
             command.Connection = connection;
