@@ -227,11 +227,20 @@
 
             if (column.Precision.HasValue)
             {
-                sb.Append("(")
-                    .Append(column.Length)
-                    .Append(", ")
-                    .Append(column.Precision)
-                    .Append(")");
+                if (column.Length != null)
+                {
+                    sb.Append("(")
+                        .Append(column.Length)
+                        .Append(", ")
+                        .Append(column.Precision)
+                        .Append(")");
+                }
+                else
+                {
+                    sb.Append("(")
+                        .Append(column.Precision)
+                        .Append(")");
+                }
             }
             else if (column.Length.HasValue)
             {
