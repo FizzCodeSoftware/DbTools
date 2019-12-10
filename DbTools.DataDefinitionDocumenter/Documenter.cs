@@ -72,7 +72,7 @@
                 WriteLine("Database");
                 WriteLine("Database", "Documented category", "Table count");
 
-                Context.Logger.Log(LogSeverity.Verbose, "Writing ltables by category.", "Documenter");
+                Context.Logger.Log(LogSeverity.Verbose, "Writing tables by category.", "Documenter");
 
                 foreach (var category in _sqlTablesByCategory.Select(kvp => kvp.Key).Distinct().OrderBy(x => x))
                 {
@@ -166,6 +166,7 @@
                 AddTableToTableList(category, table, hasCategories);
             }
 
+            Context.Logger.Log(LogSeverity.Information, "Generating Document content.", "Documenter");
             var content = DocumenterWriter.GetContent();
 
             var fileName = _fileName ?? (DatabaseName?.Length == 0 ? "Database.xlsx" : DatabaseName + ".xlsx");

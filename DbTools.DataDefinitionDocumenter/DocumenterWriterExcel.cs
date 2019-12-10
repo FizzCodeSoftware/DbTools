@@ -3,59 +3,26 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
-    using System.Globalization;
-    using System.Linq;
     using OfficeOpenXml;
     using OfficeOpenXml.Style;
 
     public class DocumenterWriterExcel : IDocumenterWriter
     {
         private ExcelPackage ExcelPackage { get; }
+        private readonly UniqueName _uniqueName;
 
         public DocumenterWriterExcel()
         {
             ExcelPackage = new ExcelPackage();
+            _uniqueName = new UniqueName();
         }
-
-        private readonly Dictionary<string, string> _sheetNames = new Dictionary<string, string>();
         private readonly Dictionary<string, Sheet> _sheets = new Dictionary<string, Sheet>();
-        private readonly Dictionary<string, int> _uniqueSheetNumbers = new Dictionary<string, int>();
 
         protected string GetSheetName(string name)
         {
-            if (!_sheetNames.ContainsKey(name))
-                _sheetNames.Add(name, CreateUniqueSheetName(name));
-
-            return _sheetNames[name];
+            return _uniqueName.GetUniqueName(name);
         }
 
-        protected string CreateUniqueSheetName(string name)
-        {
-            var uniqueName = name;
-            if (name.Length > 31)
-            {
-                var maxLengthName = name.Substring(0, 31);
-
-                if (!_uniqueSheetNumbers.ContainsKey(maxLengthName))
-                    _uniqueSheetNumbers[maxLengthName] = 0;
-                
-                var existingNumber = _uniqueSheetNumbers[maxLengthName];
-
-                if (existingNumber == 0)
-                    uniqueName = maxLengthName;
-                else
-                    uniqueName = name.Substring(0, 31 - _uniqueSheetNumbers[maxLengthName].ToString(CultureInfo.InvariantCulture).Length) + _uniqueSheetNumbers[maxLengthName]++.ToString(CultureInfo.InvariantCulture);
-
-                while (_sheetNames.Any(i => string.Equals(i.Value, uniqueName, StringComparison.OrdinalIgnoreCase)))
-                {
-                    uniqueName = name.Substring(0, 31 - _uniqueSheetNumbers[maxLengthName].ToString(CultureInfo.InvariantCulture).Length) + _uniqueSheetNumbers[maxLengthName]++.ToString(CultureInfo.InvariantCulture);
-
-                    _uniqueSheetNumbers[maxLengthName] += 1;
-                }
-            }
-
-            return uniqueName;
-        }
 
         public Sheet Sheet(string name)
         {

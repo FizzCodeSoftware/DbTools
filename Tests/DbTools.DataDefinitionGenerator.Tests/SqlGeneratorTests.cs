@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator.Tests
 {
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -22,7 +23,13 @@
             column.Properties.Add(new Identity(column) { Increment = 1, Seed = 1 });
             table.AddNVarChar("Name", 100);
 
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, TestHelper.GetDefaultTestSettings(sqlDialect));
+            var context = new GeneratorContext
+            {
+                Settings = TestHelper.GetDefaultTestSettings(sqlDialect),
+                Logger = new Logger()
+            };
+
+            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);
 
             var sql = generator.CreateTable(table);
 
@@ -40,7 +47,13 @@
 
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
 
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, TestHelper.GetDefaultTestSettings(sqlDialect));
+            var context = new GeneratorContext
+            {
+                Logger = new Logger(),
+                Settings = Helper.GetDefaultSettings(sqlDialect)
+            };
+
+            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);
             var sql = generator.DropTable(table);
             var result = _sqlExecuterTestAdapter.ExecuteNonQuery(sqlDialect.ToString(), sql);
 

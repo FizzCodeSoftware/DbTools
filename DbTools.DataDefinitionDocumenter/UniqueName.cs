@@ -27,26 +27,25 @@
         private string CreateUniqueName(string name)
         {
             var uniqueName = name;
+            var maxLengthName = name.Substring(0, Math.Min(name.Length, _maxNameLength));
+
+            if (!_maxLenghtNamePartToNumber.ContainsKey(maxLengthName))
+                _maxLenghtNamePartToNumber[maxLengthName] = 1;
+
             if (name.Length > _maxNameLength)
             {
-                var maxLengthName = name.Substring(0, _maxNameLength);
-
-                if (!_maxLenghtNamePartToNumber.ContainsKey(maxLengthName))
-                    _maxLenghtNamePartToNumber[maxLengthName] = 0;
-                
                 var existingNumber = _maxLenghtNamePartToNumber[maxLengthName];
 
-                if (existingNumber == 0)
+                if (existingNumber == 1)
                     uniqueName = maxLengthName;
                 else
                     uniqueName = GetNameWithNumberAtEnd(name);
+            }
 
-                while (_originalNamesToUniqueNames.Any(i => string.Equals(i.Value, uniqueName, StringComparison.OrdinalIgnoreCase)))
-                {
-                    uniqueName = GetNameWithNumberAtEnd(name);
-                    
-                    _maxLenghtNamePartToNumber[maxLengthName]++;
-                }
+            while (_originalNamesToUniqueNames.Any(i => string.Equals(i.Value, uniqueName, StringComparison.OrdinalIgnoreCase)))
+            {
+                uniqueName = GetNameWithNumberAtEnd(name);
+                _maxLenghtNamePartToNumber[maxLengthName]++;
             }
 
             return uniqueName;
