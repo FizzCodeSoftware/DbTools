@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
@@ -30,9 +31,15 @@
 
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
 
+            var context = new GeneratorContext
+            {
+                Logger = new Logger(),
+                Settings = Helper.GetDefaultSettings(sqlDialect)
+            };
+
             if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
             {
-                var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, TestHelper.GetDefaultTestSettings(sqlDialect));
+                var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);
                 var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
                 sqlExecutersAndDialects.Add(connectionStringKey, (sqlExecuter, sqlDialect));
 
