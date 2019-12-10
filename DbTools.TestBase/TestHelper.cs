@@ -130,8 +130,7 @@
                     foreach (var sqlDialect in array.Cast<SqlDialect>())
                     {
                         var providerName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect);
-
-                        if (DbProviderFactories.TryGetFactory(providerName, out var dbf))
+                        if (DbProviderFactories.TryGetFactory(providerName, out _))
                         {
                             _sqlDialectWithInstalledProviders.Add(sqlDialect);
                         }
