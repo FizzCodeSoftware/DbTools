@@ -17,21 +17,9 @@
             RelationshipIdentifier = relationshipIdentifier;
         }
 
-        public SchemaAndTableName FromTableSchemaAndTableName
-        {
-            get
-            {
-                return FromColumn.Table.SchemaAndTableName;
-            }
-        }
+        public SchemaAndTableName FromTableSchemaAndTableName => FromColumn.Table.SchemaAndTableName;
 
-        public string ToKey
-        {
-            get
-            {
-                return ToTableSchemaAndTableName + "/" + ToColumnName;
-            }
-        }
+        public string ToKey => ToTableSchemaAndTableName + "/" + ToColumnName;
 
         public string RelationshipIdentifierKey
         {
@@ -39,14 +27,14 @@
             {
                 if (RelationshipIdentifier == null)
                     return null;
-                
+
                 return ToTableSchemaAndTableName + "/" + RelationshipIdentifier;
             }
         }
 
         public override string ToString()
         {
-            return FromTableSchemaAndTableName + " -> " + ToTableSchemaAndTableName + " ("+ RelationshipIdentifier +")";
+            return FromTableSchemaAndTableName + " -> " + ToTableSchemaAndTableName + " (" + RelationshipIdentifier + ")";
         }
     }
 }

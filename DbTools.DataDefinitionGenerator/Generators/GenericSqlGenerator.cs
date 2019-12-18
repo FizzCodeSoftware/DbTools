@@ -9,14 +9,14 @@
 
     public class GeneratorContext
     {
-        public Settings Settings { get; set;  }
+        public Settings Settings { get; set; }
         public Logger Logger { get; set; }
     }
 
     public abstract class GenericSqlGenerator : ISqlGenerator
     {
         public virtual ISqlTypeMapper SqlTypeMapper { get; } = new GenericSqlTypeMapper();
-       
+
         public GeneratorContext Context { get; }
 
         protected GenericSqlGenerator(GeneratorContext context)

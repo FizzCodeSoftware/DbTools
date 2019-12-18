@@ -32,8 +32,8 @@
 
             var tos = _fromTo[bimRelationship.FromTableSchemaAndTableName];
 
-            if(!tos.Any(r => r.FromColumn.Name == bimRelationship.FromColumn.Name
-                && r.ToKey == bimRelationship.ToKey))
+            if (!tos.Any(r => r.FromColumn.Name == bimRelationship.FromColumn.Name
+                 && r.ToKey == bimRelationship.ToKey))
                 return false;
 
             return true;

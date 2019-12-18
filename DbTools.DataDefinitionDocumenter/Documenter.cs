@@ -172,7 +172,7 @@
             var fileName = _fileName ?? (DatabaseName?.Length == 0 ? "Database.xlsx" : DatabaseName + ".xlsx");
 
             var path = Context.DocumenterSettings?.WorkingDirectory;
-            
+
             Context.Logger.Log(LogSeverity.Information, "Writing Document file {FileName} to folder {Folder}", "Documenter", fileName, path);
 
             if (!string.IsNullOrEmpty(path))

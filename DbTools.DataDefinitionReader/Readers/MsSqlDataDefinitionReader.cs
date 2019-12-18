@@ -65,7 +65,7 @@ WHERE type = 'U'").Rows
                 AddTableDocumentation(sqlTable);
             }
 
-            var defaultSchema = Executer.Generator.Context. Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = Executer.Generator.Context.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
             ColumnDocumentationReader.GetColumnDocumentation(defaultSchema, sqlTable);
 
             return sqlTable;
