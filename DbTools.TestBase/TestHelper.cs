@@ -7,7 +7,9 @@
     using System.Linq;
     using System.Reflection;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
+    using Microsoft.Extensions.Configuration;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     public static class TestHelper
@@ -137,6 +139,24 @@
                     }
                 }
             }
+        }
+
+        public static Logger CreateLogger()
+        {
+            var logger = new Logger();
+
+            var configuration = Configuration.Load("testconfig");
+
+            var logConfiguration = configuration.GetSection("Log").Get<LogConfiguration>();
+
+            var iLogger = SerilogConfigurator.CreateLogger(logConfiguration);
+
+            var debugLogger = new DebugLogger();
+            debugLogger.Init(iLogger);
+
+            logger.LogEvent += debugLogger.OnLog;
+
+            return logger;
         }
     }
 }

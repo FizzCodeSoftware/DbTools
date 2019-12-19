@@ -33,7 +33,7 @@
 
             var context = new GeneratorContext
             {
-                Logger = new Logger(),
+                Logger = TestHelper.CreateLogger(),
                 Settings = Helper.GetDefaultSettings(sqlDialect)
             };
 

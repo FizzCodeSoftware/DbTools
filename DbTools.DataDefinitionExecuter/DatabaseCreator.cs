@@ -18,15 +18,9 @@
             _executer = sqlExecuter;
         }
 
-        public static DatabaseCreator FromConnectionStringSettings(DatabaseDefinition databaseDefinition, ConnectionStringWithProvider connectionStringWithProvider, Settings settings, Logger logger)
+        public static DatabaseCreator FromConnectionStringSettings(DatabaseDefinition databaseDefinition, ConnectionStringWithProvider connectionStringWithProvider, GeneratorContext context)
         {
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
-
-            var context = new GeneratorContext
-            {
-                Settings = settings,
-                Logger = logger
-            };
 
             var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);
 

@@ -81,14 +81,13 @@
 
             var dd = ddlReader.GetDatabaseDefinition();
 
-            ITableCustomizer customizer = null;
-
             var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
 
-            if (patternFileName != null)
-                customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
-
             var context = CreateDocumenterContext(settings, patternFileName);
+
+            ITableCustomizer customizer;
+            if (patternFileName != null)
+                context.Customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
 
             var generator = new CsGenerator(context, newDatabaseName, @namespace);
 
@@ -163,7 +162,7 @@
             if (patternFileName != null)
                 customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
 
-            customizer = customizer ?? new EmptyTableCustomizer();
+            customizer ??= new EmptyTableCustomizer();
 
             var context = new DocumenterContext
             {
