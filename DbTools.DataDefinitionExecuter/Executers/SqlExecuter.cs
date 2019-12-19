@@ -29,7 +29,7 @@
         public DbConnection OpenConnection()
         {
             // TODO log conn string without password?
-            Logger.Log(LogSeverity.Verbose, "Opening connection to {Database}.", "Executer", GetDatabase());
+            Log(LogSeverity.Verbose, "Opening connection to {Database}.", GetDatabase());
             var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(SqlDialect));
 
             var connection = dbf.CreateConnection();
@@ -84,6 +84,9 @@
         public virtual void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
             var connection = OpenConnection();
+
+            Log(LogSeverity.Verbose, "Executing non query {Query}.", sqlStatementWithParameters.Statement);
+
             var command = PrepareSqlCommand(sqlStatementWithParameters);
             command.Connection = connection;
             command.CommandTimeout = 60 * 60;
@@ -107,7 +110,7 @@
         {
             var connection = OpenConnection();
 
-            Logger.Log(LogSeverity.Verbose, "Executing query {Query}.", "Executer", sqlStatementWithParameters.Statement);
+            Log(LogSeverity.Verbose, "Executing query {Query}.", sqlStatementWithParameters.Statement);
 
             var command = PrepareSqlCommand(sqlStatementWithParameters);
             command.Connection = connection;
@@ -148,6 +151,9 @@
             object result;
 
             var connection = OpenConnection();
+
+            Log(LogSeverity.Verbose, "Executing scalar {Query}.", sqlStatementWithParameters.Statement);
+
             var command = PrepareSqlCommand(sqlStatementWithParameters);
             command.Connection = connection;
 
@@ -167,6 +173,12 @@
             }
 
             return result;
+        }
+
+        protected void Log(LogSeverity severity, string text, params object[] args )
+        {
+            var module = "Executer/" + SqlDialect.ToString();
+            Logger.Log(severity, text, module, args);
         }
     }
 }

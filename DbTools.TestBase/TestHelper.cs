@@ -145,9 +145,9 @@
         {
             var logger = new Logger();
 
-            var configuration = Configuration.Load("testconfig");
+            var configuration = Configuration.Load("testconfig", true);
 
-            var logConfiguration = configuration.GetSection("Log").Get<LogConfiguration>();
+            var logConfiguration = configuration?.GetSection("Log").Get<LogConfiguration>();
 
             var iLogger = SerilogConfigurator.CreateLogger(logConfiguration);
 

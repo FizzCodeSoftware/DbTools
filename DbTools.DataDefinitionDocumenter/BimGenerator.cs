@@ -22,7 +22,7 @@
 
         public void Generate(DatabaseDefinition databaseDefinition)
         {
-            Context.Logger.Log(LogSeverity.Information, "Starting on {DatabaseName}.", "BimGenerator", DatabaseName);
+            Log(LogSeverity.Information, "Starting on {DatabaseName}.", "BimGenerator", DatabaseName);
 
             var root = new BimGeneratorRoot
             {

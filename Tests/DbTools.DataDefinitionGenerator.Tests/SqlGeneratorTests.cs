@@ -26,7 +26,7 @@
             var context = new GeneratorContext
             {
                 Settings = TestHelper.GetDefaultTestSettings(sqlDialect),
-                Logger = new Logger()
+                Logger = TestHelper.CreateLogger()
             };
 
             var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);
@@ -49,7 +49,7 @@
 
             var context = new GeneratorContext
             {
-                Logger = new Logger(),
+                Logger = TestHelper.CreateLogger(),
                 Settings = Helper.GetDefaultSettings(sqlDialect)
             };
 

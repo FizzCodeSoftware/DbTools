@@ -48,7 +48,7 @@
 
         public void Document(DatabaseDefinition databaseDefinition)
         {
-            Context.Logger.Log(LogSeverity.Information, "Starting on {DatabaseName}.", "Documenter", DatabaseName);
+            Log(LogSeverity.Information, "Starting on {DatabaseName}.", "Documenter", DatabaseName);
 
             var tables = RemoveKnownTechnicalTables(databaseDefinition.GetTables());
 
@@ -166,14 +166,14 @@
                 AddTableToTableList(category, table, hasCategories);
             }
 
-            Context.Logger.Log(LogSeverity.Information, "Generating Document content.", "Documenter");
+            Log(LogSeverity.Information, "Generating Document content.", "Documenter");
             var content = DocumenterWriter.GetContent();
 
             var fileName = _fileName ?? (DatabaseName?.Length == 0 ? "Database.xlsx" : DatabaseName + ".xlsx");
 
             var path = Context.DocumenterSettings?.WorkingDirectory;
             
-            Context.Logger.Log(LogSeverity.Information, "Writing Document file {FileName} to folder {Folder}", "Documenter", fileName, path);
+            Log(LogSeverity.Information, "Writing Document file {FileName} to folder {Folder}", "Documenter", fileName, path);
 
             if (!string.IsNullOrEmpty(path))
             {

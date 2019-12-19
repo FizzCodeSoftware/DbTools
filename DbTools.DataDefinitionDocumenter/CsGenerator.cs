@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using System.Text;
+    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
 
     public class CsGenerator : DocumenterBase
@@ -19,6 +20,8 @@
 
         public void GenerateMultiFile(DatabaseDefinition databaseDefinition)
         {
+            Log(LogSeverity.Information, "Starting on {DatabaseName}.", "CsGenerator", DatabaseName);
+
             var sb = new StringBuilder();
             WritePartialMainClassHeader(sb);
             sb.AppendLine("}");
@@ -58,8 +61,13 @@
                 categoryInPath = categoryInPath.Replace('?', '？');
 
                 folder = Path.Combine(Context.DocumenterSettings.WorkingDirectory ?? @".\", DatabaseName, categoryInPath);
+
+                var fileName = Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, ".") + ".cs";
+
+                Context.Logger.Log(LogSeverity.Information, "Writing Document file {FileName} to folder {Folder}", "Documenter", fileName, folder);
+
                 Directory.CreateDirectory(folder);
-                File.WriteAllText(Path.Combine(folder, Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, ".") + ".cs"), sb.ToString(), Encoding.UTF8);
+                File.WriteAllText(Path.Combine(folder, fileName), sb.ToString(), Encoding.UTF8);
             }
         }
 

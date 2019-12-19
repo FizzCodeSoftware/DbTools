@@ -3,6 +3,7 @@
     using System;
     using System.Data.SQLite;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
@@ -30,6 +31,8 @@
 
         public void CreateDatabase()
         {
+            Log(LogSeverity.Verbose, "Create database.");
+
             if (_connection != null)
                 throw new Exception("Database already connected.");
 
@@ -44,6 +47,9 @@
 
         public void DropDatabase()
         {
+            Log(LogSeverity.Verbose, "Drop database.");
+
+
             if (_connection != null)
             {
                 if (_connection.State != System.Data.ConnectionState.Closed)
@@ -60,6 +66,8 @@
 
         public override void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
+            Log(LogSeverity.Verbose, "Executing non query {Query}.", sqlStatementWithParameters.Statement);
+
             using (var command = PrepareSqlCommand(sqlStatementWithParameters))
             {
                 command.Connection = _connection;
@@ -79,6 +87,8 @@
 
         public override RowSet ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
+            Log(LogSeverity.Verbose, "Executing query {Query}.", sqlStatementWithParameters.Statement);
+
             using (var command = PrepareSqlCommand(sqlStatementWithParameters))
             {
                 var rowSet = new RowSet();
@@ -118,6 +128,8 @@
 
         public override object ExecuteScalar(SqlStatementWithParameters sqlStatementWithParameters)
         {
+            Log(LogSeverity.Verbose, "Executing scalar {Query}.", sqlStatementWithParameters.Statement);
+
             using (var command = PrepareSqlCommand(sqlStatementWithParameters))
             {
                 try

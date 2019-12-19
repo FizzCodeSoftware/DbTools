@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
+﻿using FizzCode.DbTools.Common.Logger;
+
+namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     public abstract class DocumenterBase
     {
@@ -13,6 +15,11 @@
             DatabaseName = databaseName;
             Helper = new DocumenterHelper(context.Settings);
             Context = context;
+        }
+
+        protected void Log(LogSeverity severity, string text, params object[] args)
+        {
+            Context.Logger.Log(severity, text, args);
         }
     }
 }

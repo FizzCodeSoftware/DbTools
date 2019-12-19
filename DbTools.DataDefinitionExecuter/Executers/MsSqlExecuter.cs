@@ -3,6 +3,7 @@
     using System.Data.Common;
     using System.Data.SqlClient;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
@@ -52,6 +53,8 @@
             var connection = OpenConnectionMaster();
             try
             {
+                Log(LogSeverity.Verbose, "Executing query {Query}.", sqlStatementWithParameters.Statement);
+
                 var command = PrepareSqlCommand(sqlStatementWithParameters);
                 command.Connection = connection;
                 command.ExecuteNonQuery();
@@ -65,6 +68,7 @@
 
         public override DbConnection OpenConnectionMaster()
         {
+            Log(LogSeverity.Verbose, "Opening connection to Master.");
             var connection = new SqlConnection(ChangeInitialCatalog(""));
             connection.Open();
 

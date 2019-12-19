@@ -17,7 +17,7 @@
                 Settings = TestHelper.GetDefaultTestSettings(SqlDialect.MsSql),
                 DocumenterSettings = new DocumenterSettings(),
                 Customizer = customizer ?? new EmptyTableCustomizer(),
-                Logger = new Logger()
+                Logger = TestHelper.CreateLogger()
             };
 
             return context;
