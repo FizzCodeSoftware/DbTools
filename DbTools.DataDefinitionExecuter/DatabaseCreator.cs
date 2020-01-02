@@ -143,5 +143,10 @@
             var zeroOrOne = (int)_executer.ExecuteScalar(sql);
             return zeroOrOne == 0;
         }
+
+        public void CleanupDatabase()
+        {
+            _executer.CleanupDatabase();
+        }
     }
 }

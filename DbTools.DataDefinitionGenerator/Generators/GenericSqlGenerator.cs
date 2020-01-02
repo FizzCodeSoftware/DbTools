@@ -16,7 +16,7 @@
     public abstract class GenericSqlGenerator : ISqlGenerator
     {
         public virtual ISqlTypeMapper SqlTypeMapper { get; } = new GenericSqlTypeMapper();
-       
+
         public GeneratorContext Context { get; }
 
         protected GenericSqlGenerator(GeneratorContext context)
@@ -104,11 +104,13 @@
             return sb.ToString();
         }
 
-        public string CreateIndex(Index index)
+        public virtual string CreateIndex(Index index)
         {
-            var clusteredPrefix = index.Clustered == true
+            var clusteredPrefix = index.Clustered != null
+                ? index.Clustered == true
                 ? "CLUSTERED "
-                : "NONCLUSTERED ";
+                : "NONCLUSTERED "
+                : null;
 
             var sb = new StringBuilder();
             sb.Append("CREATE ")
@@ -119,7 +121,7 @@
                 .Append(GetSimplifiedSchemaAndTableName(index.SqlTable.SchemaAndTableName))
                 .AppendLine(" (")
                 .AppendLine(string.Join(", \r\n", index.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)} {c.OrderAsKeyword}"))) // Index column list + asc desc
-                .AppendLine(")");
+                .AppendLine(");");
 
             return sb.ToString();
         }

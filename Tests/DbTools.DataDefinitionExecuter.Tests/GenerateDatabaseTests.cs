@@ -20,9 +20,10 @@
         }
 
         [TestMethod]
-        public void GenerateForeignKeyCompositeTestDatabase()
+        [SqlDialects]
+        public void GenerateForeignKeyCompositeTestDatabase(SqlDialect sqlDialect)
         {
-            GenerateDatabase(new ForeignKeyCompositeTestsDb(), "MsSql");
+            GenerateDatabase(new ForeignKeyCompositeTestsDb(), sqlDialect.ToString());
         }
 
         public void GenerateDatabase(DatabaseDefinition dd, string connectionStringKey, bool isIntegrationTest = true)
@@ -50,17 +51,15 @@
             }
             finally
             {
-                var generator = SqlGeneratorFactory.CreateGenerator(SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName), context);
-
-                var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
-                executer.CleanupDatabase(dd);
+                databaseCreator.CleanupDatabase();
             }
         }
 
         [TestMethod]
-        public void GenerateDatabase_Index()
+        [SqlDialects]
+        public void GenerateDatabase_Index(SqlDialect sqlDialect)
         {
-            GenerateDatabase(new IndexTestDb(), "MsSql");
+            GenerateDatabase(new IndexTestDb(), sqlDialect.ToString());
         }
 
         [TestMethod]

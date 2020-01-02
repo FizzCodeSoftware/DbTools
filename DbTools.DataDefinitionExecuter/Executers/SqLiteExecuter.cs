@@ -49,7 +49,6 @@
         {
             Log(LogSeverity.Verbose, "Drop database.");
 
-
             if (_connection != null)
             {
                 if (_connection.State != System.Data.ConnectionState.Closed)
