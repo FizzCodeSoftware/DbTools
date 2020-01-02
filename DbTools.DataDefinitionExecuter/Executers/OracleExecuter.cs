@@ -23,12 +23,13 @@
 
         public override string GetDatabase()
         {
+            var oracleDatabaseName = Generator.Context.Settings.SqlDialectSpecificSettings.GetAs<string>("Oracle_Database_Name");
             throw new NotImplementedException("Oracle executer does not handle database name.");
         }
 
         public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd)
         {
-            var defaultSchema = Generator.Context. Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = Generator.Context.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
 
             if (dropIfExists && CheckIfUserExists(defaultSchema))
                 CleanupDatabase(dd);

@@ -15,13 +15,14 @@
     public static class TestHelper
     {
         private static readonly bool _forceIntegrationTests;
+        private static readonly IConfigurationRoot _configuration;
 
 #pragma warning disable CA1810 // Initialize reference type static fields inline
         static TestHelper()
 #pragma warning restore CA1810 // Initialize reference type static fields inline
         {
-            var configuration = Configuration.Load("testconfig", true);
-            var forceIntegrationTests = configuration["forceIntegrationTests"];
+            _configuration = Configuration.Load("testconfig", true);
+            var forceIntegrationTests = _configuration["forceIntegrationTests"];
             _forceIntegrationTests = forceIntegrationTests == "true";
         }
 
@@ -90,6 +91,11 @@
                 sqlDialectSpecificSettings["DefaultSchema"] = "dbo";
             }
 
+            if (sqlDialect == SqlDialect.Oracle)
+            {
+                sqlDialectSpecificSettings["OracleDatabaseName"] = _configuration["Oracle_Database_Name"];
+            }
+
             settings.SqlDialectSpecificSettings = sqlDialectSpecificSettings;
 
             return settings;
@@ -121,6 +127,7 @@
             DbProviderFactories.RegisterFactory("System.Data.SqlClient", System.Data.SqlClient.SqlClientFactory.Instance);
             DbProviderFactories.RegisterFactory("System.Data.SQLite", System.Data.SQLite.SQLiteFactory.Instance);
             DbProviderFactories.RegisterFactory("MySql.Data.MySqlClient", MySql.Data.MySqlClient.MySqlClientFactory.Instance);
+            DbProviderFactories.RegisterFactory("Oracle.ManagedDataAccess.Client", Oracle.ManagedDataAccess.Client.OracleClientFactory.Instance);
 
             lock (syncRoot)
             {
