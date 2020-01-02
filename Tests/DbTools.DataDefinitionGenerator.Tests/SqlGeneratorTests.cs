@@ -50,7 +50,7 @@
             var context = new GeneratorContext
             {
                 Logger = TestHelper.CreateLogger(),
-                Settings = Helper.GetDefaultSettings(sqlDialect)
+                Settings = Helper.GetDefaultSettings(sqlDialect, null)
             };
 
             var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);

@@ -62,12 +62,7 @@
 
         public static Settings GetDefaultTestSettings(SqlDialect sqlDialect)
         {
-            var settings = new Settings();
-
-            var sqlDialectSpecificSettings = new SqlDialectSpecificSettings
-            {
-                ["DefaultSchema"] = null
-            };
+            var settings = Helper.GetDefaultSettings(sqlDialect, _configuration);
 
             if (sqlDialect == SqlDialect.Oracle)
             {
@@ -83,20 +78,8 @@
 
                 var schemaName = assemblyName.Replace(".", "_", StringComparison.CurrentCultureIgnoreCase);
 
-                sqlDialectSpecificSettings["DefaultSchema"] = schemaName;
+                settings.SqlDialectSpecificSettings["DefaultSchema"] = schemaName;
             }
-
-            if (sqlDialect == SqlDialect.MsSql)
-            {
-                sqlDialectSpecificSettings["DefaultSchema"] = "dbo";
-            }
-
-            if (sqlDialect == SqlDialect.Oracle)
-            {
-                sqlDialectSpecificSettings["OracleDatabaseName"] = _configuration["Oracle_Database_Name"];
-            }
-
-            settings.SqlDialectSpecificSettings = sqlDialectSpecificSettings;
 
             return settings;
         }

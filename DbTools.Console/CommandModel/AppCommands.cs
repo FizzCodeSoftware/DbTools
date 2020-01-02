@@ -40,7 +40,7 @@
             var databaseName = sqlExecuter.GetDatabase();
 
             // TODO accept from argument
-            var settings = Helper.GetDefaultSettings(sqlDialect);
+            var settings = Helper.GetDefaultSettings(sqlDialect, Program.Configuration);
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings, CreateLogger());
 
@@ -75,7 +75,7 @@
                 connectionString
             );
 
-            var settings = Helper.GetDefaultSettings(sqlDialect);
+            var settings = Helper.GetDefaultSettings(sqlDialect, Program.Configuration);
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings, CreateLogger());
 
@@ -85,7 +85,6 @@
 
             var context = CreateDocumenterContext(settings, patternFileName);
 
-            ITableCustomizer customizer;
             if (patternFileName != null)
                 context.Customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
 
@@ -112,7 +111,7 @@
                 connectionString
             );
 
-            var settings = Helper.GetDefaultSettings(sqlDialect);
+            var settings = Helper.GetDefaultSettings(sqlDialect, Program.Configuration);
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings, CreateLogger());
 
@@ -147,7 +146,7 @@
             var context = new GeneratorContext
             {
                 Logger = CreateLogger(),
-                Settings = Helper.GetDefaultSettings(sqlDialect)
+                Settings = Helper.GetDefaultSettings(sqlDialect, Program.Configuration)
             };
 
             return context;

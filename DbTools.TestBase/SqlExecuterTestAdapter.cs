@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
@@ -34,7 +33,7 @@
             var context = new GeneratorContext
             {
                 Logger = TestHelper.CreateLogger(),
-                Settings = Helper.GetDefaultSettings(sqlDialect)
+                Settings = Helper.GetDefaultSettings(sqlDialect, Configuration)
             };
 
             if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))

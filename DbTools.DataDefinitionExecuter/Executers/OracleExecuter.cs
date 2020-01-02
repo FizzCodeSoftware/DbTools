@@ -23,8 +23,8 @@
 
         public override string GetDatabase()
         {
-            var oracleDatabaseName = Generator.Context.Settings.SqlDialectSpecificSettings.GetAs<string>("Oracle_Database_Name");
-            throw new NotImplementedException("Oracle executer does not handle database name.");
+            var oracleDatabaseName = Generator.Context.Settings.SqlDialectSpecificSettings.GetAs<string>("OracleDatabaseName");
+            return oracleDatabaseName;
         }
 
         public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd)
