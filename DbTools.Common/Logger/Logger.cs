@@ -16,7 +16,7 @@
             });
         }
 
-        public void LogOps(LogSeverity severity,  string text, params object[] args)
+        public void LogOps(LogSeverity severity, string text, params object[] args)
         {
             LogEvent?.Invoke(this, new LogEventArgs()
             {

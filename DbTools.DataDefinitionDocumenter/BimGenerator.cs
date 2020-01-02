@@ -65,7 +65,7 @@
                 var to = relationShipRegistrations.GetByFromTable(fromTable);
                 foreach (var rr in to)
                 {
-                    if(rr.FromTableSchemaAndTableName == rr.ToTableSchemaAndTableName)
+                    if (rr.FromTableSchemaAndTableName == rr.ToTableSchemaAndTableName)
                     {
                         Context.Logger.Log(LogSeverity.Warning, "Table {TableName} is referencing itself. SKIPPED.", "BimGenerator", fromTable);
                         continue;

@@ -9,7 +9,7 @@
 
     public class GeneratorContext
     {
-        public Settings Settings { get; set;  }
+        public Settings Settings { get; set; }
         public Logger Logger { get; set; }
     }
 
