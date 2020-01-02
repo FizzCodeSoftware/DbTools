@@ -13,7 +13,9 @@
 
         [DataTestMethod]
         [SqlDialects]
+#pragma warning disable IDE1006 // Naming Styles
         public void _010_GenerateScriptAndCreateTable(SqlDialect sqlDialect)
+#pragma warning restore IDE1006 // Naming Styles
         {
             _sqlExecuterTestAdapter.InitializeAndCheck(sqlDialect);
             TestHelper.CheckProvider(sqlDialect);
@@ -41,7 +43,9 @@
 
         [DataTestMethod]
         [SqlDialects]
+#pragma warning disable IDE1006 // Naming Styles
         public void _020_DropTable(SqlDialect sqlDialect)
+#pragma warning restore IDE1006 // Naming Styles
         {
             _sqlExecuterTestAdapter.InitializeAndCheck(sqlDialect);
 
