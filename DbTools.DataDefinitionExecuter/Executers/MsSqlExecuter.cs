@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
+    using System;
     using System.Data.Common;
     using System.Data.SqlClient;
     using FizzCode.DbTools.Common;
@@ -46,19 +47,26 @@
             ExecuteNonQueryMaster(sql);
         }
 
-        protected override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)
+        public override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)
         {
             SqlConnection.ClearAllPools(); // force closing connections to normal database to be able to exetute DDLs.
 
             var connection = OpenConnectionMaster();
+            Log(LogSeverity.Verbose, "Executing query {Query} on master.", sqlStatementWithParameters.Statement);
+
+            var command = PrepareSqlCommand(sqlStatementWithParameters);
+            command.Connection = connection;
+            
             try
             {
-                Log(LogSeverity.Verbose, "Executing query {Query}.", sqlStatementWithParameters.Statement);
-
-                var command = PrepareSqlCommand(sqlStatementWithParameters);
-                command.Connection = connection;
                 command.ExecuteNonQuery();
             }
+            catch (DbException ex)
+            {
+                var newEx = new Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
+                throw newEx;
+            }
+
             finally
             {
                 connection.Close();

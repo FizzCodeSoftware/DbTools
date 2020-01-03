@@ -117,7 +117,7 @@
             }
         }
 
-        protected override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)
+        public override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)
         {
             using (var command = PrepareSqlCommand(sqlStatementWithParameters))
             {

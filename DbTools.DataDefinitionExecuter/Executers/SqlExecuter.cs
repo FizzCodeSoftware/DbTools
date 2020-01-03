@@ -24,7 +24,7 @@
             ConnectionStringWithProvider = connectionStringWithProvider;
         }
 
-        protected abstract void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters);
+        public abstract void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters);
 
         public DbConnection OpenConnection()
         {

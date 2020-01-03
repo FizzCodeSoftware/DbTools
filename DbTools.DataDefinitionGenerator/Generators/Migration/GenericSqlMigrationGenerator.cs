@@ -11,6 +11,8 @@
     public interface ISqlMigrationGenerator
     {
         ISqlGenerator Generator { get; }
+        string CreateTable(TableNew tableNew);
+        string DropTable(TableDelete TableDelete);
     }
 
     public abstract class GenericSqlMigrationGenerator : ISqlMigrationGenerator

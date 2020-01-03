@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\DbTools.Common\DbTools.Common.csproj" />
+    <ProjectReference Include="..\..\DbTools.DataDefinitionExecuter\DbTools.DataDefinitionExecuter.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinitionGenerator\DbTools.DataDefinitionGenerator.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
     <ProjectReference Include="..\..\DbTools.TestBase\DbTools.TestBase.csproj" />

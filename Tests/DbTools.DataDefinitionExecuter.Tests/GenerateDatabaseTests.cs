@@ -26,11 +26,11 @@
             GenerateDatabase(new ForeignKeyCompositeTestsDb(), sqlDialect.ToString());
         }
 
-        public void GenerateDatabase(DatabaseDefinition dd, string connectionStringKey, bool isIntegrationTest = true)
+        public static void GenerateDatabase(DatabaseDefinition dd, string connectionStringKey)
         {
             var connectionStringWithProvider = SetupAssemblyInitializer.ConnectionStrings[connectionStringKey];
 
-            if (isIntegrationTest && !TestHelper.ShouldRunIntegrationTest(connectionStringWithProvider.ProviderName))
+            if (!TestHelper.ShouldRunIntegrationTest(connectionStringWithProvider.ProviderName))
                 Assert.Inconclusive("Test is skipped, integration tests are not running.");
 
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);

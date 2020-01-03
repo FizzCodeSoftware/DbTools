@@ -1,40 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
     using System.Linq;
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
-
-    public abstract class DatabaseTask
-    {
-        protected DatabaseTask(SqlExecuter sqlExecuter)
-        {
-            Executer = sqlExecuter;
-        }
-
-        protected SqlExecuter Executer { get; }
-    }
-
-    public class DatabaseMigrator : DatabaseTask
-    {
-        public DatabaseMigrator(SqlExecuter sqlExecuter) : base(sqlExecuter)
-        {
-        }
-
-        public static DatabaseMigrator FromConnectionStringSettings(ConnectionStringWithProvider connectionStringWithProvider, GeneratorContext context)
-        {
-            /*var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
-
-            var generator = SqlGeneratorFactory.CreateMigrationGenerator(sqlDialect, context);
-
-            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
-
-            return new DatabaseMigrator(executer);*/
-            return null;
-        }
-    }
 
     public class DatabaseCreator : DatabaseTask
     {
