@@ -7,12 +7,6 @@
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
 
-    public class GeneratorContext
-    {
-        public Settings Settings { get; set; }
-        public Logger Logger { get; set; }
-    }
-
     public abstract class GenericSqlGenerator : ISqlGenerator
     {
         public virtual ISqlTypeMapper SqlTypeMapper { get; } = new GenericSqlTypeMapper();

@@ -7,15 +7,42 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
-    public class DatabaseCreator
+    public abstract class DatabaseTask
     {
-        private readonly SqlExecuter _executer;
+        protected DatabaseTask(SqlExecuter sqlExecuter)
+        {
+            Executer = sqlExecuter;
+        }
+
+        protected SqlExecuter Executer { get; }
+    }
+
+    public class DatabaseMigrator : DatabaseTask
+    {
+        public DatabaseMigrator(SqlExecuter sqlExecuter) : base(sqlExecuter)
+        {
+        }
+
+        public static DatabaseMigrator FromConnectionStringSettings(ConnectionStringWithProvider connectionStringWithProvider, GeneratorContext context)
+        {
+            /*var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
+
+            var generator = SqlGeneratorFactory.CreateMigrationGenerator(sqlDialect, context);
+
+            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
+
+            return new DatabaseMigrator(executer);*/
+            return null;
+        }
+    }
+
+    public class DatabaseCreator : DatabaseTask
+    {
         public DatabaseDefinition DatabaseDefinition { get; }
 
-        public DatabaseCreator(DatabaseDefinition databaseDefinition, SqlExecuter sqlExecuter)
+        public DatabaseCreator(DatabaseDefinition databaseDefinition, SqlExecuter sqlExecuter) : base(sqlExecuter)
         {
             DatabaseDefinition = databaseDefinition;
-            _executer = sqlExecuter;
         }
 
         public static DatabaseCreator FromConnectionStringSettings(DatabaseDefinition databaseDefinition, ConnectionStringWithProvider connectionStringWithProvider, GeneratorContext context)
@@ -31,7 +58,7 @@
 
         public void ReCreateDatabase(bool createTables)
         {
-            _executer.InitializeDatabase(true, DatabaseDefinition);
+            Executer.InitializeDatabase(true, DatabaseDefinition);
 
             if (createTables)
             {
@@ -62,61 +89,61 @@
         {
             foreach (var schemaName in databaseDefinition.GetSchemaNames())
             {
-                var sql = _executer.Generator.CreateSchema(schemaName);
-                _executer.ExecuteNonQuery(sql);
+                var sql = Executer.Generator.CreateSchema(schemaName);
+                Executer.ExecuteNonQuery(sql);
             }
         }
 
         public void CreateTable(SqlTable table)
         {
-            var sql = _executer.Generator.CreateTable(table);
-            _executer.ExecuteNonQuery(sql);
+            var sql = Executer.Generator.CreateTable(table);
+            Executer.ExecuteNonQuery(sql);
         }
 
         public void CreateForeignkeys(SqlTable table)
         {
-            var sql = _executer.Generator.CreateForeignKeys(table);
+            var sql = Executer.Generator.CreateForeignKeys(table);
             if (!string.IsNullOrEmpty(sql))
-                _executer.ExecuteNonQuery(sql);
+                Executer.ExecuteNonQuery(sql);
         }
 
         public void CreateIndexes(SqlTable table)
         {
-            var sql = _executer.Generator.CreateIndexes(table);
+            var sql = Executer.Generator.CreateIndexes(table);
             if (!string.IsNullOrEmpty(sql))
-                _executer.ExecuteNonQuery(sql);
+                Executer.ExecuteNonQuery(sql);
         }
 
         public void CreateDbDescriptions(SqlTable table)
         {
-            var sqlStatementWithParameters = _executer.Generator.CreateDbTableDescription(table);
+            var sqlStatementWithParameters = Executer.Generator.CreateDbTableDescription(table);
             if (sqlStatementWithParameters != null)
-                _executer.ExecuteNonQuery(sqlStatementWithParameters);
+                Executer.ExecuteNonQuery(sqlStatementWithParameters);
 
             foreach (var column in table.Columns)
             {
-                sqlStatementWithParameters = _executer.Generator.CreateDbColumnDescription(column);
+                sqlStatementWithParameters = Executer.Generator.CreateDbColumnDescription(column);
                 if (sqlStatementWithParameters != null)
-                    _executer.ExecuteNonQuery(sqlStatementWithParameters);
+                    Executer.ExecuteNonQuery(sqlStatementWithParameters);
             }
         }
 
         public void DropAllViews()
         {
-            var sql = _executer.Generator.DropAllViews();
-            _executer.ExecuteNonQuery(sql);
+            var sql = Executer.Generator.DropAllViews();
+            Executer.ExecuteNonQuery(sql);
         }
 
         public void DropAllForeignKeys()
         {
-            var sql = _executer.Generator.DropAllForeignKeys();
-            _executer.ExecuteNonQuery(sql);
+            var sql = Executer.Generator.DropAllForeignKeys();
+            Executer.ExecuteNonQuery(sql);
         }
 
         public void DropAllTables()
         {
-            var sql = _executer.Generator.DropAllTables();
-            _executer.ExecuteNonQuery(sql);
+            var sql = Executer.Generator.DropAllTables();
+            Executer.ExecuteNonQuery(sql);
         }
 
         public void DropAllSchemas()
@@ -125,28 +152,28 @@
                 .GetSchemaNames()
                 .ToList();
 
-            var sql = _executer.Generator.DropSchemas(schemaNames);
-            _executer.ExecuteNonQuery(sql);
+            var sql = Executer.Generator.DropSchemas(schemaNames);
+            Executer.ExecuteNonQuery(sql);
         }
 
         public bool IsTableExists(SqlTable table)
         {
-            var sql = _executer.Generator.TableExists(table);
-            var zeroOrOne = (int)_executer.ExecuteScalar(sql);
+            var sql = Executer.Generator.TableExists(table);
+            var zeroOrOne = (int)Executer.ExecuteScalar(sql);
 
             return zeroOrOne == 1;
         }
 
         public bool IsTableEmpty(SqlTable table)
         {
-            var sql = _executer.Generator.TableNotEmpty(table);
-            var zeroOrOne = (int)_executer.ExecuteScalar(sql);
+            var sql = Executer.Generator.TableNotEmpty(table);
+            var zeroOrOne = (int)Executer.ExecuteScalar(sql);
             return zeroOrOne == 0;
         }
 
         public void CleanupDatabase()
         {
-            _executer.CleanupDatabase();
+            Executer.CleanupDatabase();
         }
     }
 }

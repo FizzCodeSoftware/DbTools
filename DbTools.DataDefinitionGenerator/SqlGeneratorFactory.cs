@@ -15,5 +15,16 @@
                 _ => throw new NotImplementedException($"Not implemented {dialect}."),
             };
         }
+
+        public static ISqlMigrationGenerator CreateMigrationGenerator(SqlDialect dialect, GeneratorContext context)
+        {
+            return dialect switch
+            {
+                SqlDialect.SqLite => new SqLiteMigrationGenerator(context),
+                SqlDialect.MsSql => new MsSqlMigrationGenerator(context),
+                SqlDialect.Oracle => new OracleMigrationGenerator(context),
+                _ => throw new NotImplementedException($"Not implemented {dialect}."),
+            };
+        }
     }
 }
