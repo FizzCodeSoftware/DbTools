@@ -29,13 +29,13 @@
         public void NewTable(TableNew tableNew)
         {
             var sql = MigrationGenerator.CreateTable(tableNew);
-            Executer.ExecuteNonQueryMaster(sql);
+            Executer.ExecuteNonQuery(sql);
         }
 
         public void DeleteTable(TableDelete tableDelete)
         {
             var sql = MigrationGenerator.DropTable(tableDelete);
-            Executer.ExecuteNonQueryMaster(sql);
+            Executer.ExecuteNonQuery(sql);
         }
     }
 }

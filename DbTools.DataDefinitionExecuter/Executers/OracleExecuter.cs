@@ -111,7 +111,7 @@
             }
         }
 
-        public override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)
+        protected override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)
         {
             ExecuteQuery(sqlStatementWithParameters);
         }

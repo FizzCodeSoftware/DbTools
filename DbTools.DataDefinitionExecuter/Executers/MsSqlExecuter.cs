@@ -47,7 +47,7 @@
             ExecuteNonQueryMaster(sql);
         }
 
-        public override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)
+        protected override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)
         {
             SqlConnection.ClearAllPools(); // force closing connections to normal database to be able to exetute DDLs.
 
@@ -56,7 +56,7 @@
 
             var command = PrepareSqlCommand(sqlStatementWithParameters);
             command.Connection = connection;
-            
+
             try
             {
                 command.ExecuteNonQuery();
@@ -66,7 +66,6 @@
                 var newEx = new Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
                 throw newEx;
             }
-
             finally
             {
                 connection.Close();

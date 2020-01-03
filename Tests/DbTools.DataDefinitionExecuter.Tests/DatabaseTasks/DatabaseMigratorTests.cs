@@ -29,9 +29,14 @@
                 Logger = TestHelper.CreateLogger()
             };
 
-            var databaseMigrator = DatabaseMigrator.FromConnectionStringSettings(connectionStringWithProvider, context);
+            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);
+            var migrationGenerator = SqlGeneratorFactory.CreateMigrationGenerator(sqlDialect, context);
 
-            var databaseCreator = DatabaseCreator.FromConnectionStringSettings(new TestDatabaseSimple(), connectionStringWithProvider, context);
+            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
+
+            var databaseMigrator = new DatabaseMigrator(executer, migrationGenerator);
+
+            var databaseCreator = new DatabaseCreator(new TestDatabaseSimple(), executer);
 
             try
             {

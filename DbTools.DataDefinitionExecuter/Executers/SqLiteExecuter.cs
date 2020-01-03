@@ -90,6 +90,7 @@
 
             using (var command = PrepareSqlCommand(sqlStatementWithParameters))
             {
+                command.Connection = _connection;
                 var rowSet = new RowSet();
                 using (var sqlReader = command.ExecuteReader())
                 {
@@ -117,7 +118,7 @@
             }
         }
 
-        public override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)
+        protected override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)
         {
             using (var command = PrepareSqlCommand(sqlStatementWithParameters))
             {

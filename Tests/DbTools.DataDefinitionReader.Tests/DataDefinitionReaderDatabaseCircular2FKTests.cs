@@ -21,8 +21,6 @@
     [TestClass]
     public class DataDefinitionReaderDatabaseCircular2FKTests : DataDefinitionReaderTests
     {
-        //private static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new SqlExecuterTestAdapter();
-
         [DataTestMethod]
         [SqlDialects]
         public void CreateTables(SqlDialect sqlDialect)

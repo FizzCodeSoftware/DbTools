@@ -2,8 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+
     <IsPackable>false</IsPackable>
-    <CodeAnalysisRuleSet>..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
+
+    <AssemblyName>FizzCode.DbTools.DataDefinitionExecuterMigrationIntegrationTests</AssemblyName>
+
+    <RootNamespace>FizzCode.DbTools.DataDefinitionExecuterMigrationIntegrationTests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,7 +22,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\DbTools.Common\DbTools.Common.csproj" />
+    <ProjectReference Include="..\..\DbTools.Configuration\DbTools.Configuration.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinitionExecuter\DbTools.DataDefinitionExecuter.csproj" />
+    <ProjectReference Include="..\..\DbTools.DataDefinitionGenerator\DbTools.DataDefinitionGenerator.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinitionReader\DbTools.DataDefinitionReader.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
     <ProjectReference Include="..\..\DbTools.TestBase\DbTools.TestBase.csproj" />
@@ -26,6 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="testconfig-local.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="testconfig.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

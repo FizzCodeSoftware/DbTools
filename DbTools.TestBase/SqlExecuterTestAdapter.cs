@@ -30,15 +30,15 @@
 
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
 
-            var context = new GeneratorContext
+            Context = new GeneratorContext
             {
                 Logger = TestHelper.CreateLogger(),
-                Settings = Helper.GetDefaultSettings(sqlDialect, Configuration)
+                Settings = TestHelper.GetDefaultTestSettings(sqlDialect)
             };
 
             if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
             {
-                var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);
+                var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, Context);
                 var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
                 sqlExecutersAndDialects.Add(connectionStringKey, (sqlExecuter, sqlDialect));
 
@@ -51,6 +51,8 @@
 
             return connectionStringWithProvider;
         }
+
+        public GeneratorContext Context { get; private set; }
 
         public void Cleanup()
         {
