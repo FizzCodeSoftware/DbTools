@@ -16,7 +16,8 @@
         public void CreateTables(SqlDialect sqlDialect)
         {
             var dd = new ForeignKeyCompositeTestsDb();
-            _sqlExecuterTestAdapter.InitializeAndCheck(sqlDialect, dd);
+            _sqlExecuterTestAdapter.Check(sqlDialect);
+            _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString(), dd);
 
             var creator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
             creator.ReCreateDatabase(true);
@@ -27,7 +28,7 @@
         public void ReadTables(SqlDialect sqlDialect)
         {
             TestHelper.CheckFeature(sqlDialect, "ReadDdl");
-            TestHelper.CheckProvider(sqlDialect);
+            TestHelper.CheckProvider(sqlDialect, _sqlExecuterTestAdapter.ConnectionStrings.All);
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(sqlDialect, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
             var db = ddlReader.GetDatabaseDefinition();

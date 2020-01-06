@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator.Tests
 {
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,8 +16,8 @@
         public void _010_GenerateScriptAndCreateTable(SqlDialect sqlDialect)
 #pragma warning restore IDE1006 // Naming Styles
         {
-            _sqlExecuterTestAdapter.InitializeAndCheck(sqlDialect);
-            TestHelper.CheckProvider(sqlDialect);
+            _sqlExecuterTestAdapter.Check(sqlDialect);
+            _sqlExecuterTestAdapter.InitializeAndCreate(sqlDialect.ToString());
 
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
             var column = table.AddInt32("Id");
@@ -47,7 +46,8 @@
         public void _020_DropTable(SqlDialect sqlDialect)
 #pragma warning restore IDE1006 // Naming Styles
         {
-            _sqlExecuterTestAdapter.InitializeAndCheck(sqlDialect);
+            _sqlExecuterTestAdapter.Check(sqlDialect);
+            _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString());
 
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
 

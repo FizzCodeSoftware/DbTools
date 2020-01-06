@@ -25,8 +25,9 @@
         [SqlDialects]
         public void CreateTables(SqlDialect sqlDialect)
         {
+            _sqlExecuterTestAdapter.Check(sqlDialect);
             var dd = new TestDatabaseCircular2FK();
-            _sqlExecuterTestAdapter.InitializeAndCheck(sqlDialect, dd);
+            _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString(), dd);
             var creator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
             creator.ReCreateDatabase(true);
         }
@@ -36,7 +37,7 @@
         public void ReadTables(SqlDialect sqlDialect)
         {
             TestHelper.CheckFeature(sqlDialect, "ReadDdl");
-            TestHelper.CheckProvider(sqlDialect);
+            TestHelper.CheckProvider(sqlDialect, _sqlExecuterTestAdapter.ConnectionStrings.All);
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(sqlDialect, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
             _ = ddlReader.GetDatabaseDefinition();

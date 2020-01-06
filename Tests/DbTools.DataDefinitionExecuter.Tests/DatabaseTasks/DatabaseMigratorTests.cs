@@ -10,18 +10,15 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class DatabaseMigratorTests
+    public class DatabaseMigratorTests : DataDefinitionExecuterTests
     {
         [TestMethod]
         [SqlDialects]
         public void NewTableTest(SqlDialect sqlDialect)
         {
-            var connectionStringWithProvider = SetupAssemblyInitializer.ConnectionStrings[sqlDialect.ToString()];
-
-            if (!TestHelper.ShouldRunIntegrationTest(connectionStringWithProvider.ProviderName))
-                Assert.Inconclusive("Test is skipped, integration tests are not running.");
-
-            TestHelper.CheckProvider(sqlDialect);
+            _sqlExecuterTestAdapter.Check(sqlDialect);
+            var dd = new TestDatabaseSimple();
+            _sqlExecuterTestAdapter.InitializeAndCreate(sqlDialect.ToString(), dd);
 
             var context = new GeneratorContext
             {
@@ -29,35 +26,23 @@
                 Logger = TestHelper.CreateLogger()
             };
 
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);
             var migrationGenerator = SqlGeneratorFactory.CreateMigrationGenerator(sqlDialect, context);
 
-            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
+            var executer = _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString());
 
             var databaseMigrator = new DatabaseMigrator(executer, migrationGenerator);
+            var tableNew = new TableNew
 
-            var databaseCreator = new DatabaseCreator(new TestDatabaseSimple(), executer);
-
-            try
             {
-                databaseCreator.ReCreateDatabase(true);
+                SchemaAndTableName = "NewTableToMigrate"
+            };
+            ((SqlTable)tableNew).AddInt32("Id", false).SetPK().SetIdentity();
 
-                var tableNew = new TableNew
-                {
-                    SchemaAndTableName = "NewTableToMigrate"
-                };
-                ((SqlTable)tableNew).AddInt32("Id", false).SetPK().SetIdentity();
+            new PrimaryKeyNamingDefaultStrategy().SetPrimaryKeyName(tableNew.Properties.OfType<PrimaryKey>().First());
 
-                new PrimaryKeyNamingDefaultStrategy().SetPrimaryKeyName(tableNew.Properties.OfType<PrimaryKey>().First());
+            ((SqlTable)tableNew).AddNVarChar("Name", 100);
 
-                ((SqlTable)tableNew).AddNVarChar("Name", 100);
-
-                databaseMigrator.NewTable(tableNew);
-            }
-            finally
-            {
-                databaseCreator.CleanupDatabase();
-            }
+            databaseMigrator.NewTable(tableNew);
         }
     }
 }

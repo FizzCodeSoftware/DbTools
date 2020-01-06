@@ -5,45 +5,32 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.DataDefinitionExecuter;
-    using FizzCode.DbTools.DataDefinitionGenerator;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class GenerateDatabaseTests
+    public class GenerateDatabaseTests : DataDefinitionExecuterTests
     {
         [TestMethod]
         [SqlDialects]
         public void GenerateTestDatabaseSimple(SqlDialect sqlDialect)
         {
-            GenerateDatabase(new TestDatabaseSimple(), sqlDialect.ToString());
+            GenerateDatabase(new TestDatabaseSimple(), sqlDialect);
         }
 
         [TestMethod]
         [SqlDialects]
         public void GenerateForeignKeyCompositeTestDatabase(SqlDialect sqlDialect)
         {
-            GenerateDatabase(new ForeignKeyCompositeTestsDb(), sqlDialect.ToString());
+            GenerateDatabase(new ForeignKeyCompositeTestsDb(), sqlDialect);
         }
 
-        public static void GenerateDatabase(DatabaseDefinition dd, string connectionStringKey)
+        public static void GenerateDatabase(DatabaseDefinition dd, SqlDialect sqlDialect)
         {
-            var connectionStringWithProvider = SetupAssemblyInitializer.ConnectionStrings[connectionStringKey];
+            _sqlExecuterTestAdapter.Check(sqlDialect);
+            _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString(), dd);
 
-            if (!TestHelper.ShouldRunIntegrationTest(connectionStringWithProvider.ProviderName))
-                Assert.Inconclusive("Test is skipped, integration tests are not running.");
-
-            var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
-
-            TestHelper.CheckProvider(sqlDialect);
-
-            var context = new GeneratorContext
-            {
-                Settings = TestHelper.GetDefaultTestSettings(sqlDialect),
-                Logger = TestHelper.CreateLogger()
-            };
-
-            var databaseCreator = DatabaseCreator.FromConnectionStringSettings(dd, connectionStringWithProvider, context);
+            var databaseCreator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
 
             try
             {
@@ -59,19 +46,19 @@
         [SqlDialects]
         public void GenerateDatabase_Index(SqlDialect sqlDialect)
         {
-            GenerateDatabase(new IndexTestDb(), sqlDialect.ToString());
+            GenerateDatabase(new IndexTestDb(), sqlDialect);
         }
 
         [TestMethod]
         public void GenerateDatabase_TableDescription()
         {
-            GenerateDatabase(new TableDescriptionTestDb(), "MsSql");
+            GenerateDatabase(new TableDescriptionTestDb(), SqlDialect.MsSql);
         }
 
         [TestMethod]
         public void GenerateDatabase_ColumnDescription()
         {
-            GenerateDatabase(new ColumnDescriptionTestDb(), "MsSql");
+            GenerateDatabase(new ColumnDescriptionTestDb(), SqlDialect.MsSql);
         }
 
         public class IndexTestDb : DatabaseDeclaration
@@ -107,7 +94,7 @@
         [TestMethod]
         public void GenerateDatabase_DefaultValue()
         {
-            GenerateDatabase(new DefaultValueTestDb(), "MsSql");
+            GenerateDatabase(new DefaultValueTestDb(), SqlDialect.MsSql);
         }
 
         public class DefaultValueTestDb : DatabaseDeclaration
@@ -123,13 +110,13 @@
         [TestMethod]
         public void DatabaseDefinitionWithSchemaTableNameSeparator()
         {
-            GenerateDatabase(new SchemaTableNameSeparatorTestDb(), "MsSql");
+            GenerateDatabase(new SchemaTableNameSeparatorTestDb(), SqlDialect.MsSql);
         }
 
         [TestMethod]
         public void DatabaseDefinitionWithSchemaAndDefaultSchema()
         {
-            GenerateDatabase(new SchemaTableNameDefaultSchemaTestDb(), "MsSql");
+            GenerateDatabase(new SchemaTableNameDefaultSchemaTestDb(), SqlDialect.MsSql);
         }
 
         public class SchemaTableNameSeparatorTestDb : DatabaseDeclaration

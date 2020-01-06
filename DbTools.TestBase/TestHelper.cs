@@ -8,6 +8,7 @@
     using System.Reflection;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using Microsoft.Extensions.Configuration;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -94,40 +95,43 @@
                 Assert.Inconclusive($"Test is skipped, feature {feature} is not implemented (yet). ({featureSupport.Description}).");
         }
 
-        public static void CheckProvider(SqlDialect sqlDialect)
+        public static void CheckProvider(SqlDialect sqlDialect, IEnumerable<ConnectionStringWithProvider> connectionStringWithProviders)
         {
-            CheckAndRegisterInstalledProviders();
-            if (!_sqlDialectWithInstalledProviders.Contains(sqlDialect))
-                Assert.Inconclusive($"Test is skipped, .Net Framework Data Provider is not installed for {sqlDialect.ToString()} dialect, provier name: {SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect)}");
+            RegisterProviders();
+            var usedSqlDialects = GetSqlDialectsWithConfiguredConnectionStrting(connectionStringWithProviders);
+            if (!usedSqlDialects.Contains(sqlDialect))
+                Assert.Inconclusive($"Test is skipped, .Net Framework Data Provider is not usabe for {sqlDialect.ToString()} dialect, provider name: {SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect)}. No valid connection string is configured.");
         }
 
-        private static List<SqlDialect> _sqlDialectWithInstalledProviders;
+        private static List<SqlDialect> _sqlDialectsWithConfiguredConnectionStrting;
 
-        private static readonly object syncRoot = new object();
-
-        private static void CheckAndRegisterInstalledProviders()
+        private static List<SqlDialect> GetSqlDialectsWithConfiguredConnectionStrting(IEnumerable<ConnectionStringWithProvider> connectionStringCollection)
         {
-            DbProviderFactories.RegisterFactory("System.Data.SqlClient", System.Data.SqlClient.SqlClientFactory.Instance);
-            DbProviderFactories.RegisterFactory("System.Data.SQLite", System.Data.SQLite.SQLiteFactory.Instance);
-            DbProviderFactories.RegisterFactory("MySql.Data.MySqlClient", MySql.Data.MySqlClient.MySqlClientFactory.Instance);
-            DbProviderFactories.RegisterFactory("Oracle.ManagedDataAccess.Client", Oracle.ManagedDataAccess.Client.OracleClientFactory.Instance);
-
-            lock (syncRoot)
+            if (_sqlDialectsWithConfiguredConnectionStrting == null)
             {
-                if (_sqlDialectWithInstalledProviders == null)
+                _sqlDialectsWithConfiguredConnectionStrting = new List<SqlDialect>();
+                foreach (var connectionStringWithProvider in connectionStringCollection)
                 {
-                    _sqlDialectWithInstalledProviders = new List<SqlDialect>();
-
-                    var array = Enum.GetValues(typeof(SqlDialect));
-                    foreach (var sqlDialect in array.Cast<SqlDialect>())
-                    {
-                        var providerName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect);
-                        if (DbProviderFactories.TryGetFactory(providerName, out _))
-                        {
-                            _sqlDialectWithInstalledProviders.Add(sqlDialect);
-                        }
-                    }
+                    if (!string.IsNullOrEmpty(connectionStringWithProvider.ConnectionString))
+                        _sqlDialectsWithConfiguredConnectionStrting.Add(SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName));
                 }
+            }
+
+            return _sqlDialectsWithConfiguredConnectionStrting;
+        }
+
+        private static bool _areDbProviderFactoriesRegistered;
+
+        private static void RegisterProviders()
+        {
+            if (!_areDbProviderFactoriesRegistered)
+            {
+                DbProviderFactories.RegisterFactory("System.Data.SqlClient", System.Data.SqlClient.SqlClientFactory.Instance);
+                DbProviderFactories.RegisterFactory("System.Data.SQLite", System.Data.SQLite.SQLiteFactory.Instance);
+                DbProviderFactories.RegisterFactory("MySql.Data.MySqlClient", MySql.Data.MySqlClient.MySqlClientFactory.Instance);
+                DbProviderFactories.RegisterFactory("Oracle.ManagedDataAccess.Client", Oracle.ManagedDataAccess.Client.OracleClientFactory.Instance);
+
+                _areDbProviderFactoriesRegistered = true;
             }
         }
 

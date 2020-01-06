@@ -23,16 +23,12 @@
             // Detect changes (one new table)
             // Execute changes/migration
 
-            var connectionStringWithProvider = SetupAssemblyInitializer.ConnectionStrings[sqlDialect.ToString()];
-            if (!TestHelper.ShouldRunIntegrationTest(connectionStringWithProvider.ProviderName))
-                Assert.Inconclusive("Test is skipped, integration tests are not running.");
-
+            var dd = new TestDatabaseSimple();
+            _sqlExecuterTestAdapter.Check(sqlDialect);
+            _sqlExecuterTestAdapter.InitializeAndCreate(sqlDialect.ToString(), dd);
             TestHelper.CheckFeature(sqlDialect, "ReadDdl");
 
-            var dd = new TestDatabaseSimple();
-            _sqlExecuterTestAdapter.InitializeAndCheck(sqlDialect, dd);
-
-            var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()),  SqlGeneratorFactory.CreateMigrationGenerator(sqlDialect, _sqlExecuterTestAdapter.Context));
+            var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()),  SqlGeneratorFactory.CreateMigrationGenerator(sqlDialect, _sqlExecuterTestAdapter.GetContext(sqlDialect)));
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(sqlDialect, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
             var db = ddlReader.GetDatabaseDefinition();
@@ -41,11 +37,11 @@
             {
                 SchemaAndTableName = "NewTableToMigrate"
             };
-            ((SqlTable)newTable).AddInt32("Id", false).SetPK().SetIdentity();
+            newTable.AddInt32("Id", false).SetPK().SetIdentity();
 
             new PrimaryKeyNamingDefaultStrategy().SetPrimaryKeyName(newTable.Properties.OfType<PrimaryKey>().First());
 
-            ((SqlTable)newTable).AddNVarChar("Name", 100);
+            newTable.AddNVarChar("Name", 100);
 
             dd.AddTable(newTable);
 
