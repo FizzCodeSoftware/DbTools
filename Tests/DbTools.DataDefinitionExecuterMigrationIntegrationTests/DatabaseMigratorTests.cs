@@ -3,6 +3,7 @@
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Migration;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.DataDefinitionExecuter;
     using FizzCode.DbTools.DataDefinitionGenerator;
@@ -25,13 +26,17 @@
 
             var dd = new TestDatabaseSimple();
             _sqlExecuterTestAdapter.Check(sqlDialect);
-            _sqlExecuterTestAdapter.InitializeAndCreate(sqlDialect.ToString(), dd);
+            _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString(), dd);
             TestHelper.CheckFeature(sqlDialect, "ReadDdl");
+
+            var databaseCreator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
+
+            databaseCreator.ReCreateDatabase(true);
 
             var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()),  SqlGeneratorFactory.CreateMigrationGenerator(sqlDialect, _sqlExecuterTestAdapter.GetContext(sqlDialect)));
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(sqlDialect, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
-            var db = ddlReader.GetDatabaseDefinition();
+            var ddInDatabase = ddlReader.GetDatabaseDefinition();
 
             var newTable = new SqlTable
             {
@@ -45,7 +50,11 @@
 
             dd.AddTable(newTable);
 
-            // databaseMigrator.NewTable(newTable);
+            var comparer = new DataDefinition.Migration.Comparer();
+            var changes = comparer.Compare(ddInDatabase, dd);
+
+            var first = changes.First() as TableNew;
+            Assert.AreEqual("NewTableToMigrate", first.SchemaAndTableName);
         }
     }
 }

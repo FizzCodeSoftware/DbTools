@@ -26,7 +26,26 @@
     { }
 
     public class TableNew : SqlTable
-    { }
+    {
+        public TableNew()
+        {
+        }
+
+        public TableNew(SqlTable original)
+        {
+            SchemaAndTableName = original.SchemaAndTableName;
+            foreach (var column in original.Columns)
+            {
+                var newColumn = new SqlColumn
+                {
+                    Table = this
+                };
+                Columns.Add(column.CopyTo(newColumn));
+            }
+
+            // TODO copy .Properties
+        }
+    }
 
     // Other / all cases
     // New PK, Deleted OK, Renamed PK
