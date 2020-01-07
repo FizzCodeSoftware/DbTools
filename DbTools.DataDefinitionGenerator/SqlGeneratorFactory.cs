@@ -5,7 +5,7 @@
 
     public static class SqlGeneratorFactory
     {
-        public static ISqlGenerator CreateGenerator(SqlDialect dialect, GeneratorContext context)
+        public static ISqlGenerator CreateGenerator(SqlDialect dialect, Context context)
         {
             return dialect switch
             {
@@ -16,7 +16,7 @@
             };
         }
 
-        public static ISqlMigrationGenerator CreateMigrationGenerator(SqlDialect dialect, GeneratorContext context)
+        public static ISqlMigrationGenerator CreateMigrationGenerator(SqlDialect dialect, Context context)
         {
             return dialect switch
             {

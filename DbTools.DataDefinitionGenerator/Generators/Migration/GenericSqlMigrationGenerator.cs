@@ -19,9 +19,9 @@
     {
         public virtual ISqlTypeMapper SqlTypeMapper { get; } = new GenericSqlTypeMapper();
 
-        public GeneratorContext Context { get; }
+        public Context Context { get; }
 
-        protected GenericSqlMigrationGenerator(GeneratorContext context)
+        protected GenericSqlMigrationGenerator(Context context)
         {
             Context = context;
         }
@@ -60,7 +60,7 @@
 
     public class MsSqlMigrationGenerator : GenericSqlMigrationGenerator
     {
-        public MsSqlMigrationGenerator(GeneratorContext context) : base(context)
+        public MsSqlMigrationGenerator(Context context) : base(context)
         {
         }
 
@@ -72,7 +72,7 @@
 
     public class SqLiteMigrationGenerator : GenericSqlMigrationGenerator
     {
-        public SqLiteMigrationGenerator(GeneratorContext context) : base(context)
+        public SqLiteMigrationGenerator(Context context) : base(context)
         {
         }
 
@@ -84,7 +84,7 @@
 
     public class OracleMigrationGenerator : GenericSqlMigrationGenerator
     {
-        public OracleMigrationGenerator(GeneratorContext context) : base(context)
+        public OracleMigrationGenerator(Context context) : base(context)
         {
         }
 

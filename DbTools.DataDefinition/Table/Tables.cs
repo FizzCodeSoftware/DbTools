@@ -29,6 +29,11 @@
             return byName.ContainsValue(item);
         }
 
+        public bool ContainsKey(SchemaAndTableName schemaAndTableName)
+        {
+            return byName.ContainsKey(schemaAndTableName);
+        }
+
         public void CopyTo(SqlTable[] array, int arrayIndex)
         {
             throw new System.NotImplementedException();

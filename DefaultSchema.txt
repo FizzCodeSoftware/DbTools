@@ -1,0 +1,67 @@
+Default schema usage
+--------------------
+
+MsSql: Default schema is "dbo".
+Oracle: Default schema is the user name.
+SqLite: no schemas.
+MySQL: no schemas.
+PostgreSQL: Default schema is "public".
+
+
+(Current) configuration/set points:
+-----------------------------------
+
+- Common.Helper.GetDefaultSettings:
+  sqlDialectSpecificSettings["DefaultSchema"] = "dbo"
+
+- TestBase.TestHelper.GetDefaultTestSettings
+  calls Common.Helper.GetDefaultSettings, plus:
+  if Oracle
+  "DefaultSchema" is constructed from the (test) assembly name
+  Reasoning: In the case of Oracle database is NOT CREATED,
+   schema is created instead, and the Oracle Executer will create the defaultSchema (as User) in InitializeDatabase.
+   CleanupDatabase will delete schema (DROP USER)
+
+- Options.ShouldUseDefaultSchema
+
+ DocumentHelper.GetSimplifiedSchemaAndTableName injects sqlDialectSpecificSettings["DefaultSchema"] as schema if 
+ ShouldUseDefaultSchema is true and provided schema part is null.
+
+ GenericSqlGenerator.GetSimplifiedSchemaAndTableName uses sqlDialectSpecificSettings["DefaultSchema"] as schema if
+ ShouldUseDefaultSchema is true and provided schema part is null - using GuardKeywords, so for exampl, in the form of [schema].[tableName] or [tableName].
+
+
+Note:
+- Common.Helper.GetDefaultSettings:
+  sqlDialectSpecificSettings["OracleDatabaseName"] = configuration["oracleDatabaseName"]
+  
+  This database name is used in OracleExecuter.GetDatabase()
+  MsSqlExecuter uses GetDatabase() with Create and Drop database.
+  In case of OracleExecuter, GetDatabase() is only used for logging purposes (No db creation/drop in case of Oracle).
+
+Expected behaviour:
+-------------------
+MsSql: if no schema is provided, use DefaultSchema.
+The sql engine will work accordingly, creating object in "dbo".
+
+Oracle: if no schema is provided, use DefaultSchema.
+The sql engine will work accordingly, creating object in the nam of the current user.
+
+No schemas (SqLite, MySQL): SchemaAndTableName should not contain schema part.
+If does, exception should occur.
+// TODO maybe use Feature flag.
+
+SchemaAndTableName equality.
+SchemaAndTableName is SqlDialect independent, so does not and should not be dependent about any SqlDialectSpecificSettings including "DefaultSchema".
+Thus two SchemaAndTableName are only equal if schema and tableName parts are equal.
+
+Current (as of 01/07/2020) issue.
+- Create (a schemaless) DataBaseDefinition with no schema.
+ At this step, schema parts in SchemaAndTableName are null.
+- Create database
+ Default behaviour will create the tables with the DefaultSchema.
+ ("dbo" in MsSql, the current user in Oracle, and no schema in engines without schema feature.
+- Now when DataDefinitionReader reads the structure of the created database, it does fill up schema parts in SchemaAndTableName
+ Now original.Table.SchemaAndTableName <> readBack Table.SchemaAndTableName.
+
+

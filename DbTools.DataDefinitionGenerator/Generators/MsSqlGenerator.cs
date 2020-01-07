@@ -3,11 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
     public class MsSqlGenerator : GenericSqlGenerator, ISqlGeneratorDropAndCreateDatabase
     {
-        public MsSqlGenerator(GeneratorContext context)
+        public MsSqlGenerator(Context context)
             : base(context)
         {
         }

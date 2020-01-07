@@ -4,16 +4,15 @@
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
 
     public abstract class GenericSqlGenerator : ISqlGenerator
     {
         public virtual ISqlTypeMapper SqlTypeMapper { get; } = new GenericSqlTypeMapper();
 
-        public GeneratorContext Context { get; }
+        public Context Context { get; }
 
-        protected GenericSqlGenerator(GeneratorContext context)
+        protected GenericSqlGenerator(Context context)
         {
             Context = context;
         }

@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Migration;
@@ -14,7 +15,7 @@
 
         protected ISqlMigrationGenerator MigrationGenerator { get; }
 
-        public static DatabaseMigrator FromConnectionStringSettings(ConnectionStringWithProvider connectionStringWithProvider, GeneratorContext context)
+        public static DatabaseMigrator FromConnectionStringSettings(ConnectionStringWithProvider connectionStringWithProvider, Context context)
         {
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
 

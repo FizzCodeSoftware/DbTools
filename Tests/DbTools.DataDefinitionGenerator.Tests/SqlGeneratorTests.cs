@@ -24,7 +24,7 @@
             column.Properties.Add(new Identity(column) { Increment = 1, Seed = 1 });
             table.AddNVarChar("Name", 100);
 
-            var context = new GeneratorContext
+            var context = new Context
             {
                 Settings = TestHelper.GetDefaultTestSettings(sqlDialect),
                 Logger = TestHelper.CreateLogger()
@@ -51,7 +51,7 @@
 
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
 
-            var context = new GeneratorContext
+            var context = new Context
             {
                 Logger = TestHelper.CreateLogger(),
                 Settings = Helper.GetDefaultSettings(sqlDialect, null)

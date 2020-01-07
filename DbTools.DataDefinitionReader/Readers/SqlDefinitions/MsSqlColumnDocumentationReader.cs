@@ -17,8 +17,9 @@
             _executer = sqlExecuter;
         }
 
-        public void GetColumnDocumentation(string defaultSchema, SqlTable table)
+        public void GetColumnDocumentation(SqlTable table)
         {
+            var defaultSchema = _executer.Generator.Context.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
             var schemaAndTableName = (table.SchemaAndTableName.Schema ?? defaultSchema) + "." + table.SchemaAndTableName.TableName;
             var rows = QueryResult[schemaAndTableName];
 

@@ -14,13 +14,13 @@
         {
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
 
-            var generatorContext = new GeneratorContext
+            var context = new Context
             {
                 Settings = settings,
                 Logger = logger
             };
 
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, generatorContext);
+            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);
 
             var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
 

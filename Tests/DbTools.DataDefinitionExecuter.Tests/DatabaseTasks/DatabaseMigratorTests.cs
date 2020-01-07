@@ -20,7 +20,7 @@
             var dd = new TestDatabaseSimple();
             _sqlExecuterTestAdapter.InitializeAndCreate(sqlDialect.ToString(), dd);
 
-            var context = new GeneratorContext
+            var context = new Context
             {
                 Settings = TestHelper.GetDefaultTestSettings(sqlDialect),
                 Logger = TestHelper.CreateLogger()

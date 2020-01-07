@@ -2,11 +2,12 @@
 {
     using System.Linq;
     using System.Text;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
 
     public class OracleGenerator : MsSqlGenerator
     {
-        public OracleGenerator(GeneratorContext context)
+        public OracleGenerator(Context context)
             : base(context)
         {
         }

@@ -141,9 +141,9 @@
             return logger;
         }
 
-        private static GeneratorContext CreateGeneratorContext(SqlDialect sqlDialect)
+        private static Context CreateContext(SqlDialect sqlDialect)
         {
-            var context = new GeneratorContext
+            var context = new Context
             {
                 Logger = CreateLogger(),
                 Settings = Helper.GetDefaultSettings(sqlDialect, Program.Configuration)
@@ -184,7 +184,7 @@
             var providerName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect);
             var connectionStringWithProvider = new ConnectionStringWithProvider("", providerName, connectionString);
 
-            var context = CreateGeneratorContext(sqlDialect);
+            var context = CreateContext(sqlDialect);
 
             var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);
 

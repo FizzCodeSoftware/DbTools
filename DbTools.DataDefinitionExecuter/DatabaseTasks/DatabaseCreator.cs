@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
     using System.Linq;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
@@ -14,7 +15,7 @@
             DatabaseDefinition = databaseDefinition;
         }
 
-        public static DatabaseCreator FromConnectionStringSettings(DatabaseDefinition databaseDefinition, ConnectionStringWithProvider connectionStringWithProvider, GeneratorContext context)
+        public static DatabaseCreator FromConnectionStringSettings(DatabaseDefinition databaseDefinition, ConnectionStringWithProvider connectionStringWithProvider, Context context)
         {
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
 
@@ -58,6 +59,9 @@
         {
             foreach (var schemaName in databaseDefinition.GetSchemaNames())
             {
+                if (schemaName == Executer.Generator.Context.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema", null))
+                    continue;
+
                 var sql = Executer.Generator.CreateSchema(schemaName);
                 Executer.ExecuteNonQuery(sql);
             }

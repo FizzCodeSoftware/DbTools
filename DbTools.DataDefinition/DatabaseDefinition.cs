@@ -34,6 +34,11 @@
             return Tables[schemaAndTableName.SchemaAndName];
         }
 
+        public bool Contains(SchemaAndTableName schemaAndTableName)
+        {
+            return Tables.ContainsKey(schemaAndTableName.SchemaAndName);
+        }
+
         public IEnumerable<string> GetSchemaNames()
         {
             var schemas = GetTables()

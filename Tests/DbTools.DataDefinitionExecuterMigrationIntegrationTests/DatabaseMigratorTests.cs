@@ -25,6 +25,10 @@
             // Execute changes/migration
 
             var dd = new TestDatabaseSimple();
+
+            /*if (sqlDialect == SqlDialect.MsSql)
+                dd.DefaultSchema = "dbo";*/
+
             _sqlExecuterTestAdapter.Check(sqlDialect);
             _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString(), dd);
             TestHelper.CheckFeature(sqlDialect, "ReadDdl");
@@ -50,11 +54,11 @@
 
             dd.AddTable(newTable);
 
-            var comparer = new DataDefinition.Migration.Comparer();
+            var comparer = new Comparer(_sqlExecuterTestAdapter.GetContext(sqlDialect));
             var changes = comparer.Compare(ddInDatabase, dd);
 
             var first = changes.First() as TableNew;
-            Assert.AreEqual("NewTableToMigrate", first.SchemaAndTableName);
+            Assert.AreEqual((SchemaAndTableName)"NewTableToMigrate", first.SchemaAndTableName);
         }
     }
 }

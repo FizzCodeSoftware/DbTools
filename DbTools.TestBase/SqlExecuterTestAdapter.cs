@@ -59,15 +59,15 @@
             return connectionStringWithProvider;
         }
 
-        private readonly Dictionary<SqlDialect, GeneratorContext> _contextPerSqlDialect = new Dictionary<SqlDialect, GeneratorContext>();
+        private readonly Dictionary<SqlDialect, Context> _contextPerSqlDialect = new Dictionary<SqlDialect, Context>();
 
-        public GeneratorContext GetContext(SqlDialect sqlDialect)
+        public Context GetContext(SqlDialect sqlDialect)
         {
             if (!_contextPerSqlDialect.ContainsKey(sqlDialect))
             {
                 var existingContext = _contextPerSqlDialect.Values.FirstOrDefault();
                 var existingLogger = existingContext?.Logger;
-                var _context = new GeneratorContext
+                var _context = new Context
                 {
                     Logger = existingLogger ?? TestHelper.CreateLogger(),
                     Settings = TestHelper.GetDefaultTestSettings(sqlDialect)

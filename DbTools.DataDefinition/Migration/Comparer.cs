@@ -3,9 +3,17 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using FizzCode.DbTools.Common;
 
     public class Comparer
     {
+        public Context Context { get; }
+
+        public Comparer(Context context)
+        {
+            Context = context;
+        }
+
         public List<object> Compare(DatabaseDefinition originalDd, DatabaseDefinition newDd)
         {
             // TODO needs to be ordered
@@ -17,8 +25,7 @@
             // detect new tables
             foreach (var tableOriginal in originalDd.GetTables())
             {
-                var tableNew = newDd.GetTable(tableOriginal.SchemaAndTableName);
-                if (tableNew == null)
+                if (!newDd.Contains(tableOriginal.SchemaAndTableName))
                 {
                     var tableDelete = new TableDelete
                     {
@@ -31,11 +38,9 @@
 
             foreach (var tableNewDd in newDd.GetTables())
             {
-                var tableOriginal = originalDd.GetTable(tableNewDd.SchemaAndTableName);
-
-                if (tableOriginal == null)
+                if (!originalDd.Contains(tableNewDd.SchemaAndTableName))
                 {
-                    var tableNew = new TableNew(tableOriginal);
+                    var tableNew = new TableNew(tableNewDd);
                     changes.Add(tableNew);
                 }
             }
