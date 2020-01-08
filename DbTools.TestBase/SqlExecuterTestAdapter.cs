@@ -81,6 +81,10 @@
 
         public void Cleanup()
         {
+            var existingContext = _contextPerSqlDialect.Values.FirstOrDefault();
+            var existingLogger = existingContext?.Logger;
+            existingLogger?.Log(Common.Logger.LogSeverity.Debug, "Cleanup is called.", "SqlExecuterTestAdapter");
+
             var exceptions = new List<Exception>();
             foreach (var sqlExecuterAndDialect in sqlExecutersAndDialects.Values)
             {

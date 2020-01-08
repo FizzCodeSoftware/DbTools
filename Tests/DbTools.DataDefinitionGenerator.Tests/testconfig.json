@@ -1,6 +1,6 @@
 ﻿{
   "forceIntegrationTests": "false",
-  "oracleDatabaseName": "DbTools_DataDefinitionExecuter_Tests",
+  "oracleDatabaseName": "DbTools_DataDefinitionGenerator_Tests",
   "connectionStrings": {
     "SqLite": {
       "ProviderName": "System.Data.SQLite",

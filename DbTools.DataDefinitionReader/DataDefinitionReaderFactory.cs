@@ -33,6 +33,7 @@
             {
                 SqlDialect.MsSql => new MsSqlDataDefinitionReader(sqlExecuter),
                 SqlDialect.SqLite => new SqLiteDataDefinitionReader(sqlExecuter),
+                SqlDialect.Oracle => new OracleDataDefinitionReader(sqlExecuter),
                 _ => throw new NotImplementedException($"Not implemented {sqlDialect}."),
             };
         }
