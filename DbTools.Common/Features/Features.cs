@@ -6,7 +6,6 @@
         {
             _features.Add("ReadDdl");
             _features["ReadDdl"].Add(SqlDialect.SqLite, Support.NotSupported, "No known way to read DDL with SqLite in memory.");
-            _features["ReadDdl"].Add(SqlDialect.Oracle, Support.NotImplementedYet);
         }
 
         private static readonly FeatureList _features = new FeatureList();

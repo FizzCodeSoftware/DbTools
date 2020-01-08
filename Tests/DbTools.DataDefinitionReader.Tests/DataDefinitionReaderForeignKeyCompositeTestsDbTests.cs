@@ -34,7 +34,7 @@
             var db = ddlReader.GetDatabaseDefinition();
 
             // TODO db.GetTable("Company") - use default schema
-            var company = db.GetTable("dbo", "Company");
+            var company = db.GetTable("Company");
 
             var pkCompany = company.Properties.OfType<PrimaryKey>().FirstOrDefault();
             Assert.IsNotNull(pkCompany);

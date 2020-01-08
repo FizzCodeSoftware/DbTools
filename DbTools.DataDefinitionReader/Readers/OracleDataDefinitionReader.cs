@@ -27,7 +27,7 @@
 
             Logger.Log(LogSeverity.Debug, "Reading table documentetion from database.", "Reader");
 
-            throw new NotImplementedException();
+            return dd;
         }
 
         public override List<SchemaAndTableName> GetSchemaAndTableNames()

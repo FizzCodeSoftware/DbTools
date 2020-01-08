@@ -7,18 +7,6 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public abstract class DataDefinitionReaderTests
-    {
-        protected static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new SqlExecuterTestAdapter();
-
-        [AssemblyCleanup]
-        public static void Cleanup()
-        {
-            _sqlExecuterTestAdapter.Cleanup();
-        }
-    }
-
-    [TestClass]
     public class DataDefinitionReaderDatabaseCircular2FKTests : DataDefinitionReaderTests
     {
         [DataTestMethod]
