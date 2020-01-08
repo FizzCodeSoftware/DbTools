@@ -34,7 +34,6 @@
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(sqlDialect, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
             var db = ddlReader.GetDatabaseDefinition();
 
-            // TODO db.GetTable("Company") - use default schema
             var company = db.GetTable("Company");
 
             var pkCompany = company.Properties.OfType<PrimaryKey>().FirstOrDefault();
@@ -42,7 +41,7 @@
             Assert.AreEqual(1, pkCompany.SqlColumns.Count);
             Assert.AreEqual("Id", pkCompany.SqlColumns[0].SqlColumn.Name);
 
-            var topOrdersPerCompany = db.GetTable("dbo", "TopOrdersPerCompany");
+            var topOrdersPerCompany = db.GetTable("TopOrdersPerCompany");
 
             var fks = topOrdersPerCompany.Properties.OfType<ForeignKey>().ToList();
             Assert.AreEqual(2, fks.Count);
@@ -53,7 +52,7 @@
             Assert.AreEqual(2, fk1.ForeignKeyColumns.Count);
             Assert.AreEqual(2, fk2.ForeignKeyColumns.Count);
 
-            var order = db.GetTable("dbo", "Order");
+            var order = db.GetTable("Order");
 
             Assert.AreEqual(topOrdersPerCompany.Columns["Top1A"], fk1.ForeignKeyColumns[0].ForeignKeyColumn);
             Assert.AreEqual(topOrdersPerCompany.Columns["Top1B"], fk1.ForeignKeyColumns[1].ForeignKeyColumn);

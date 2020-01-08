@@ -71,7 +71,9 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
                 var referencedColumn = row.GetAs<string>("REFERENCED_COLUMN_NAME");
                 var fkName = row.GetAs<string>("FK_CONSTRAINT_NAME");
 
-                var referencedSqlTable = table.DatabaseDefinition.GetTable(referencedSchemaAndTableName);
+                var referencedSqlTableSchemaAndTableNameAsToStore = GenericDataDefinitionReader.GetSchemaAndTableNameAsToStore(referencedSchemaAndTableName, _executer.Generator.Context);
+
+                var referencedSqlTable = table.DatabaseDefinition.GetTable(referencedSqlTableSchemaAndTableNameAsToStore);
 
                 if (row.GetAs<int>("FK_ORDINAL_POSITION") == 1)
                 {
@@ -81,7 +83,7 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
 
                 var referencedSqlColumn = referencedSqlTable[referencedColumn];
 
-                var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName.SchemaAndName == referencedSchemaAndTableName.SchemaAndName && fk1.Name == fkName);
+                var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName.SchemaAndName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
                 fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkColumn, referencedSqlColumn));
             }
         }

@@ -29,5 +29,15 @@
             var module = "Reader/" + SqlDialect.ToString();
             Logger.Log(severity, text, module, args);
         }
+
+        public static SchemaAndTableName GetSchemaAndTableNameAsToStore(SchemaAndTableName original, Context context)
+        {
+            var defaultSchema = context.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+
+            if (context.Settings.Options.ShouldUseDefaultSchema && original.Schema == defaultSchema)
+                return new SchemaAndTableName(null, original.TableName);
+
+            return new SchemaAndTableName(original.Schema, original.TableName);
+        }
     }
 }
