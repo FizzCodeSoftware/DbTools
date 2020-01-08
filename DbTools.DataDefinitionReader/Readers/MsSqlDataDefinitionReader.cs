@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
@@ -15,21 +16,23 @@
         {
         }
 
+        protected override SqlDialect SqlDialect => SqlDialect.MsSql;
+
         public override DatabaseDefinition GetDatabaseDefinition()
         {
             var dd = new DatabaseDefinition();
 
-            Logger.Log(LogSeverity.Debug, "Reading table definitions from database.", "Reader");
+            Log(LogSeverity.Debug, "Reading table definitions from database.");
 
             foreach (var schemaAndTableName in GetSchemaAndTableNames())
                 dd.AddTable(GetTableDefinition(schemaAndTableName, false));
 
-            Logger.Log(LogSeverity.Debug, "Reading table documentetion from database.", "Reader");
+            Log(LogSeverity.Debug, "Reading table documentetion from database.");
             AddTableDocumentation(dd);
 
-            Logger.Log(LogSeverity.Debug, "Reading table identities from database.", "Reader");
+            Log(LogSeverity.Debug, "Reading table identities from database.");
             new MsSqlIdentityReader(Executer).GetIdentity(dd);
-            Logger.Log(LogSeverity.Debug, "Reading table primary keys from database.", "Reader");
+            Log(LogSeverity.Debug, "Reading table primary keys from database.");
             new MsSqlPrimaryKeyReader(Executer).GetPrimaryKey(dd);
             Logger.Log(LogSeverity.Debug, "Reading table foreign keys from database.", "Reader");
             new MsSqlForeignKeyReader(Executer).GetForeignKeys(dd);

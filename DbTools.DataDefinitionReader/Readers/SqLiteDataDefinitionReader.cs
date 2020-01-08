@@ -14,6 +14,8 @@
         {
         }
 
+        protected override SqlDialect SqlDialect => SqlDialect.SqLite;
+
         public override DatabaseDefinition GetDatabaseDefinition()
         {
             var dd = new DatabaseDefinition();
