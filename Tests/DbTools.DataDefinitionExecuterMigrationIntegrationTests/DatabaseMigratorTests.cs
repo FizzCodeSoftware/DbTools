@@ -44,7 +44,7 @@
             databaseMigrator.NewTable(first);
         }
 
-        private static void Init(SqlDialect sqlDialect, TestDatabaseSimple dd)
+        private static void Init(SqlDialect sqlDialect, DatabaseDefinition dd)
         {
             _sqlExecuterTestAdapter.Check(sqlDialect);
             _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString(), dd);
