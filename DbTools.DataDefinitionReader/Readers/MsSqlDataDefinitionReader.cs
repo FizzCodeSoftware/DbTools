@@ -72,7 +72,7 @@ WHERE type = 'U'").Rows
 
             var defaultSchema = Executer.Generator.Context.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
 
-            if (sqlTable.SchemaAndTableName.Schema == defaultSchema)
+            if (Executer.Generator.Context.Settings.Options.ShouldUseDefaultSchema && sqlTable.SchemaAndTableName.Schema == defaultSchema)
                 sqlTable.SchemaAndTableName.Schema = null;
 
             return sqlTable;

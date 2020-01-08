@@ -50,6 +50,8 @@
             _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString(), dd);
             TestHelper.CheckFeature(sqlDialect, "ReadDdl");
 
+            _sqlExecuterTestAdapter.GetContext(sqlDialect).Settings.Options.ShouldUseDefaultSchema = true;
+
             var databaseCreator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
 
             databaseCreator.ReCreateDatabase(true);

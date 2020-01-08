@@ -41,6 +41,8 @@ Note:
 
 Expected behaviour:
 -------------------
+Creation
+--------
 MsSql: if no schema is provided, use DefaultSchema.
 The sql engine will work accordingly, creating object in "dbo".
 
@@ -54,6 +56,13 @@ If does, exception should occur.
 SchemaAndTableName equality.
 SchemaAndTableName is SqlDialect independent, so does not and should not be dependent about any SqlDialectSpecificSettings including "DefaultSchema".
 Thus two SchemaAndTableName are only equal if schema and tableName parts are equal.
+
+
+Reader
+------
+When reading the database structure, we don't know, if default schema was used or not.
+While this is fix in case of MsSql ("dbo"), in Oracle, this might change (current user = current schema).
+
 
 Current (as of 01/07/2020) issue.
 - Create (a schemaless) DataBaseDefinition with no schema.
