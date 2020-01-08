@@ -33,14 +33,36 @@
         public override List<SchemaAndTableName> GetSchemaAndTableNames()
         {
             return Executer.ExecuteQuery(@"
-SELECT table_name tableName, owner schemaName FROM information_schema.TABLES").Rows
-                .Select(row => new SchemaAndTableName(row.GetAs<string>("schemaName"), row.GetAs<string>("tableName")))
+SELECT t.table_name tableName, t.owner schemaName
+FROM dba_tables t, dba_users u 
+WHERE t.owner = u.username
+AND EXISTS (SELECT 1 FROM dba_objects o
+WHERE o.owner = u.username ) AND default_tablespace not in
+('SYSTEM','SYSAUX') and ACCOUNT_STATUS = 'OPEN'").Rows
+                .Select(row => new SchemaAndTableName(row.GetAs<string>("SCHEMANAME"), row.GetAs<string>("TABLENAME")))
                 .ToList();
         }
 
+        private OracleTableReader _tableReader;
+        private OracleTableReader TableReader => _tableReader ?? (_tableReader = new OracleTableReader(Executer));
+
         public override SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition)
         {
-            throw new NotImplementedException();
+            var sqlTable = TableReader.GetTableDefinition(schemaAndTableName);
+
+            /*if (fullDefinition)
+            {
+                new MsSqlPrimaryKeyReader(Executer).
+                GetPrimaryKey(sqlTable);
+                new MsSqlForeignKeyReader(Executer).GetForeignKeys(sqlTable);
+                AddTableDocumentation(sqlTable);
+            }
+
+            ColumnDocumentationReader.GetColumnDocumentation(sqlTable);*/
+
+            sqlTable.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlTable.SchemaAndTableName, Executer.Generator.Context);
+
+            return sqlTable;
         }
     }
 }

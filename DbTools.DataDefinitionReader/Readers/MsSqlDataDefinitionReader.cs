@@ -69,7 +69,7 @@ WHERE type = 'U'").Rows
             }
 
             ColumnDocumentationReader.GetColumnDocumentation(sqlTable);
-            
+
             sqlTable.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlTable.SchemaAndTableName, Executer.Generator.Context);
 
             return sqlTable;

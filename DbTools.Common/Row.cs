@@ -9,6 +9,9 @@
         {
             try
             {
+                if (default(T) == null && DBNull.Value.Equals(this[name]))
+                    return default;
+
                 return (T)this[name];
             }
             catch (Exception ex)

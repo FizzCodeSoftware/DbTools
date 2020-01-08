@@ -120,8 +120,10 @@
                 var rowSet = new RowSet();
                 using (var sqlReader = command.ExecuteReader())
                 {
+                    var rowCount = 0;
                     while (sqlReader.Read())
                     {
+                        rowCount++;
                         var row = new Row();
                         for (var i = 0; i < sqlReader.FieldCount; i++)
                         {
@@ -130,6 +132,8 @@
 
                         rowSet.Rows.Add(row);
                     }
+
+                    Log(LogSeverity.Verbose, "{rowCount} rows returned", rowCount);
                 }
 
                 return rowSet;
