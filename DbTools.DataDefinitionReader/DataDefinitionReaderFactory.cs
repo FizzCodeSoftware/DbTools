@@ -14,26 +14,28 @@
         {
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
 
+            // TODO version detection / specify
+            var version = SqlEngines.GetLatestVersion(sqlDialect);
+
             var context = new Context
             {
                 Settings = settings,
                 Logger = logger
             };
 
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);
+            var generator = SqlGeneratorFactory.CreateGenerator(version, context);
 
             var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
 
-            return CreateDataDefinitionReader(sqlDialect, executer);
+            return CreateDataDefinitionReader(version.SqlDialect, executer);
         }
 
-        public static IDataDefinitionReader CreateDataDefinitionReader(SqlDialect sqlDialect, SqlExecuter sqlExecuter)
+        public static IDataDefinitionReader CreateDataDefinitionReader(SqlDialectX sqlDialect, SqlExecuter sqlExecuter)
         {
             return sqlDialect switch
             {
-                SqlDialect.MsSql => new MsSqlDataDefinitionReader(sqlExecuter),
-                SqlDialect.SqLite => new SqLiteDataDefinitionReader(sqlExecuter),
-                SqlDialect.Oracle => new OracleDataDefinitionReader(sqlExecuter),
+                SqlDialectX.MsSql => new MsSqlDataDefinitionReader(sqlExecuter),
+                SqlDialectX.Oracle => new OracleDataDefinitionReader(sqlExecuter),
                 _ => throw new NotImplementedException($"Not implemented {sqlDialect}."),
             };
         }

@@ -13,7 +13,7 @@
             Executer = sqlExecuter;
         }
 
-        protected abstract SqlDialect SqlDialect { get; }
+        protected abstract SqlDialectX SqlDialect { get; }
 
         protected SqlExecuter Executer { get; }
 

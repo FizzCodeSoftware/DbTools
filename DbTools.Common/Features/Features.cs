@@ -5,15 +5,15 @@
         static Features()
         {
             _features.Add("ReadDdl");
-            _features["ReadDdl"].Add(SqlDialect.SqLite, Support.NotSupported, "No known way to read DDL with SqLite in memory.");
+            _features["ReadDdl"].Add(SqlEngines.GetVersions(SqlDialectX.SqLite), Support.NotSupported, "No known way to read DDL with SqLite in memory.");
         }
 
         private static readonly FeatureList _features = new FeatureList();
 
-        public static FeatureSupport GetSupport(SqlDialect sqlDialect, string name)
+        public static FeatureSupport GetSupport(SqlVersion version, string name)
         {
-            if (_features.ContainsKey(name) && _features[name].Support.ContainsKey(sqlDialect))
-                return _features[name].Support[sqlDialect];
+            if (_features.ContainsKey(name) && _features[name].Support.ContainsKey(version))
+                return _features[name].Support[version];
 
             return new FeatureSupport(Support.Unknown, null);
         }

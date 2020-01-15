@@ -19,7 +19,7 @@
 
         private SQLiteConnection _connection;
 
-        protected override SqlDialect SqlDialect => SqlDialect.SqLite;
+        protected override SqlDialectX SqlDialect => SqlDialectX.SqLite;
 
         public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd)
         {

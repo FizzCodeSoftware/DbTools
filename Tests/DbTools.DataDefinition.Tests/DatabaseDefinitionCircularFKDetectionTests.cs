@@ -3,7 +3,7 @@ namespace FizzCode.DbTools.DataDefinition.Tests
 {
     using System.Collections.Generic;
     using System.Linq;
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Generic1;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     public class TestDatabaseOtherChainIsCircular : DatabaseDeclaration

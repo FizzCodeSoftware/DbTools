@@ -34,5 +34,20 @@
                 throw new InvalidCastException($"Invalid cast, from: {this[name].GetType().Name} to {typeof(T).Name}, column name: {name}", ex);
             }
         }
+
+        public T CastAs<T>(string name)
+        {
+            try
+            {
+                if (default(T) == null && DBNull.Value.Equals(this[name]))
+                    return default;
+
+                return (T)this[name];
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidCastException($"Invalid cast, from: {this[name].GetType().Name} to {typeof(T).Name}, column name: {name}", ex);
+            }
+        }
     }
 }

@@ -16,7 +16,7 @@
         {
         }
 
-        protected override SqlDialect SqlDialect => SqlDialect.MsSql;
+        protected override SqlDialectX SqlDialect => SqlDialectX.MsSql;
 
         public override DatabaseDefinition GetDatabaseDefinition()
         {

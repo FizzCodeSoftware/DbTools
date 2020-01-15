@@ -10,7 +10,7 @@
 
     public abstract class SqlExecuter : ISqlExecuter
     {
-        protected abstract SqlDialect SqlDialect { get; }
+        protected abstract SqlDialectX SqlDialect { get; }
 
         public ConnectionStringWithProvider ConnectionStringWithProvider { get; }
         public ISqlGenerator Generator { get; }

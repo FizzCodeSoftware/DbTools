@@ -11,8 +11,6 @@
         {
         }
 
-        public override ISqlTypeMapper SqlTypeMapper { get; } = new SqLiteTypeMapper();
-
         protected override string GuardKeywords(string name)
         {
             return $"\"{name}\"";

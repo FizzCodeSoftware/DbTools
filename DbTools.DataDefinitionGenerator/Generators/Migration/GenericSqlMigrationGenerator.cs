@@ -17,8 +17,6 @@
 
     public abstract class GenericSqlMigrationGenerator : ISqlMigrationGenerator
     {
-        public virtual ISqlTypeMapper SqlTypeMapper { get; } = new GenericSqlTypeMapper();
-
         public Context Context { get; }
 
         protected GenericSqlMigrationGenerator(Context context)

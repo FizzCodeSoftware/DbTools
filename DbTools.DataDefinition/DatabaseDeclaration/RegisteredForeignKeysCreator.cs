@@ -18,7 +18,8 @@ namespace FizzCode.DbTools.DataDefinition
             pkColumn.CopyTo(col);
 
             col.Table = sqlTable;
-            col.IsNullable = fkRegistration.IsNullable;
+            col.Types.SetAllNullable(fkRegistration.IsNullable);
+
             col.Name = fkRegistration.SingleFkColumnName;
 
             var placeHolderColumn = sqlTable
@@ -51,7 +52,7 @@ namespace FizzCode.DbTools.DataDefinition
                 pkColumn.CopyTo(col);
 
                 col.Table = sqlTable;
-                col.IsNullable = fkRegistration.IsNullable;
+                col.Types.SetAllNullable(fkRegistration.IsNullable);
 
                 col.Name = fkNaming.GetFkToPkColumnName(pkColumn, fkRegistration.NamePrefix);
 
@@ -100,7 +101,7 @@ namespace FizzCode.DbTools.DataDefinition
                 referredTable.Columns[fkGroup.ReferredColumnName].CopyTo(col);
 
                 col.Table = sqlTable;
-                col.IsNullable = fkRegistration.IsNullable;
+                col.Types.SetAllNullable(fkRegistration.IsNullable);
 
                 col.Name = fkGroup.ColumnName;
 

@@ -19,8 +19,11 @@
         {
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
 
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);
-            var migrationGenerator = SqlGeneratorFactory.CreateMigrationGenerator(sqlDialect, context);
+            // TODO version detection?
+            var version = SqlEngines.GetLatestVersion(sqlDialect);
+
+            var generator = SqlGeneratorFactory.CreateGenerator(version, context);
+            var migrationGenerator = SqlGeneratorFactory.CreateMigrationGenerator(version, context);
 
             var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
 

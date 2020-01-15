@@ -14,9 +14,9 @@
 
             return dialect switch
             {
-                SqlDialect.SqLite => new SqLiteExecuter(connectionStringWithProvider, sqlGenerator),
-                SqlDialect.MsSql => new MsSqlExecuter(connectionStringWithProvider, sqlGenerator),
-                SqlDialect.Oracle => new OracleExecuter(connectionStringWithProvider, sqlGenerator),
+                SqlDialectX.SqLite => new SqLiteExecuter(connectionStringWithProvider, sqlGenerator),
+                SqlDialectX.MsSql => new MsSqlExecuter(connectionStringWithProvider, sqlGenerator),
+                SqlDialectX.Oracle => new OracleExecuter(connectionStringWithProvider, sqlGenerator),
                 _ => throw new NotImplementedException($"Not implemented {dialect}."),
             };
         }

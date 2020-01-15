@@ -1,34 +1,79 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using FizzCode.DbTools.Common;
+
+    public class SqlTypes : Dictionary<SqlVersion, SqlType>
+    {
+        public void SetAllNullable(bool isNullable)
+        {
+            foreach (var sqlType in Values)
+            {
+                sqlType.IsNullable = isNullable;
+            }
+        }
+
+        // TODO move to converter?
+        public SqlType PreferredType
+        {
+            get
+            {
+                if (Keys.Count == 1)
+                    return Values.First();
+
+                if (Keys.Any(k => SqlEngines.GetVersions(SqlDialectX.Generic).Contains(k)))
+                    return this[SqlEngines.GetLatestVersion(SqlDialectX.Generic)];
+
+                return null;
+            }
+        }
+
+        public string Describe()
+        {
+            if (Keys.Any(k => SqlEngines.GetVersions(SqlDialectX.Generic).Contains(k)))
+            {
+                return Describe(SqlEngines.GetLatestVersion(SqlDialectX.Generic));
+            }
+
+            return Describe(Keys.Last());
+        }
+
+        public string Describe(SqlVersion preferredVersion)
+        {
+            return this[preferredVersion].ToString();
+        }
+
+        public SqlTypes CopyTo(SqlTypes sqlTypes)
+        {
+            foreach (var kvp in this)
+            {
+                sqlTypes.Add(kvp.Key, kvp.Value.CopyTo(new SqlType()));
+            }
+
+            return sqlTypes;
+        }
+    }
 
     public class SqlColumn
     {
         public SqlTable Table { get; set; }
         public string Name { get; set; }
-        public SqlType Type { get; set; }
-        public bool IsNullable { get; set; }
-        public int? Length { get; set; }
-        public int? Precision { get; set; }
+        public SqlTypes Types { get; set; }
 
         private List<SqlColumnProperty> _properties;
         public List<SqlColumnProperty> Properties => _properties ?? (_properties = new List<SqlColumnProperty>());
 
         public override string ToString()
         {
-            return $"{Name} {Enum.GetName(typeof(SqlType), Type)} on {Table.SchemaAndTableName}";
+            return $"{Name} {Types.Describe()} on {Table.SchemaAndTableName}";
         }
 
-        public T CopyTo<T>(T column) where T : SqlColumn
+        public SqlColumn CopyTo(SqlColumn column)
         {
             column.Name = Name;
-            column.Type = Type;
+            column.Types = Types.CopyTo(new SqlTypes());
             column.Table = Table;
-            column.IsNullable = IsNullable;
-            column.Length = Length;
-            column.Precision = Precision;
             return column;
         }
 

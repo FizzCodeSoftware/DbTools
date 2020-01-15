@@ -12,17 +12,17 @@
 
     public class SqlExecuterTestAdapter : ConfigurationBase
     {
-        private readonly Dictionary<string, (SqlExecuter SqlExecuter, SqlDialect SqlDialect)> sqlExecutersAndDialects = new Dictionary<string, (SqlExecuter, SqlDialect)>();
+        private readonly Dictionary<string, (SqlExecuter SqlExecuter, SqlVersion Version)> sqlExecutersAndDialects = new Dictionary<string, (SqlExecuter, SqlVersion)>();
 
         private readonly List<DatabaseDefinition> _dds = new List<DatabaseDefinition>();
 
         public override string ConfigurationFileName => "testconfig";
 
-        public void Check(SqlDialect sqlDialect)
+        public void Check(SqlVersion version)
         {
-            TestHelper.CheckProvider(sqlDialect, ConnectionStrings.All);
+            TestHelper.CheckProvider(version.SqlDialect, ConnectionStrings.All);
 
-            if (!TestHelper.ShouldRunIntegrationTest(sqlDialect))
+            if (!TestHelper.ShouldRunIntegrationTest(version))
                 Assert.Inconclusive("Test is skipped, integration tests are not running.");
         }
 
@@ -43,14 +43,15 @@
             var connectionStringWithProvider = ConnectionStrings[connectionStringKey];
 
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
+            var version = SqlEngines.GetLatestVersion(sqlDialect);
 
             if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
             {
-                var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, GetContext(sqlDialect));
+                var generator = SqlGeneratorFactory.CreateGenerator(version, GetContext(version));
                 var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
-                sqlExecutersAndDialects.Add(connectionStringKey, (sqlExecuter, sqlDialect));
+                sqlExecutersAndDialects.Add(connectionStringKey, (sqlExecuter, version));
 
-                if (shouldCreate && TestHelper.ShouldRunIntegrationTest(sqlDialect))
+                if (shouldCreate && TestHelper.ShouldRunIntegrationTest(version))
                 {
                     sqlExecuter.InitializeDatabase(false, dds);
                 }
@@ -59,29 +60,29 @@
             return connectionStringWithProvider;
         }
 
-        private readonly Dictionary<SqlDialect, Context> _contextPerSqlDialect = new Dictionary<SqlDialect, Context>();
+        private readonly Dictionary<SqlVersion, Context> _contextPerSqlVersion = new Dictionary<SqlVersion, Context>();
 
-        public Context GetContext(SqlDialect sqlDialect)
+        public Context GetContext(SqlVersion version)
         {
-            if (!_contextPerSqlDialect.ContainsKey(sqlDialect))
+            if (!_contextPerSqlVersion.ContainsKey(version))
             {
-                var existingContext = _contextPerSqlDialect.Values.FirstOrDefault();
+                var existingContext = _contextPerSqlVersion.Values.FirstOrDefault();
                 var existingLogger = existingContext?.Logger;
                 var _context = new Context
                 {
                     Logger = existingLogger ?? TestHelper.CreateLogger(),
-                    Settings = TestHelper.GetDefaultTestSettings(sqlDialect)
+                    Settings = TestHelper.GetDefaultTestSettings(version)
                 };
 
-                _contextPerSqlDialect.Add(sqlDialect, _context);
+                _contextPerSqlVersion.Add(version, _context);
             }
 
-            return _contextPerSqlDialect[sqlDialect];
+            return _contextPerSqlVersion[version];
         }
 
         public void Cleanup()
         {
-            var existingContext = _contextPerSqlDialect.Values.FirstOrDefault();
+            var existingContext = _contextPerSqlVersion.Values.FirstOrDefault();
             var existingLogger = existingContext?.Logger;
             existingLogger?.Log(Common.Logger.LogSeverity.Debug, "Cleanup is called.", "SqlExecuterTestAdapter");
 
@@ -90,7 +91,7 @@
             {
                 try
                 {
-                    var shouldDrop = TestHelper.ShouldRunIntegrationTest(sqlExecuterAndDialect.SqlDialect);
+                    var shouldDrop = TestHelper.ShouldRunIntegrationTest(sqlExecuterAndDialect.Version);
                     if (shouldDrop)
                     {
                         sqlExecuterAndDialect.SqlExecuter.CleanupDatabase(_dds.ToArray());
@@ -111,8 +112,9 @@
             var connectionStringWithProvider = Initialize(connectionStringKey);
 
             var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
+            var version = SqlEngines.GetLatestVersion(sqlDialect);
 
-            if (!TestHelper.ShouldRunIntegrationTest(sqlDialect))
+            if (!TestHelper.ShouldRunIntegrationTest(version))
                 return "Query execution is skipped, integration tests are not running.";
 
             sqlExecutersAndDialects[connectionStringKey].SqlExecuter.ExecuteNonQuery(query);

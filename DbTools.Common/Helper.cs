@@ -4,18 +4,18 @@
 
     public static class Helper
     {
-        public static Settings GetDefaultSettings(SqlDialect sqlDialect, IConfigurationRoot configuration)
+        public static Settings GetDefaultSettings(SqlVersion version, IConfigurationRoot configuration)
         {
             var settings = new Settings();
 
             var sqlDialectSpecificSettings = new SqlDialectSpecificSettings();
 
-            if (sqlDialect == SqlDialect.MsSql)
+            if (version.SqlDialect == SqlDialectX.MsSql)
             {
                 sqlDialectSpecificSettings["DefaultSchema"] = "dbo";
             }
 
-            if (sqlDialect == SqlDialect.Oracle)
+            if (version.SqlDialect == SqlDialectX.Oracle)
             {
                 sqlDialectSpecificSettings["OracleDatabaseName"] = configuration["oracleDatabaseName"];
             }

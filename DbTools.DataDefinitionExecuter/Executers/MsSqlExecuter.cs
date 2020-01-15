@@ -11,7 +11,7 @@
 
     public class MsSqlExecuter : SqlExecuter, ISqlExecuterDropAndCreateDatabase
     {
-        protected override SqlDialect SqlDialect => SqlDialect.MsSql;
+        protected override SqlDialectX SqlDialect => SqlDialectX.MsSql;
 
         public MsSqlExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
             : base(connectionStringWithProvider, sqlGenerator)

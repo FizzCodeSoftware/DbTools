@@ -12,8 +12,6 @@
         {
         }
 
-        public override ISqlTypeMapper SqlTypeMapper { get; } = new OracleTypeMapper();
-
         protected override string GuardKeywords(string name)
         {
             return $"\"{ name}\"";

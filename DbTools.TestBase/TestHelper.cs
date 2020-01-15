@@ -35,6 +35,11 @@
             return _forceIntegrationTests;
         }
 
+        public static bool ShouldRunIntegrationTest(SqlVersion version)
+        {
+            return ShouldRunIntegrationTest(version.SqlDialect);
+        }
+
         public static bool ShouldRunIntegrationTest(string providerName)
         {
             if (ShouldForceIntegrationTests())
@@ -48,24 +53,24 @@
             };
         }
 
-        public static bool ShouldRunIntegrationTest(SqlDialect sqlDialect)
+        private static bool ShouldRunIntegrationTest(SqlDialectX sqlDialect)
         {
             if (ShouldForceIntegrationTests())
                 return true;
 
             return sqlDialect switch
             {
-                SqlDialect.MsSql => false,
-                SqlDialect.Oracle => false,
+                SqlDialectX.MsSql => false,
+                SqlDialectX.Oracle => false,
                 _ => true,
             };
         }
 
-        public static Settings GetDefaultTestSettings(SqlDialect sqlDialect)
+        public static Settings GetDefaultTestSettings(SqlVersion version)
         {
-            var settings = Helper.GetDefaultSettings(sqlDialect, _configuration);
+            var settings = Helper.GetDefaultSettings(version, _configuration);
 
-            if (sqlDialect == SqlDialect.Oracle)
+            if (version.SqlDialect == SqlDialectX.Oracle)
             {
                 var executingAssembly = Assembly.GetExecutingAssembly();
                 var callerAssemblies = new StackTrace().GetFrames()
@@ -85,9 +90,9 @@
             return settings;
         }
 
-        public static void CheckFeature(SqlDialect sqlDialect, string feature)
+        public static void CheckFeature(SqlVersion version, string feature)
         {
-            var featureSupport = Features.GetSupport(sqlDialect, feature);
+            var featureSupport = Features.GetSupport(version, feature);
             if (featureSupport.Support == Support.NotSupported)
                 Assert.Inconclusive($"Test is skipped, feature {feature} is not supported. ({featureSupport.Description}).");
 
@@ -95,7 +100,7 @@
                 Assert.Inconclusive($"Test is skipped, feature {feature} is not implemented (yet). ({featureSupport.Description}).");
         }
 
-        public static void CheckProvider(SqlDialect sqlDialect, IEnumerable<ConnectionStringWithProvider> connectionStringWithProviders)
+        public static void CheckProvider(SqlDialectX sqlDialect, IEnumerable<ConnectionStringWithProvider> connectionStringWithProviders)
         {
             RegisterProviders();
             var usedSqlDialects = GetSqlDialectsWithConfiguredConnectionStrting(connectionStringWithProviders);
@@ -103,13 +108,13 @@
                 Assert.Inconclusive($"Test is skipped, .Net Framework Data Provider is not usabe for {sqlDialect.ToString()} dialect, provider name: {SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect)}. No valid connection string is configured.");
         }
 
-        private static List<SqlDialect> _sqlDialectsWithConfiguredConnectionStrting;
+        private static List<SqlDialectX> _sqlDialectsWithConfiguredConnectionStrting;
 
-        private static List<SqlDialect> GetSqlDialectsWithConfiguredConnectionStrting(IEnumerable<ConnectionStringWithProvider> connectionStringCollection)
+        private static List<SqlDialectX> GetSqlDialectsWithConfiguredConnectionStrting(IEnumerable<ConnectionStringWithProvider> connectionStringCollection)
         {
             if (_sqlDialectsWithConfiguredConnectionStrting == null)
             {
-                _sqlDialectsWithConfiguredConnectionStrting = new List<SqlDialect>();
+                _sqlDialectsWithConfiguredConnectionStrting = new List<SqlDialectX>();
                 foreach (var connectionStringWithProvider in connectionStringCollection)
                 {
                     if (!string.IsNullOrEmpty(connectionStringWithProvider.ConnectionString))

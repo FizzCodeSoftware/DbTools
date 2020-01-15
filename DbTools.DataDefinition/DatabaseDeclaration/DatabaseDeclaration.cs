@@ -10,11 +10,13 @@
         public NamingStrategies NamingStrategies { get; }
         public const char SchemaTableNameSeparator = 'ꜗ';
         public string DefaultSchema { get; }
+        public TypeConverters TypeConverters { get; }
 
-        protected DatabaseDeclaration(string defaultSchema = null, NamingStrategies namingStrategies = null)
+        protected DatabaseDeclaration(string defaultSchema = null, NamingStrategies namingStrategies = null, TypeConverters typeConverters = null)
         {
             DefaultSchema = defaultSchema;
             NamingStrategies = namingStrategies ?? new NamingStrategies();
+            TypeConverters = typeConverters ?? TypeConverters.All;
 
             AddDeclaredTables();
             CreateRegisteredForeignKeys();

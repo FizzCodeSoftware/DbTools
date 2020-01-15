@@ -13,8 +13,6 @@
         {
         }
 
-        public override ISqlTypeMapper SqlTypeMapper { get; } = new MsSqlTypeMapper();
-
         protected override string GuardKeywords(string name)
         {
             return $"[{name}]";

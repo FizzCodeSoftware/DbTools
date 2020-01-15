@@ -26,8 +26,6 @@
         string DropAllTables();
         string DropSchemas(List<string> schemaNames);
 
-        ISqlTypeMapper SqlTypeMapper { get; }
-
         SqlStatementWithParameters TableExists(SqlTable table);
         string TableNotEmpty(SqlTable table);
     }

@@ -9,7 +9,7 @@
 
     public class OracleExecuter : SqlExecuter
     {
-        protected override SqlDialect SqlDialect => SqlDialect.Oracle;
+        protected override SqlDialectX SqlDialect => SqlDialectX.Oracle;
 
         public OracleExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
             : base(connectionStringWithProvider, sqlGenerator)

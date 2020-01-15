@@ -2,30 +2,24 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using FizzCode.DbTools.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
-    public class SqlDialectsAttribute : Attribute, ITestDataSource
+    public abstract class SqlVersionsBasAttribute : Attribute, ITestDataSource
     {
-        public SqlDialectsAttribute()
-        {
-            var array = Enum.GetValues(typeof(SqlDialect));
-            _sqlDialects = new SqlDialect[array.Length];
-            array.CopyTo(_sqlDialects, 0);
-        }
+        protected SqlVersion[] Versions { get; }
 
-        public SqlDialectsAttribute(params SqlDialect[] sqlDialects)
+        protected SqlVersionsBasAttribute(params SqlVersion[] versions)
         {
-            _sqlDialects = sqlDialects;
+            Versions = versions;
         }
-
-        private readonly SqlDialect[] _sqlDialects;
 
         public IEnumerable<object[]> GetData(MethodInfo methodInfo)
         {
-            foreach (var item in _sqlDialects)
+            foreach (var item in Versions)
             {
                 if (TestHelper.ShouldRunIntegrationTest(item))
                     yield return new[] { (object)item };
@@ -34,10 +28,39 @@
 
         public string GetDisplayName(MethodInfo methodInfo, object[] data)
         {
-            var sqlDialect = (SqlDialect)data[0];
-            var sqlDialectName = Enum.GetName(typeof(SqlDialect), sqlDialect);
+            var versionKey = (Version)data[0];
+            return $"{methodInfo.Name} {versionKey}";
+        }
+    }
 
-            return $"{methodInfo.Name} {sqlDialectName}";
+    [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
+    public class LatestSqlVersionsAttribute : SqlVersionsBasAttribute
+    {
+        public LatestSqlVersionsAttribute()
+        {
+            var list = new List<SqlVersion>();
+            foreach (var sqlDialect in Enum.GetValues(typeof(SqlDialectX)).Cast<SqlDialectX>())
+            {
+                list.Add(SqlEngines.GetLatestVersion(sqlDialect));
+            }
+
+            //VersionKeys = new VersionKey[list.Count];
+            list.CopyTo(Versions, 0);
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
+    public class SqlVersionsAttribute : SqlVersionsBasAttribute
+    {
+        public SqlVersionsAttribute()
+        {
+            var list = SqlEngines.Versions;
+            //VersionKeys = new VersionKey[list.Count];
+            list.CopyTo(Versions, 0);
+        }
+
+        public SqlVersionsAttribute(params SqlVersion[] versions) : base(versions)
+        {
         }
     }
 }

@@ -5,25 +5,25 @@
 
     public static class SqlGeneratorFactory
     {
-        public static ISqlGenerator CreateGenerator(SqlDialect dialect, Context context)
+        public static ISqlGenerator CreateGenerator(SqlVersion version, Context context)
         {
-            return dialect switch
+            return version.SqlDialect switch
             {
-                SqlDialect.SqLite => new SqLiteGenerator(context),
-                SqlDialect.MsSql => new MsSqlGenerator(context),
-                SqlDialect.Oracle => new OracleGenerator(context),
-                _ => throw new NotImplementedException($"Not implemented {dialect}."),
+                SqlDialectX.SqLite => new SqLiteGenerator(context),
+                SqlDialectX.MsSql => new MsSqlGenerator(context),
+                SqlDialectX.Oracle => new OracleGenerator(context),
+                _ => throw new NotImplementedException($"Not implemented {version.SqlDialect}."),
             };
         }
 
-        public static ISqlMigrationGenerator CreateMigrationGenerator(SqlDialect dialect, Context context)
+        public static ISqlMigrationGenerator CreateMigrationGenerator(SqlVersion version, Context context)
         {
-            return dialect switch
+            return version.SqlDialect switch
             {
-                SqlDialect.SqLite => new SqLiteMigrationGenerator(context),
-                SqlDialect.MsSql => new MsSqlMigrationGenerator(context),
-                SqlDialect.Oracle => new OracleMigrationGenerator(context),
-                _ => throw new NotImplementedException($"Not implemented {dialect}."),
+                SqlDialectX.SqLite => new SqLiteMigrationGenerator(context),
+                SqlDialectX.MsSql => new MsSqlMigrationGenerator(context),
+                SqlDialectX.Oracle => new OracleMigrationGenerator(context),
+                _ => throw new NotImplementedException($"Not implemented {version.SqlDialect}."),
             };
         }
     }

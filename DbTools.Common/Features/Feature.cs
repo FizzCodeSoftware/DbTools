@@ -7,15 +7,21 @@
         public Feature(string name)
         {
             Name = name;
-            Support = new Dictionary<SqlDialect, FeatureSupport>();
+            Support = new Dictionary<SqlVersion, FeatureSupport>();
         }
 
         public string Name { get; set; }
-        public Dictionary<SqlDialect, FeatureSupport> Support { get; set; }
+        public Dictionary<SqlVersion, FeatureSupport> Support { get; set; }
 
-        public void Add(SqlDialect sqlDialect, Support support, string description = null)
+        public void Add(SqlVersion version, Support support, string description = null)
         {
-            Support.Add(sqlDialect, new FeatureSupport(support, description));
+            Support.Add(version, new FeatureSupport(support, description));
+        }
+
+        public void Add(List<SqlVersion> versions, Support support, string description = null)
+        {
+            foreach(var version in versions)
+                Support.Add(version, new FeatureSupport(support, description));
         }
     }
 }

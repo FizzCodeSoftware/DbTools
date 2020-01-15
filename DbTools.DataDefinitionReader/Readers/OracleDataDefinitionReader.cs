@@ -14,7 +14,7 @@
         {
         }
 
-        protected override SqlDialect SqlDialect => SqlDialect.Oracle;
+        protected override SqlDialectX SqlDialect => SqlDialectX.Oracle;
 
         public override DatabaseDefinition GetDatabaseDefinition()
         {

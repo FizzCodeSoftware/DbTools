@@ -8,8 +8,6 @@
 
     public abstract class GenericSqlGenerator : ISqlGenerator
     {
-        public virtual ISqlTypeMapper SqlTypeMapper { get; } = new GenericSqlTypeMapper();
-
         public Context Context { get; }
 
         protected GenericSqlGenerator(Context context)
@@ -215,35 +213,38 @@
 
         protected string GenerateCreateColumn(SqlColumn column)
         {
+            // TODO Generator should know SqlVersion
+            var type = column.Types.PreferredType;
+
             var sb = new StringBuilder();
             sb.Append(GuardKeywords(column.Name))
                 .Append(" ")
-                .Append(SqlTypeMapper.GetType(column.Type));
+                .Append(type.SqlTypeInfo.DbType);
 
-            if (column.Precision.HasValue)
+            if (type.Scale.HasValue)
             {
-                if (column.Length != null)
+                if (type.Length != null)
                 {
                     sb.Append("(")
-                        .Append(column.Length)
+                        .Append(type.Length)
                         .Append(", ")
-                        .Append(column.Precision)
+                        .Append(type.Scale)
                         .Append(")");
                 }
                 else
                 {
                     sb.Append("(")
-                        .Append(column.Precision)
+                        .Append(type.Scale)
                         .Append(")");
                 }
             }
-            else if (column.Length.HasValue)
+            else if (type.Length.HasValue)
             {
                 sb.Append("(");
-                if (column.Length == -1)
+                if (type.Length == -1)
                     sb.Append("MAX");
                 else
-                    sb.Append(column.Length);
+                    sb.Append(type.Length);
 
                 sb.Append(")");
             }
@@ -262,7 +263,7 @@
                     .Append(")");
             }
 
-            if (column.IsNullable)
+            if (type.IsNullable)
                 sb.Append(" NULL");
             else
                 sb.Append(" NOT NULL");

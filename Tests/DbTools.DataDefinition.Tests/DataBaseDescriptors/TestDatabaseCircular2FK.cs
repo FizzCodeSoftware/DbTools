@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Tests
 {
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Generic1;
 
     public class TestDatabaseCircular2FK : DatabaseDeclaration
     {
