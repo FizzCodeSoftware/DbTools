@@ -4,9 +4,11 @@
     {
         private static readonly Configuration.MsSql2016 Version = new Configuration.MsSql2016();
 
+        private static readonly MsSqlTypeMapper2016 TypeMapper = new MsSqlTypeMapper2016();
+
         public static SqlTypeInfo GetSqlTypeInfo(string name)
         {
-            return MsSqlInfo.Get(new Configuration.MsSql2016())[name];
+            return TypeMapper.SqlTypeInfos[name];
         }
 
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)

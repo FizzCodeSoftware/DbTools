@@ -4,9 +4,11 @@
     {
         private static readonly Configuration.Oracle12c Version = new Configuration.Oracle12c();
 
+        private static readonly OracleTypeMapper12c TypeMapper = new OracleTypeMapper12c();
+
         public static SqlTypeInfo GetSqlTypeInfo(string name)
         {
-            return OracleInfo.Get(new Configuration.Oracle12c())[name];
+            return TypeMapper.SqlTypeInfos[name];
         }
 
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)

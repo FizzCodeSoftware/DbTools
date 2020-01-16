@@ -1,13 +1,18 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Generic1
+﻿using System.Collections.Generic;
+using System.Linq;
+using FizzCode.DbTools.Configuration;
+
+namespace FizzCode.DbTools.DataDefinition.Generic1
 {
     public static class Generic1
     {
         private static readonly Configuration.Generic1 Version = new Configuration.Generic1();
 
+        private static readonly GenericTypeMapper1 TypeMapper = new GenericTypeMapper1();
+
         public static SqlTypeInfo GetSqlTypeInfo(string name)
         {
-            var x = GenericInfo.Current;
-            return GenericInfo.Get(Version)[name];
+            return TypeMapper.SqlTypeInfos[name];
         }
 
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)

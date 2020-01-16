@@ -16,7 +16,6 @@ namespace FizzCode.DbTools.DataDefinition
                 column = new SqlColumn
                 {
                     Table = table,
-                    Types = new SqlTypes(),
                     Name = name
                 };
                 table.Columns.Add(name, column);

@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using FizzCode.DbTools.Configuration;
 
 namespace FizzCode.DbTools.DataDefinition
 {
     internal static class RegisteredForeignKeysCreator
     {
-        internal static void PrimaryKeySingleColum(DatabaseDefinition definition, SqlTable sqlTable, ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn fkRegistration)
+        internal static void PrimaryKeySingleColum(DatabaseDefinition definition, SqlTable sqlTable, ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn fkRegistration, Dictionary<SqlVersion, TypeMapper> TypeMappers)
         {
             var referredTable = definition.GetTable(fkRegistration.ReferredTableName);
             var referredPk = GetReferredPK(referredTable);
@@ -30,9 +32,20 @@ namespace FizzCode.DbTools.DataDefinition
             var order = sqlTable.Columns.GetOrder(placeHolderColumn.Name);
             sqlTable.Columns.Remove(placeHolderColumn.Name);
 
+            CreateOtherTypes(sqlTable, TypeMappers, col);
+
             sqlTable.Columns.Add(col.Name, col, order);
 
             fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(col, pkColumn));
+        }
+
+        private static void CreateOtherTypes(SqlTable sqlTable, Dictionary<SqlVersion, TypeMapper> TypeMappers, SqlColumn col)
+        {
+            foreach (var typeMapper in TypeMappers)
+            {
+                var othertype = typeMapper.Value.MapFromGeneric1(col.Types[new Configuration.Generic1()]);
+                SqlColumnHelper.Add(typeMapper.Key, sqlTable, col.Name, othertype);
+            }
         }
 
         public static void PrimaryKey(DatabaseDefinition definition, SqlTable sqlTable, ForeignKeyRegistrationToTableWithPrimaryKey fkRegistration, IForeignKeyNamingStrategy fkNaming)
@@ -52,6 +65,7 @@ namespace FizzCode.DbTools.DataDefinition
                 pkColumn.CopyTo(col);
 
                 col.Table = sqlTable;
+
                 col.Types.SetAllNullable(fkRegistration.IsNullable);
 
                 col.Name = fkNaming.GetFkToPkColumnName(pkColumn, fkRegistration.NamePrefix);

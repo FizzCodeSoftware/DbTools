@@ -4,6 +4,13 @@
     {
         private static readonly Configuration.SqLite3 Version = new Configuration.SqLite3();
 
+        private static readonly SqLiteTypeMapper3 TypeMapper = new SqLiteTypeMapper3();
+
+        public static SqlTypeInfo GetSqlTypeInfo(string name)
+        {
+            return TypeMapper.SqlTypeInfos[name];
+        }
+
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
         {
             return SqlColumnHelper.Add(Version, table, name, sqlType);
@@ -13,7 +20,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = SqLiteInfo.Current["INTEGER"],
+                SqlTypeInfo = GetSqlTypeInfo("INTEGER"),
                 IsNullable = isNullable
             };
 
@@ -24,7 +31,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = SqLiteInfo.Current["REAL"],
+                SqlTypeInfo = GetSqlTypeInfo("REAL"),
                 IsNullable = isNullable
             };
 
@@ -35,7 +42,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = SqLiteInfo.Current["TEXT"],
+                SqlTypeInfo = GetSqlTypeInfo("TEXT"),
                 IsNullable = isNullable
             };
 
@@ -46,7 +53,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = SqLiteInfo.Current["BLOB"],
+                SqlTypeInfo = GetSqlTypeInfo("BLOB"),
                 IsNullable = isNullable
             };
 

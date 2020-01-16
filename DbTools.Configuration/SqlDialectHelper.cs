@@ -17,13 +17,13 @@
 
         public static string GetProviderNameFromSqlDialect(Type sqlDialectType)
         {
-            if (sqlDialectType is IMsSqlDialect)
+            if (typeof(IMsSqlDialect).IsAssignableFrom(sqlDialectType))
                 return "System.Data.SqlClient";
 
-            if (sqlDialectType is ISqLiteDialect)
+            if (typeof(ISqLiteDialect).IsAssignableFrom(sqlDialectType))
                 return "System.Data.SQLite";
 
-            if (sqlDialectType is IOracleDialect)
+            if (typeof(IOracleDialect).IsAssignableFrom(sqlDialectType))
                 return "Oracle.ManagedDataAccess.Client";
 
             throw new NotImplementedException($"Unmapped sqlDialect {sqlDialectType.Name}");

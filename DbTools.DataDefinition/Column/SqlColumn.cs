@@ -60,7 +60,8 @@
     {
         public SqlTable Table { get; set; }
         public string Name { get; set; }
-        public SqlTypes Types { get; set; }
+
+        public SqlTypes Types { get; } = new SqlTypes();
 
         private List<SqlColumnProperty> _properties;
         public List<SqlColumnProperty> Properties => _properties ?? (_properties = new List<SqlColumnProperty>());
@@ -73,7 +74,7 @@
         public SqlColumn CopyTo(SqlColumn column)
         {
             column.Name = Name;
-            column.Types = Types.CopyTo(new SqlTypes());
+            Types.CopyTo(column.Types);
             column.Table = Table;
             return column;
         }

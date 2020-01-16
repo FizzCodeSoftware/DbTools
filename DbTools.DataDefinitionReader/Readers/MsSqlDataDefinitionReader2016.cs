@@ -19,6 +19,11 @@
         {
             var dd = new DatabaseDefinition();
 
+            dd.TypeMappers = new Dictionary<SqlVersion, TypeMapper>
+            {
+                { new MsSql2016(), new MsSqlTypeMapper2016() }
+            };
+
             Log(LogSeverity.Debug, "Reading table definitions from database.");
 
             foreach (var schemaAndTableName in GetSchemaAndTableNames())

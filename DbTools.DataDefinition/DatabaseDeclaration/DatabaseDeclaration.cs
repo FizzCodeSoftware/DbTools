@@ -10,13 +10,11 @@
         public NamingStrategies NamingStrategies { get; }
         public const char SchemaTableNameSeparator = 'ꜗ';
         public string DefaultSchema { get; }
-        public TypeConverters TypeConverters { get; }
 
-        protected DatabaseDeclaration(string defaultSchema = null, NamingStrategies namingStrategies = null, TypeConverters typeConverters = null)
+        protected DatabaseDeclaration(string defaultSchema = null, NamingStrategies namingStrategies = null)
         {
             DefaultSchema = defaultSchema;
             NamingStrategies = namingStrategies ?? new NamingStrategies();
-            TypeConverters = typeConverters ?? TypeConverters.All;
 
             AddDeclaredTables();
             CreateRegisteredForeignKeys();
@@ -37,7 +35,7 @@
                     if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
                         fkRegistration.ReferredTableName.Schema = DefaultSchema;
 
-                    RegisteredForeignKeysCreator.PrimaryKeySingleColum(this, sqlTable, fkRegistration);
+                    RegisteredForeignKeysCreator.PrimaryKeySingleColum(this, sqlTable, fkRegistration, TypeMappers);
                 }
 
                 foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithPrimaryKey>(sqlTable))

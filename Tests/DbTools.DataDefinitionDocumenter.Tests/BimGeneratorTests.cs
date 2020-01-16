@@ -4,6 +4,7 @@
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.Tabular;
     using FizzCode.DbTools.TestBase;
