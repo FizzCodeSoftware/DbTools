@@ -2,7 +2,7 @@
 {
     public class Settings
     {
-        public SqlDialectSpecificSettings SqlDialectSpecificSettings { get; set; } = new SqlDialectSpecificSettings();
+        public SqlVersionSpecificSettings SqlVersionSpecificSettings { get; set; } = new SqlVersionSpecificSettings();
         public Options Options { get; set; } = new Options();
     }
 }

@@ -9,19 +9,19 @@
         {
             var settings = new Settings();
 
-            var sqlDialectSpecificSettings = new SqlDialectSpecificSettings();
+            var sqlVersionSpecificSettings = new SqlVersionSpecificSettings();
 
             if (version is IMsSqlDialect)
             {
-                sqlDialectSpecificSettings["DefaultSchema"] = "dbo";
+                sqlVersionSpecificSettings["DefaultSchema"] = "dbo";
             }
 
             if (version is IOracleDialect)
             {
-                sqlDialectSpecificSettings["OracleDatabaseName"] = configuration["oracleDatabaseName"];
+                sqlVersionSpecificSettings["OracleDatabaseName"] = configuration["oracleDatabaseName"];
             }
 
-            settings.SqlDialectSpecificSettings = sqlDialectSpecificSettings;
+            settings.SqlVersionSpecificSettings = sqlVersionSpecificSettings;
 
             return settings;
         }

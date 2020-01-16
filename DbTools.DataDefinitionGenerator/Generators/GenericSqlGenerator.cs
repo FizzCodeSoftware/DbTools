@@ -322,7 +322,7 @@ SELECT
             var schema = schemaAndTableName.Schema;
             var tableName = schemaAndTableName.TableName;
 
-            var defaultSchema = Context.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema", null);
+            var defaultSchema = Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema", null);
 
             if (!string.IsNullOrEmpty(defaultSchema) && Context.Settings.Options.ShouldUseDefaultSchema && string.IsNullOrEmpty(schema))
             {

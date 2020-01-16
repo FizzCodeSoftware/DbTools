@@ -6,13 +6,13 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
 
-    public class OracleTableReader
+    public class OracleTableReader12c
     {
         private readonly SqlExecuter _executer;
         private ILookup<string, Row> _queryResult;
         private ILookup<string, Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetStatement()).Rows.ToLookup(x => x.GetAs<string>("SCHEMAANDTABLENAME")));
 
-        public OracleTableReader(SqlExecuter sqlExecuter)
+        public OracleTableReader12c(SqlExecuter sqlExecuter)
         {
             _executer = sqlExecuter;
         }

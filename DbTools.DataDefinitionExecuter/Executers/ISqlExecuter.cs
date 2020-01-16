@@ -7,6 +7,7 @@
 
     public interface ISqlExecuter
     {
+        public SqlVersion Version { get; }
         ConnectionStringWithProvider ConnectionStringWithProvider { get; }
         ISqlGenerator Generator { get; }
 

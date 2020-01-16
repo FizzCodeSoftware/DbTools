@@ -2,7 +2,6 @@
 {
     using System;
     using System.Data.Common;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
@@ -22,13 +21,13 @@
 
         public override string GetDatabase()
         {
-            var oracleDatabaseName = Generator.Context.Settings.SqlDialectSpecificSettings.GetAs<string>("OracleDatabaseName");
+            var oracleDatabaseName = Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("OracleDatabaseName");
             return oracleDatabaseName;
         }
 
         public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd)
         {
-            var defaultSchema = Generator.Context.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
 
             if (dropIfExists && CheckIfUserExists(defaultSchema))
                 CleanupDatabase(dd);
@@ -55,7 +54,7 @@
 
         public override void CleanupDatabase(params DatabaseDefinition[] dds)
         {
-            var defaultSchema = Generator.Context.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
             // TODO - DROP ALL Schemas - in current DD
 
             var currentUser = ExecuteQuery("select user from dual").Rows[0].GetAs<string>("USER");

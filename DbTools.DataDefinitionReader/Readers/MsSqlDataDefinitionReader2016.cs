@@ -3,20 +3,19 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
-    public class MsSqlDataDefinitionReader : GenericDataDefinitionReader
+    public class MsSqlDataDefinitionReader2016 : GenericDataDefinitionReader
     {
-        public MsSqlDataDefinitionReader(SqlExecuter sqlExecuter)
+        public MsSqlDataDefinitionReader2016(SqlExecuter sqlExecuter)
             : base(sqlExecuter)
         {
+            Version = new MsSql2016();
         }
-
-        protected override SqlDialectX SqlDialect => SqlDialectX.MsSql;
 
         public override DatabaseDefinition GetDatabaseDefinition()
         {
@@ -31,11 +30,11 @@
             AddTableDocumentation(dd);
 
             Log(LogSeverity.Debug, "Reading table identities from database.");
-            new MsSqlIdentityReader(Executer).GetIdentity(dd);
+            new MsSqlIdentityReader2016(Executer).GetIdentity(dd);
             Log(LogSeverity.Debug, "Reading table primary keys from database.");
-            new MsSqlPrimaryKeyReader(Executer).GetPrimaryKey(dd);
+            new MsSqlPrimaryKeyReader2016(Executer).GetPrimaryKey(dd);
             Logger.Log(LogSeverity.Debug, "Reading table foreign keys from database.", "Reader");
-            new MsSqlForeignKeyReader(Executer).GetForeignKeys(dd);
+            new MsSqlForeignKeyReader2016(Executer).GetForeignKeys(dd);
 
             return dd;
         }
@@ -50,11 +49,11 @@ WHERE type = 'U'").Rows
                 .ToList();
         }
 
-        private MsSqlTableReader _tableReader;
-        private MsSqlTableReader TableReader => _tableReader ?? (_tableReader = new MsSqlTableReader(Executer));
+        private MsSqlTableReader2016 _tableReader;
+        private MsSqlTableReader2016 TableReader => _tableReader ?? (_tableReader = new MsSqlTableReader2016(Executer));
 
-        private MsSqlColumnDocumentationReader _columnDocumentationReader;
-        private MsSqlColumnDocumentationReader ColumnDocumentationReader => _columnDocumentationReader ?? (_columnDocumentationReader = new MsSqlColumnDocumentationReader(Executer));
+        private MsSqlColumnDocumentationReader2016 _columnDocumentationReader;
+        private MsSqlColumnDocumentationReader2016 ColumnDocumentationReader => _columnDocumentationReader ?? (_columnDocumentationReader = new MsSqlColumnDocumentationReader2016(Executer));
 
         public override SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition = true)
         {
@@ -62,9 +61,9 @@ WHERE type = 'U'").Rows
 
             if (fullDefinition)
             {
-                new MsSqlPrimaryKeyReader(Executer).
+                new MsSqlPrimaryKeyReader2016(Executer).
                 GetPrimaryKey(sqlTable);
-                new MsSqlForeignKeyReader(Executer).GetForeignKeys(sqlTable);
+                new MsSqlForeignKeyReader2016(Executer).GetForeignKeys(sqlTable);
                 AddTableDocumentation(sqlTable);
             }
 

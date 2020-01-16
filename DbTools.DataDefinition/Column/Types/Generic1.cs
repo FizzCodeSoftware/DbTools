@@ -4,7 +4,7 @@
     {
         public static SqlTypeInfo GetSqlTypeInfo(string name)
         {
-            return GenericInfo.Get(new Common.Generic1())[name];
+            return GenericInfo.Get(new Configuration.Generic1())[name];
         }
 
         public static SqlColumn AddChar(this SqlTable table, string name, int length, bool isNullable = false)

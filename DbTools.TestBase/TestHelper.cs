@@ -9,7 +9,6 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
-    using FizzCode.DbTools.DataDefinition;
     using Microsoft.Extensions.Configuration;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -34,7 +33,7 @@
 #endif
             return _forceIntegrationTests;
         }
-        
+
         public static bool ShouldRunIntegrationTest(string providerName)
         {
             if (ShouldForceIntegrationTests())
@@ -66,7 +65,7 @@
         {
             var settings = Helper.GetDefaultSettings(version, _configuration);
 
-            if (version.SqlDialect == SqlDialectX.Oracle)
+            if (version is IOracleDialect)
             {
                 var executingAssembly = Assembly.GetExecutingAssembly();
                 var callerAssemblies = new StackTrace().GetFrames()
@@ -80,7 +79,7 @@
 
                 var schemaName = assemblyName.Replace(".", "_", StringComparison.CurrentCultureIgnoreCase);
 
-                settings.SqlDialectSpecificSettings["DefaultSchema"] = schemaName;
+                settings.SqlVersionSpecificSettings["DefaultSchema"] = schemaName;
             }
 
             return settings;
@@ -96,29 +95,29 @@
                 Assert.Inconclusive($"Test is skipped, feature {feature} is not implemented (yet). ({featureSupport.Description}).");
         }
 
-        public static void CheckProvider(IEnumerable<ConnectionStringWithProvider> connectionStringWithProviders)
+        public static void CheckProvider(SqlVersion version, IEnumerable<ConnectionStringWithProvider> connectionStringWithProviders)
         {
             RegisterProviders();
-            var usedSqlDialects = GetSqlDialectsWithConfiguredConnectionStrting(connectionStringWithProviders);
-            if (!usedSqlDialects.Contains(sqlDialect))
-                Assert.Inconclusive($"Test is skipped, .Net Framework Data Provider is not usabe for {sqlDialect.ToString()} dialect, provider name: {SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect)}. No valid connection string is configured.");
+            var usedVersions = GetSqlVersionsWithConfiguredConnectionStrting(connectionStringWithProviders);
+            if (!usedVersions.Contains(version))
+                Assert.Inconclusive($"Test is skipped, .Net Framework Data Provider is not usabe for {version} engine version, provider name: {SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType())}. No valid connection string is configured.");
         }
 
-        private static List<SqlDialectX> _sqlDialectsWithConfiguredConnectionStrting;
+        private static List<SqlVersion> _sqlVersionsWithConfiguredConnectionStrting;
 
-        private static List<SqlDialectX> GetSqlDialectsWithConfiguredConnectionStrting(IEnumerable<ConnectionStringWithProvider> connectionStringCollection)
+        private static List<SqlVersion> GetSqlVersionsWithConfiguredConnectionStrting(IEnumerable<ConnectionStringWithProvider> connectionStringCollection)
         {
-            if (_sqlDialectsWithConfiguredConnectionStrting == null)
+            if (_sqlVersionsWithConfiguredConnectionStrting == null)
             {
-                _sqlDialectsWithConfiguredConnectionStrting = new List<SqlDialectX>();
+                _sqlVersionsWithConfiguredConnectionStrting = new List<SqlVersion>();
                 foreach (var connectionStringWithProvider in connectionStringCollection)
                 {
                     if (!string.IsNullOrEmpty(connectionStringWithProvider.ConnectionString))
-                        _sqlDialectsWithConfiguredConnectionStrting.Add(SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName));
+                        _sqlVersionsWithConfiguredConnectionStrting.Add(connectionStringWithProvider.SqlEngineVersion);
                 }
             }
 
-            return _sqlDialectsWithConfiguredConnectionStrting;
+            return _sqlVersionsWithConfiguredConnectionStrting;
         }
 
         private static bool _areDbProviderFactoriesRegistered;

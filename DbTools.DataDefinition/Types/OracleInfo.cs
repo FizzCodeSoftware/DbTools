@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
 
     public class OracleInfo : DbInfo
     {
@@ -39,14 +39,14 @@
                 new SqlTypeInfo("UriType")
             };
 
-            TypesPerVersions.Add(new Common.Oracle12c(), sqlTypeInfos);
+            TypesPerVersions.Add(new Configuration.Oracle12c(), sqlTypeInfos);
         }
 
         public static SqlTypeInfos Current
         {
             get
             {
-                return TypesPerVersions[SqlEngines.GetLatestVersion(SqlDialectX.Oracle)];
+                return TypesPerVersions[SqlEngines.GetLatestVersion<IOracleDialect>()];
             }
         }
     }

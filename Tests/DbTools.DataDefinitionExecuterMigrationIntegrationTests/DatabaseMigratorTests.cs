@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuterMigrationIntegration.Tests
 {
     using System.Linq;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Generic1;
@@ -38,7 +37,7 @@
             var comparer = new Comparer(_sqlExecuterTestAdapter.GetContext(version));
             var changes = comparer.Compare(ddInDatabase, dd);
 
-            var first = changes.First() as TableNew;
+            var first = changes[0] as TableNew;
             Assert.AreEqual((SchemaAndTableName)"NewTableToMigrate", first.SchemaAndTableName);
 
             var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(version.ToString()), SqlGeneratorFactory.CreateMigrationGenerator(version, _sqlExecuterTestAdapter.GetContext(version)));
@@ -88,7 +87,7 @@
             var comparer = new Comparer(_sqlExecuterTestAdapter.GetContext(version));
             var changes = comparer.Compare(ddInDatabase, new TestDatabaseSimple());
 
-            var first = changes.First() as TableDelete;
+            var first = changes[0] as TableDelete;
             Assert.AreEqual((SchemaAndTableName)"NewTableToMigrate", first.SchemaAndTableName);
 
             var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(version.ToString()), SqlGeneratorFactory.CreateMigrationGenerator(version, _sqlExecuterTestAdapter.GetContext(version)));

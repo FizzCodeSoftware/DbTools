@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
 
     public class MsSqlInfo : DbInfo
     {
@@ -41,14 +41,14 @@
 
                 new SqlTypeInfo("XML"),
             };
-            TypesPerVersions.Add(new Common.MsSql2016(), sqlTypeInfos);
+            TypesPerVersions.Add(new Configuration.MsSql2016(), sqlTypeInfos);
         }
 
         public static SqlTypeInfos Current
         {
             get
             {
-                return TypesPerVersions[SqlEngines.GetLatestVersion(SqlDialectX.MsSql)];
+                return TypesPerVersions[SqlEngines.GetLatestVersion<IMsSqlDialect>()];
             }
         }
     }

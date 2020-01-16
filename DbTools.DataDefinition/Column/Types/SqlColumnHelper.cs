@@ -6,7 +6,9 @@
         {
             SqlColumn column;
             if (table.Columns.ContainsKey(name))
+            {
                 column = table[name];
+            }
             else
             {
                 column = new SqlColumn
@@ -18,7 +20,7 @@
                 table.Columns.Add(name, column);
             }
 
-            column.Types.Add(new Common.MsSql2016(), sqlType);
+            column.Types.Add(new Configuration.MsSql2016(), sqlType);
 
             return column;
         }

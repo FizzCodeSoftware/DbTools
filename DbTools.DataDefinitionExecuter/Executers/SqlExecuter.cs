@@ -51,7 +51,7 @@
 
         public virtual DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
         {
-            var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(Version.SqlDialect));
+            var dbf = DbProviderFactories.GetFactory(ConnectionStringWithProvider.ProviderName);
 
             var command = dbf.CreateCommand();
 #pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
@@ -71,7 +71,7 @@
 
         public DbConnectionStringBuilder GetConnectionStringBuilder()
         {
-            var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(Version.SqlDialect));
+            var dbf = DbProviderFactories.GetFactory(ConnectionStringWithProvider.ProviderName);
             return dbf.CreateConnectionStringBuilder();
         }
 

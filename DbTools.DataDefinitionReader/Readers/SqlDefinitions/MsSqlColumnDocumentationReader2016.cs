@@ -6,20 +6,20 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
 
-    public class MsSqlColumnDocumentationReader
+    public class MsSqlColumnDocumentationReader2016
     {
         private readonly SqlExecuter _executer;
         private ILookup<string, Row> _queryResult;
         private ILookup<string, Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetStatement()).Rows.ToLookup(x => x.GetAs<string>("SchemaAndTableName")));
 
-        public MsSqlColumnDocumentationReader(SqlExecuter sqlExecuter)
+        public MsSqlColumnDocumentationReader2016(SqlExecuter sqlExecuter)
         {
             _executer = sqlExecuter;
         }
 
         public void GetColumnDocumentation(SqlTable table)
         {
-            var defaultSchema = _executer.Generator.Context.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = _executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
             var schemaAndTableName = (table.SchemaAndTableName.Schema ?? defaultSchema) + "." + table.SchemaAndTableName.TableName;
             var rows = QueryResult[schemaAndTableName];
 

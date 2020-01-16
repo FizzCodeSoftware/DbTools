@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
 
     public class GenericInfo : DbInfo
     {
@@ -31,14 +31,14 @@
                 new SqlTypeInfo("DATETIME"),
             };
 
-            TypesPerVersions.Add(new Common.Generic1(), sqlTypeInfos);
+            TypesPerVersions.Add(new Configuration.Generic1(), sqlTypeInfos);
         }
 
         public static SqlTypeInfos Current
         {
             get
             {
-                return TypesPerVersions[SqlEngines.GetLatestVersion(SqlDialectX.Generic)];
+                return TypesPerVersions[SqlEngines.GetLatestVersion<IGenericDialect>()];
             }
         }
     }

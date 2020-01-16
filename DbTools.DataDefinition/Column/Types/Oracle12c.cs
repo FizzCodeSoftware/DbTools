@@ -2,12 +2,16 @@
 {
     public static class Oracle12c
     {
+        public static SqlTypeInfo GetSqlTypeInfo(string name)
+        {
+            return MsSqlInfo.Get(new Configuration.Oracle12c())[name];
+        }
 
         public static SqlColumn AddNVarChar(this SqlTable table, string name, int length, bool isNullable = false)
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = OracleInfo.Current["NVARCHAR"],
+                SqlTypeInfo = GetSqlTypeInfo("NVARCHAR"),
                 Length = length,
                 IsNullable = isNullable
             };

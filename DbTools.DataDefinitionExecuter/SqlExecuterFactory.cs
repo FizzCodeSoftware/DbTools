@@ -8,8 +8,6 @@
     {
         public static SqlExecuter CreateSqlExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
         {
-            var dialect = SqlDialectHelper.GetSqlDialectTypeFromProviderName(connectionStringWithProvider.ProviderName);
-
             if (connectionStringWithProvider.SqlEngineVersion is SqLite3)
                 return new SqLiteExecuter3(connectionStringWithProvider, sqlGenerator);
 
@@ -19,7 +17,7 @@
             if (connectionStringWithProvider.SqlEngineVersion is MsSql2016)
                 return new MsSqlExecuter2016(connectionStringWithProvider, sqlGenerator);
 
-            throw new NotImplementedException($"Not implemented {dialect}.");
+            throw new NotImplementedException($"Not implemented {connectionStringWithProvider.SqlEngineVersion}.");
         }
     }
 }

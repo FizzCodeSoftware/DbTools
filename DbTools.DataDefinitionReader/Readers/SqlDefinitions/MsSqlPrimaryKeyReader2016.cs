@@ -6,7 +6,7 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
 
-    public class MsSqlPrimaryKeyReader
+    public class MsSqlPrimaryKeyReader2016
     {
         private readonly SqlExecuter _executer;
         private List<Row> _queryResult;
@@ -17,7 +17,7 @@
                         .ThenBy(row => row.GetAs<int>("index_column_id"))
                         .ToList());
 
-        public MsSqlPrimaryKeyReader(SqlExecuter sqlExecuter)
+        public MsSqlPrimaryKeyReader2016(SqlExecuter sqlExecuter)
         {
             _executer = sqlExecuter;
         }

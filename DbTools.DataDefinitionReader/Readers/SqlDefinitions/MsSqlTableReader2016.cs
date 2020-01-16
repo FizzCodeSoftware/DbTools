@@ -6,13 +6,13 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
 
-    public class MsSqlTableReader
+    public class MsSqlTableReader2016
     {
         private readonly SqlExecuter _executer;
         private ILookup<string, Row> _queryResult;
         private ILookup<string, Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetStatement()).Rows.ToLookup(x => x.GetAs<string>("SchemaAndTableName")));
 
-        public MsSqlTableReader(SqlExecuter sqlExecuter)
+        public MsSqlTableReader2016(SqlExecuter sqlExecuter)
         {
             _executer = sqlExecuter;
         }

@@ -17,12 +17,7 @@
 
         public static DatabaseCreator FromConnectionStringSettings(DatabaseDefinition databaseDefinition, ConnectionStringWithProvider connectionStringWithProvider, Context context)
         {
-            var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
-
-            // TODO version detection?
-            var version = SqlEngines.GetLatestVersion(sqlDialect);
-
-            var generator = SqlGeneratorFactory.CreateGenerator(version, context);
+            var generator = SqlGeneratorFactory.CreateGenerator(connectionStringWithProvider.SqlEngineVersion, context);
 
             var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
 
@@ -62,7 +57,7 @@
         {
             foreach (var schemaName in databaseDefinition.GetSchemaNames())
             {
-                if (schemaName == Executer.Generator.Context.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema", null))
+                if (schemaName == Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema", null))
                     continue;
 
                 var sql = Executer.Generator.CreateSchema(schemaName);

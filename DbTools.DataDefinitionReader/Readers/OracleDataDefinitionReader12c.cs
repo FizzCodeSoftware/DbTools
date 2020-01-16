@@ -5,16 +5,16 @@
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
 
-    public class OracleDataDefinitionReader : GenericDataDefinitionReader
+    public class OracleDataDefinitionReader12c : GenericDataDefinitionReader
     {
-        public OracleDataDefinitionReader(SqlExecuter sqlExecuter) : base(sqlExecuter)
+        public OracleDataDefinitionReader12c(SqlExecuter sqlExecuter) : base(sqlExecuter)
         {
+            Version = new Oracle12c();
         }
-
-        protected override SqlDialectX SqlDialect => SqlDialectX.Oracle;
 
         public override DatabaseDefinition GetDatabaseDefinition()
         {

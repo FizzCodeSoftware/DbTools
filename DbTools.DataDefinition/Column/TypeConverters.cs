@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System.Collections.Generic;
-    using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
 
     public class TypeConverters : Dictionary<SqlVersion, TypeConverter>
     {

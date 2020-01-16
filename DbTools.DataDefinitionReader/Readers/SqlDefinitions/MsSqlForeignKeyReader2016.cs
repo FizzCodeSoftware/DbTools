@@ -6,13 +6,13 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
 
-    public class MsSqlForeignKeyReader
+    public class MsSqlForeignKeyReader2016
     {
         private readonly SqlExecuter _executer;
         private List<Row> _queryResult;
         private List<Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetStatement()).Rows);
 
-        public MsSqlForeignKeyReader(SqlExecuter sqlExecuter)
+        public MsSqlForeignKeyReader2016(SqlExecuter sqlExecuter)
         {
             _executer = sqlExecuter;
         }

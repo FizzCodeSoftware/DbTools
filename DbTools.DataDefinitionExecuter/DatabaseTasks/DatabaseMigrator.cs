@@ -2,7 +2,6 @@
 {
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Migration;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
@@ -17,13 +16,8 @@
 
         public static DatabaseMigrator FromConnectionStringSettings(ConnectionStringWithProvider connectionStringWithProvider, Context context)
         {
-            var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
-
-            // TODO version detection?
-            var version = SqlEngines.GetLatestVersion(sqlDialect);
-
-            var generator = SqlGeneratorFactory.CreateGenerator(version, context);
-            var migrationGenerator = SqlGeneratorFactory.CreateMigrationGenerator(version, context);
+            var generator = SqlGeneratorFactory.CreateGenerator(connectionStringWithProvider.SqlEngineVersion, context);
+            var migrationGenerator = SqlGeneratorFactory.CreateMigrationGenerator(connectionStringWithProvider.SqlEngineVersion, context);
 
             var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
 

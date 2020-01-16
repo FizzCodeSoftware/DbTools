@@ -20,7 +20,7 @@
 
         public void Check(SqlVersion version)
         {
-            TestHelper.CheckProvider(version.SqlDialect, ConnectionStrings.All);
+            TestHelper.CheckProvider(version, ConnectionStrings.All);
 
             if (!TestHelper.ShouldRunIntegrationTest(version))
                 Assert.Inconclusive("Test is skipped, integration tests are not running.");
