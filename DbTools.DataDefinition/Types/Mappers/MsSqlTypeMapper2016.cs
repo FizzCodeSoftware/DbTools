@@ -93,7 +93,7 @@
             return sqlTypeInfos;
         }
 
-        public SqlType MapSqlType(string type, bool isNullable, int numericPrecision, int numericSale, int characterMaximumLength, int datetimePrecision)
+        public SqlType MapSqlTypeFromReaderInfo(string type, bool isNullable, int numericPrecision, int numericSale, int characterMaximumLength, int datetimePrecision)
         {
             switch (type.ToUpper())
             {
@@ -101,37 +101,37 @@
                 case "NCHAR":
                 case "VARCHAR": // TODO max length allowed - what is in Row?
                 case "NVARCHAR": // TODO max length allowed - what is in Row?
-                    return MapSqlType(type, isNullable, characterMaximumLength);
+                    return base.MapSqlType(type, isNullable, characterMaximumLength);
                 case "BIT":
                 case "TINYINT":
                 case "SMALLINT":
                 case "INT":
                 case "BIGINT":
-                    return MapSqlType(type, isNullable);
+                    return base.MapSqlType(type, isNullable);
                 case "DECIMAL":
                 case "NUMERIC":
-                    return MapSqlType(type, isNullable, numericPrecision, numericSale);
+                    return base.MapSqlType(type, isNullable, numericPrecision, numericSale);
                 case "MONEY":
                 case "SMALLMONEY":
-                    return MapSqlType(type, isNullable);
+                    return base.MapSqlType(type, isNullable);
                 case "FLOAT":
                 case "REAL":
-                    return MapSqlType(type, isNullable);
+                    return base.MapSqlType(type, isNullable);
                 case "DATE":
                 case "DATETIME":
                 case "SMALLDATETIME":
-                    return MapSqlType(type, isNullable);
+                    return base.MapSqlType(type, isNullable);
                 case "TIME":
                 case "DATETIME2":
                 case "DATETIMEOFFSET":
-                    return MapSqlType(type, isNullable, datetimePrecision);
+                    return base.MapSqlType(type, isNullable, datetimePrecision);
                 case "BINARY":
-                    return MapSqlType(type, isNullable, characterMaximumLength); // TODO which length?
+                    return base.MapSqlType(type, isNullable, characterMaximumLength); // TODO which length?
                 case "VARBINARY": // TODO max length allowed - what is in Row?
-                    return MapSqlType(type, isNullable, characterMaximumLength); // TODO which length?
+                    return base.MapSqlType(type, isNullable, characterMaximumLength); // TODO which length?
                 case "IMAGE":
                 case "XML":
-                    return MapSqlType(type, isNullable);
+                    return base.MapSqlType(type, isNullable);
                 default:
                     throw new NotImplementedException($"Unmapped SqlType: {type}.");
             }

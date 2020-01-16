@@ -6,7 +6,7 @@
     {
         public SqlTypeInfos SqlTypeInfos { get; protected set; }
 
-        public virtual SqlType MapSqlType(string type, bool IsNullable, int length = 0, int scale = 0)
+        protected virtual SqlType MapSqlType(string type, bool isNullable, int length = 0, int scale = 0)
         {
             var typeName = type.ToUpper();
             SqlTypeInfos.TryGetValue(typeName, out var sqlTypeInfo);
@@ -18,7 +18,7 @@
             {
                 Length = length,
                 Scale = scale,
-                IsNullable = IsNullable,
+                IsNullable = isNullable,
                 SqlTypeInfo = sqlTypeInfo
             };
 

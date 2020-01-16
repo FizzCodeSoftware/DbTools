@@ -44,5 +44,11 @@
         public bool HasScale { get; }
         public bool IsScaleMandatory { get; }
         public bool Deprecated { get; }
+
+        public override string ToString()
+        {
+            var deprecated = Deprecated ? " (Deprecated)" : "";
+            return $"{DbType} ({HasLength}, {HasScale}{deprecated}";
+        }
     }
 }

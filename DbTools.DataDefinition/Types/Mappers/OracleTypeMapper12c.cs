@@ -9,7 +9,7 @@
             SqlTypeInfos = GetTypeInfos();
         }
 
-        public SqlType MapSqlType(string type, bool isNullable, int dataPrecision, int dataScale)
+        public SqlType MapSqlTypeFromReaderInfo(string type, bool isNullable, int dataPrecision, int dataScale)
         {
             // TODO VARCHAR2(20 BYTE) VS VARCHAR2(20 CHAR)
 
@@ -21,7 +21,7 @@
                 case "NVARCHAR":
                 case "VARCHAR2":
                 case "NVARCHAR2":
-                    return MapSqlType(type, isNullable, dataPrecision);
+                    return base.MapSqlType(type, isNullable, dataPrecision);
 
                 case "BLOB":
                 case "CLOB":
@@ -29,23 +29,23 @@
                 case "BFILE":
                 case "LONG": // TODO handle deprecated
                 case "LONG RAW": // TODO handle deprecated
-                    return MapSqlType(type, isNullable, dataPrecision);
+                    return base.MapSqlType(type, isNullable, dataPrecision);
 
                 case "NUMBER":
-                    return MapSqlType(type, isNullable, dataPrecision, dataScale);
+                    return base.MapSqlType(type, isNullable, dataPrecision, dataScale);
 
                 case "BINARY_FLOAT":
                 case "BINARY_DOUBLE":
-                    return MapSqlType(type, isNullable);
+                    return base.MapSqlType(type, isNullable);
 
                 case "DATE":
                 case "TIMESTAMP WITH TIME ZONE":
                 case "TIMESTAMP WITH LOCAL TIME ZONE":
-                    return MapSqlType(type, isNullable);
+                    return base.MapSqlType(type, isNullable);
 
                 case "XMLTYPE":
                 case "URITYPE":
-                    return MapSqlType(type, isNullable);
+                    return base.MapSqlType(type, isNullable);
 
                 default:
                     throw new NotImplementedException($"Unmapped SqlType: {type}.");
@@ -54,7 +54,6 @@
 
         public override SqlType MapFromGeneric1(SqlType genericType)
         {
-            var result = new SqlType();
             switch (genericType.SqlTypeInfo.DbType)
             {
                 case "CHAR":
@@ -72,7 +71,7 @@
                 case "INT16":
                 case "INT32":
                 case "INT64":
-                    return genericType.CopyTo(result);
+                    return MapAs("NUMBER", genericType);
                 default:
                     throw new NotImplementedException($"Unmapped type {genericType.SqlTypeInfo.DbType}");
             }

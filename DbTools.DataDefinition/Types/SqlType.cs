@@ -15,5 +15,11 @@
             sqltype.Scale = Scale;
             return sqltype;
         }
+
+        public override string ToString()
+        {
+            var nullable = IsNullable ? " NULL" : " NOT NULL";
+            return $"{SqlTypeInfo.DbType} ({Length}, {Scale}){nullable}";
+        }
     }
 }

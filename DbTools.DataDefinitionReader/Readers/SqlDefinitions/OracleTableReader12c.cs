@@ -30,13 +30,13 @@
             {
                 var type = row.GetAs<string>("DATA_TYPE");
                 var dataPrecisionDecimal = row.GetAs<decimal?>("DATA_PRECISION");
-                var dataScaleDecimal = row.GetAs<decimal>("DATA_SCALE");
+                var dataScaleDecimal = row.GetAs<decimal?>("DATA_SCALE");
                 var dataPrecision = (int)(dataPrecisionDecimal ?? 0);
-                var dataScale = (int)dataScaleDecimal;
+                var dataScale = (int)(dataScaleDecimal ?? 0);
 
-                var isNullable = row.GetAs<string>("IS_NULLABLE") == "YES";
+                var isNullable = row.GetAs<string>("NULLABLE") != "N";
 
-                var sqlType = TypeMapper.MapSqlType(type, isNullable, dataPrecision, dataScale);
+                var sqlType = TypeMapper.MapSqlTypeFromReaderInfo(type, isNullable, dataPrecision, dataScale);
 
                 var column = new SqlColumn
                 {

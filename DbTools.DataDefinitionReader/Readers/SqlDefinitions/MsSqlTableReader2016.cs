@@ -36,7 +36,7 @@
 
                 var isNullable = row.GetAs<string>("IS_NULLABLE") == "YES";
 
-                var sqlType = TypeMapper.MapSqlType(type, isNullable, numericPrecision, numericScale, characterMaximumLength, dateTimePrecision);
+                var sqlType = TypeMapper.MapSqlTypeFromReaderInfo(type, isNullable, numericPrecision, numericScale, characterMaximumLength, dateTimePrecision);
 
                 var column = new SqlColumn
                 {
