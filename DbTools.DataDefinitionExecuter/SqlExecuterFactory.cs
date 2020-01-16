@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
     using System;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
@@ -18,6 +19,13 @@
                 return new MsSqlExecuter2016(connectionStringWithProvider, sqlGenerator);
 
             throw new NotImplementedException($"Not implemented {connectionStringWithProvider.SqlEngineVersion}.");
+        }
+
+        public static SqlExecuter CreateSqlExecuter(ConnectionStringWithProvider connectionStringWithProvider, Context context)
+        {
+            var generator = SqlGeneratorFactory.CreateGenerator(connectionStringWithProvider.SqlEngineVersion, context);
+
+            return CreateSqlExecuter(connectionStringWithProvider, generator);
         }
     }
 }

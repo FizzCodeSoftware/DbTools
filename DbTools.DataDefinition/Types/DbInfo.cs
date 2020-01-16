@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using FizzCode.DbTools.Common;
-using FizzCode.DbTools.Configuration;
-
-namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition
 {
+    using System.Collections.Generic;
+    using FizzCode.DbTools.Configuration;
 
     public abstract class DbInfo
     {

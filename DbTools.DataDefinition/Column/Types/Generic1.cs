@@ -2,9 +2,17 @@
 {
     public static class Generic1
     {
+        private static readonly Configuration.Generic1 Version = new Configuration.Generic1();
+
         public static SqlTypeInfo GetSqlTypeInfo(string name)
         {
-            return GenericInfo.Get(new Configuration.Generic1())[name];
+            var x = GenericInfo.Current;
+            return GenericInfo.Get(Version)[name];
+        }
+
+        private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
+        {
+            return SqlColumnHelper.Add(Version, table, name, sqlType);
         }
 
         public static SqlColumn AddChar(this SqlTable table, string name, int length, bool isNullable = false)
@@ -16,7 +24,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
 
         public static SqlColumn AddNChar(this SqlTable table, string name, int length, bool isNullable = false)
@@ -28,7 +36,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
 
         public static SqlColumn AddVarChar(this SqlTable table, string name, int length, bool isNullable = false)
@@ -40,7 +48,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
 
         public static SqlColumn AddNVarChar(this SqlTable table, string name, int length, bool isNullable = false)
@@ -52,7 +60,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
 
         public static SqlColumn AddPK(this SqlTable table, string name, bool isNullable = false)
@@ -63,7 +71,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
 
         public static SqlColumn AddFloatSmall(this SqlTable table, string name, bool isNullable = false)
@@ -74,7 +82,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
 
         public static SqlColumn AddFloatLarge(this SqlTable table, string name, bool isNullable = false)
@@ -85,7 +93,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
 
         public static SqlColumn AddBit(this SqlTable table, string name, bool isNullable = false)
@@ -96,7 +104,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
 
         public static SqlColumn AddByte(this SqlTable table, string name, bool isNullable = false)
@@ -107,7 +115,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
 
         public static SqlColumn AddInt16(this SqlTable table, string name, bool isNullable = false)
@@ -118,7 +126,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
 
         public static SqlColumn AddInt32(this SqlTable table, string name, bool isNullable = false)
@@ -129,7 +137,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
 
         public static SqlColumn AddInt64(this SqlTable table, string name, bool isNullable = false)
@@ -140,7 +148,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
 
         public static SqlColumn AddNumber(this SqlTable table, string name, int? length, int? scale, bool isNullable = false)
@@ -153,7 +161,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
 
         public static SqlColumn AddDate(this SqlTable table, string name, bool isNullable = false)
@@ -164,7 +172,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
 
         public static SqlColumn AddTime(this SqlTable table, string name, bool isNullable = false)
@@ -175,7 +183,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
 
         public static SqlColumn AddDateTime(this SqlTable table, string name, bool isNullable = false)
@@ -186,7 +194,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
     }
 }

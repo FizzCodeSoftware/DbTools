@@ -40,6 +40,24 @@ namespace FizzCode.DbTools.Configuration
     {
         public string VersionString { get; protected set; }
         public string VersionNumber { get; protected set; }
+
+        public override int GetHashCode()
+        {
+            return GetType().GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            return obj.GetType() == GetType();
+        }
+
+        public override string ToString()
+        {
+            return GetType().Name;
+        }
     }
 
     public class Oracle12c : SqlVersion, IOracleDialect
@@ -88,7 +106,7 @@ namespace FizzCode.DbTools.Configuration
             Versions.Add(new Oracle12c());
         }
 
-        public static List<SqlVersion> Versions => new List<SqlVersion>();
+        public static List<SqlVersion> Versions { get; } = new List<SqlVersion>();
 
         public static SqlVersion GetLatestVersion<T>() where T : ISqlDialect
         {
@@ -96,9 +114,9 @@ namespace FizzCode.DbTools.Configuration
             return lastVersion;
         }
 
-        public static List<SqlVersion> GetLatestVersions()
+        public static List<SqlVersion> GetLatestExecutableVersions()
         {
-            var latestVersions = Versions.GroupBy(t => t.GetType()).SelectMany(t => new[] { t.Last() }).ToList();
+            var latestVersions = Versions.Where(v => !typeof(IGenericDialect).IsAssignableFrom(v.GetType())).GroupBy(t => t.GetType()).SelectMany(t => new[] { t.Last() }).ToList();
             return latestVersions.ToList();
         }
 
@@ -110,7 +128,7 @@ namespace FizzCode.DbTools.Configuration
 
         public static SqlVersion GetVersion(Type sqlDialectType, string versionString)
         {
-            var result = Versions.Where(v => v.GetType() == sqlDialectType && v.VersionString == versionString).First();
+            var result = Versions.Where(v => sqlDialectType.IsAssignableFrom(v.GetType()) && v.VersionString == versionString).First();
             return result;
         }
 

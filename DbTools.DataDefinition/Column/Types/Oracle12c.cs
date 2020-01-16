@@ -2,9 +2,16 @@
 {
     public static class Oracle12c
     {
+        private static readonly Configuration.Oracle12c Version = new Configuration.Oracle12c();
+
         public static SqlTypeInfo GetSqlTypeInfo(string name)
         {
-            return MsSqlInfo.Get(new Configuration.Oracle12c())[name];
+            return OracleInfo.Get(new Configuration.Oracle12c())[name];
+        }
+
+        private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
+        {
+            return SqlColumnHelper.Add(Version, table, name, sqlType);
         }
 
         public static SqlColumn AddNVarChar(this SqlTable table, string name, int length, bool isNullable = false)
@@ -16,7 +23,7 @@
                 IsNullable = isNullable
             };
 
-            return SqlColumnHelper.Add(table, name, sqlType);
+            return Add(table, name, sqlType);
         }
     }
 }

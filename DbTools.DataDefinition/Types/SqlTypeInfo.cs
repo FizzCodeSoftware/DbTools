@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using FizzCode.DbTools.Common;
-
-namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition
 {
     public class SqlTypeInfo
     {

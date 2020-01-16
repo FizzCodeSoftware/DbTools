@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using FizzCode.DbTools.Configuration;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,11 +10,11 @@
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
     public abstract class SqlVersionsBasAttribute : Attribute, ITestDataSource
     {
-        protected SqlVersion[] Versions { get; }
+        protected List<SqlVersion> Versions { get; set;  }
 
         protected SqlVersionsBasAttribute(params SqlVersion[] versions)
         {
-            Versions = versions;
+            Versions = versions.ToList();
         }
 
         public IEnumerable<object[]> GetData(MethodInfo methodInfo)
@@ -27,7 +28,7 @@
 
         public string GetDisplayName(MethodInfo methodInfo, object[] data)
         {
-            var versionKey = (Version)data[0];
+            var versionKey = (SqlVersion)data[0];
             return $"{methodInfo.Name} {versionKey}";
         }
     }
@@ -37,7 +38,7 @@
     {
         public LatestSqlVersionsAttribute()
         {
-            SqlEngines.GetLatestVersions().CopyTo(Versions);
+            Versions = SqlEngines.GetLatestExecutableVersions();
         }
     }
 
@@ -46,7 +47,7 @@
     {
         public SqlVersionsAttribute()
         {
-            SqlEngines.Versions.CopyTo(Versions, 0);
+            Versions = SqlEngines.Versions;
         }
 
         public SqlVersionsAttribute(params SqlVersion[] versions) : base(versions)

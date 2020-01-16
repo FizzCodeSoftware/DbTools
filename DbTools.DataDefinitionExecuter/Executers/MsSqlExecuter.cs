@@ -13,7 +13,6 @@
         public MsSqlExecuter2016(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
             : base(connectionStringWithProvider, sqlGenerator)
         {
-            Version = new MsSql2016();
         }
 
         public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd)

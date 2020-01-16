@@ -3,13 +3,15 @@
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
 
-    public class OracleGenerator : MsSqlGenerator
+    public class OracleGenerator12c : MsSqlGenerator2016
     {
-        public OracleGenerator(Context context)
+        public OracleGenerator12c(Context context)
             : base(context)
         {
+            Version = new Oracle12c();
         }
 
         protected override string GuardKeywords(string name)

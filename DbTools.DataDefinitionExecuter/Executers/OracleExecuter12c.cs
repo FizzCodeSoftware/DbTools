@@ -11,7 +11,6 @@
         public OracleExecuter12c(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
             : base(connectionStringWithProvider, sqlGenerator)
         {
-            Version = new Oracle12c();
         }
 
         public override DbConnection OpenConnectionMaster()
@@ -48,7 +47,7 @@
 
         public bool CheckIfUserExists(string userName)
         {
-            var result = ExecuteScalar(OracleGenerator.IfExists("dba_users", "username", userName));
+            var result = ExecuteScalar(OracleGenerator12c.IfExists("dba_users", "username", userName));
             return (decimal)result == 0;
         }
 

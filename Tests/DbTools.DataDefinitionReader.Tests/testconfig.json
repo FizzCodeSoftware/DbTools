@@ -2,17 +2,20 @@
   "forceIntegrationTests": "false",
   "oracleDatabaseName": "DbTools_DataDefinitionReader_Tests",
   "connectionStrings": {
-    "SqLite": {
+    "SqLite3": {
       "ProviderName": "System.Data.SQLite",
-      "ConnectionString": "FullUri=file::memory:?cache=shared;"
+      "ConnectionString": "FullUri=file::memory:?cache=shared;",
+      "Version": "3"
     },
-    "MsSql": {
+    "MsSql2016": {
       "ProviderName": "System.Data.SqlClient",
-      "ConnectionString": "Data Source=(local);Initial Catalog=DbTools_DataDefinitionReader_Tests;Integrated Security=SSPI;Connection Timeout=5"
+      "ConnectionString": "Data Source=(local);Initial Catalog=DbTools_DataDefinitionReader_Tests;Integrated Security=SSPI;Connection Timeout=5",
+      "Version": "2016"
     },
-    "Oracle": {
+    "Oracle12c": {
       "ProviderName": "Oracle.ManagedDataAccess.Client",
-      "ConnectionString": ""
+      "ConnectionString": "",
+      "Version": "12c"
     }
   }
 }

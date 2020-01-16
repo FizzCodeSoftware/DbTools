@@ -1,8 +1,10 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿using FizzCode.DbTools.Configuration;
+
+namespace FizzCode.DbTools.DataDefinition
 {
     public static class SqlColumnHelper
     {
-        public static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
+        public static SqlColumn Add(SqlVersion version, SqlTable table, string name, SqlType sqlType)
         {
             SqlColumn column;
             if (table.Columns.ContainsKey(name))
@@ -20,7 +22,7 @@
                 table.Columns.Add(name, column);
             }
 
-            column.Types.Add(new Configuration.MsSql2016(), sqlType);
+            column.Types.Add(version, sqlType);
 
             return column;
         }

@@ -4,11 +4,14 @@
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
 
     public abstract class GenericSqlGenerator : ISqlGenerator
     {
         public Context Context { get; }
+
+        public SqlVersion Version { get; protected set; }
 
         protected GenericSqlGenerator(Context context)
         {
@@ -213,8 +216,7 @@
 
         protected string GenerateCreateColumn(SqlColumn column)
         {
-            // TODO Generator should know SqlVersion
-            var type = column.Types.PreferredType;
+            var type = column.Types[Version];
 
             var sb = new StringBuilder();
             sb.Append(GuardKeywords(column.Name))

@@ -6,7 +6,6 @@
 
     public interface IDataDefinitionReader
     {
-        public SqlVersion Version { get; }
         DatabaseDefinition GetDatabaseDefinition();
         List<SchemaAndTableName> GetSchemaAndTableNames();
         SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition = true);

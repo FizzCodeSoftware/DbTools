@@ -4,7 +4,7 @@
 
     public class GenericInfo : DbInfo
     {
-        public GenericInfo()
+        static GenericInfo()
         {
             var sqlTypeInfos = new SqlTypeInfos
             {

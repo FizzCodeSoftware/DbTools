@@ -4,7 +4,7 @@
 
     public class SqLiteInfo : DbInfo
     {
-        public SqLiteInfo()
+        static SqLiteInfo()
         {
             var sqlTypeInfos = new SqlTypeInfos
             {

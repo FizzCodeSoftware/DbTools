@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.DataDefinitionExecuter;
@@ -18,7 +19,7 @@
             var dd = new ForeignKeyCompositeTestsDb();
             Init(version, dd);
 
-            var creator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.SqlDialect.ToString()));
+            var creator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.ToString()));
             creator.ReCreateDatabase(true);
         }
 
@@ -30,7 +31,7 @@
 
             TestHelper.CheckFeature(version, "ReadDdl");
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(version, _sqlExecuterTestAdapter.GetExecuter(version.SqlDialect.ToString()));
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(_sqlExecuterTestAdapter.ConnectionStrings[version.ToString()], _sqlExecuterTestAdapter.GetContext(version));
             var db = ddlReader.GetDatabaseDefinition();
 
             var company = db.GetTable("Company");

@@ -2,37 +2,19 @@
 {
     using System;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
-    using FizzCode.DbTools.DataDefinitionExecuter;
-    using FizzCode.DbTools.DataDefinitionGenerator;
 
     public static class DataDefinitionReaderFactory
     {
-        public static IDataDefinitionReader CreateDataDefinitionReader(ConnectionStringWithProvider connectionStringWithProvider, Settings settings, Logger logger)
+        public static IDataDefinitionReader CreateDataDefinitionReader(ConnectionStringWithProvider connectionStringWithProvider, Context context)
         {
-            var context = new Context
-            {
-                Settings = settings,
-                Logger = logger
-            };
+            if (connectionStringWithProvider.SqlEngineVersion is IMsSqlDialect)
+                return new MsSqlDataDefinitionReader2016(connectionStringWithProvider, context);
 
-            var generator = SqlGeneratorFactory.CreateGenerator(connectionStringWithProvider.SqlEngineVersion, context);
+            if (connectionStringWithProvider.SqlEngineVersion is IOracleDialect)
+                return new OracleDataDefinitionReader12c(connectionStringWithProvider, context);
 
-            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
-
-            return CreateDataDefinitionReader(connectionStringWithProvider.SqlEngineVersion, executer);
-        }
-
-        public static IDataDefinitionReader CreateDataDefinitionReader(SqlVersion version, SqlExecuter sqlExecuter)
-        {
-            if (version is IMsSqlDialect)
-                return new MsSqlDataDefinitionReader2016(sqlExecuter);
-
-            if (version is IOracleDialect)
-                return new OracleDataDefinitionReader12c(sqlExecuter);
-
-            throw new NotImplementedException($"Not implemented {version}.");
+            throw new NotImplementedException($"Not implemented {connectionStringWithProvider.SqlEngineVersion}.");
         }
     }
 }

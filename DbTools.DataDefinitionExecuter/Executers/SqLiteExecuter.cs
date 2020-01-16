@@ -15,7 +15,6 @@
         public SqLiteExecuter3(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator = null)
             : base(connectionStringWithProvider, sqlGenerator)
         {
-            Version = new SqLite3();
         }
 
         private SQLiteConnection _connection;

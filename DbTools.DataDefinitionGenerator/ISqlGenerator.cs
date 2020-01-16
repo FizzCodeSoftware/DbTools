@@ -2,11 +2,14 @@
 {
     using System.Collections.Generic;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
 
     public interface ISqlGenerator
     {
         Context Context { get; }
+
+        SqlVersion Version { get; }
 
         string CreateSchema(string schemaName);
 

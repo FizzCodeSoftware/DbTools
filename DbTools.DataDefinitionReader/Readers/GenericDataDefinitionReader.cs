@@ -9,14 +9,12 @@
 
     public abstract class GenericDataDefinitionReader : IDataDefinitionReader
     {
-        protected GenericDataDefinitionReader(SqlExecuter sqlExecuter)
+        protected GenericDataDefinitionReader(ConnectionStringWithProvider connectionStringWithProvider, Context context)
         {
-            Executer = sqlExecuter;
+            Executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, context);
         }
 
-        public SqlVersion Version { get; protected set; }
-
-        protected SqlExecuter Executer { get; }
+        protected SqlExecuter Executer { get; set; }
 
         protected Logger Logger => Executer.Generator.Context.Logger;
 
@@ -27,7 +25,7 @@
 
         protected void Log(LogSeverity severity, string text, params object[] args)
         {
-            var module = "Reader/" + Executer.Version.ToString();
+            var module = "Reader/" + Executer.Generator.Version.ToString();
             Logger.Log(severity, text, module, args);
         }
 

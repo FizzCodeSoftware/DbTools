@@ -4,7 +4,7 @@
 
     public class MsSqlInfo : DbInfo
     {
-        public MsSqlInfo()
+        static MsSqlInfo()
         {
             var sqlTypeInfos = new SqlTypeInfos
             {

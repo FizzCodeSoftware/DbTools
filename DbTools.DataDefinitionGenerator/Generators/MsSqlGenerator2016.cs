@@ -4,13 +4,15 @@
     using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
 
-    public class MsSqlGenerator : GenericSqlGenerator, ISqlGeneratorDropAndCreateDatabase
+    public class MsSqlGenerator2016 : GenericSqlGenerator, ISqlGeneratorDropAndCreateDatabase
     {
-        public MsSqlGenerator(Context context)
+        public MsSqlGenerator2016(Context context)
             : base(context)
         {
+            Version = new MsSql2016();
         }
 
         protected override string GuardKeywords(string name)

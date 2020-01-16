@@ -1,19 +1,16 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinitionExecuter;
 
     public class OracleDataDefinitionReader12c : GenericDataDefinitionReader
     {
-        public OracleDataDefinitionReader12c(SqlExecuter sqlExecuter) : base(sqlExecuter)
+        public OracleDataDefinitionReader12c(ConnectionStringWithProvider connectionStringWithProvider, Context context) : base(connectionStringWithProvider, context)
         {
-            Version = new Oracle12c();
         }
 
         public override DatabaseDefinition GetDatabaseDefinition()
@@ -43,8 +40,9 @@ WHERE o.owner = u.username ) AND default_tablespace not in
                 .ToList();
         }
 
-        private OracleTableReader _tableReader;
-        private OracleTableReader TableReader => _tableReader ?? (_tableReader = new OracleTableReader(Executer));
+        private OracleTableReader12c _tableReader;
+
+        private OracleTableReader12c TableReader => _tableReader ?? (_tableReader = new OracleTableReader12c(Executer));
 
         public override SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition)
         {

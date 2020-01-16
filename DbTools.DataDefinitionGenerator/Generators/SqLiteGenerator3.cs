@@ -2,13 +2,15 @@
 {
     using System.Collections.Generic;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
 
-    public class SqLiteGenerator : GenericSqlGenerator
+    public class SqLiteGenerator3 : GenericSqlGenerator
     {
-        public SqLiteGenerator(Context context)
+        public SqLiteGenerator3(Context context)
             : base(context)
         {
+            Version = new SqLite3();
         }
 
         protected override string GuardKeywords(string name)

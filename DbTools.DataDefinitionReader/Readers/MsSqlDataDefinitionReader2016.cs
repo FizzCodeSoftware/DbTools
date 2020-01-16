@@ -3,18 +3,16 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinitionExecuter;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
     public class MsSqlDataDefinitionReader2016 : GenericDataDefinitionReader
     {
-        public MsSqlDataDefinitionReader2016(SqlExecuter sqlExecuter)
-            : base(sqlExecuter)
+        public MsSqlDataDefinitionReader2016(ConnectionStringWithProvider connectionStringWithProvider, Context context) : base(connectionStringWithProvider, context)
         {
-            Version = new MsSql2016();
         }
 
         public override DatabaseDefinition GetDatabaseDefinition()

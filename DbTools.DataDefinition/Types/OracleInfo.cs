@@ -4,7 +4,7 @@
 
     public class OracleInfo : DbInfo
     {
-        public OracleInfo()
+        static OracleInfo()
         {
             var sqlTypeInfos = new SqlTypeInfos
             {

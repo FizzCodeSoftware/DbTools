@@ -12,6 +12,8 @@
         private ILookup<string, Row> _queryResult;
         private ILookup<string, Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetStatement()).Rows.ToLookup(x => x.GetAs<string>("SCHEMAANDTABLENAME")));
 
+        protected OracleTypeMapper12c TypeMapper { get; } = new OracleTypeMapper12c();
+
         public OracleTableReader12c(SqlExecuter sqlExecuter)
         {
             _executer = sqlExecuter;
@@ -26,116 +28,27 @@
 
             foreach (var row in rows)
             {
-                var type = MapSqlType(row.GetAs<string>("DATA_TYPE"), row);
-                var column = CreateSqlColumn(type, row);
+                var type = row.GetAs<string>("DATA_TYPE");
+                var dataPrecisionDecimal = row.GetAs<decimal?>("DATA_PRECISION");
+                var dataScaleDecimal = row.GetAs<decimal>("DATA_SCALE");
+                var dataPrecision = (int)(dataPrecisionDecimal ?? 0);
+                var dataScale = (int)dataScaleDecimal;
 
-                column.Table = sqlTable;
+                var isNullable = row.GetAs<string>("IS_NULLABLE") == "YES";
+
+                var sqlType = TypeMapper.MapSqlType(type, isNullable, dataPrecision, dataScale);
+
+                var column = new SqlColumn
+                {
+                    Table = sqlTable
+                };
+                column.Types.Add(_executer.Generator.Version, sqlType);
+                column.Name = row.GetAs<string>("COLUMN_NAME");
 
                 sqlTable.Columns.Add(column.Name, column);
             }
 
             return sqlTable;
-        }
-
-        private static SqlType MapSqlType(string type, Row row)
-        {
-            switch(type)
-            {
-                case "NUMBER":
-                    {
-                        if(row.GetAs<decimal>("DATA_SCALE") == 0
-                           && row.GetAs<decimal?>("DATA_PRECISION") == 20)
-                        {
-                            return SqlType.Int64;
-                        }
-
-                        if (row.GetAs<decimal>("DATA_SCALE") == 0
-                           && row.GetAs<decimal?>("DATA_PRECISION") == 10)
-                        {
-                            return SqlType.Int32;
-                        }
-
-                        if (row.GetAs<decimal>("DATA_SCALE") == 0
-                          && row.GetAs<decimal?>("DATA_PRECISION") == 5)
-                        {
-                            return SqlType.Int16;
-                        }
-
-                        return SqlType.Decimal;
-                    }
-                case "FLOAT":
-                    {
-                        if (row.GetAs<decimal>("DATA_SCALE") == 0
-                           && row.GetAs<decimal?>("DATA_PRECISION") == 53)
-                        {
-                            return SqlType.Double;
-                        }
-
-                        if (row.GetAs<decimal>("DATA_SCALE") == 0
-                           && row.GetAs<decimal?>("DATA_PRECISION") == 24)
-                        {
-                            return SqlType.Single;
-                        }
-
-                        return SqlType.Double;
-                    }
-                case "NVARCHAR":
-                    {
-                        return SqlType.NVarchar;
-                    }
-                default:
-                    throw new NotImplementedException($"Unmapped SqlType: {type}.");
-            }
-        }
-
-        private static SqlColumn CreateSqlColumn(SqlType type, Row row)
-        {
-            SqlColumn column;
-            switch (type)
-            {
-                case SqlType.Decimal:
-                case SqlType.Money:
-                    column = new SqlColumn
-                    {
-                        Precision = row.GetAs<int>("DATA_SCALE"),
-                        Length = row.GetAs<byte>("DATA_PRECISION")
-                    };
-                    break;
-                /*case SqlType.Int16:
-                case SqlType.Int32:
-                case SqlType.Int64:
-                    column = new SqlColumn
-                    {
-                        Length = row.GetAs<byte>("NUMERIC_PRECISION")
-                    };
-                    break;*/
-                case SqlType.DateTimeOffset:
-                    column = new SqlColumn
-                    {
-                        Precision = row.GetAs<short>("DATA_PRECISION"),
-                    };
-                    break;
-                case SqlType.Char:
-                case SqlType.Varchar:
-                case SqlType.NChar:
-                case SqlType.NVarchar:
-                    column = new SqlColumn
-                    {
-                        Length = row.GetAs<int>("CHARACTER_MAXIMUM_LENGTH")
-                    };
-                    break;
-                default:
-                    column = new SqlColumn();
-                    break;
-            }
-
-            column.Name = row.GetAs<string>("COLUMN_NAME");
-            column.Type = type;
-
-            if (row.GetAs<string>("IS_NULLABLE") == "YES")
-                column.IsNullable = true;
-
-            return column;
         }
 
         private static string GetStatement()

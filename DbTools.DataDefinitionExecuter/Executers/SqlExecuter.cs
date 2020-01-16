@@ -10,8 +10,6 @@
 
     public abstract class SqlExecuter : ISqlExecuter
     {
-        public SqlVersion Version { get; protected set; }
-
         public ConnectionStringWithProvider ConnectionStringWithProvider { get; }
         public ISqlGenerator Generator { get; }
 
@@ -181,7 +179,7 @@
 
         protected void Log(LogSeverity severity, string text, params object[] args )
         {
-            var module = "Executer/" + Version.ToString();
+            var module = "Executer/" + Generator.Version.ToString();
             Logger.Log(severity, text, module, args);
         }
     }
