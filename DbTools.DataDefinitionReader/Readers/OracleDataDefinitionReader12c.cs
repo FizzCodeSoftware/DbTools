@@ -22,7 +22,8 @@
             foreach (var schemaAndTableName in GetSchemaAndTableNames())
                 dd.AddTable(GetTableDefinition(schemaAndTableName, false));
 
-            Logger.Log(LogSeverity.Debug, "Reading table documentetion from database.", "Reader");
+            Log(LogSeverity.Debug, "Reading table primary keys from database.");
+            new OraclePrimaryKeyReader12c(Executer).GetPrimaryKey(dd);
 
             return dd;
         }
