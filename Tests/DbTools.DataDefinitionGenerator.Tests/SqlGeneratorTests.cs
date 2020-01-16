@@ -1,7 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator.Tests
 {
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -11,13 +13,13 @@
         private static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new SqlExecuterTestAdapter();
 
         [DataTestMethod]
-        [SqlDialects]
+        [LatestSqlVersions]
 #pragma warning disable IDE1006 // Naming Styles
-        public void _010_GenerateScriptAndCreateTable(SqlDialect sqlDialect)
+        public void _010_GenerateScriptAndCreateTable(SqlVersion version)
 #pragma warning restore IDE1006 // Naming Styles
         {
-            _sqlExecuterTestAdapter.Check(sqlDialect);
-            _sqlExecuterTestAdapter.InitializeAndCreate(sqlDialect.ToString());
+            _sqlExecuterTestAdapter.Check(version);
+            _sqlExecuterTestAdapter.InitializeAndCreate(version.ToString());
 
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
             var column = table.AddInt32("Id");
@@ -26,40 +28,40 @@
 
             var context = new Context
             {
-                Settings = TestHelper.GetDefaultTestSettings(sqlDialect),
+                Settings = TestHelper.GetDefaultTestSettings(version),
                 Logger = TestHelper.CreateLogger()
             };
 
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);
+            var generator = SqlGeneratorFactory.CreateGenerator(version, context);
 
             var sql = generator.CreateTable(table);
 
-            var result = _sqlExecuterTestAdapter.ExecuteNonQuery(sqlDialect.ToString(), sql);
+            var result = _sqlExecuterTestAdapter.ExecuteNonQuery(version.ToString(), sql);
 
             if (result != null)
                 Assert.Inconclusive(result);
         }
 
         [DataTestMethod]
-        [SqlDialects]
+        [LatestSqlVersions]
 #pragma warning disable IDE1006 // Naming Styles
-        public void _020_DropTable(SqlDialect sqlDialect)
+        public void _020_DropTable(SqlVersion version)
 #pragma warning restore IDE1006 // Naming Styles
         {
-            _sqlExecuterTestAdapter.Check(sqlDialect);
-            _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString());
+            _sqlExecuterTestAdapter.Check(version);
+            _sqlExecuterTestAdapter.Initialize(version.ToString());
 
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
 
             var context = new Context
             {
                 Logger = TestHelper.CreateLogger(),
-                Settings = Helper.GetDefaultSettings(sqlDialect, null)
+                Settings = Helper.GetDefaultSettings(version, null)
             };
 
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);
+            var generator = SqlGeneratorFactory.CreateGenerator(version, context);
             var sql = generator.DropTable(table);
-            var result = _sqlExecuterTestAdapter.ExecuteNonQuery(sqlDialect.ToString(), sql);
+            var result = _sqlExecuterTestAdapter.ExecuteNonQuery(version.ToString(), sql);
 
             if (result != null)
                 Assert.Inconclusive(result);

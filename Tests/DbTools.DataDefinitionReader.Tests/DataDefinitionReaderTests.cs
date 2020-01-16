@@ -1,8 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader.Tests
 {
-    using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinitionExecuter;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -11,13 +10,13 @@
     {
         protected static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new SqlExecuterTestAdapter();
 
-        protected static void Init(SqlDialect sqlDialect, DatabaseDefinition dd)
+        protected static void Init(SqlVersion version, DatabaseDefinition dd)
         {
-            _sqlExecuterTestAdapter.Check(sqlDialect);
-            _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString(), dd);
-            TestHelper.CheckFeature(sqlDialect, "ReadDdl");
+            _sqlExecuterTestAdapter.Check(version);
+            _sqlExecuterTestAdapter.Initialize(version.SqlDialect.ToString(), dd);
+            TestHelper.CheckFeature(version, "ReadDdl");
 
-            _sqlExecuterTestAdapter.GetContext(sqlDialect).Settings.Options.ShouldUseDefaultSchema = true;
+            _sqlExecuterTestAdapter.GetContext(version).Settings.Options.ShouldUseDefaultSchema = true;
         }
 
         [AssemblyCleanup]

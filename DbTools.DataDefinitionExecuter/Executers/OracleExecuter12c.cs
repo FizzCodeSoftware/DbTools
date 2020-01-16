@@ -7,13 +7,12 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
-    public class OracleExecuter : SqlExecuter
+    public class OracleExecuter12c : SqlExecuter
     {
-        protected override SqlDialectX SqlDialect => SqlDialectX.Oracle;
-
-        public OracleExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
+        public OracleExecuter12c(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
             : base(connectionStringWithProvider, sqlGenerator)
         {
+            Version = new Oracle12c();
         }
 
         public override DbConnection OpenConnectionMaster()

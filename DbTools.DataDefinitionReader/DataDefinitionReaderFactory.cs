@@ -27,16 +27,16 @@
 
             var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
 
-            return CreateDataDefinitionReader(version.SqlDialect, executer);
+            return CreateDataDefinitionReader(version, executer);
         }
 
-        public static IDataDefinitionReader CreateDataDefinitionReader(SqlDialectX sqlDialect, SqlExecuter sqlExecuter)
+        public static IDataDefinitionReader CreateDataDefinitionReader(SqlVersion version, SqlExecuter sqlExecuter)
         {
-            return sqlDialect switch
+            return version.SqlDialect switch
             {
                 SqlDialectX.MsSql => new MsSqlDataDefinitionReader(sqlExecuter),
                 SqlDialectX.Oracle => new OracleDataDefinitionReader(sqlExecuter),
-                _ => throw new NotImplementedException($"Not implemented {sqlDialect}."),
+                _ => throw new NotImplementedException($"Not implemented {version}."),
             };
         }
     }

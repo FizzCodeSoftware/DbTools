@@ -26,7 +26,7 @@
 
         protected void Log(LogSeverity severity, string text, params object[] args)
         {
-            var module = "Reader/" + SqlDialect.ToString();
+            var module = "Reader/" + Executer. SqlDialect.ToString();
             Logger.Log(severity, text, module, args);
         }
 

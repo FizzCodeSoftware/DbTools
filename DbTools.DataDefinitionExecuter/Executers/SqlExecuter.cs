@@ -10,7 +10,7 @@
 
     public abstract class SqlExecuter : ISqlExecuter
     {
-        protected abstract SqlDialectX SqlDialect { get; }
+        public SqlVersion Version { get; protected set; }
 
         public ConnectionStringWithProvider ConnectionStringWithProvider { get; }
         public ISqlGenerator Generator { get; }
@@ -30,7 +30,7 @@
         {
             // TODO log conn string without password?
             Log(LogSeverity.Verbose, "Opening connection to {Database}.", GetDatabase());
-            var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(SqlDialect));
+            var dbf = DbProviderFactories.GetFactory(ConnectionStringWithProvider.ProviderName);
 
             var connection = dbf.CreateConnection();
             connection.ConnectionString = ConnectionStringWithProvider.ConnectionString;
@@ -41,7 +41,7 @@
 
         public virtual DbConnection OpenConnectionMaster()
         {
-            var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(SqlDialect));
+            var dbf = DbProviderFactories.GetFactory(ConnectionStringWithProvider.ProviderName);
 
             var connection = dbf.CreateConnection();
             connection.Open();
@@ -51,7 +51,7 @@
 
         public virtual DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
         {
-            var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(SqlDialect));
+            var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(Version.SqlDialect));
 
             var command = dbf.CreateCommand();
 #pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
@@ -71,7 +71,7 @@
 
         public DbConnectionStringBuilder GetConnectionStringBuilder()
         {
-            var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(SqlDialect));
+            var dbf = DbProviderFactories.GetFactory(SqlDialectHelper.GetProviderNameFromSqlDialect(Version.SqlDialect));
             return dbf.CreateConnectionStringBuilder();
         }
 
@@ -181,7 +181,7 @@
 
         protected void Log(LogSeverity severity, string text, params object[] args )
         {
-            var module = "Executer/" + SqlDialect.ToString();
+            var module = "Executer/" + Version.ToString();
             Logger.Log(severity, text, module, args);
         }
     }

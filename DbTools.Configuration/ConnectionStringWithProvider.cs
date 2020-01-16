@@ -10,16 +10,19 @@
     {
         public string Name { get; set; }
         public string ProviderName { get => _providerName; set { _providerName = value; UpdateKnownProvider(); } }
+        public SqlVersion SqlEngineVersion { get; set; }
         public string ConnectionString { get; set; }
         public KnownProvider? KnownProvider { get; private set; }
 
         private string _providerName { get; set; }
 
-        public ConnectionStringWithProvider(string name, string providerName, string connectionString)
+        public ConnectionStringWithProvider(string name, string providerName, string connectionString, string versionString)
         {
             Name = name;
             ProviderName = providerName;
             ConnectionString = connectionString;
+            var sqlDialectType = SqlDialectHelper.GetSqlDialectTypeFromProviderName(providerName);
+            SqlEngineVersion = SqlEngines.GetVersion(sqlDialectType, versionString);
         }
 
         public override string ToString()

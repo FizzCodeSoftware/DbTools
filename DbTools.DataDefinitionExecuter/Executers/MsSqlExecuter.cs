@@ -3,19 +3,17 @@
     using System;
     using System.Data.Common;
     using System.Data.SqlClient;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
-    public class MsSqlExecuter : SqlExecuter, ISqlExecuterDropAndCreateDatabase
+    public class MsSqlExecuter2016 : SqlExecuter, ISqlExecuterDropAndCreateDatabase
     {
-        protected override SqlDialectX SqlDialect => SqlDialectX.MsSql;
-
-        public MsSqlExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
+        public MsSqlExecuter2016(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
             : base(connectionStringWithProvider, sqlGenerator)
         {
+            Version = new MsSql2016();
         }
 
         public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd)

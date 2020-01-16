@@ -4,15 +4,18 @@
   "connectionStrings": {
     "SqLite": {
       "ProviderName": "System.Data.SQLite",
-      "ConnectionString": "FullUri=file::memory:?cache=shared;"
+      "ConnectionString": "FullUri=file::memory:?cache=shared;",
+      "Version": "3"
     },
     "MsSql": {
       "ProviderName": "System.Data.SqlClient",
-      "ConnectionString": "Data Source=(local);Initial Catalog=DbTools_DataDefinitionExecuter_Tests;Integrated Security=SSPI;Connection Timeout=5"
+      "ConnectionString": "Data Source=(local);Initial Catalog=DbTools_DataDefinitionExecuter_Tests;Integrated Security=SSPI;Connection Timeout=5",
+      "Version": "2016"
     },
     "Oracle": {
       "ProviderName": "Oracle.ManagedDataAccess.Client",
-      "ConnectionString": ""
+      "ConnectionString": "",
+      "Version": "12c"
     }
   }
 }

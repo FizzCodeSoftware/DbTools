@@ -2,7 +2,9 @@
 {
     using System.Linq;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.DataDefinition.Migration;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.DataDefinitionGenerator;
@@ -13,22 +15,22 @@
     public class DatabaseMigratorTests : DataDefinitionExecuterTests
     {
         [TestMethod]
-        [SqlDialects]
-        public void NewTableTest(SqlDialect sqlDialect)
+        [LatestSqlVersions]
+        public void NewTableTest(SqlVersion version)
         {
-            _sqlExecuterTestAdapter.Check(sqlDialect);
+            _sqlExecuterTestAdapter.Check(version);
             var dd = new TestDatabaseSimple();
-            _sqlExecuterTestAdapter.InitializeAndCreate(sqlDialect.ToString(), dd);
+            _sqlExecuterTestAdapter.InitializeAndCreate(version.ToString(), dd);
 
             var context = new Context
             {
-                Settings = TestHelper.GetDefaultTestSettings(sqlDialect),
+                Settings = TestHelper.GetDefaultTestSettings(version),
                 Logger = TestHelper.CreateLogger()
             };
 
-            var migrationGenerator = SqlGeneratorFactory.CreateMigrationGenerator(sqlDialect, context);
+            var migrationGenerator = SqlGeneratorFactory.CreateMigrationGenerator(version, context);
 
-            var executer = _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString());
+            var executer = _sqlExecuterTestAdapter.GetExecuter(version.ToString());
 
             var databaseMigrator = new DatabaseMigrator(executer, migrationGenerator);
             var tableNew = new TableNew

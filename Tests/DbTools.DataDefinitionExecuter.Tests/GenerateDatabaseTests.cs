@@ -2,7 +2,9 @@
 {
     using System;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.DataDefinitionExecuter;
     using FizzCode.DbTools.TestBase;
@@ -12,25 +14,25 @@
     public class GenerateDatabaseTests : DataDefinitionExecuterTests
     {
         [TestMethod]
-        [SqlDialects]
-        public void GenerateTestDatabaseSimple(SqlDialect sqlDialect)
+        [LatestSqlVersions]
+        public void GenerateTestDatabaseSimple(SqlVersion version)
         {
-            GenerateDatabase(new TestDatabaseSimple(), sqlDialect);
+            GenerateDatabase(new TestDatabaseSimple(), version);
         }
 
         [TestMethod]
-        [SqlDialects]
-        public void GenerateForeignKeyCompositeTestDatabase(SqlDialect sqlDialect)
+        [LatestSqlVersions]
+        public void GenerateForeignKeyCompositeTestDatabase(SqlVersion version)
         {
-            GenerateDatabase(new ForeignKeyCompositeTestsDb(), sqlDialect);
+            GenerateDatabase(new ForeignKeyCompositeTestsDb(), version);
         }
 
-        public static void GenerateDatabase(DatabaseDefinition dd, SqlDialect sqlDialect)
+        public static void GenerateDatabase(DatabaseDefinition dd, SqlVersion version)
         {
-            _sqlExecuterTestAdapter.Check(sqlDialect);
-            _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString(), dd);
+            _sqlExecuterTestAdapter.Check(version);
+            _sqlExecuterTestAdapter.Initialize(version.ToString(), dd);
 
-            var databaseCreator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
+            var databaseCreator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.ToString()));
 
             try
             {
@@ -43,22 +45,22 @@
         }
 
         [TestMethod]
-        [SqlDialects]
-        public void GenerateDatabase_Index(SqlDialect sqlDialect)
+        [LatestSqlVersions]
+        public void GenerateDatabase_Index(SqlVersion version)
         {
-            GenerateDatabase(new IndexTestDb(), sqlDialect);
+            GenerateDatabase(new IndexTestDb(), version);
         }
 
         [TestMethod]
         public void GenerateDatabase_TableDescription()
         {
-            GenerateDatabase(new TableDescriptionTestDb(), SqlDialect.MsSql);
+            GenerateDatabase(new TableDescriptionTestDb(), new MsSql2016());
         }
 
         [TestMethod]
         public void GenerateDatabase_ColumnDescription()
         {
-            GenerateDatabase(new ColumnDescriptionTestDb(), SqlDialect.MsSql);
+            GenerateDatabase(new ColumnDescriptionTestDb(), new MsSql2016());
         }
 
         public class IndexTestDb : DatabaseDeclaration
@@ -94,7 +96,7 @@
         [TestMethod]
         public void GenerateDatabase_DefaultValue()
         {
-            GenerateDatabase(new DefaultValueTestDb(), SqlDialect.MsSql);
+            GenerateDatabase(new DefaultValueTestDb(), new MsSql2016());
         }
 
         public class DefaultValueTestDb : DatabaseDeclaration
@@ -110,13 +112,13 @@
         [TestMethod]
         public void DatabaseDefinitionWithSchemaTableNameSeparator()
         {
-            GenerateDatabase(new SchemaTableNameSeparatorTestDb(), SqlDialect.MsSql);
+            GenerateDatabase(new SchemaTableNameSeparatorTestDb(), new MsSql2016());
         }
 
         [TestMethod]
         public void DatabaseDefinitionWithSchemaAndDefaultSchema()
         {
-            GenerateDatabase(new SchemaTableNameDefaultSchemaTestDb(), SqlDialect.MsSql);
+            GenerateDatabase(new SchemaTableNameDefaultSchemaTestDb(), new MsSql2016());
         }
 
         public class SchemaTableNameSeparatorTestDb : DatabaseDeclaration

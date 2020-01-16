@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using FizzCode.DbTools.Common;
+using FizzCode.DbTools.Configuration;
 
 namespace FizzCode.DbTools.DataDefinition
 {

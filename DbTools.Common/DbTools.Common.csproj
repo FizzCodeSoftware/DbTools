@@ -25,4 +25,8 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DbTools.Configuration\DbTools.Configuration.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -34,12 +34,7 @@
 #endif
             return _forceIntegrationTests;
         }
-
-        public static bool ShouldRunIntegrationTest(SqlVersion version)
-        {
-            return ShouldRunIntegrationTest(version.SqlDialect);
-        }
-
+        
         public static bool ShouldRunIntegrationTest(string providerName)
         {
             if (ShouldForceIntegrationTests())
@@ -53,17 +48,18 @@
             };
         }
 
-        private static bool ShouldRunIntegrationTest(SqlDialectX sqlDialect)
+        public static bool ShouldRunIntegrationTest(SqlVersion version)
         {
             if (ShouldForceIntegrationTests())
                 return true;
 
-            return sqlDialect switch
-            {
-                SqlDialectX.MsSql => false,
-                SqlDialectX.Oracle => false,
-                _ => true,
-            };
+            if (version is IMsSqlDialect)
+                return false;
+
+            if (version is IOracleDialect)
+                return false;
+
+            return true;
         }
 
         public static Settings GetDefaultTestSettings(SqlVersion version)
@@ -100,7 +96,7 @@
                 Assert.Inconclusive($"Test is skipped, feature {feature} is not implemented (yet). ({featureSupport.Description}).");
         }
 
-        public static void CheckProvider(SqlDialectX sqlDialect, IEnumerable<ConnectionStringWithProvider> connectionStringWithProviders)
+        public static void CheckProvider(IEnumerable<ConnectionStringWithProvider> connectionStringWithProviders)
         {
             RegisterProviders();
             var usedSqlDialects = GetSqlDialectsWithConfiguredConnectionStrting(connectionStringWithProviders);

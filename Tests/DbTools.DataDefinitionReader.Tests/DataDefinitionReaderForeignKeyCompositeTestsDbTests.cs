@@ -12,26 +12,25 @@
     public class DataDefinitionReaderForeignKeyCompositeTestsDbTests : DataDefinitionReaderTests
     {
         [DataTestMethod]
-        [SqlDialects]
-        public void CreateTables(SqlDialect sqlDialect)
+        [LatestSqlVersions]
+        public void CreateTables(SqlVersion version)
         {
             var dd = new ForeignKeyCompositeTestsDb();
-            Init(sqlDialect, dd);
+            Init(version, dd);
 
-            var creator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
+            var creator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.SqlDialect.ToString()));
             creator.ReCreateDatabase(true);
         }
 
         [DataTestMethod]
-        [SqlDialects]
-        public void ReadTables(SqlDialect sqlDialect)
+        [LatestSqlVersions]
+        public void ReadTables(SqlVersion version)
         {
-            Init(sqlDialect, null);
+            Init(version, null);
 
-            TestHelper.CheckFeature(sqlDialect, "ReadDdl");
-            TestHelper.CheckProvider(sqlDialect, _sqlExecuterTestAdapter.ConnectionStrings.All);
+            TestHelper.CheckFeature(version, "ReadDdl");
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(sqlDialect, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(version, _sqlExecuterTestAdapter.GetExecuter(version.SqlDialect.ToString()));
             var db = ddlReader.GetDatabaseDefinition();
 
             var company = db.GetTable("Company");

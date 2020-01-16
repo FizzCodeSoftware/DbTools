@@ -42,16 +42,13 @@
 
             var connectionStringWithProvider = ConnectionStrings[connectionStringKey];
 
-            var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
-            var version = SqlEngines.GetLatestVersion(sqlDialect);
-
             if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
             {
-                var generator = SqlGeneratorFactory.CreateGenerator(version, GetContext(version));
+                var generator = SqlGeneratorFactory.CreateGenerator(connectionStringWithProvider.SqlEngineVersion, GetContext(connectionStringWithProvider.SqlEngineVersion));
                 var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
-                sqlExecutersAndDialects.Add(connectionStringKey, (sqlExecuter, version));
+                sqlExecutersAndDialects.Add(connectionStringKey, (sqlExecuter, connectionStringWithProvider.SqlEngineVersion));
 
-                if (shouldCreate && TestHelper.ShouldRunIntegrationTest(version))
+                if (shouldCreate && TestHelper.ShouldRunIntegrationTest(connectionStringWithProvider.SqlEngineVersion))
                 {
                     sqlExecuter.InitializeDatabase(false, dds);
                 }
@@ -111,10 +108,7 @@
         {
             var connectionStringWithProvider = Initialize(connectionStringKey);
 
-            var sqlDialect = SqlDialectHelper.GetSqlDialectFromProviderName(connectionStringWithProvider.ProviderName);
-            var version = SqlEngines.GetLatestVersion(sqlDialect);
-
-            if (!TestHelper.ShouldRunIntegrationTest(version))
+            if (!TestHelper.ShouldRunIntegrationTest(connectionStringWithProvider.SqlEngineVersion))
                 return "Query execution is skipped, integration tests are not running.";
 
             sqlExecutersAndDialects[connectionStringKey].SqlExecuter.ExecuteNonQuery(query);

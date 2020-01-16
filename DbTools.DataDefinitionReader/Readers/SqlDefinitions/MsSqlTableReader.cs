@@ -41,8 +41,6 @@
         {
             var value = MsSqlInfo.Current.Values.Where(v => v.DbType == type).First();
 
-
-
             return type switch
             {
                 "int" => SqlType.Int32,

@@ -19,7 +19,8 @@
                 Add(new ConnectionStringWithProvider(
                     name: child.Key,
                     providerName: child.GetValue<string>("ProviderName"),
-                    connectionString: child.GetValue<string>("ConnectionString")));
+                    connectionString: child.GetValue<string>("ConnectionString"),
+                    versionString: child.GetValue<string>("Version") ));
             }
         }
 

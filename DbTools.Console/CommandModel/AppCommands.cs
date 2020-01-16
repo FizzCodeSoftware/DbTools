@@ -22,25 +22,29 @@
             Program.Terminated = true;
         }
 
+        // TODO sqldialect OR sqlVersion / detect version?
+
         [ApplicationMetadata(Name = "document", Description = "Generate excel documentation of an existing database")]
         public void Document(
             [Option(LongName = "connectionString", ShortName = "c")]
             string connectionString,
-            [Option(LongName = "sqlDialect", ShortName = "d")]
-            SqlDialect sqlDialect,
+            [Option(LongName = "sqlType", ShortName = "t")]
+            string sqlType,
             [Option(LongName = "patternFileName", ShortName = "p")]
             string patternFileName,
             [Option(LongName = "flags", ShortName = "f")]
             List<DocumenterFlag> flags)
         {
-            var connectionStringWithProvider = new ConnectionStringWithProvider(sqlDialect.ToString(), SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect), connectionString);
+            var version = SqlEngines.GetVersion(sqlType);
+
+            var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), version.VersionString, connectionString);
 
             // TODO provider-specific ConnectionStringBuilder class
             var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, null);
             var databaseName = sqlExecuter.GetDatabase();
 
             // TODO accept from argument
-            var settings = Helper.GetDefaultSettings(sqlDialect, Program.Configuration);
+            var settings = Helper.GetDefaultSettings(version, Program.Configuration);
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings, CreateLogger());
 
@@ -59,8 +63,8 @@
         public void Generate(
             [Option(LongName = "connectionString", ShortName = "c")]
             string connectionString,
-            [Option(LongName = "sqlDialect", ShortName = "d")]
-            SqlDialect sqlDialect,
+            [Option(LongName = "sqlType", ShortName = "t")]
+            string sqlType,
             [Option(LongName = "namespace", ShortName = "n")]
             string @namespace,
             [Option(LongName = "newDatabaseName", ShortName = "b")]
@@ -68,14 +72,11 @@
             [Option(LongName = "patternFileName", ShortName = "p")]
             string patternFileName)
         {
-            var connectionStringWithProvider = new ConnectionStringWithProvider
-            (
-                sqlDialect.ToString(),
-                SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect),
-                connectionString
-            );
+            var version = SqlEngines.GetVersion(sqlType);
 
-            var settings = Helper.GetDefaultSettings(sqlDialect, Program.Configuration);
+            var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), version.VersionString, connectionString);
+
+            var settings = Helper.GetDefaultSettings(version, Program.Configuration);
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings, CreateLogger());
 
@@ -97,21 +98,18 @@
         public void Bim(
             [Option(LongName = "connectionString", ShortName = "c")]
             string connectionString,
-            [Option(LongName = "sqlDialect", ShortName = "d")]
-            SqlDialect sqlDialect,
+            [Option(LongName = "sqlType", ShortName = "t")]
+            string sqlType,
             [Option(LongName = "databaseName", ShortName = "b")]
             string databaseName,
             [Option(LongName = "patternFileName", ShortName = "p")]
             string patternFileName)
         {
-            var connectionStringWithProvider = new ConnectionStringWithProvider
-            (
-                sqlDialect.ToString(),
-                SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect),
-                connectionString
-            );
+            var version = SqlEngines.GetVersion(sqlType);
 
-            var settings = Helper.GetDefaultSettings(sqlDialect, Program.Configuration);
+            var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), version.VersionString, connectionString);
+
+            var settings = Helper.GetDefaultSettings(version, Program.Configuration);
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings, CreateLogger());
 
@@ -141,12 +139,12 @@
             return logger;
         }
 
-        private static Context CreateContext(SqlDialect sqlDialect)
+        private static Context CreateContext(SqlVersion version)
         {
             var context = new Context
             {
                 Logger = CreateLogger(),
-                Settings = Helper.GetDefaultSettings(sqlDialect, Program.Configuration)
+                Settings = Helper.GetDefaultSettings(version, Program.Configuration)
             };
 
             return context;
@@ -177,16 +175,17 @@
         public void DropAll(
             [Option(LongName = "connectionString", ShortName = "c")]
             string connectionString,
-            [Option(LongName = "sqlDialect", ShortName = "d")]
-            SqlDialect sqlDialect
+            [Option(LongName = "sqlType", ShortName = "t")]
+            string sqlType
             )
         {
-            var providerName = SqlDialectHelper.GetProviderNameFromSqlDialect(sqlDialect);
-            var connectionStringWithProvider = new ConnectionStringWithProvider("", providerName, connectionString);
+            var version = SqlEngines.GetVersion(sqlType);
 
-            var context = CreateContext(sqlDialect);
+            var connectionStringWithProvider = new ConnectionStringWithProvider("", SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), version.VersionString, connectionString);
 
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlDialect, context);
+            var context = CreateContext(version);
+
+            var generator = SqlGeneratorFactory.CreateGenerator(version, context);
 
             var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
             var dc = new DatabaseCreator(null, executer);

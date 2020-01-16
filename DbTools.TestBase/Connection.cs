@@ -14,7 +14,7 @@
 
             foreach (var c in StaticConfiguration.ConnectionStrings)
             {
-                if (TestHelper.ShouldRunIntegrationTest(c.ProviderName))
+                if (TestHelper.ShouldRunIntegrationTest(c.SqlEngineVersion))
                     yield return new[] { c.Name };
             }
         }

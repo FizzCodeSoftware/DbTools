@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader.Tests
 {
-    using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.DataDefinitionExecuter;
     using FizzCode.DbTools.TestBase;
@@ -10,22 +10,22 @@
     public class DataDefinitionReaderDatabaseCircular2FKTests : DataDefinitionReaderTests
     {
         [DataTestMethod]
-        [SqlDialects]
-        public void CreateTables(SqlDialect sqlDialect)
+        [LatestSqlVersions]
+        public void CreateTables(SqlVersion version)
         {
             var dd = new TestDatabaseCircular2FK();
-            Init(sqlDialect, dd);
-            var creator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
+            Init(version, dd);
+            var creator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.ToString()));
             creator.ReCreateDatabase(true);
         }
 
         [DataTestMethod]
-        [SqlDialects]
-        public void ReadTables(SqlDialect sqlDialect)
+        [LatestSqlVersions]
+        public void ReadTables(SqlVersion version)
         {
-            Init(sqlDialect, null);
+            Init(version, null);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(sqlDialect, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(version, _sqlExecuterTestAdapter.GetExecuter(version.ToString()));
             _ = ddlReader.GetDatabaseDefinition();
         }
     }

@@ -2,7 +2,9 @@
 {
     using System.Linq;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.DataDefinition.Migration;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.DataDefinitionExecuter;
@@ -15,8 +17,8 @@
     public class DatabaseMigratorTests : DataDefinitionExecuterMigrationIntegrationTests
     {
         [TestMethod]
-        [SqlDialects]
-        public void AddTableTest(SqlDialect sqlDialect)
+        [LatestSqlVersions]
+        public void AddTableTest(SqlVersion version)
         {
             // Create Test Db
             // Read up DD
@@ -26,33 +28,33 @@
 
             var dd = new TestDatabaseSimple();
 
-            Init(sqlDialect, dd);
+            Init(version, dd);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(sqlDialect, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(version, _sqlExecuterTestAdapter.GetExecuter(version.ToString()));
             var ddInDatabase = ddlReader.GetDatabaseDefinition();
 
             AddTable(dd);
 
-            var comparer = new Comparer(_sqlExecuterTestAdapter.GetContext(sqlDialect));
+            var comparer = new Comparer(_sqlExecuterTestAdapter.GetContext(version));
             var changes = comparer.Compare(ddInDatabase, dd);
 
             var first = changes.First() as TableNew;
             Assert.AreEqual((SchemaAndTableName)"NewTableToMigrate", first.SchemaAndTableName);
 
-            var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()), SqlGeneratorFactory.CreateMigrationGenerator(sqlDialect, _sqlExecuterTestAdapter.GetContext(sqlDialect)));
+            var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(version.ToString()), SqlGeneratorFactory.CreateMigrationGenerator(version, _sqlExecuterTestAdapter.GetContext(version)));
 
             databaseMigrator.NewTable(first);
         }
 
-        private static void Init(SqlDialect sqlDialect, DatabaseDefinition dd)
+        private static void Init(SqlVersion version, DatabaseDefinition dd)
         {
-            _sqlExecuterTestAdapter.Check(sqlDialect);
-            _sqlExecuterTestAdapter.Initialize(sqlDialect.ToString(), dd);
-            TestHelper.CheckFeature(sqlDialect, "ReadDdl");
+            _sqlExecuterTestAdapter.Check(version);
+            _sqlExecuterTestAdapter.Initialize(version.ToString(), dd);
+            TestHelper.CheckFeature(version, "ReadDdl");
 
-            _sqlExecuterTestAdapter.GetContext(sqlDialect).Settings.Options.ShouldUseDefaultSchema = true;
+            _sqlExecuterTestAdapter.GetContext(version).Settings.Options.ShouldUseDefaultSchema = true;
 
-            var databaseCreator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
+            var databaseCreator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.ToString()));
 
             databaseCreator.ReCreateDatabase(true);
         }
@@ -73,23 +75,23 @@
         }
 
         [TestMethod]
-        [SqlDialects]
-        public void RemoveTableTest(SqlDialect sqlDialect)
+        [LatestSqlVersions]
+        public void RemoveTableTest(SqlVersion version)
         {
             var dd = new TestDatabaseSimple();
             AddTable(dd);
-            Init(sqlDialect, dd);
+            Init(version, dd);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(sqlDialect, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(version, _sqlExecuterTestAdapter.GetExecuter(version.ToString()));
             var ddInDatabase = ddlReader.GetDatabaseDefinition();
 
-            var comparer = new Comparer(_sqlExecuterTestAdapter.GetContext(sqlDialect));
+            var comparer = new Comparer(_sqlExecuterTestAdapter.GetContext(version));
             var changes = comparer.Compare(ddInDatabase, new TestDatabaseSimple());
 
             var first = changes.First() as TableDelete;
             Assert.AreEqual((SchemaAndTableName)"NewTableToMigrate", first.SchemaAndTableName);
 
-            var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()), SqlGeneratorFactory.CreateMigrationGenerator(sqlDialect, _sqlExecuterTestAdapter.GetContext(sqlDialect)));
+            var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(version.ToString()), SqlGeneratorFactory.CreateMigrationGenerator(version, _sqlExecuterTestAdapter.GetContext(version)));
 
             databaseMigrator.DeleteTable(first);
         }

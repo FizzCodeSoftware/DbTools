@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
 
     public class SqlTypes : Dictionary<SqlVersion, SqlType>
     {
@@ -22,8 +23,8 @@
                 if (Keys.Count == 1)
                     return Values.First();
 
-                if (Keys.Any(k => SqlEngines.GetVersions(SqlDialectX.Generic).Contains(k)))
-                    return this[SqlEngines.GetLatestVersion(SqlDialectX.Generic)];
+                if (Keys.Any(k => SqlEngines.GetVersions<IGenericDialect>().Contains(k)))
+                    return this[SqlEngines.GetLatestVersion<IGenericDialect>()];
 
                 return null;
             }
@@ -31,9 +32,9 @@
 
         public string Describe()
         {
-            if (Keys.Any(k => SqlEngines.GetVersions(SqlDialectX.Generic).Contains(k)))
+            if (Keys.Any(k => SqlEngines.GetVersions<IGenericDialect>().Contains(k)))
             {
-                return Describe(SqlEngines.GetLatestVersion(SqlDialectX.Generic));
+                return Describe(SqlEngines.GetLatestVersion<IGenericDialect>());
             }
 
             return Describe(Keys.Last());

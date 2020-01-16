@@ -2,9 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
-    using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
@@ -38,14 +37,7 @@
     {
         public LatestSqlVersionsAttribute()
         {
-            var list = new List<SqlVersion>();
-            foreach (var sqlDialect in Enum.GetValues(typeof(SqlDialectX)).Cast<SqlDialectX>())
-            {
-                list.Add(SqlEngines.GetLatestVersion(sqlDialect));
-            }
-
-            //VersionKeys = new VersionKey[list.Count];
-            list.CopyTo(Versions, 0);
+            SqlEngines.GetLatestVersions().CopyTo(Versions);
         }
     }
 
@@ -54,9 +46,7 @@
     {
         public SqlVersionsAttribute()
         {
-            var list = SqlEngines.Versions;
-            //VersionKeys = new VersionKey[list.Count];
-            list.CopyTo(Versions, 0);
+            SqlEngines.Versions.CopyTo(Versions, 0);
         }
 
         public SqlVersionsAttribute(params SqlVersion[] versions) : base(versions)

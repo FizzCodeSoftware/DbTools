@@ -1,11 +1,13 @@
-﻿namespace FizzCode.DbTools.Common
+﻿using FizzCode.DbTools.Configuration;
+
+namespace FizzCode.DbTools.Common
 {
     public static class Features
     {
         static Features()
         {
             _features.Add("ReadDdl");
-            _features["ReadDdl"].Add(SqlEngines.GetVersions(SqlDialectX.SqLite), Support.NotSupported, "No known way to read DDL with SqLite in memory.");
+            _features["ReadDdl"].Add(new SqLite3(), Support.NotSupported, "No known way to read DDL with SqLite in memory.");
         }
 
         private static readonly FeatureList _features = new FeatureList();

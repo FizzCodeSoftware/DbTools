@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.Common
 {
+    using FizzCode.DbTools.Configuration;
     using Microsoft.Extensions.Configuration;
 
     public static class Helper
@@ -10,12 +11,12 @@
 
             var sqlDialectSpecificSettings = new SqlDialectSpecificSettings();
 
-            if (version.SqlDialect == SqlDialectX.MsSql)
+            if (version is IMsSqlDialect)
             {
                 sqlDialectSpecificSettings["DefaultSchema"] = "dbo";
             }
 
-            if (version.SqlDialect == SqlDialectX.Oracle)
+            if (version is IOracleDialect)
             {
                 sqlDialectSpecificSettings["OracleDatabaseName"] = configuration["oracleDatabaseName"];
             }
