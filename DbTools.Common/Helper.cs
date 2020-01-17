@@ -26,18 +26,18 @@
             return settings;
         }
 
-        public static Settings GetDefaultSettings(SqlDialect sqlDialect)
+        public static Settings GetDefaultSettings(SqlVersion version)
         {
             var settings = new Settings();
 
-            var sqlDialectSpecificSettings = new SqlDialectSpecificSettings();
+            var sqlVersionSpecificSettings = new SqlVersionSpecificSettings();
 
-            if (sqlDialect == SqlDialect.MsSql)
+            if (version is IMsSqlDialect)
             {
-                sqlDialectSpecificSettings["DefaultSchema"] = "dbo";
+                sqlVersionSpecificSettings["DefaultSchema"] = "dbo";
             }
 
-            settings.SqlDialectSpecificSettings = sqlDialectSpecificSettings;
+            settings.SqlVersionSpecificSettings = sqlVersionSpecificSettings;
 
             return settings;
         }
