@@ -65,8 +65,7 @@ namespace FizzCode.DbTools.Console
                 lvl++;
             }
 
-            _logger.Fatal("[{Module}], " + "{Message}",
-                msg);
+            _logger.Fatal("[{Module}], {Message}", msg);
         }
 
         private void GetOpsMessages(Exception ex, List<string> messages)

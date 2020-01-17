@@ -1,18 +1,13 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Migration;
 
     public interface ISqlMigrationGenerator
     {
         ISqlGenerator Generator { get; }
         string CreateTable(TableNew tableNew);
-        string DropTable(TableDelete TableDelete);
+        string DropTable(TableDelete tableDelete);
     }
 
     public abstract class GenericSqlMigrationGenerator : ISqlMigrationGenerator
@@ -49,13 +44,7 @@
 
         private ISqlGenerator _generator;
 
-        public ISqlGenerator Generator
-        {
-            get
-            {
-                return _generator ?? (_generator = CreateGenerator());
-            }
-        }
+        public ISqlGenerator Generator => _generator ?? (_generator = CreateGenerator());
     }
 
     public class MsSqlMigrationGenerator : GenericSqlMigrationGenerator

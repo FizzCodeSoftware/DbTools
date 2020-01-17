@@ -37,7 +37,7 @@
 
             databaseCreator.ReCreateDatabase(true);
 
-            var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()),  SqlGeneratorFactory.CreateMigrationGenerator(sqlDialect, _sqlExecuterTestAdapter.GetContext(sqlDialect)));
+            _ = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()), SqlGeneratorFactory.CreateMigrationGenerator(sqlDialect, _sqlExecuterTestAdapter.GetContext(sqlDialect)));
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(sqlDialect, _sqlExecuterTestAdapter.GetExecuter(sqlDialect.ToString()));
             var ddInDatabase = ddlReader.GetDatabaseDefinition();
@@ -57,7 +57,7 @@
             var comparer = new Comparer(_sqlExecuterTestAdapter.GetContext(sqlDialect));
             var changes = comparer.Compare(ddInDatabase, dd);
 
-            var first = changes.First() as TableNew;
+            var first = changes[0] as TableNew;
             Assert.AreEqual((SchemaAndTableName)"NewTableToMigrate", first.SchemaAndTableName);
         }
     }

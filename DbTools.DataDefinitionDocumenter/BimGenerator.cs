@@ -90,7 +90,7 @@
                     }
                     else
                     {
-                        toTables[rr.ToKey] += 1;
+                        toTables[rr.ToKey]++;
                         var numberOfReferencesToTheSameTable = toTables[rr.ToKey];
                         if (numberOfReferencesToTheSameTable > 1)
                             CreateTableCopyForReference(rr, model, numberOfReferencesToTheSameTable);
@@ -142,7 +142,7 @@
             var fks = sqlTable.Properties.OfType<ForeignKey>();
             foreach (var fk in fks)
             {
-                var firstColumnMap = fk.ForeignKeyColumns.First();
+                var firstColumnMap = fk.ForeignKeyColumns[0];
 
                 var bimRelationship = new BimRelationship(firstColumnMap.ForeignKeyColumn, firstColumnMap.ReferredColumn.Table.SchemaAndTableName, firstColumnMap.ReferredColumn.Name);
 
@@ -159,8 +159,8 @@
             // TODO A/ leave out default schema B/ option to leave out if all schema are the same C/ namingstrategy
             if (string.IsNullOrEmpty(schemaAndTableName.Schema))
                 return schemaAndTableName.TableName;
-            else
-                return schemaAndTableName.Schema + " " + schemaAndTableName.TableName;
+
+            return schemaAndTableName.Schema + " " + schemaAndTableName.TableName;
         }
 
         private Table GenerateTable(SqlTable sqlTable, string overrideName = null)

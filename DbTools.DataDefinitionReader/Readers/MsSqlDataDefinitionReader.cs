@@ -67,11 +67,6 @@ WHERE type = 'U'").Rows
 
             ColumnDocumentationReader.GetColumnDocumentation(sqlTable);
 
-            var defaultSchema = Executer.Generator.Context.Settings.SqlDialectSpecificSettings.GetAs<string>("DefaultSchema");
-
-            if (sqlTable.SchemaAndTableName.Schema == defaultSchema)
-                sqlTable.SchemaAndTableName.Schema = null;
-
             return sqlTable;
         }
 
