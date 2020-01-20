@@ -16,25 +16,25 @@
         }
 
         [TestMethod]
-        public void GeneratorForeignKeyCompositeTestsDb()
+        public void GeneratorForeignKeyComposite()
         {
-            var db = new ForeignKeyCompositeTestsDb();
+            var db = new ForeignKeyComposite();
 
             var generator = new CsGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "TestDatabaseFks", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
         }
 
         [TestMethod]
-        public void GeneratorForeignKeyCompositeTestsDb1()
+        public void GeneratorForeignKeyComposite1()
         {
-            var db = new ForeignKeyCompositeTestsDb();
+            var db = new ForeignKeyComposite();
 
-            var generator = new CsGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "ForeignKeyCompositeTestsDb", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
+            var generator = new CsGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "ForeignKeyComposite", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
         }
 
         [TestMethod]
-        public void GeneratorForeignKeyCompositeTestsDb2()
+        public void GeneratorForeignKeyComposite2()
         {
             var db = new ForeignKeyCompositeSetForeignKeyTo();
             var generator = new CsGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(new DocumenterTests.TableCustomizer()), "ForeignKeyCompositeSetForeignKeyTo", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");

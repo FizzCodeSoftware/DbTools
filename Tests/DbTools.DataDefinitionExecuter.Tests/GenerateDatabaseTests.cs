@@ -24,7 +24,7 @@
         [LatestSqlVersions]
         public void GenerateForeignKeyCompositeTestDatabase(SqlVersion version)
         {
-            GenerateDatabase(new ForeignKeyCompositeTestsDb(), version);
+            GenerateDatabase(new ForeignKeyComposite(), version);
         }
 
         public static void GenerateDatabase(DatabaseDefinition dd, SqlVersion version)

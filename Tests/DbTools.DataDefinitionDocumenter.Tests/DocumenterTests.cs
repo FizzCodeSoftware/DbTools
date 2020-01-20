@@ -27,8 +27,8 @@
         [TestMethod]
         public void DocumentTestForeignKeyComposite()
         {
-            var db = new ForeignKeyCompositeTestsDb();
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "ForeignKeyCompositeTestsDb");
+            var db = new ForeignKeyComposite();
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "ForeignKeyComposite");
             documenter.Document(db);
         }
 

@@ -27,7 +27,7 @@
         }
 
         [TestMethod]
-        public void ToStringTestForeignKeyCompositeTestsDb()
+        public void ToStringTestForeignKeyComposite()
         {
             var dd = new ForeignKeyComposite();
 

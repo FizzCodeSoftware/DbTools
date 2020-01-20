@@ -39,7 +39,7 @@
         }
 
         [TestMethod]
-        public void GeneratorForeignKeyCompositeTestsDb()
+        public void GeneratorForeignKeyComposite()
         {
             var db = new ForeignKeyComposite();
 
@@ -48,16 +48,16 @@
         }
 
         [TestMethod]
-        public void GeneratorForeignKeyCompositeTestsDb1()
+        public void GeneratorForeignKeyComposite1()
         {
             var db = new ForeignKeyComposite();
 
-            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "ForeignKeyCompositeTestsDb");
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "ForeignKeyComposite");
             generator.Generate(db);
         }
 
         [TestMethod]
-        public void GeneratorForeignKeyCompositeTestsDb2()
+        public void GeneratorForeignKeyComposite2()
         {
             var db = new ForeignKeyCompositeSetForeignKeyTo();
             var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(new DocumenterTests.TableCustomizer()), "ForeignKeyCompositeSetForeignKeyTo");
