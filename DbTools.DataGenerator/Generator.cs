@@ -4,15 +4,20 @@
     using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
 
     public class Generator
     {
         private readonly GeneratorContext Context;
 
+        // TODO
+        private readonly SqlVersion Version;
+
         public Generator(GeneratorContext context)
         {
             Context = context;
+            Version = new Generic1();
         }
 
         // Get a SqlTable
@@ -52,7 +57,7 @@
 
             if (generator == null)
             {
-                if (!column.IsNullable)
+                if (!column.Types[Version].IsNullable)
                     generator = GetDefaultGenerator(column);
             }
 
@@ -63,15 +68,16 @@
             }
         }
 
-        private static GeneratorBase GetDefaultGenerator(SqlColumn column)
+        private GeneratorBase GetDefaultGenerator(SqlColumn column)
         {
-            return column.Type switch
+            var type = column.Types[Version];
+            return type.SqlTypeInfo.DbType switch
             {
-                SqlType.NVarchar => new GeneratorString(1, column.Length.Value + 1),
-                SqlType.Int32 => new GeneratorInt32(),
-                SqlType.Date => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
-                SqlType.DateTime => new GeneratorDateTimeMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
-                _ => throw new NotImplementedException($"Unhandled SqlType: {Enum.GetName(typeof(SqlType), column.Type)}"),
+                "NVARCHAR" => new GeneratorString(1, type.Length.Value + 1),
+                "INT32" => new GeneratorInt32(),
+                "DATE" => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
+                "DATETIME" => new GeneratorDateTimeMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
+                _ => throw new NotImplementedException($"Unhandled type: {type.SqlTypeInfo.DbType}"),
             };
         }
     }

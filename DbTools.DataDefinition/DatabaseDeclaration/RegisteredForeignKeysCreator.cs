@@ -7,7 +7,7 @@ namespace FizzCode.DbTools.DataDefinition
 {
     internal static class RegisteredForeignKeysCreator
     {
-        internal static void PrimaryKeySingleColum(DatabaseDefinition definition, SqlTable sqlTable, ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn fkRegistration, Dictionary<SqlVersion, TypeMapper> TypeMappers)
+        internal static void PrimaryKeySingleColumn(DatabaseDefinition definition, SqlTable sqlTable, ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn fkRegistration, Dictionary<SqlVersion, TypeMapper> TypeMappers)
         {
             var referredTable = definition.GetTable(fkRegistration.ReferredTableName);
             var referredPk = GetReferredPK(referredTable);
@@ -32,9 +32,8 @@ namespace FizzCode.DbTools.DataDefinition
             var order = sqlTable.Columns.GetOrder(placeHolderColumn.Name);
             sqlTable.Columns.Remove(placeHolderColumn.Name);
 
-            CreateOtherTypes(sqlTable, TypeMappers, col);
-
             sqlTable.Columns.Add(col.Name, col, order);
+            CreateOtherTypes(sqlTable, TypeMappers, col);
 
             fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(col, pkColumn));
         }

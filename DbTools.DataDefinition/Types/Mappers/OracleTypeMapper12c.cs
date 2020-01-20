@@ -72,6 +72,9 @@
                 case "INT32":
                 case "INT64":
                     return MapAs("NUMBER", genericType);
+                case "DATE":
+                case "DATETIME":
+                    return MapAs("DATE", genericType);
                 default:
                     throw new NotImplementedException($"Unmapped type {genericType.SqlTypeInfo.DbType}");
             }

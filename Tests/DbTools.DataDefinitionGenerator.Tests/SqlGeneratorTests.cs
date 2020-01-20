@@ -21,10 +21,14 @@
             _sqlExecuterTestAdapter.Check(version);
             _sqlExecuterTestAdapter.InitializeAndCreate(version.ToString());
 
+            var dd = new DatabaseDefinition();
+
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
             var column = table.AddInt32("Id");
             column.Properties.Add(new Identity(column) { Increment = 1, Seed = 1 });
             table.AddNVarChar("Name", 100);
+
+            dd.AddTable(table);
 
             var context = new Context
             {

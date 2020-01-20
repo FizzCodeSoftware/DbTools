@@ -36,7 +36,7 @@
                     if (!column.Types.ContainsKey(new Configuration.Generic1()))
                         continue;
 
-                    var othertype = typeMapper.Value.MapFromGeneric1(column.Types[new Configuration. Generic1()]);
+                    var othertype = typeMapper.Value.MapFromGeneric1(column.Types[new Configuration.Generic1()]);
                     SqlColumnHelper.Add(typeMapper.Key, sqlTable, column.Name, othertype);
                 }
             }

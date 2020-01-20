@@ -18,6 +18,8 @@
                 case "NCHAR":
                 case "VARCHAR":
                 case "NVARCHAR":
+                case "DATE":
+                case "DATETIME":
                     {
                         result.SqlTypeInfo = SqlTypeInfos["TEXT"];
                         return result;

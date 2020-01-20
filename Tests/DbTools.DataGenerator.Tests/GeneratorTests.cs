@@ -2,6 +2,7 @@
 {
     using System;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.DataGenerator;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
