@@ -13,7 +13,7 @@
         public string ConnectionString { get; set; }
         public KnownProvider? KnownProvider { get; private set; }
 
-        private string _providerName { get; set; }
+        private string _providerName;
 
         public ConnectionStringWithProvider(string name, string providerName, string connectionString)
         {

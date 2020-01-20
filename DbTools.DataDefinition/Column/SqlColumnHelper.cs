@@ -12,6 +12,7 @@
                 Length = length,
                 IsNullable = isNullable
             };
+
             table.Columns.Add(name, column);
             return column;
         }
@@ -26,6 +27,7 @@
                 Length = length,
                 IsNullable = isNullable
             };
+
             table.Columns.Add(name, column);
             return column;
         }
@@ -39,6 +41,7 @@
                 Name = name,
                 IsNullable = isNullable
             };
+
             table.Columns.Add(name, column);
             return column;
         }
@@ -52,6 +55,7 @@
                 Name = name,
                 IsNullable = isNullable
             };
+
             table.Columns.Add(name, column);
             return column;
         }
@@ -65,7 +69,7 @@
                 Name = name,
                 IsNullable = isNullable
             };
-            column.Table = table;
+
             table.Columns.Add(name, column);
             return column;
         }
@@ -79,7 +83,7 @@
                 Name = name,
                 IsNullable = isNullable
             };
-            column.Table = table;
+
             table.Columns.Add(name, column);
             return column;
         }
@@ -95,7 +99,7 @@
                 Length = scale,
                 Precision = precision
             };
-            column.Table = table;
+
             table.Columns.Add(name, column);
             return column;
         }
@@ -110,7 +114,7 @@
                 Length = length,
                 IsNullable = isNullable
             };
-            column.Table = table;
+
             table.Columns.Add(name, column);
             return column;
         }
@@ -125,7 +129,7 @@
                 Length = length,
                 IsNullable = isNullable
             };
-            column.Table = table;
+
             table.Columns.Add(name, column);
             return column;
         }
@@ -139,7 +143,7 @@
                 Name = name,
                 IsNullable = isNullable
             };
-            column.Table = table;
+
             table.Columns.Add(name, column);
             return column;
         }
@@ -153,7 +157,7 @@
                 Name = name,
                 IsNullable = isNullable
             };
-            column.Table = table;
+
             table.Columns.Add(name, column);
             return column;
         }
@@ -167,7 +171,7 @@
                 Name = name,
                 IsNullable = isNullable
             };
-            column.Table = table;
+
             table.Columns.Add(name, column);
             return column;
         }
@@ -182,7 +186,7 @@
                 Precision = precision,
                 IsNullable = isNullable
             };
-            column.Table = table;
+
             table.Columns.Add(name, column);
             return column;
         }
@@ -197,6 +201,7 @@
                 Precision = precision,
                 IsNullable = isNullable
             };
+
             table.Columns.Add(name, column);
             return column;
         }
@@ -210,6 +215,7 @@
                 Name = name,
                 IsNullable = isNullable
             };
+
             table.Columns.Add(name, column);
             return column;
         }
@@ -223,14 +229,36 @@
                 Name = name,
                 IsNullable = isNullable
             };
+
             table.Columns.Add(name, column);
             return column;
         }
 
         public static SqlColumn AddXml(this SqlTable table, string name, bool isNullable = false)
         {
-            var column = new SqlColumn { Type = SqlType.Xml, Name = name, IsNullable = isNullable };
-            column.Table = table;
+            var column = new SqlColumn
+            {
+                Table = table,
+                Type = SqlType.Xml,
+                Name = name,
+                IsNullable = isNullable
+            };
+
+            table.Columns.Add(name, column);
+            return column;
+        }
+
+        public static SqlColumn AddVarBinary(this SqlTable table, string name, int length = -1, bool isNullable = false)
+        {
+            var column = new SqlColumn
+            {
+                Table = table,
+                Type = SqlType.VarBinary,
+                Name = name,
+                Length = length,
+                IsNullable = isNullable,
+            };
+
             table.Columns.Add(name, column);
             return column;
         }
