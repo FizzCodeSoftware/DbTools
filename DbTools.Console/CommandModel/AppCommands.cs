@@ -39,22 +39,21 @@
 
             var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), version.VersionString, connectionString);
 
+            var context = CreateContext(version);
+
             // TODO provider-specific ConnectionStringBuilder class
-            var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, null);
+            var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, context);
             var databaseName = sqlExecuter.GetDatabase();
 
-            // TODO accept from argument
-            var settings = Helper.GetDefaultSettings(version, Program.Configuration);
-
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings, CreateLogger());
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, context);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
             var flagsSet = flags == null ? new HashSet<DocumenterFlag>() : new HashSet<DocumenterFlag>(flags);
 
-            var context = CreateDocumenterContext(settings, patternFileName);
+            var documenterContext = CreateDocumenterContext(context, patternFileName);
 
-            var documenter = new Documenter(context, databaseName, null, flagsSet);
+            var documenter = new Documenter(documenterContext, databaseName, null, flagsSet);
 
             documenter.Document(dd);
         }
@@ -76,20 +75,17 @@
 
             var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), version.VersionString, connectionString);
 
-            var settings = Helper.GetDefaultSettings(version, Program.Configuration);
+            var context = CreateContext(version);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings, CreateLogger());
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, context);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
             var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
 
-            var context = CreateDocumenterContext(settings, patternFileName);
+            var documenterContext = CreateDocumenterContext(context, patternFileName);
 
-            if (patternFileName != null)
-                context.Customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
-
-            var generator = new CsGenerator(context, newDatabaseName, @namespace);
+            var generator = new CsGenerator(documenterContext, newDatabaseName, @namespace);
 
             generator.GenerateMultiFile(dd);
         }
@@ -109,15 +105,15 @@
 
             var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), version.VersionString, connectionString);
 
-            var settings = Helper.GetDefaultSettings(version, Program.Configuration);
+            var context = CreateContext(version);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, settings, CreateLogger());
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, context);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
-            var context = CreateDocumenterContext(settings, patternFileName);
+            var documenterContext = CreateDocumenterContext(context, patternFileName);
 
-            var generator = new BimGenerator(context, databaseName);
+            var generator = new BimGenerator(documenterContext, databaseName);
 
             generator.Generate(dd);
         }
@@ -150,7 +146,7 @@
             return context;
         }
 
-        private static DocumenterContext CreateDocumenterContext(Settings settings, string patternFileName)
+        private static DocumenterContext CreateDocumenterContext(Context context, string patternFileName)
         {
             var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
 
@@ -161,14 +157,14 @@
 
             customizer ??= new EmptyTableCustomizer();
 
-            var context = new DocumenterContext
+            var documenterContext = new DocumenterContext
             {
                 DocumenterSettings = documenterSettings,
-                Settings = settings,
-                Logger = CreateLogger(),
+                Settings = context.Settings,
+                Logger = context.Logger,
                 Customizer = customizer
             };
-            return context;
+            return documenterContext;
         }
 
         [ApplicationMetadata(Name = "dropall", Description = "Drop every object from a database.")]
