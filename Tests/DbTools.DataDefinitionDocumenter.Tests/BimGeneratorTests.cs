@@ -41,7 +41,7 @@
         [TestMethod]
         public void GeneratorForeignKeyCompositeTestsDb()
         {
-            var db = new ForeignKeyCompositeTestsDb();
+            var db = new ForeignKeyComposite();
 
             var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "TestDatabaseFks");
             generator.Generate(db);
@@ -50,7 +50,7 @@
         [TestMethod]
         public void GeneratorForeignKeyCompositeTestsDb1()
         {
-            var db = new ForeignKeyCompositeTestsDb();
+            var db = new ForeignKeyComposite();
 
             var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "ForeignKeyCompositeTestsDb");
             generator.Generate(db);
@@ -59,22 +59,22 @@
         [TestMethod]
         public void GeneratorForeignKeyCompositeTestsDb2()
         {
-            var db = new ForeignKeyCompositeSetForeignKeyToTestDb();
-            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(new DocumenterTests.TableCustomizer()), "ForeignKeyCompositeSetForeignKeyToTestDb");
+            var db = new ForeignKeyCompositeSetForeignKeyTo();
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(new DocumenterTests.TableCustomizer()), "ForeignKeyCompositeSetForeignKeyTo");
             generator.Generate(db);
         }
 
         [TestMethod]
-        public void GeneratorTabularRelationTestDb()
+        public void GeneratorTabularRelation()
         {
-            var db = new TabularRelationTestDb();
+            var db = new TabularRelation();
 
-            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "TabularRelationTestDb");
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "TabularRelation");
             generator.Generate(db);
         }
     }
 
-    public class TabularRelationTestDb : DatabaseDeclaration
+    public class TabularRelation : DatabaseDeclaration
     {
         public SqlTable KeyTable { get; } = AddTable(table =>
         {

@@ -24,6 +24,8 @@
 
             Log(LogSeverity.Debug, "Reading table primary keys from database.");
             new OraclePrimaryKeyReader12c(Executer).GetPrimaryKey(dd);
+            Logger.Log(LogSeverity.Debug, "Reading table foreign keys from database.", "Reader");
+            new OracleForeignKeyReader12c(Executer).GetForeignKeys(dd);
 
             return dd;
         }

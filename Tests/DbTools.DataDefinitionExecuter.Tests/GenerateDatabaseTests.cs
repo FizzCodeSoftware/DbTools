@@ -48,22 +48,22 @@
         [LatestSqlVersions]
         public void GenerateDatabase_Index(SqlVersion version)
         {
-            GenerateDatabase(new IndexTestDb(), version);
+            GenerateDatabase(new Index(), version);
         }
 
         [TestMethod]
         public void GenerateDatabase_TableDescription()
         {
-            GenerateDatabase(new TableDescriptionTestDb(), new MsSql2016());
+            GenerateDatabase(new TableDescription(), new MsSql2016());
         }
 
         [TestMethod]
         public void GenerateDatabase_ColumnDescription()
         {
-            GenerateDatabase(new ColumnDescriptionTestDb(), new MsSql2016());
+            GenerateDatabase(new ColumnDescription(), new MsSql2016());
         }
 
-        public class IndexTestDb : DatabaseDeclaration
+        public class Index : DatabaseDeclaration
         {
             public SqlTable Table { get; } = AddTable(table =>
             {
@@ -74,7 +74,7 @@
             });
         }
 
-        public class TableDescriptionTestDb : DatabaseDeclaration
+        public class TableDescription : DatabaseDeclaration
         {
             public SqlTable Table { get; } = AddTable(table =>
             {
@@ -84,7 +84,7 @@
             });
         }
 
-        public class ColumnDescriptionTestDb : DatabaseDeclaration
+        public class ColumnDescription : DatabaseDeclaration
         {
             public SqlTable Table { get; } = AddTable(table =>
             {
@@ -96,10 +96,10 @@
         [TestMethod]
         public void GenerateDatabase_DefaultValue()
         {
-            GenerateDatabase(new DefaultValueTestDb(), new MsSql2016());
+            GenerateDatabase(new DefaultValue(), new MsSql2016());
         }
 
-        public class DefaultValueTestDb : DatabaseDeclaration
+        public class DefaultValue: DatabaseDeclaration
         {
             public SqlTable Table { get; } = AddTable(table =>
             {
@@ -112,16 +112,16 @@
         [TestMethod]
         public void DatabaseDefinitionWithSchemaTableNameSeparator()
         {
-            GenerateDatabase(new SchemaTableNameSeparatorTestDb(), new MsSql2016());
+            GenerateDatabase(new SchemaTableNameSeparator(), new MsSql2016());
         }
 
         [TestMethod]
         public void DatabaseDefinitionWithSchemaAndDefaultSchema()
         {
-            GenerateDatabase(new SchemaTableNameDefaultSchemaTestDb(), new MsSql2016());
+            GenerateDatabase(new SchemaTableNameDefaultSchema(), new MsSql2016());
         }
 
-        public class SchemaTableNameSeparatorTestDb : DatabaseDeclaration
+        public class SchemaTableNameSeparator : DatabaseDeclaration
         {
             public SqlTable SchemaAꜗTable { get; } = AddTable(table =>
             {
@@ -137,7 +137,7 @@
             });
         }
 
-        public class SchemaTableNameDefaultSchemaTestDb : SchemaTableNameSeparatorTestDb
+        public class SchemaTableNameDefaultSchema : SchemaTableNameSeparator
         {
             public SqlTable Table { get; } = AddTable(table =>
             {

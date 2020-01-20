@@ -10,13 +10,13 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class DataDefinitionReaderForeignKeyCompositeTestsDbTests : DataDefinitionReaderTests
+    public class DataDefinitionReaderForeignKeyCompositeTests : DataDefinitionReaderTests
     {
         [DataTestMethod]
         [LatestSqlVersions]
         public void CreateTables(SqlVersion version)
         {
-            var dd = new ForeignKeyCompositeTestsDb();
+            var dd = new ForeignKeyComposite();
             Init(version, dd);
 
             var creator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.ToString()));

@@ -29,7 +29,7 @@
         [TestMethod]
         public void ToStringTestForeignKeyCompositeTestsDb()
         {
-            var dd = new ForeignKeyCompositeTestsDb();
+            var dd = new ForeignKeyComposite();
 
             var topOrdersPerCompany = dd.GetTable("TopOrdersPerCompany");
             var fks = topOrdersPerCompany.Properties.OfType<ForeignKey>().ToList();
@@ -45,14 +45,14 @@
         [TestMethod]
         public void CheckCompositeFks1()
         {
-            var tables = new ForeignKeyCompositeTestsDb().GetTables();
+            var tables = new ForeignKeyComposite().GetTables();
             CheckCompositeFks(tables);
         }
 
         [TestMethod]
         public void CheckCompositeFks2()
         {
-            var tables = new ForeignKeyCompositeSetForeignKeyToTestDb().GetTables();
+            var tables = new ForeignKeyCompositeSetForeignKeyTo().GetTables();
             CheckCompositeFks(tables);
         }
 

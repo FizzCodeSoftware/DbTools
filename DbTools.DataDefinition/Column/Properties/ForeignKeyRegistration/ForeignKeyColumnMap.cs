@@ -11,5 +11,10 @@
             ForeignKeyColumn = foreignKeyColumn;
             ReferredColumn = referredColumn;
         }
+
+        public override string ToString()
+        {
+            return ForeignKeyColumn.ToString() + " ->" + ReferredColumn.ToString();
+        }
     }
 }

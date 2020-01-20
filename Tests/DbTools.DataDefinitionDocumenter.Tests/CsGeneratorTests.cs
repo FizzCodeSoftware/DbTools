@@ -36,8 +36,8 @@
         [TestMethod]
         public void GeneratorForeignKeyCompositeTestsDb2()
         {
-            var db = new ForeignKeyCompositeSetForeignKeyToTestDb();
-            var generator = new CsGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(new DocumenterTests.TableCustomizer()), "ForeignKeyCompositeSetForeignKeyToTestDb", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
+            var db = new ForeignKeyCompositeSetForeignKeyTo();
+            var generator = new CsGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(new DocumenterTests.TableCustomizer()), "ForeignKeyCompositeSetForeignKeyTo", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
         }
     }
