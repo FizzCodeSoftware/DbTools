@@ -53,7 +53,7 @@
 
             var documenterContext = CreateDocumenterContext(context, patternFileName);
 
-            var documenter = new Documenter(documenterContext, databaseName, null, flagsSet);
+            var documenter = new Documenter(documenterContext, version, databaseName, null, flagsSet);
 
             documenter.Document(dd);
         }
@@ -81,11 +81,9 @@
 
             var dd = ddlReader.GetDatabaseDefinition();
 
-            var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
-
             var documenterContext = CreateDocumenterContext(context, patternFileName);
 
-            var generator = new CsGenerator(documenterContext, newDatabaseName, @namespace);
+            var generator = new CsGenerator(documenterContext, version, newDatabaseName, @namespace);
 
             generator.GenerateMultiFile(dd);
         }
@@ -113,7 +111,7 @@
 
             var documenterContext = CreateDocumenterContext(context, patternFileName);
 
-            var generator = new BimGenerator(documenterContext, databaseName);
+            var generator = new BimGenerator(documenterContext, version, databaseName);
 
             generator.Generate(dd);
         }

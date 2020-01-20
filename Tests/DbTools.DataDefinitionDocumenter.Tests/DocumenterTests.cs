@@ -1,34 +1,39 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Tests;
+    using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class DocumenterTests
     {
         [TestMethod]
-        public void DocumentTest()
+        [LatestSqlVersions]
+        public void DocumentTest(SqlVersion version)
         {
             var db = new TestDatabaseFks();
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "TestDatabaseFks");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(), version, "TestDatabaseFks");
 
             documenter.Document(db);
         }
 
         [TestMethod]
-        public void TableCustomizerTest()
+        [LatestSqlVersions]
+        public void TableCustomizerTest(SqlVersion version)
         {
             var db = new TestDatabaseFks();
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(new TableCustomizer()), "TestDatabaseFks");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(new TableCustomizer()), version, "TestDatabaseFks");
             documenter.Document(db);
         }
 
         [TestMethod]
-        public void DocumentTestForeignKeyComposite()
+        [LatestSqlVersions]
+        public void DocumentTestForeignKeyComposite(SqlVersion version)
         {
             var db = new ForeignKeyComposite();
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "ForeignKeyComposite");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(), version, "ForeignKeyComposite");
             documenter.Document(db);
         }
 

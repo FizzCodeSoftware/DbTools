@@ -5,6 +5,7 @@
     using System.IO;
     using System.Linq;
     using FizzCode.DbTools.Common.Logger;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
@@ -15,13 +16,13 @@
         private readonly string _fileName;
         private readonly HashSet<DocumenterFlag> _flags;
 
-        public Documenter(DocumenterContext context, string databaseName = "", string fileName = null, HashSet<DocumenterFlag> flags = null)
-            : this(new DocumenterWriterExcel(), context, databaseName, fileName, flags)
+        public Documenter(DocumenterContext context, SqlVersion version, string databaseName = "", string fileName = null, HashSet<DocumenterFlag> flags = null)
+            : this(new DocumenterWriterExcel(), context, version, databaseName, fileName, flags)
         {
         }
 
-        public Documenter(IDocumenterWriter documenterWriter, DocumenterContext context, string databaseName = "", string fileName = null, HashSet<DocumenterFlag> flags = null)
-            : base(context, databaseName)
+        public Documenter(IDocumenterWriter documenterWriter, DocumenterContext context, SqlVersion version, string databaseName = "", string fileName = null, HashSet<DocumenterFlag> flags = null)
+            : base(context, version, databaseName)
         {
             DocumenterWriter = documenterWriter;
             _fileName = fileName;

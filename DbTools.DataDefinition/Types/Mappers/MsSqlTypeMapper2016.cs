@@ -39,6 +39,8 @@
                 new SqlTypeInfo("DATE"),
                 new SqlTypeInfo("TIME"),
                 new SqlTypeInfo("DATETIME"),
+
+                // TODO Blob and like
             };
 
             return sqlTypeInfos;

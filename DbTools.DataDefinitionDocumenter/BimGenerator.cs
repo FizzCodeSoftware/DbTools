@@ -9,14 +9,15 @@
     using System.Text.Json;
     using System.Text.RegularExpressions;
     using FizzCode.DbTools.Common.Logger;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionDocumenter.BimDTO;
     using FizzCode.DbTools.Tabular;
 
     public class BimGenerator : DocumenterBase
     {
-        public BimGenerator(DocumenterContext context, string databaseName)
-            : base(context, databaseName)
+        public BimGenerator(DocumenterContext context, SqlVersion version, string databaseName)
+            : base(context, version, databaseName)
         {
         }
 
@@ -179,7 +180,7 @@
                 {
                     // TODO mapping
                     Name = sqlColumn.Name,
-                    DataType = BimHelper.MapType(sqlColumn.Type),
+                    DataType =  sqlColumn.Types[Version].SqlTypeInfo.DbType,
                     SourceColumn = sqlColumn.Name
                 };
 

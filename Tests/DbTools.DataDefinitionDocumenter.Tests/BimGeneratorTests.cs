@@ -30,46 +30,51 @@
     public class BimGeneratorTests
     {
         [TestMethod]
-        public void GeneratorTestDatabaseFks()
+        [LatestSqlVersions]
+        public void GeneratorTestDatabaseFks(SqlVersion version)
         {
             var db = new TestDatabaseFks();
 
-            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(new DocumenterTests.TableCustomizer()), "TestDatabaseFks");
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(new DocumenterTests.TableCustomizer()), version, "TestDatabaseFks");
             generator.Generate(db);
         }
 
         [TestMethod]
-        public void GeneratorForeignKeyComposite()
+        [LatestSqlVersions]
+        public void GeneratorForeignKeyComposite(SqlVersion version)
         {
             var db = new ForeignKeyComposite();
 
-            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "TestDatabaseFks");
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), version, "TestDatabaseFks");
             generator.Generate(db);
         }
 
         [TestMethod]
-        public void GeneratorForeignKeyComposite1()
+        [LatestSqlVersions]
+        public void GeneratorForeignKeyComposite1(SqlVersion version)
         {
             var db = new ForeignKeyComposite();
 
-            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "ForeignKeyComposite");
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), version, "ForeignKeyComposite");
             generator.Generate(db);
         }
 
         [TestMethod]
-        public void GeneratorForeignKeyComposite2()
+        [LatestSqlVersions]
+        public void GeneratorForeignKeyComposite2(SqlVersion version)
         {
             var db = new ForeignKeyCompositeSetForeignKeyTo();
-            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(new DocumenterTests.TableCustomizer()), "ForeignKeyCompositeSetForeignKeyTo");
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(new DocumenterTests.TableCustomizer()), version, "ForeignKeyCompositeSetForeignKeyTo");
             generator.Generate(db);
         }
 
         [TestMethod]
-        public void GeneratorTabularRelation()
+        [LatestSqlVersions]
+        public void GeneratorTabularRelation(SqlVersion version)
         {
             var db = new TabularRelation();
 
-            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), "TabularRelation");
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), version, "TabularRelation");
             generator.Generate(db);
         }
     }

@@ -1,21 +1,49 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
+
+    public static class GeneratorColumnsFactory
+    {
+
+        public static GeneratorColumns CreateGeneratorColumns(SqlVersion version, Context context)
+        {
+            if (version is IGenericDialect)
+                return new GenericGeneratorColumns1(context);
+
+            if (version is ISqLiteDialect)
+                return new SqLiteCsGeneratorColumns3(context);
+
+            if (version is IMsSqlDialect)
+                return new MsSqlCsGeneratorColumns2016(context);
+
+            if (version is IOracleDialect)
+                return new OracleCsGeneratorColumns12c(context);
+
+            throw new NotImplementedException($"Not implemented {version}.");
+        }
+    }
 
     public class CsGenerator : DocumenterBase
     {
         private readonly string _namespace;
 
-        public CsGenerator(DocumenterContext context, string databaseName, string @namespace)
-            : base(context, databaseName)
+        private readonly GeneratorColumns _generatorColumns;
+
+        public CsGenerator(DocumenterContext context, SqlVersion version, string databaseName, string @namespace)
+            : base(context, version, databaseName)
         {
             _namespace = @namespace;
+            // TODO handle versions
+            _generatorColumns = GeneratorColumnsFactory.CreateGeneratorColumns(Version, context);
         }
 
         public void GenerateMultiFile(DatabaseDefinition databaseDefinition)
@@ -171,7 +199,7 @@
 
             foreach (var column in pkColumns)
             {
-                var columnCreation = ColumnCreationHelper.GetColumnCreation(column);
+                var columnCreation = _generatorColumns.GetColumnCreation(column); 
                 sb.AppendLine(columnCreation);
             }
 
@@ -181,7 +209,7 @@
 
             foreach (var column in regularColumns)
             {
-                var columnCreation = ColumnCreationHelper.GetColumnCreation(column);
+                var columnCreation = _generatorColumns.GetColumnCreation(column);
                 sb.AppendLine(columnCreation);
             }
 

@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
     using System.IO;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.DataDefinitionDocumenter;
@@ -127,7 +128,7 @@
 
             var db = new TestDatabaseFks();
             var patternMatching = PatternMatchingTableCustomizerFromPatterns.FromCsv("TestDatabaseFks", null);
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(patternMatching), "TestDatabaseFks");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(patternMatching), new Generic1(), "TestDatabaseFks");
             documenter.Document(db);
         }
 

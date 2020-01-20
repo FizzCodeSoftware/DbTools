@@ -1,4 +1,5 @@
 ﻿using FizzCode.DbTools.Common.Logger;
+using FizzCode.DbTools.Configuration;
 
 namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
@@ -8,13 +9,16 @@ namespace FizzCode.DbTools.DataDefinitionDocumenter
 
         protected DocumenterHelper Helper { get; set; }
 
+        protected SqlVersion Version { get; set; }
+
         protected string DatabaseName { get; }
 
-        protected DocumenterBase(DocumenterContext context, string databaseName = "")
+        protected DocumenterBase(DocumenterContext context, SqlVersion version, string databaseName = "")
         {
+            Context = context;
+            Version = version;
             DatabaseName = databaseName;
             Helper = new DocumenterHelper(context.Settings);
-            Context = context;
         }
 
         protected void Log(LogSeverity severity, string text, params object[] args)

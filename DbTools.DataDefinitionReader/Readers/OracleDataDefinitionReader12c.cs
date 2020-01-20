@@ -51,15 +51,16 @@ WHERE o.owner = u.username ) AND default_tablespace not in
         {
             var sqlTable = TableReader.GetTableDefinition(schemaAndTableName);
 
-            /*if (fullDefinition)
+            if (fullDefinition)
             {
-                new MsSqlPrimaryKeyReader(Executer).
+                new OraclePrimaryKeyReader12c(Executer).
                 GetPrimaryKey(sqlTable);
-                new MsSqlForeignKeyReader(Executer).GetForeignKeys(sqlTable);
-                AddTableDocumentation(sqlTable);
+                new OracleForeignKeyReader12c(Executer).GetForeignKeys(sqlTable);
+                // TODO
+                //AddTableDocumentation(sqlTable);
             }
-
-            ColumnDocumentationReader.GetColumnDocumentation(sqlTable);*/
+            // TODO 
+            // ColumnDocumentationReader.GetColumnDocumentation(sqlTable);
 
             sqlTable.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlTable.SchemaAndTableName, Executer.Generator.Context);
 

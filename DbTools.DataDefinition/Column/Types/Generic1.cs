@@ -1,8 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using FizzCode.DbTools.Configuration;
-
-namespace FizzCode.DbTools.DataDefinition.Generic1
+﻿namespace FizzCode.DbTools.DataDefinition.Generic1
 {
     public static class Generic1
     {
