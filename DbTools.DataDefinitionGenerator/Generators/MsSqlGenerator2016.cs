@@ -68,9 +68,9 @@ exec sp_MSforeachtable ""drop table ?"";";
             */
         }
 
-        public override string DropSchemas(List<string> schemaNames)
+        public override SqlStatementWithParameters DropSchemas(List<string> schemaNames, bool hard = false)
         {
-            return string.Join(Environment.NewLine, schemaNames.Select(x => "DROP SCHEMA IF EXISTS " + x + ";"));
+            return string.Join(Environment.NewLine, schemaNames.Select(x => "DROP SCHEMA IF EXISTS " + GuardKeywords(x) + ";"));
         }
 
         public override string DropAllViews()

@@ -14,6 +14,7 @@
 
         protected GeneratorColumns(Context context)
         {
+            Context = context;
         }
 
         public string GetColumnCreation(SqlColumn column)
@@ -157,7 +158,7 @@
                 "MONEY" => $"AddMoney(\"{column.Name}\"",
                 "SMALLMONEY" => $"AddSmallMoney(\"{column.Name}\"",
                 "DATE" => $"AddDate(\"{column.Name}\"",
-                "TIME" => $"AddTime(\"{column.Name}\", {type.Length}", 
+                "TIME" => $"AddTime(\"{column.Name}\", {type.Length}",
                 "DATETIME" => $"AddDateTime(\"{column.Name}\"",
                 "DATETIME2" => $"AddDateTime2(\"{column.Name}\", {type.Length}",
                 "DATETIMEOFFSET" => $"AddDateTime2(\"{column.Name}\", {type.Length}",

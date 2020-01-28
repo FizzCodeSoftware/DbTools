@@ -48,9 +48,9 @@
 
             var fk1 = fks[0];
 
-            Assert.AreEqual(2, fk1.ForeignKeyColumns.Count);
+            Assert.AreEqual(1, fk1.ForeignKeyColumns.Count);
 
-            Assert.AreEqual(child.Columns["Parent"], fk1.ForeignKeyColumns[0].ForeignKeyColumn);
+            Assert.AreEqual(child.Columns["Parent.ParentId"], fk1.ForeignKeyColumns[0].ForeignKeyColumn);
             Assert.AreEqual(parent.Columns["Id"], fk1.ForeignKeyColumns[0].ReferredColumn);
             Assert.AreEqual(parent, fk1.ReferredTable.SchemaAndTableName);
         }

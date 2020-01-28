@@ -83,7 +83,7 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
 
                 var referencedSqlColumn = referencedSqlTable[referencedColumn];
 
-                var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName.SchemaAndName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
+                var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
                 fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkColumn, referencedSqlColumn));
             }
         }

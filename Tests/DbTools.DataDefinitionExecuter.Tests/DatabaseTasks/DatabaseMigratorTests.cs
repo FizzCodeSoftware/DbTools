@@ -44,6 +44,8 @@
 
             ((SqlTable)tableNew).AddNVarChar("Name", 100);
 
+            dd.AddTable(tableNew);
+
             databaseMigrator.NewTable(tableNew);
         }
     }

@@ -23,10 +23,10 @@
             return CreateTableInternal(table, false);
         }
 
-        public virtual string CreateSchema(string schemaName)
+        public virtual SqlStatementWithParameters CreateSchema(string schemaName)
         {
             if (!string.IsNullOrEmpty(schemaName))
-                return $"CREATE SCHEMA {schemaName}";
+                return $"CREATE SCHEMA {GetSchema(schemaName)}";
 
             return "";
         }
@@ -292,7 +292,7 @@
 
         public abstract string DropAllIndexes();
 
-        public abstract string DropSchemas(List<string> schemaNames);
+        public abstract SqlStatementWithParameters DropSchemas(List<string> schemaNames, bool hard = false);
 
         public virtual SqlStatementWithParameters TableExists(SqlTable table)
         {
@@ -304,14 +304,14 @@ SELECT
     END", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName);
         }
 
-        public static SqlStatementWithParameters SchmaExists(SqlTable table)
+        public SqlStatementWithParameters SchmaExists(SqlTable table)
         {
             return new SqlStatementWithParameters(@"
 SELECT
     CASE WHEN EXISTS(SELECT schema_name FROM information_schema.schemata WHERE schema_name = @SchemaName)
         THEN 1
         ELSE 0
-    END", table.SchemaAndTableName.Schema);
+    END", GetSchema(table));
         }
 
         public string TableNotEmpty(SqlTable table)
@@ -321,7 +321,7 @@ SELECT
 
         public string GetSimplifiedSchemaAndTableName(SchemaAndTableName schemaAndTableName)
         {
-            var schema = schemaAndTableName.Schema;
+            var schema = GetSchema(schemaAndTableName.Schema);
             var tableName = schemaAndTableName.TableName;
 
             var defaultSchema = Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema", null);
@@ -337,6 +337,16 @@ SELECT
             }
 
             return GuardKeywords(tableName);
+        }
+
+        protected string GetSchema(SqlTable table)
+        {
+            return GetSchema(table.SchemaAndTableName.Schema);
+        }
+
+        public virtual string GetSchema(string schema)
+        {
+            return schema;
         }
     }
 }

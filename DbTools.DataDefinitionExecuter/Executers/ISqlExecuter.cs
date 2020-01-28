@@ -18,7 +18,7 @@
         DbConnection OpenConnection();
         DbConnection OpenConnectionMaster();
         DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters);
-        void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd);
-        void CleanupDatabase(params DatabaseDefinition[] dds);
+        void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dds);
+        void CleanupDatabase(bool hard = false, params DatabaseDefinition[] dds);
     }
 }

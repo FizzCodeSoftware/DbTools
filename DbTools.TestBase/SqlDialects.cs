@@ -12,9 +12,14 @@
     {
         protected List<SqlVersion> Versions { get; set;  }
 
-        protected SqlVersionsBasAttribute(params SqlVersion[] versions)
+        protected SqlVersionsBasAttribute(params Type[] versionTypes)
         {
-            Versions = versions.ToList();
+            Versions = new List<SqlVersion>();
+            foreach (var versionType in versionTypes)
+            {
+                var version = (SqlVersion)Activator.CreateInstance(versionType);
+                Versions.Add(version);
+            }
         }
 
         public IEnumerable<object[]> GetData(MethodInfo methodInfo)
@@ -50,7 +55,7 @@
             Versions = SqlEngines.Versions;
         }
 
-        public SqlVersionsAttribute(params SqlVersion[] versions) : base(versions)
+        public SqlVersionsAttribute(params Type[] versionTypes) : base(versionTypes)
         {
         }
     }

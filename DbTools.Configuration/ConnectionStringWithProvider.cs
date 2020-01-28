@@ -21,8 +21,8 @@
             Name = name;
             ProviderName = providerName;
             ConnectionString = connectionString;
-            var sqlDialectType = SqlDialectHelper.GetSqlDialectTypeFromProviderName(providerName);
-            SqlEngineVersion = SqlEngines.GetVersion(sqlDialectType, versionString);
+            var sqlVersionType = SqlDialectHelper.GetSqlVersionTypeFromProviderName(providerName);
+            SqlEngineVersion = SqlEngines.GetVersion(sqlVersionType, versionString);
         }
 
         public override string ToString()

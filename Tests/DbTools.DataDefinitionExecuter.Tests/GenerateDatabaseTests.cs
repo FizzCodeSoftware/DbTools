@@ -99,7 +99,7 @@
             GenerateDatabase(new DefaultValue(), new MsSql2016());
         }
 
-        public class DefaultValue: DatabaseDeclaration
+        public class DefaultValue : DatabaseDeclaration
         {
             public SqlTable Table { get; } = AddTable(table =>
             {
@@ -110,9 +110,10 @@
         }
 
         [TestMethod]
-        public void DatabaseDefinitionWithSchemaTableNameSeparator()
+        [SqlVersions(typeof(MsSql2016), typeof(Oracle12c))]
+        public void DatabaseDefinitionWithSchemaTableNameSeparator(SqlVersion version)
         {
-            GenerateDatabase(new SchemaTableNameSeparator(), new MsSql2016());
+            GenerateDatabase(new SchemaTableNameSeparator(), version);
         }
 
         [TestMethod]

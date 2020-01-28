@@ -27,7 +27,7 @@
             ExecuteNonQueryMaster(sql);
         }
 
-        public override void CleanupDatabase(params DatabaseDefinition[] dds)
+        public override void CleanupDatabase(bool hard = false, params DatabaseDefinition[] dds)
         {
             DropDatabase();
         }

@@ -19,7 +19,7 @@
 
         private SQLiteConnection _connection;
 
-        public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd)
+        public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dds)
         {
             if (dropIfExists)
                 DropDatabase();
@@ -38,7 +38,7 @@
             _connection.Open();
         }
 
-        public override void CleanupDatabase(params DatabaseDefinition[] dds)
+        public override void CleanupDatabase(bool hard = false, params DatabaseDefinition[] dds)
         {
             DropDatabase();
         }

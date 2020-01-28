@@ -2,7 +2,7 @@
   "forceIntegrationTests": "false",
   "oracleDatabaseName": "DbTools_DataDefinitionExecuter_Tests",
   "connectionStrings": {
-    "SqLite": {
+    "SqLite3": {
       "ProviderName": "System.Data.SQLite",
       "ConnectionString": "FullUri=file::memory:?cache=shared;",
       "Version": "3"

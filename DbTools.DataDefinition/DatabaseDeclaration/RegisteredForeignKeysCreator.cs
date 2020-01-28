@@ -33,7 +33,7 @@ namespace FizzCode.DbTools.DataDefinition
             sqlTable.Columns.Remove(placeHolderColumn.Name);
 
             sqlTable.Columns.Add(col.Name, col, order);
-            CreateOtherTypes(sqlTable, TypeMappers, col);
+            // CreateOtherTypes(sqlTable, TypeMappers, col);
 
             fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(col, pkColumn));
         }

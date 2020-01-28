@@ -75,9 +75,9 @@
 
         public abstract string GetDatabase();
 
-        public abstract void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd);
+        public abstract void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dds);
 
-        public abstract void CleanupDatabase(params DatabaseDefinition[] dds);
+        public abstract void CleanupDatabase(bool hard = false, params DatabaseDefinition[] dds);
 
         public virtual void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {

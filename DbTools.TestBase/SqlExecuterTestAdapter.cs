@@ -38,9 +38,12 @@
 
         private ConnectionStringWithProvider Initialize(string connectionStringKey, bool shouldCreate, params DatabaseDefinition[] dds)
         {
-            _dds.AddRange(dds);
-
             var connectionStringWithProvider = ConnectionStrings[connectionStringKey];
+
+            if (connectionStringWithProvider == null)
+                throw new InvalidOperationException($"No connection string is configured for {connectionStringKey}");
+
+            _dds.AddRange(dds);
 
             if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
             {
@@ -91,7 +94,7 @@
                     var shouldDrop = TestHelper.ShouldRunIntegrationTest(sqlExecuterAndDialect.Version);
                     if (shouldDrop)
                     {
-                        sqlExecuterAndDialect.SqlExecuter.CleanupDatabase(_dds.ToArray());
+                        sqlExecuterAndDialect.SqlExecuter.CleanupDatabase(true, _dds.ToArray());
                     }
                 }
                 catch (Exception ex)

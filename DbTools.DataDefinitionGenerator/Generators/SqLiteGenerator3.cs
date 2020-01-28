@@ -33,7 +33,7 @@
             throw new System.NotImplementedException();
         }
 
-        public override string DropSchemas(List<string> schemaNames)
+        public override SqlStatementWithParameters DropSchemas(List<string> schemaNames, bool hard = false)
         {
             throw new System.NotImplementedException();
         }

@@ -4,7 +4,7 @@
 
     public static class SqlDialectHelper
     {
-        public static Type GetSqlDialectTypeFromProviderName(string providerName)
+        public static Type GetSqlVersionTypeFromProviderName(string providerName)
         {
             return providerName switch
             {

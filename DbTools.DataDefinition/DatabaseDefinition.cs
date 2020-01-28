@@ -13,8 +13,10 @@
             // TODO expandable
             if(!TypeMappers.ContainsKey(new Configuration.MsSql2016()))
                 TypeMappers.Add(new Configuration.MsSql2016(), new MsSqlTypeMapper2016());
+
             if (!TypeMappers.ContainsKey(new Configuration.Oracle12c()))
                 TypeMappers.Add(new Configuration.Oracle12c(), new OracleTypeMapper12c());
+
             if (!TypeMappers.ContainsKey(new Configuration.SqLite3()))
                 TypeMappers.Add(new Configuration.SqLite3(), new SqLiteTypeMapper3());
         }

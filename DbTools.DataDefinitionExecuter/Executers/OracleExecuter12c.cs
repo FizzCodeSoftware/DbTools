@@ -1,7 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionExecuter
 {
     using System;
+    using System.Collections.Generic;
     using System.Data.Common;
+    using System.Linq;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionGenerator;
@@ -24,12 +26,30 @@
             return oracleDatabaseName;
         }
 
-        public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dd)
+        public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dds)
         {
             var defaultSchema = Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
 
-            if (dropIfExists && CheckIfUserExists(defaultSchema))
-                CleanupDatabase(dd);
+            if (dropIfExists)
+            {
+                var allSchemas = dds.SelectMany(dd => dd.GetSchemaNames().ToList()).ToList();
+
+                allSchemas.Add(defaultSchema);
+
+                foreach (var schema in allSchemas)
+                {
+                    if (CheckIfUserExists(schema))
+                    {
+                        var schemasList = new List<string>
+                        {
+                            schema
+                        };
+
+                        var sql = Generator.DropSchemas(schemasList, true);
+                        ExecuteNonQuery(sql);
+                    }
+                }
+            }
 
             // TODO password
             ExecuteNonQuery($"CREATE USER \"{defaultSchema}\" IDENTIFIED BY sa123");
@@ -51,15 +71,20 @@
             return (decimal)result == 0;
         }
 
-        public override void CleanupDatabase(params DatabaseDefinition[] dds)
+        public override void CleanupDatabase(bool hard, params DatabaseDefinition[] dds)
         {
-            var defaultSchema = Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
-            // TODO - DROP ALL Schemas - in current DD
+            var allSchemas = dds.SelectMany(dd => dd.GetSchemaNames().ToList()).ToList();
+            if (allSchemas.Count > 0)
+            {
+                var sql = Generator.DropSchemas(allSchemas, hard);
+                ExecuteNonQuery(sql);
+            }
 
+            var defaultSchema = Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
             var currentUser = ExecuteQuery("select user from dual").Rows[0].GetAs<string>("USER");
 
-            ExecuteQuery($"ALTER SESSION SET current_schema = {currentUser}");
-            ExecuteQuery($"DROP USER \"{defaultSchema}\" CASCADE");
+            ExecuteNonQuery($"ALTER SESSION SET current_schema = {currentUser}");
+            ExecuteNonQuery($"DROP USER \"{defaultSchema}\" CASCADE");
         }
 
         public override DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
@@ -70,6 +95,20 @@
 
         public override void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
+            var sqlStatements = BreakIfMultipleCommands(sqlStatementWithParameters);
+            foreach(var sqlStatement in sqlStatements)
+                base.ExecuteNonQuery(sqlStatement);
+        }
+
+        protected override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)
+        {
+            ExecuteQuery(sqlStatementWithParameters);
+        }
+
+        private List<SqlStatementWithParameters> BreakIfMultipleCommands(SqlStatementWithParameters sqlStatementWithParameters)
+        {
+            var sqlStatements = new List<SqlStatementWithParameters>();
+
             if (!(sqlStatementWithParameters.Statement.Trim().StartsWith("BEGIN", StringComparison.CurrentCultureIgnoreCase)
                 && sqlStatementWithParameters.Statement.Trim().EndsWith("END;", StringComparison.CurrentCultureIgnoreCase)))
             {
@@ -88,29 +127,27 @@
                 if (count == 1 && sqlStatementTrimEnd[^1] == ';')
                 {
                     sqlStatementWithParameters.Statement = sqlStatementTrimEnd.Remove(sqlStatementTrimEnd.Length - 1);
+                    sqlStatements.Add(sqlStatementWithParameters);
                 }
                 else if (count > 1)
                 {
                     foreach (var subStatement in sqlStatementWithParameters.Statement.Split(';'))
                     {
                         if (subStatement.Trim().Length > 0)
-                            base.ExecuteNonQuery(new SqlStatementWithParameters(subStatement, sqlStatementWithParameters.Parameters));
+                            sqlStatements.Add(new SqlStatementWithParameters(subStatement, sqlStatementWithParameters.Parameters));
                     }
                 }
                 else
                 {
-                    base.ExecuteNonQuery(sqlStatementWithParameters);
+                    sqlStatements.Add(sqlStatementWithParameters);
                 }
             }
             else
             {
-                base.ExecuteNonQuery(sqlStatementWithParameters);
+                sqlStatements.Add(sqlStatementWithParameters);
             }
-        }
 
-        protected override void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters)
-        {
-            ExecuteQuery(sqlStatementWithParameters);
+            return sqlStatements;
         }
     }
 }

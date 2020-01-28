@@ -11,7 +11,7 @@
 
         SqlVersion Version { get; }
 
-        string CreateSchema(string schemaName);
+        SqlStatementWithParameters CreateSchema(string schemaName);
 
         string CreateTable(SqlTable table);
 
@@ -27,7 +27,7 @@
         string DropAllViews();
         string DropAllForeignKeys();
         string DropAllTables();
-        string DropSchemas(List<string> schemaNames);
+        SqlStatementWithParameters DropSchemas(List<string> schemaNames, bool hard = false);
 
         SqlStatementWithParameters TableExists(SqlTable table);
         string TableNotEmpty(SqlTable table);
