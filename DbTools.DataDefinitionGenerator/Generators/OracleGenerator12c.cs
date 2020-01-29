@@ -88,6 +88,7 @@ s            */
 
             foreach (var fk in allFks)
             {
+                sb.Append(GrantReferenceAcrossSchemas(fk));
                 sb.Append("ALTER TABLE ")
                     .Append(GetSimplifiedSchemaAndTableName(table.SchemaAndTableName))
                     .Append(" ADD ")
@@ -96,6 +97,16 @@ s            */
             }
 
             return sb.ToString();
+        }
+
+        private string GrantReferenceAcrossSchemas(ForeignKey fk)
+        {
+            if (fk.SqlTable.SchemaAndTableName.Schema != fk.ReferredTable.SchemaAndTableName.Schema)
+            {
+                return $"GRANT REFERENCES ON {GetSimplifiedSchemaAndTableName(fk.ReferredTable.SchemaAndTableName)} TO \"{fk.SqlTable.SchemaAndTableName.Schema}\";";
+            }
+
+            return null;
         }
 
         public override string DropAllForeignKeys()

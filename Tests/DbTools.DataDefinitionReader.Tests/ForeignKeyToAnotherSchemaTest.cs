@@ -52,7 +52,7 @@
 
             Assert.AreEqual(child.Columns["Parent.ParentId"], fk1.ForeignKeyColumns[0].ForeignKeyColumn);
             Assert.AreEqual(parent.Columns["Id"], fk1.ForeignKeyColumns[0].ReferredColumn);
-            Assert.AreEqual(parent, fk1.ReferredTable.SchemaAndTableName);
+            Assert.AreEqual(parent.SchemaAndTableName, fk1.ReferredTable.SchemaAndTableName);
         }
     }
 }

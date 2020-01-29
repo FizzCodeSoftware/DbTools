@@ -31,6 +31,7 @@ SELECT
 		cons.constraint_name,
 		cons.r_constraint_name,
 		cons.table_name,
+        cons.R_OWNER,
 		--cons.constraint_type,
 		cols.column_name,
 		cols.POSITION,
@@ -39,7 +40,7 @@ SELECT
 		refcons.constraint_type ref_constraint_type,
 		refcols.column_name ref_column_name
 	FROM all_constraints cons
-	JOIN all_constraints refcons ON refcons.owner = cons.owner
+	JOIN all_constraints refcons ON refcons.owner = cons.r_owner
 		AND refcons.constraint_name = cons.r_constraint_name
 	JOIN dba_users u ON u.username = cons.owner
 	
@@ -70,7 +71,7 @@ SELECT
                 var fkColumn = table.Columns[row.GetAs<string>("COLUMN_NAME")];
 
                 // TODO how to query reference in a nother schema?
-                var referencedSchema = row.GetAs<string>("OWNER");
+                var referencedSchema = row.GetAs<string>("R_OWNER");
                 var referencedTable = row.GetAs<string>("REF_TABLE_NAME");
                 var referencedSchemaAndTableName = new SchemaAndTableName(referencedSchema, referencedTable);
                 var referencedColumn = row.GetAs<string>("REF_COLUMN_NAME");
@@ -88,7 +89,7 @@ SELECT
 
                 var referencedSqlColumn = referencedSqlTable[referencedColumn];
 
-                var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName.SchemaAndName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
+                var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
                 fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkColumn, referencedSqlColumn));
             }
         }
