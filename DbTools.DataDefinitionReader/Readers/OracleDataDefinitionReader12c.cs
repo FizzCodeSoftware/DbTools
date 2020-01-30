@@ -9,7 +9,7 @@
 
     public class OracleDataDefinitionReader12c : GenericDataDefinitionReader
     {
-        public OracleDataDefinitionReader12c(ConnectionStringWithProvider connectionStringWithProvider, Context context) : base(connectionStringWithProvider, context)
+        public OracleDataDefinitionReader12c(ConnectionStringWithProvider connectionStringWithProvider, Context context, List<string> schemaNames = null) : base(connectionStringWithProvider, context, schemaNames)
         {
         }
 
@@ -32,13 +32,24 @@
 
         public override List<SchemaAndTableName> GetSchemaAndTableNames()
         {
-            return Executer.ExecuteQuery(@"
+            var sqlStatement = @"
 SELECT t.table_name tableName, t.owner schemaName
 FROM dba_tables t, dba_users u 
 WHERE t.owner = u.username
 AND EXISTS (SELECT 1 FROM dba_objects o
 WHERE o.owner = u.username ) AND default_tablespace not in
-('SYSTEM','SYSAUX') and ACCOUNT_STATUS = 'OPEN'").Rows
+('SYSTEM','SYSAUX') and ACCOUNT_STATUS = 'OPEN'";
+
+            if (SchemaNames != null)
+            {
+                var schemaNames = SchemaNames;
+                if (Executer.Generator.Context.Settings.Options.ShouldUseDefaultSchema)
+                    schemaNames.Add(Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
+
+                sqlStatement += $" AND t.owner IN({string.Join(',', schemaNames.Select(s => "'" + s + "'").ToList())})";
+            }
+
+            return Executer.ExecuteQuery(sqlStatement).Rows
                 .Select(row => new SchemaAndTableName(row.GetAs<string>("SCHEMANAME"), row.GetAs<string>("TABLENAME")))
                 .ToList();
         }

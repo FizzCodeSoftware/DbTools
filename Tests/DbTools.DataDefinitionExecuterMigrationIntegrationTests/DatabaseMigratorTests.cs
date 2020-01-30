@@ -29,7 +29,7 @@
 
             Init(version, dd);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(_sqlExecuterTestAdapter.ConnectionStrings[version.ToString()], _sqlExecuterTestAdapter.GetContext(version));
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(_sqlExecuterTestAdapter.ConnectionStrings[version.ToString()], _sqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
             var ddInDatabase = ddlReader.GetDatabaseDefinition();
 
             AddTable(dd);
@@ -83,7 +83,7 @@
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
                 _sqlExecuterTestAdapter.ConnectionStrings[version.ToString()]
-                , _sqlExecuterTestAdapter.GetContext(version));
+                , _sqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
             var ddInDatabase = ddlReader.GetDatabaseDefinition();
 
             var comparer = new Comparer(_sqlExecuterTestAdapter.GetContext(version));

@@ -45,7 +45,7 @@
             var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, context);
             var databaseName = sqlExecuter.GetDatabase();
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, context);
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, context, null);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -77,7 +77,7 @@
 
             var context = CreateContext(version);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, context);
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, context, null);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -105,7 +105,7 @@
 
             var context = CreateContext(version);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, context);
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, context, null);
 
             var dd = ddlReader.GetDatabaseDefinition();
 

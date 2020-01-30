@@ -9,10 +9,13 @@
 
     public abstract class GenericDataDefinitionReader : IDataDefinitionReader
     {
-        protected GenericDataDefinitionReader(ConnectionStringWithProvider connectionStringWithProvider, Context context)
+        protected GenericDataDefinitionReader(ConnectionStringWithProvider connectionStringWithProvider, Context context, List<string> schemaNames = null)
         {
+            SchemaNames = schemaNames;
             Executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, context);
         }
+
+        protected List<string> SchemaNames { get; } = new List<string>();
 
         protected SqlExecuter Executer { get; set; }
 

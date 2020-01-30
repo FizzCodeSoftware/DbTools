@@ -31,7 +31,9 @@
 
             TestHelper.CheckFeature(version, "ReadDdl");
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(_sqlExecuterTestAdapter.ConnectionStrings[version.ToString()], _sqlExecuterTestAdapter.GetContext(version));
+            var dd = new ForeignKeyComposite();
+
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(_sqlExecuterTestAdapter.ConnectionStrings[version.ToString()], _sqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
             var db = ddlReader.GetDatabaseDefinition();
 
             var company = db.GetTable("Company");

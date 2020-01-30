@@ -27,7 +27,7 @@
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
                 _sqlExecuterTestAdapter.ConnectionStrings[version.ToString()],
-                _sqlExecuterTestAdapter.GetContext(version));
+                _sqlExecuterTestAdapter.GetContext(version), null);
             _ = ddlReader.GetDatabaseDefinition();
         }
     }

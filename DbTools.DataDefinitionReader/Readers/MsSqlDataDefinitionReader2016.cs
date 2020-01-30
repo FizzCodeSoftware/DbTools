@@ -11,17 +11,18 @@
 
     public class MsSqlDataDefinitionReader2016 : GenericDataDefinitionReader
     {
-        public MsSqlDataDefinitionReader2016(ConnectionStringWithProvider connectionStringWithProvider, Context context) : base(connectionStringWithProvider, context)
+        public MsSqlDataDefinitionReader2016(ConnectionStringWithProvider connectionStringWithProvider, Context context, List<string> schemaNames = null) : base(connectionStringWithProvider, context, schemaNames)
         {
         }
 
         public override DatabaseDefinition GetDatabaseDefinition()
         {
-            var dd = new DatabaseDefinition();
-
-            dd.TypeMappers = new Dictionary<SqlVersion, TypeMapper>
+            var dd = new DatabaseDefinition
+            {
+                TypeMappers = new Dictionary<SqlVersion, TypeMapper>
             {
                 { new MsSql2016(), new MsSqlTypeMapper2016() }
+            }
             };
 
             Log(LogSeverity.Debug, "Reading table definitions from database.");
@@ -44,10 +45,20 @@
 
         public override List<SchemaAndTableName> GetSchemaAndTableNames()
         {
-            return Executer.ExecuteQuery(@"
+            var sqlStatement = @"
 SELECT ss.name schemaName, so.name tableName FROM sys.objects so
 INNER JOIN sys.schemas ss ON ss.schema_id = so.schema_id
-WHERE type = 'U'").Rows
+WHERE type = 'U'";
+            if (SchemaNames != null)
+            {
+                var schemaNames = SchemaNames;
+                if (Executer.Generator.Context.Settings.Options.ShouldUseDefaultSchema)
+                    schemaNames.Add(Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
+
+                sqlStatement += $" AND ss.name IN({string.Join(',',schemaNames.Select(s => "'" + s + "'").ToList())})";
+            }
+
+            return Executer.ExecuteQuery(sqlStatement).Rows
                 .Select(row => new SchemaAndTableName(row.GetAs<string>("schemaName"), row.GetAs<string>("tableName")))
                 .ToList();
         }
