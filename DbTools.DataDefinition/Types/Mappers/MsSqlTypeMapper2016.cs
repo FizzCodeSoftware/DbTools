@@ -88,6 +88,7 @@
                 new SqlTypeInfo("BINARY", true, false, false),
                 new SqlTypeInfo("VARBINARY", true),
                 new SqlTypeInfo("IMAGE"),
+                new SqlTypeInfo("UNIQUEIDENTIFIER"),
 
                 new SqlTypeInfo("XML"),
             };
@@ -133,6 +134,7 @@
                     return base.MapSqlType(type, isNullable, characterMaximumLength); // TODO which length?
                 case "IMAGE":
                 case "XML":
+                case "UNIQUEIDENTIFIER":
                     return base.MapSqlType(type, isNullable);
                 default:
                     throw new NotImplementedException($"Unmapped SqlType: {type}.");

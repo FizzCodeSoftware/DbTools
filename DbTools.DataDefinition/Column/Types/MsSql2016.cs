@@ -319,5 +319,17 @@
 
             return Add(table, name, sqlType);
         }
+
+        public static SqlColumn AddUniqueIdentifier(this SqlTable table, string name, bool isNullable = false)
+        {
+            var sqlType = new SqlType
+            {
+                SqlTypeInfo = GetSqlTypeInfo("UNIQUEIDENTIFIER"),
+                IsNullable = isNullable,
+            };
+
+            return Add(table, name, sqlType);
+        }
+
     }
 }
