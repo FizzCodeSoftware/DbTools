@@ -71,13 +71,23 @@
         private GeneratorBase GetDefaultGenerator(SqlColumn column)
         {
             var type = column.Types[Version];
-            return type.SqlTypeInfo.DbType switch
+            return type.SqlTypeInfo switch
             {
-                "NVARCHAR" => new GeneratorString(1, type.Length.Value + 1),
-                "INT32" => new GeneratorInt32(),
-                "DATE" => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
-                "DATETIME" => new GeneratorDateTimeMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
-                _ => throw new NotImplementedException($"Unhandled type: {type.SqlTypeInfo.DbType}"),
+                DataDefinition.Generic1.NVarChar _ => new GeneratorString(1, type.Length.Value + 1),
+                DataDefinition.MsSql2016.NVarChar _ => new GeneratorString(1, type.Length.Value + 1),
+                DataDefinition.Oracle12c.NVarChar2 _ => new GeneratorString(1, type.Length.Value + 1),
+
+                DataDefinition.Generic1.Int32 _ => new GeneratorInt32(),
+                DataDefinition.MsSql2016.Int _ => new GeneratorInt32(),
+
+                DataDefinition.Generic1.Date _ => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
+                DataDefinition.MsSql2016.Date _ => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
+                DataDefinition.Oracle12c.Date _ => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
+
+                DataDefinition.Generic1.DateTime _ => new GeneratorDateTimeMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
+                DataDefinition.MsSql2016.DateTime _ => new GeneratorDateTimeMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
+
+                _ => throw new NotImplementedException($"Unhandled type: {type.SqlTypeInfo}"),
             };
         }
     }

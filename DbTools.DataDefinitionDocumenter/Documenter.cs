@@ -237,7 +237,7 @@
                 // TODO internall data types are not OK this way
 
                 if (!_flags.Contains(DocumenterFlag.NoInternalDataTypes))
-                    Write(table.SchemaAndTableName, column.Name, sqlType.SqlTypeInfo.DbType, sqlType.SqlTypeInfo.DbType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
+                    Write(table.SchemaAndTableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
                 else
                     Write(table.SchemaAndTableName, column.Name, sqlType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
 
@@ -279,17 +279,17 @@
                 if (hasCategories)
                 {
                     if (!_flags.Contains(DocumenterFlag.NoInternalDataTypes))
-                        DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.DbType, sqlType.SqlTypeInfo.DbType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
+                        DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
                     else
                         DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
                 }
                 else if (!_flags.Contains(DocumenterFlag.NoInternalDataTypes))
                 {
-                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.DbType, sqlType.SqlTypeInfo.DbType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
                 }
                 else
                 {
-                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.DbType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
                 }
 
                 if (isPk)

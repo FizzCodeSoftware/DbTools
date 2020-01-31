@@ -180,7 +180,7 @@
                 {
                     // TODO mapping
                     Name = sqlColumn.Name,
-                    DataType =  sqlColumn.Types[Version].SqlTypeInfo.DbType,
+                    DataType =  sqlColumn.Types[Version].SqlTypeInfo.SqlDataType,
                     SourceColumn = sqlColumn.Name
                 };
 

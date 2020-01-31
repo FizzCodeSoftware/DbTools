@@ -105,7 +105,7 @@
             {
                 table.AddInt32("Id").SetPK().SetIdentity();
                 table.AddNVarChar("Name", 100).AddDefaultValue("'apple'");
-                table.AddDateTime("DateTime").AddDefaultValue("'" + new DateTime(2019, 8, 7, 13, 59, 57, 357).ToString("yyyy-M-d HH:mm:ss.fff") + "'");
+                table.AddDateTime("DateTime").AddDefaultValue("'" + new System.DateTime(2019, 8, 7, 13, 59, 57, 357).ToString("yyyy-M-d HH:mm:ss.fff") + "'");
             });
         }
 

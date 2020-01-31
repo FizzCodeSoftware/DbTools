@@ -1,15 +1,8 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.MsSql2016
 {
-    public static class MsSql2016
+    public static class MsSql2016Helper
     {
         private static readonly Configuration.MsSql2016 Version = new Configuration.MsSql2016();
-
-        private static readonly MsSqlTypeMapper2016 TypeMapper = new MsSqlTypeMapper2016();
-
-        public static SqlTypeInfo GetSqlTypeInfo(string name)
-        {
-            return TypeMapper.SqlTypeInfos[name];
-        }
 
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
         {
@@ -20,7 +13,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("CHAR"),
+                SqlTypeInfo = new Char(),
                 Length = length,
                 IsNullable = isNullable
             };
@@ -32,7 +25,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("NCHAR"),
+                SqlTypeInfo = new NChar(),
                 Length = length,
                 IsNullable = isNullable
             };
@@ -46,7 +39,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("VARCHAR"),
+                SqlTypeInfo = new VarChar(),
                 Length = length,
                 IsNullable = isNullable
             };
@@ -60,7 +53,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("NVARCHAR"),
+                SqlTypeInfo = new NVarChar(),
                 Length = length,
                 IsNullable = isNullable
             };
@@ -72,7 +65,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("BIT"),
+                SqlTypeInfo = new Bit(),
                 IsNullable = isNullable
             };
 
@@ -83,7 +76,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("TINYINT"),
+                SqlTypeInfo = new TinyInt(),
                 IsNullable = isNullable
             };
 
@@ -94,7 +87,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("SMALLINT"),
+                SqlTypeInfo = new SmallInt(),
                 IsNullable = isNullable
             };
 
@@ -105,7 +98,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("INT"),
+                SqlTypeInfo = new Int(),
                 IsNullable = isNullable
             };
 
@@ -116,7 +109,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("BIGINT"),
+                SqlTypeInfo = new BigInt(),
                 IsNullable = isNullable
             };
 
@@ -127,7 +120,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("DECIMAL"),
+                SqlTypeInfo = new Decimal(),
                 IsNullable = isNullable,
                 Length = length,
                 Scale = scale
@@ -140,7 +133,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("NUMERIC"),
+                SqlTypeInfo = new Numeric(),
                 IsNullable = isNullable,
                 Length = length,
                 Scale = scale
@@ -153,7 +146,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("MONEY"),
+                SqlTypeInfo = new Money(),
                 IsNullable = isNullable,
             };
 
@@ -164,7 +157,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("SMALLMONEY"),
+                SqlTypeInfo = new SmallMoney(),
                 IsNullable = isNullable,
             };
 
@@ -175,7 +168,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("FLOAT"),
+                SqlTypeInfo = new Float(),
                 IsNullable = isNullable,
             };
 
@@ -186,7 +179,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("REAL"),
+                SqlTypeInfo = new Real(),
                 IsNullable = isNullable,
             };
 
@@ -197,7 +190,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("DATE"),
+                SqlTypeInfo = new Date(),
                 IsNullable = isNullable,
             };
 
@@ -208,7 +201,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("TIME"),
+                SqlTypeInfo = new Time(),
                 IsNullable = isNullable,
             };
 
@@ -219,7 +212,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("DATETIME"),
+                SqlTypeInfo = new DateTime(),
                 IsNullable = isNullable,
             };
 
@@ -230,7 +223,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("DATETIME2"),
+                SqlTypeInfo = new DateTime2(),
                 IsNullable = isNullable,
                 Length = length
             };
@@ -242,7 +235,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("DATETIMEOFFSET"),
+                SqlTypeInfo = new DateTimeOffset(),
                 IsNullable = isNullable,
                 Length = length
             };
@@ -254,7 +247,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("SMALLDATETIME"),
+                SqlTypeInfo = new SmallDateTime(),
                 IsNullable = isNullable,
             };
 
@@ -265,7 +258,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("BINARY"),
+                SqlTypeInfo = new Binary(),
                 IsNullable = isNullable,
                 Length = length
             };
@@ -273,13 +266,13 @@
             return Add(table, name, sqlType);
         }
 
-        // TODO max legth
+        // TODO max length
 
         public static SqlColumn AddVarBinary(this SqlTable table, string name, int length, bool isNullable = false)
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("VARBINARY"),
+                SqlTypeInfo = new VarBinary(),
                 IsNullable = isNullable,
                 Length = length
             };
@@ -291,7 +284,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("IMAGE"),
+                SqlTypeInfo = new Image(),
                 IsNullable = isNullable,
             };
 
@@ -302,7 +295,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("TEXT"),
+                SqlTypeInfo = new Text(),
                 IsNullable = isNullable,
             };
 
@@ -313,7 +306,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("TEXT"),
+                SqlTypeInfo = new NText(),
                 IsNullable = isNullable,
             };
 
@@ -324,12 +317,11 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("UNIQUEIDENTIFIER"),
+                SqlTypeInfo = new UniqueIdentifier(),
                 IsNullable = isNullable,
             };
 
             return Add(table, name, sqlType);
         }
-
     }
 }

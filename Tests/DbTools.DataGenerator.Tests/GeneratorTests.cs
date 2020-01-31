@@ -22,29 +22,29 @@
         [TestMethod]
         public void Date()
         {
-            var generator = new Generator(new GeneratorContext(new RandomBasic(0), new DateTime(2019, 7, 24)));
+            var generator = new Generator(new GeneratorContext(new RandomBasic(0), new System.DateTime(2019, 7, 24)));
             var row = generator.Generate(new GeneratorTestDateDb().GetTable("Table"));
 
             Assert.IsTrue(row["Date"] != null);
             Assert.IsTrue(row["DateTime"] != null);
 
-            Assert.IsTrue(row.GetAs<DateTime>("Date").Year > 0);
-            Assert.IsTrue(row.GetAs<DateTime>("Date").Month > 0);
-            Assert.IsTrue(row.GetAs<DateTime>("Date").Day > 0);
+            Assert.IsTrue(row.GetAs<System.DateTime>("Date").Year > 0);
+            Assert.IsTrue(row.GetAs<System.DateTime>("Date").Month > 0);
+            Assert.IsTrue(row.GetAs<System.DateTime>("Date").Day > 0);
 
-            Assert.IsTrue(row.GetAs<DateTime>("Date").Hour == 0);
-            Assert.IsTrue(row.GetAs<DateTime>("Date").Minute == 0);
-            Assert.IsTrue(row.GetAs<DateTime>("Date").Second == 0);
+            Assert.IsTrue(row.GetAs<System.DateTime>("Date").Hour == 0);
+            Assert.IsTrue(row.GetAs<System.DateTime>("Date").Minute == 0);
+            Assert.IsTrue(row.GetAs<System.DateTime>("Date").Second == 0);
 
-            Assert.IsTrue(row.GetAs<DateTime>("DateTime").Year > 0);
-            Assert.IsTrue(row.GetAs<DateTime>("DateTime").Month > 0);
-            Assert.IsTrue(row.GetAs<DateTime>("DateTime").Day > 0);
+            Assert.IsTrue(row.GetAs<System.DateTime>("DateTime").Year > 0);
+            Assert.IsTrue(row.GetAs<System.DateTime>("DateTime").Month > 0);
+            Assert.IsTrue(row.GetAs<System.DateTime>("DateTime").Day > 0);
         }
 
         [TestMethod]
         public void Name()
         {
-            var generator = new Generator(new GeneratorContext(new RandomBasic(0), new DateTime(2019, 7, 24)));
+            var generator = new Generator(new GeneratorContext(new RandomBasic(0), new System.DateTime(2019, 7, 24)));
             var row = generator.Generate(new GeneratorTestNameDb().GetTable("Table"));
 
             Assert.IsFalse(string.IsNullOrEmpty(row.GetAs<string>("Name")));

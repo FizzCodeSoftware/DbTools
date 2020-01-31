@@ -6,55 +6,27 @@
     {
         public SqLiteTypeMapper3()
         {
-            SqlTypeInfos = GetTypeInfos();
         }
 
         public override SqlType MapFromGeneric1(SqlType genericType)
         {
-            var result = new SqlType();
-            switch (genericType.SqlTypeInfo.DbType)
+            return genericType.SqlTypeInfo switch
             {
-                case "CHAR":
-                case "NCHAR":
-                case "VARCHAR":
-                case "NVARCHAR":
-                case "DATE":
-                case "DATETIME":
-                    {
-                        result.SqlTypeInfo = SqlTypeInfos["TEXT"];
-                        return result;
-                    }
-                case "FLOAT_SMALL":
-                case "FLOAT_LARGE":
-                    {
-                        result.SqlTypeInfo = SqlTypeInfos["REAL"];
-                        return result;
-                    }
-                case "BIT":
-                case "BYTE":
-                case "INT16":
-                case "INT32":
-                case "INT64":
-                    {
-                        result.SqlTypeInfo = SqlTypeInfos["INTEGER"];
-                        return result;
-                    }
-                default:
-                    throw new NotImplementedException($"Unmapped type {genericType.SqlTypeInfo.DbType}");
-            }
-        }
-
-        protected override SqlTypeInfos GetTypeInfos()
-        {
-            var sqlTypeInfos = new SqlTypeInfos
-            {
-                new SqlTypeInfo("INTEGER"),
-                new SqlTypeInfo("REAL"),
-                new SqlTypeInfo("TEXT"),
-                new SqlTypeInfo("BLOB"),
+                Generic1.Char _ => genericType.Create(typeof(SqLite3.Text)),
+                Generic1.NChar _ => genericType.Create(typeof(SqLite3.Text)),
+                Generic1.VarChar _ => genericType.Create(typeof(SqLite3.Text)),
+                Generic1.NVarChar _ => genericType.Create(typeof(SqLite3.Text)),
+                Generic1.FloatSmall _ => genericType.Create(typeof(SqLite3.Real)),
+                Generic1.FloatLarge _ => genericType.Create(typeof(SqLite3.Real)),
+                Generic1.Bit _ => genericType.Create(typeof(SqLite3.Real)),
+                Generic1.Byte _ => genericType.Create(typeof(SqLite3.Real)),
+                Generic1.Int16 _ => genericType.Create(typeof(SqLite3.Real)),
+                Generic1.Int32 _ => genericType.Create(typeof(SqLite3.Real)),
+                Generic1.Int64 _ => genericType.Create(typeof(SqLite3.Real)),
+                Generic1.DateTime _ => genericType.Create(typeof(SqLite3.Real)),
+                Generic1.Date _ => genericType.Create(typeof(SqLite3.Text)),
+                _ => throw new NotImplementedException($"Unmapped type {genericType.SqlTypeInfo}"),
             };
-
-            return sqlTypeInfos;
         }
     }
 }

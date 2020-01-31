@@ -6,7 +6,7 @@
     {
         public void Add(SqlTypeInfo sqlTypeInfo)
         {
-            Add(sqlTypeInfo.DbType, sqlTypeInfo);
+            Add(sqlTypeInfo.ToString(), sqlTypeInfo);
         }
     }
 }

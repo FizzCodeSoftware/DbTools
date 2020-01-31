@@ -221,7 +221,7 @@
             var sb = new StringBuilder();
             sb.Append(GuardKeywords(column.Name))
                 .Append(" ")
-                .Append(type.SqlTypeInfo.DbType);
+                .Append(type.SqlTypeInfo.SqlDataType);
 
             if (type.Scale.HasValue)
             {
