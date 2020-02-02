@@ -13,7 +13,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Char(),
+                SqlTypeInfo = new SqlChar(),
                 Length = length,
                 IsNullable = isNullable
             };
@@ -25,7 +25,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new NChar(),
+                SqlTypeInfo = new SqlNChar(),
                 Length = length,
                 IsNullable = isNullable
             };
@@ -37,7 +37,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new VarChar(),
+                SqlTypeInfo = new SqlVarChar(),
                 Length = length,
                 IsNullable = isNullable
             };
@@ -49,7 +49,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new VarChar2(),
+                SqlTypeInfo = new SqlVarChar2(),
                 Length = length,
                 IsNullable = isNullable
             };
@@ -62,7 +62,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new NVarChar2(),
+                SqlTypeInfo = new SqlNVarChar2(),
                 Length = length,
                 IsNullable = isNullable
             };
@@ -74,7 +74,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Blob(),
+                SqlTypeInfo = new SqlBlob(),
                 IsNullable = isNullable
             };
 
@@ -85,7 +85,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Clob(),
+                SqlTypeInfo = new SqlClob(),
                 IsNullable = isNullable
             };
 
@@ -96,7 +96,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new NClob(),
+                SqlTypeInfo = new SqlNClob(),
                 IsNullable = isNullable
             };
 
@@ -107,7 +107,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Bfile(),
+                SqlTypeInfo = new SqlBfile(),
                 IsNullable = isNullable
             };
 
@@ -118,7 +118,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Long(),
+                SqlTypeInfo = new SqlLong(),
                 IsNullable = isNullable
             };
 
@@ -129,7 +129,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new LongRaw(),
+                SqlTypeInfo = new SqlLongRaw(),
                 IsNullable = isNullable
             };
 

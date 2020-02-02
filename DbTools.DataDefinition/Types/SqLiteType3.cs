@@ -4,6 +4,12 @@
     {
         public override bool HasLength => false;
         public override bool HasScale => false;
+
+        public static SqlText Text { get; } = new SqlText();
+        public static SqlReal Real { get; } = new SqlReal();
+        public static SqlInteger Integer { get; } = new SqlInteger();
+        public static SqlBlob Blob { get; } = new SqlBlob();
+
     }
 
     public abstract class SqLiteType : SqlTypeInfo
@@ -11,19 +17,19 @@
     }
 
 
-    public class Text : SqLiteType3
+    public class SqlText : SqLiteType3
     {
     }
 
-    public class Real : SqLiteType3
+    public class SqlReal : SqLiteType3
     {
     }
 
-    public class Integer : SqLiteType3
+    public class SqlInteger : SqLiteType3
     {
     }
 
-    public class Blob : SqLiteType3
+    public class SqlBlob : SqLiteType3
     {
     }
 }

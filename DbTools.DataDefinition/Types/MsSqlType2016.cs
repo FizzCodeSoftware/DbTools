@@ -1,220 +1,63 @@
-﻿namespace FizzCode.DbTools.DataDefinition.MsSql2016
+﻿namespace FizzCode.DbTools.DataDefinition
 {
+    using FizzCode.DbTools.DataDefinition.MsSql2016;
+
     public abstract class MsSqlType2016 : MsSqlType
     {
+        public static SqlChar Char { get; } = new SqlChar();
+        public static SqlNChar NChar { get; } = new SqlNChar();
+        public static SqlVarChar VarChar { get; } = new SqlVarChar();
+        public static SqlNVarChar NVarChar { get; } = new SqlNVarChar();
+        public static SqlTinyInt TinyInt { get; } = new SqlTinyInt();
+        public static SqlSmallInt SmallInt { get; } = new SqlSmallInt();
+        public static SqlBigInt BigInt { get; } = new SqlBigInt();
+        public static SqlInt Int { get; } = new SqlInt();
+        public static SqlBit Bit { get; } = new SqlBit();
+        public static SqlDecimal Decimal { get; } = new SqlDecimal();
+        public static SqlNumeric Numeric { get; } = new SqlNumeric();
+        public static SqlMoney Money { get; } = new SqlMoney();
+        public static SqlSmallMoney SmallMoney { get; } = new SqlSmallMoney();
+        public static SqlDate Date { get; } = new SqlDate();
+        public static SqlTime Time { get; } = new SqlTime();
+        public static SqlDateTime DateTime { get; } = new SqlDateTime();
+        public static SqlSmallDateTime SmallDateTime { get; } = new SqlSmallDateTime();
+        public static SqlDateTime2 DateTime2 { get; } = new SqlDateTime2();
+        public static SqlDateTimeOffset DateTimeOffset { get; } = new SqlDateTimeOffset();
+        public static SqlFloat Float { get; } = new SqlFloat();
+        public static SqlReal Real { get; } = new SqlReal();
+        public static SqlBinary Binary { get; } = new SqlBinary();
+        public static SqlVarBinary VarBinary { get; } = new SqlVarBinary();
+        public static SqlImage Image { get; } = new SqlImage();
+        public static SqlText Text { get; } = new SqlText();
+        public static SqlNText NText { get; } = new SqlNText();
+        public static SqlUniqueIdentifier UniqueIdentifier { get; } = new SqlUniqueIdentifier();
+        public static SqlXml Xml { get; } = new SqlXml();
     }
 
-    public abstract class MsSqlType : SqlTypeInfo
+    public static class MsSqlType2016Extensions
     {
-        public virtual bool IsMaxLengthAllowed { get; }
+        public static bool IsInt(this SqlType sqlType)
+        {
+            return sqlType.SqlTypeInfo is SqlInt;
+        }
+
+        public static bool IsBit(this SqlType sqlType)
+        {
+            return sqlType.SqlTypeInfo is SqlBit;
+        }
     }
 
-
-    public class Char : MsSqlType2016
+    public static class MSqlType2016Extensions
     {
-        public override bool HasLength => true;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
+        public static bool AnyOf(this SqlType sqlType, params SqlTypeInfo[] sqlTypeInfos)
+        {
+            foreach (var sqlTypeInfo in sqlTypeInfos)
+            {
+                if (sqlType.SqlTypeInfo.GetType().Name == sqlTypeInfo.GetType().Name)
+                    return true;
+            }
 
-    public class NChar : MsSqlType2016
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class VarChar : MsSqlType2016
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => true;
-    }
-
-    public class NVarChar : MsSqlType2016
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => true;
-    }
-
-    public class Text : MsSqlType2016
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => true;
-        public override bool Deprecated => true;
-    }
-
-    public class NText : MsSqlType2016
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => true;
-        public override bool Deprecated => true;
-    }
-
-    public class Bit : MsSqlType2016
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-
-    public class TinyInt : MsSqlType2016
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class SmallInt : MsSqlType2016
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class Int : MsSqlType2016
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class BigInt : MsSqlType2016
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class Decimal : MsSqlType2016
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => true;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class Numeric : MsSqlType2016
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => true;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class Money : MsSqlType2016
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class SmallMoney : MsSqlType2016
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class Float : MsSqlType2016
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class Real : MsSqlType2016
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-
-    public class Date : MsSqlType2016
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class Time : MsSqlType2016
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class DateTime : MsSqlType2016
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class DateTime2 : MsSqlType2016
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class DateTimeOffset : MsSqlType2016
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-    public class SmallDateTime : MsSqlType2016
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class Binary : MsSqlType2016
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class VarBinary : MsSqlType2016
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => true;
-    }
-
-    public class Image : MsSqlType2016
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-        public override bool Deprecated => true;
-    }
-
-
-    public class IniqueIdentifier : MsSqlType2016
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class Xml : MsSqlType2016
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
-    }
-
-    public class UniqueIdentifier : MsSqlType2016
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-        public override bool IsMaxLengthAllowed => false;
+            return false;
+        }
     }
 }

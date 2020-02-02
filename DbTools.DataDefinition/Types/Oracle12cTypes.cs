@@ -3,7 +3,7 @@
     using System;
     using System.Globalization;
 
-    public abstract class OracleSqlType : SqlTypeInfo
+    public abstract class OracleType : SqlTypeInfo
     {
         public bool IsLengthMandatory
         {
@@ -40,75 +40,71 @@
         public override string SqlDataType => base.SqlDataType.ToUpper(CultureInfo.InvariantCulture);
     }
 
-    public abstract class OracleSqlType12c : OracleSqlType
-    {
-    }
 
-
-    public class Char : OracleSqlType12c
+    public class SqlChar : OracleType12c
     {
         public override bool HasLength => true;
 
         public override bool HasScale => false;
     }
 
-    public class NChar : OracleSqlType12c
+    public class SqlNChar : OracleType12c
     {
         public override bool HasLength => true;
 
         public override bool HasScale => false;
     }
 
-    public class VarChar : OracleSqlType12c
+    public class SqlVarChar : OracleType12c
     {
         public override bool HasLength => true;
 
         public override bool HasScale => false;
     }
 
-    public class VarChar2 : OracleSqlType12c
+    public class SqlVarChar2 : OracleType12c
     {
         public override bool HasLength => true;
 
         public override bool HasScale => false;
     }
 
-    public class NVarChar2 : OracleSqlType12c
+    public class SqlNVarChar2 : OracleType12c
     {
         public override bool HasLength => true;
 
         public override bool HasScale => false;
     }
 
-    public class Blob : OracleSqlType12c
+    public class SqlBlob : OracleType12c
     {
         public override bool HasLength => false;
 
         public override bool HasScale => false;
     }
 
-    public class Clob : OracleSqlType12c
+    public class SqlClob : OracleType12c
     {
         public override bool HasLength => false;
 
         public override bool HasScale => false;
     }
 
-    public class NClob : OracleSqlType12c
+    public class SqlNClob : OracleType12c
     {
         public override bool HasLength => false;
 
         public override bool HasScale => false;
     }
 
-    public class Bfile : OracleSqlType12c
+    public class SqlBfile : OracleType12c
     {
         public override bool HasLength => false;
 
         public override bool HasScale => false;
     }
 
-    public class Long : OracleSqlType12c
+    public class SqlLong : OracleType12c
     {
         public override bool HasLength => false;
 
@@ -116,7 +112,7 @@
         public override bool Deprecated => true;
     }
 
-    public class LongRaw : OracleSqlType12c
+    public class SqlLongRaw : OracleType12c
     {
         public override bool HasLength => false;
 
@@ -124,7 +120,7 @@
         public override bool Deprecated => true;
     }
 
-    public class Number  : OracleSqlType12c
+    public class SqlNumber  : OracleType12c
     {
         public override bool HasLength => true;
 
@@ -134,28 +130,28 @@
         protected override bool? IsScaleMandatoryInternal => false;
     }
 
-    public class BinaryFloat : OracleSqlType12c
+    public class SqlBinaryFloat : OracleType12c
     {
         public override bool HasLength => false;
 
         public override bool HasScale => false;
     }
 
-    public class BinaryDouble : OracleSqlType12c
+    public class SqlBinaryDouble : OracleType12c
     {
         public override bool HasLength => false;
 
         public override bool HasScale => false;
     }
 
-    public class Date : OracleSqlType12c
+    public class SqlDate : OracleType12c
     {
         public override bool HasLength => false;
 
         public override bool HasScale => false;
     }
 
-    public class TimeStampWithTimeZone : OracleSqlType12c
+    public class SqlTimeStampWithTimeZone : OracleType12c
     {
         public override bool HasLength => false;
 
@@ -164,7 +160,7 @@
         public override string SqlDataType => "TIMESTAMP WITH TIME ZONE";
     }
 
-    public class TimeStampWithLocalTimeZone : OracleSqlType12c
+    public class SqlTimeStampWithLocalTimeZone : OracleType12c
     {
         public override bool HasLength => false;
 
@@ -173,14 +169,14 @@
         public override string SqlDataType => "TIMESTAMP WITH LOCAL TIME ZONE";
     }
 
-    public class XmlType : OracleSqlType12c
+    public class SqlXmlType : OracleType12c
     {
         public override bool HasLength => false;
 
         public override bool HasScale => false;
     }
 
-    public class UriType : OracleSqlType12c
+    public class SqlUriType : OracleType12c
     {
         public override bool HasLength => false;
 

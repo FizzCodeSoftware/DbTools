@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using FizzCode.DbTools.Configuration;
 
     public class SqlColumn
     {
@@ -43,6 +42,20 @@
             where T : SqlColumnProperty
         {
             return Properties.Any(x => x is T);
+        }
+
+        public SqlType Type
+        {
+            get
+            {
+                if (Table.DatabaseDefinition.MainVersion != null)
+                    return Types[Table.DatabaseDefinition.MainVersion];
+
+                if (Types.Count == 1)
+                    return Types.First().Value;
+
+                return null;
+            }
         }
     }
 }

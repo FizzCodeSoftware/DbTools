@@ -17,10 +17,10 @@ using FizzCode.DbTools.DataDefinition;
             var type = column.Types[Version];
             return type.SqlTypeInfo switch
             {
-                Integer _ => $"AddNVarChar(\"{column.Name}\"",
-                Real _  => $"AddNVarChar(\"{column.Name}\"",
-                Text _ => $"AddNVarChar(\"{column.Name}\"",
-                Blob _ => $"AddNVarChar(\"{column.Name}\"",
+                SqlInteger _ => $"AddNVarChar(\"{column.Name}\"",
+                SqlReal _  => $"AddNVarChar(\"{column.Name}\"",
+                SqlText _ => $"AddNVarChar(\"{column.Name}\"",
+                SqlBlob _ => $"AddNVarChar(\"{column.Name}\"",
                 _ => throw new NotImplementedException($"Unmapped type: {type.SqlTypeInfo}"),
             };
         }

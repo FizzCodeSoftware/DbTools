@@ -15,6 +15,21 @@ namespace FizzCode.DbTools.DataDefinition
             }
         }
 
-        public virtual string SqlDataType => GetType().Name;
+        public virtual string SqlDataType
+        {
+            get
+            {
+                var fullTypeName = GetType().Name;
+
+                string typeName;
+
+                if (fullTypeName.StartsWith("Sql", StringComparison.InvariantCulture))
+                    typeName = fullTypeName.Remove(0, 3);
+                else
+                    typeName = fullTypeName;
+
+                return typeName;
+            }
+        }
     }
 }

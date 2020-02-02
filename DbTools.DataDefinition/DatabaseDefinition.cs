@@ -8,17 +8,34 @@
     {
         public Dictionary<SqlVersion, TypeMapper> TypeMappers { get; set; } = new Dictionary<SqlVersion, TypeMapper>();
 
-        public DatabaseDefinition()
+        public DatabaseDefinition() : this(null, new Configuration.MsSql2016(), new Configuration.Oracle12c(), new Configuration.SqLite3())
         {
-            // TODO expandable
-            if(!TypeMappers.ContainsKey(new Configuration.MsSql2016()))
-                TypeMappers.Add(new Configuration.MsSql2016(), new MsSqlTypeMapper2016());
+        }
 
-            if (!TypeMappers.ContainsKey(new Configuration.Oracle12c()))
-                TypeMappers.Add(new Configuration.Oracle12c(), new OracleTypeMapper12c());
+        public List<SqlVersion> SqlVersions { get; } = new List<SqlVersion>();
 
-            if (!TypeMappers.ContainsKey(new Configuration.SqLite3()))
-                TypeMappers.Add(new Configuration.SqLite3(), new SqLiteTypeMapper3());
+        public SqlVersion MainVersion { get; protected set; }
+
+        public DatabaseDefinition(SqlVersion mainVersion)
+        {
+            MainVersion = mainVersion;
+        }
+
+        public DatabaseDefinition(SqlVersion mainVersion,  params SqlVersion[] versions)
+        {
+            SetVersions(mainVersion, versions);
+        }
+
+        public void SetVersions(SqlVersion mainVersion, params SqlVersion[] versions)
+        {
+            MainVersion = mainVersion;
+            SqlVersions.AddRange(versions);
+
+            foreach (var version in SqlVersions)
+            {
+                if (!TypeMappers.ContainsKey(version))
+                    TypeMappers.Add(version, TypeMapperFactory.GetTypeMapper(version));
+            }
         }
 
         internal Tables Tables { get; } = new Tables();

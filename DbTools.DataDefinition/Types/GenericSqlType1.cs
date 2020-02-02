@@ -2,137 +2,28 @@
 {
     using System;
 
-    public abstract class GenericSqlType : SqlTypeInfo
-    {
-        /*public bool IsLengthMandatory
-        {
-            get
-            {
-                if (IsLengthMandatoryInternal.HasValue)
-                    return IsLengthMandatoryInternal.Value;
-                else
-                    if (!HasLength)
-                    return false;
-                else
-                    throw new Exception();
-            }
-        }
-
-        public bool IsScaleMandatory
-        {
-            get
-            {
-                if (IsScaleMandatoryInternal.HasValue)
-                    return IsScaleMandatoryInternal.Value;
-                else
-                    if (!HasScale)
-                    return false;
-                else
-                    throw new Exception();
-            }
-        }
-
-        protected virtual bool? IsLengthMandatoryInternal { get; }
-
-        public virtual bool? IsScaleMandatoryInternal { get; }*/
-    }
-
     public abstract class GenericSqlType1 : SqlTypeInfo
     {
+        public static SqlChar Char { get; } = new SqlChar();
+        public static SqlNChar NChar { get; } = new SqlNChar();
+        public static SqlVarChar VarChar { get; } = new SqlVarChar();
+        public static SqlNVarChar NVarChar { get; } = new SqlNVarChar();
+        public static SqlFloatSmall FloatSmall { get; } = new SqlFloatSmall();
+        public static SqlFloatLarge FloatLarge { get; } = new SqlFloatLarge();
+        public static SqlBit Bit { get; } = new SqlBit();
+        public static SqlByte Byte { get; } = new SqlByte();
+        public static SqlInt16 Int16 { get; } = new SqlInt16();
+        public static SqlInt32 Int32 { get; } = new SqlInt32();
+        public static SqlInt64 Int64 { get; } = new SqlInt64();
+        public static SqlNumber Number { get; } = new SqlNumber();
+        public static SqlDate Date { get; } = new SqlDate();
+        public static SqlTime Time { get; } = new SqlTime();
+        public static SqlDateTime DateTime { get; } = new SqlDateTime();
+
+
+
+
+
     }
-
-    public class Char : GenericSqlType1
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => false;
-    }
-
-    public class NChar : GenericSqlType1
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => false;
-    }
-
-    public class VarChar : GenericSqlType1
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => false;
-    }
-
-    public class NVarChar : GenericSqlType1
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => false;
-    }
-
-    public class FloatSmall : GenericSqlType1
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-    }
-
-    public class FloatLarge : GenericSqlType1
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-    }
-
-    public class Bit : GenericSqlType1
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-    }
-
-    public class Byte : GenericSqlType1
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-    }
-
-    public class Int16 : GenericSqlType1
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-    }
-
-    public class Int32 : GenericSqlType1
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-    }
-
-    public class Int64 : GenericSqlType1
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-    }
-
-    public class Number : GenericSqlType1
-    {
-        public override bool HasLength => true;
-        public override bool HasScale => true;
-    }
-
-
-    public class Date : GenericSqlType1
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-    }
-
-    public class Time : GenericSqlType1
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-    }
-
-    public class DateTime : GenericSqlType1
-    {
-        public override bool HasLength => false;
-        public override bool HasScale => false;
-    }
-
-
-
-
 }
+

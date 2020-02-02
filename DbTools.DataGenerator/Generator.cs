@@ -73,19 +73,19 @@
             var type = column.Types[Version];
             return type.SqlTypeInfo switch
             {
-                DataDefinition.Generic1.NVarChar _ => new GeneratorString(1, type.Length.Value + 1),
-                DataDefinition.MsSql2016.NVarChar _ => new GeneratorString(1, type.Length.Value + 1),
-                DataDefinition.Oracle12c.NVarChar2 _ => new GeneratorString(1, type.Length.Value + 1),
+                DataDefinition.Generic1.SqlNVarChar _ => new GeneratorString(1, type.Length.Value + 1),
+                DataDefinition.MsSql2016.SqlNVarChar _ => new GeneratorString(1, type.Length.Value + 1),
+                DataDefinition.Oracle12c.SqlNVarChar2 _ => new GeneratorString(1, type.Length.Value + 1),
 
-                DataDefinition.Generic1.Int32 _ => new GeneratorInt32(),
-                DataDefinition.MsSql2016.Int _ => new GeneratorInt32(),
+                DataDefinition.Generic1.SqlInt32 _ => new GeneratorInt32(),
+                DataDefinition.MsSql2016.SqlInt _ => new GeneratorInt32(),
 
-                DataDefinition.Generic1.Date _ => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
-                DataDefinition.MsSql2016.Date _ => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
-                DataDefinition.Oracle12c.Date _ => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
+                DataDefinition.Generic1.SqlDate _ => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
+                DataDefinition.MsSql2016.SqlDate _ => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
+                DataDefinition.Oracle12c.SqlDate _ => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
 
-                DataDefinition.Generic1.DateTime _ => new GeneratorDateTimeMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
-                DataDefinition.MsSql2016.DateTime _ => new GeneratorDateTimeMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
+                DataDefinition.Generic1.SqlDateTime _ => new GeneratorDateTimeMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
+                DataDefinition.MsSql2016.SqlDateTime _ => new GeneratorDateTimeMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
 
                 _ => throw new NotImplementedException($"Unhandled type: {type.SqlTypeInfo}"),
             };

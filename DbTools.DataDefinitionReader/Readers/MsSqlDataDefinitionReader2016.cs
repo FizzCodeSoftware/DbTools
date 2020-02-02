@@ -20,9 +20,9 @@
             var dd = new DatabaseDefinition
             {
                 TypeMappers = new Dictionary<SqlVersion, TypeMapper>
-            {
-                { new MsSql2016(), new MsSqlTypeMapper2016() }
-            }
+                {
+                    { new MsSql2016(), new MsSqlTypeMapper2016() }
+                }
             };
 
             Log(LogSeverity.Debug, "Reading table definitions from database.");

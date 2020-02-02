@@ -9,10 +9,8 @@ namespace FizzCode.DbTools.DataDefinition
         public int? Length { get; set; }
         public int? Scale { get; set; }
 
-        public SqlType Create(Type sqlTypeInfoType)
+        public SqlType Create(SqlTypeInfo sqlTypeInfo)
         {
-            var sqlTypeInfo = (SqlTypeInfo)Activator.CreateInstance(sqlTypeInfoType);
-
             var sqlType = new SqlType
             {
                 SqlTypeInfo = sqlTypeInfo,

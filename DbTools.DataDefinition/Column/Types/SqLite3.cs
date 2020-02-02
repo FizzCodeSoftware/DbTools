@@ -6,11 +6,6 @@
 
         private static readonly SqLiteTypeMapper3 TypeMapper = new SqLiteTypeMapper3();
 
-        public static SqlTypeInfo GetSqlTypeInfo(string name)
-        {
-            return TypeMapper.SqlTypeInfos[name];
-        }
-
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
         {
             return SqlColumnHelper.Add(Version, table, name, sqlType);
@@ -20,7 +15,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("INTEGER"),
+                SqlTypeInfo = SqLiteType3.Integer,
                 IsNullable = isNullable
             };
 
@@ -31,7 +26,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("REAL"),
+                SqlTypeInfo = SqLiteType3.Real,
                 IsNullable = isNullable
             };
 
@@ -42,7 +37,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("TEXT"),
+                SqlTypeInfo = SqLiteType3.Text,
                 IsNullable = isNullable
             };
 
@@ -53,7 +48,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = GetSqlTypeInfo("BLOB"),
+                SqlTypeInfo = SqLiteType3.Blob,
                 IsNullable = isNullable
             };
 

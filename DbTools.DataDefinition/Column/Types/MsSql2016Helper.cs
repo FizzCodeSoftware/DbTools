@@ -13,7 +13,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Char(),
+                SqlTypeInfo = MsSqlType2016.Char,
                 Length = length,
                 IsNullable = isNullable
             };
@@ -25,7 +25,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new NChar(),
+                SqlTypeInfo = MsSqlType2016.NChar,
                 Length = length,
                 IsNullable = isNullable
             };
@@ -39,7 +39,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new VarChar(),
+                SqlTypeInfo = MsSqlType2016.VarChar,
                 Length = length,
                 IsNullable = isNullable
             };
@@ -53,7 +53,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new NVarChar(),
+                SqlTypeInfo = MsSqlType2016.NVarChar,
                 Length = length,
                 IsNullable = isNullable
             };
@@ -65,7 +65,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Bit(),
+                SqlTypeInfo = MsSqlType2016.Bit,
                 IsNullable = isNullable
             };
 
@@ -76,7 +76,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new TinyInt(),
+                SqlTypeInfo = MsSqlType2016.TinyInt,
                 IsNullable = isNullable
             };
 
@@ -87,7 +87,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new SmallInt(),
+                SqlTypeInfo = MsSqlType2016.SmallInt,
                 IsNullable = isNullable
             };
 
@@ -98,7 +98,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Int(),
+                SqlTypeInfo = MsSqlType2016.Int,
                 IsNullable = isNullable
             };
 
@@ -109,7 +109,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new BigInt(),
+                SqlTypeInfo = MsSqlType2016.BigInt,
                 IsNullable = isNullable
             };
 
@@ -120,7 +120,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Decimal(),
+                SqlTypeInfo = MsSqlType2016.Decimal,
                 IsNullable = isNullable,
                 Length = length,
                 Scale = scale
@@ -133,7 +133,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Numeric(),
+                SqlTypeInfo = MsSqlType2016.Numeric,
                 IsNullable = isNullable,
                 Length = length,
                 Scale = scale
@@ -146,7 +146,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Money(),
+                SqlTypeInfo = MsSqlType2016.Numeric,
                 IsNullable = isNullable,
             };
 
@@ -157,7 +157,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new SmallMoney(),
+                SqlTypeInfo = MsSqlType2016.Money,
                 IsNullable = isNullable,
             };
 
@@ -168,7 +168,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Float(),
+                SqlTypeInfo = MsSqlType2016.Float,
                 IsNullable = isNullable,
             };
 
@@ -179,7 +179,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Real(),
+                SqlTypeInfo = MsSqlType2016.Real,
                 IsNullable = isNullable,
             };
 
@@ -190,7 +190,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Date(),
+                SqlTypeInfo = MsSqlType2016.Date,
                 IsNullable = isNullable,
             };
 
@@ -201,7 +201,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Time(),
+                SqlTypeInfo = MsSqlType2016.Time,
                 IsNullable = isNullable,
             };
 
@@ -212,7 +212,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new DateTime(),
+                SqlTypeInfo = MsSqlType2016.DateTime,
                 IsNullable = isNullable,
             };
 
@@ -223,7 +223,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new DateTime2(),
+                SqlTypeInfo = MsSqlType2016.DateTime2,
                 IsNullable = isNullable,
                 Length = length
             };
@@ -235,7 +235,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new DateTimeOffset(),
+                SqlTypeInfo = MsSqlType2016.DateTimeOffset,
                 IsNullable = isNullable,
                 Length = length
             };
@@ -247,7 +247,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new SmallDateTime(),
+                SqlTypeInfo = MsSqlType2016.SmallDateTime,
                 IsNullable = isNullable,
             };
 
@@ -258,7 +258,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Binary(),
+                SqlTypeInfo = MsSqlType2016.Binary,
                 IsNullable = isNullable,
                 Length = length
             };
@@ -272,7 +272,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new VarBinary(),
+                SqlTypeInfo = MsSqlType2016.VarBinary,
                 IsNullable = isNullable,
                 Length = length
             };
@@ -284,7 +284,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Image(),
+                SqlTypeInfo = MsSqlType2016.Image,
                 IsNullable = isNullable,
             };
 
@@ -295,7 +295,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new Text(),
+                SqlTypeInfo = MsSqlType2016.Text,
                 IsNullable = isNullable,
             };
 
@@ -306,7 +306,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new NText(),
+                SqlTypeInfo = MsSqlType2016.NText,
                 IsNullable = isNullable,
             };
 
@@ -317,7 +317,7 @@
         {
             var sqlType = new SqlType
             {
-                SqlTypeInfo = new UniqueIdentifier(),
+                SqlTypeInfo = MsSqlType2016.UniqueIdentifier,
                 IsNullable = isNullable,
             };
 
