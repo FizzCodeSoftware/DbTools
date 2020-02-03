@@ -109,8 +109,8 @@
         {
             var sqlStatements = new List<SqlStatementWithParameters>();
 
-            if (!(sqlStatementWithParameters.Statement.Trim().StartsWith("BEGIN", StringComparison.CurrentCultureIgnoreCase)
-                && sqlStatementWithParameters.Statement.Trim().EndsWith("END;", StringComparison.CurrentCultureIgnoreCase)))
+            if (!(sqlStatementWithParameters.Statement.Trim().StartsWith("BEGIN", StringComparison.InvariantCultureIgnoreCase)
+                && sqlStatementWithParameters.Statement.Trim().EndsWith("END;", StringComparison.InvariantCultureIgnoreCase)))
             {
                 var count = 0;
                 foreach (var c in sqlStatementWithParameters.Statement)

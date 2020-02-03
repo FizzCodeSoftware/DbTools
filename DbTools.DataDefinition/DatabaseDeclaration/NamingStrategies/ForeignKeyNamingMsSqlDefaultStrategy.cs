@@ -14,7 +14,7 @@
 
             var sameNameFks = fk.SqlTable.Properties
                 .OfType<ForeignKey>()
-                .Where(x => x != fk && x.Name?.StartsWith(fkName, StringComparison.CurrentCultureIgnoreCase) == true)
+                .Where(x => x != fk && x.Name?.StartsWith(fkName, StringComparison.InvariantCultureIgnoreCase) == true)
                 .ToList();
 
             foreach (var sameFk in sameNameFks)

@@ -98,8 +98,8 @@
             unchecked
             {
                 var hash = 17;
-                hash = (hash * 23) + Schema?.GetHashCode(StringComparison.CurrentCultureIgnoreCase) ?? 0;
-                hash = (hash * 23) + TableName.GetHashCode(StringComparison.CurrentCultureIgnoreCase);
+                hash = (hash * 23) + Schema?.GetHashCode(StringComparison.InvariantCultureIgnoreCase) ?? 0;
+                hash = (hash * 23) + TableName.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
                 return hash;
             }
         }

@@ -15,7 +15,7 @@
         private static void ReplaceNamedParameterPrefixes(DbCommand dbCommand)
         {
 #pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
-            dbCommand.CommandText = dbCommand.CommandText.Replace(" @", " :", StringComparison.CurrentCultureIgnoreCase); //replace named parameter indicators
+            dbCommand.CommandText = dbCommand.CommandText.Replace(" @", " :", StringComparison.InvariantCultureIgnoreCase); //replace named parameter indicators
 #pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
 
             foreach (var paramter in dbCommand.Parameters)

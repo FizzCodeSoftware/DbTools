@@ -74,10 +74,10 @@
                 var initialAssembly = callerAssemblies.Last();
 
                 var assemblyName = initialAssembly.GetName().Name;
-                if (assemblyName.StartsWith("FizzCode.DbTools.", StringComparison.CurrentCultureIgnoreCase))
+                if (assemblyName.StartsWith("FizzCode.DbTools.", StringComparison.InvariantCultureIgnoreCase))
                     assemblyName = assemblyName.Substring("FizzCode.DbTools.".Length);
 
-                var schemaName = assemblyName.Replace(".", "_", StringComparison.CurrentCultureIgnoreCase);
+                var schemaName = assemblyName.Replace(".", "_", StringComparison.InvariantCultureIgnoreCase);
 
                 settings.SqlVersionSpecificSettings["DefaultSchema"] = schemaName;
             }
