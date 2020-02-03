@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.Common;
@@ -14,7 +13,7 @@
         public OracleGenerator12c(Context context)
             : base(context)
         {
-            Version = new Oracle12c();
+            Version = SqlEngines.Oracle12c;
         }
 
         protected override string GuardKeywords(string name)

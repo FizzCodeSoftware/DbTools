@@ -10,7 +10,7 @@
         public SqLiteGenerator3(Context context)
             : base(context)
         {
-            Version = new SqLite3();
+            Version = SqlEngines.SqLite3;
         }
 
         protected override string GuardKeywords(string name)

@@ -60,6 +60,23 @@
                 }
             }
 
+            if (MainVersion != SqlEngines.Generic1)
+            {
+                var typeMapper = TypeMapperFactory.GetTypeMapper(MainVersion);
+                foreach (var column in sqlTable.Columns)
+                {
+                    if (column is SqlColumnFKRegistration)
+                        continue;
+
+                    // map TO Gen1 if not present
+                    if (!column.Types.ContainsKey(new Configuration.Generic1()))
+                    {
+                        var genericType = typeMapper.MapToGeneric1(column.Types[MainVersion]);
+                        SqlColumnHelper.Add(SqlEngines.Generic1, sqlTable, column.Name, genericType);
+                    }
+                }
+            }
+
             Tables.Add(sqlTable);
         }
 

@@ -5,12 +5,7 @@ namespace FizzCode.DbTools.Configuration
     using System.Collections.Generic;
     using System.Linq;
 
-    // TODO - test
-    // TODO Move to configuraton
-
     // TODO GuardKeyWord -> ConnectionStringWithProvider.IsEscaped
-
-    // TODO version (server version)  to ConnectionStringWithProvider
 
     public interface ISqlDialect
 
@@ -27,14 +22,6 @@ namespace FizzCode.DbTools.Configuration
 
     public interface ISqLiteDialect : ISqlDialect
     { }
-
-    /*public enum SqlDialectX
-    {
-        Generic,
-        MsSql,
-        SqLite,
-        Oracle
-    }*/
 
     public abstract class SqlVersion
     {
@@ -100,11 +87,17 @@ namespace FizzCode.DbTools.Configuration
     {
         static SqlEngines()
         {
-            Versions.Add(new Generic1());
-            Versions.Add(new MsSql2016());
-            Versions.Add(new SqLite3());
-            Versions.Add(new Oracle12c());
+            Versions.Add(Generic1);
+            Versions.Add(MsSql2016);
+            Versions.Add(SqLite3);
+            Versions.Add(Oracle12c);
         }
+
+        public static Generic1 Generic1 { get; } = new Generic1();
+        public static MsSql2016 MsSql2016 { get; } = new MsSql2016();
+        public static SqLite3 SqLite3 { get; } = new SqLite3();
+        public static Oracle12c Oracle12c { get; } = new Oracle12c();
+
 
         public static List<SqlVersion> Versions { get; } = new List<SqlVersion>();
 

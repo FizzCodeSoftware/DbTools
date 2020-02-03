@@ -17,13 +17,7 @@
 
         public override DatabaseDefinition GetDatabaseDefinition()
         {
-            var dd = new DatabaseDefinition
-            {
-                TypeMappers = new Dictionary<SqlVersion, TypeMapper>
-                {
-                    { new MsSql2016(), new MsSqlTypeMapper2016() }
-                }
-            };
+            var dd = new DatabaseDefinition(Executer.ConnectionStringWithProvider.SqlEngineVersion, SqlEngines.Generic1);
 
             Log(LogSeverity.Debug, "Reading table definitions from database.");
 

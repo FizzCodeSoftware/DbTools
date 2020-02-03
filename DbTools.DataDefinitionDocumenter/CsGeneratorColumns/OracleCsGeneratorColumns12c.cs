@@ -1,8 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using System;
-    using System.Linq;
-    using System.Text;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
@@ -11,7 +9,7 @@
     {
         public OracleCsGeneratorColumns12c(Context context) : base(context)
         {
-            Version = new Oracle12c();
+            Version = SqlEngines.Oracle12c;
         }
 
         protected override string GetColumnCreationMethod(SqlColumn column)

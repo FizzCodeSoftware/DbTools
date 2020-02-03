@@ -10,7 +10,7 @@
     {
         public GenericGeneratorColumns1(Context context) : base(context)
         {
-            Version = new Generic1();
+            Version = SqlEngines.Generic1;
         }
 
         protected override string GetColumnCreationMethod(SqlColumn column)

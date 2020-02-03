@@ -54,13 +54,13 @@
         [TestMethod]
         public void GenerateDatabase_TableDescription()
         {
-            GenerateDatabase(new TableDescription(), new MsSql2016());
+            GenerateDatabase(new TableDescription(), SqlEngines.MsSql2016);
         }
 
         [TestMethod]
         public void GenerateDatabase_ColumnDescription()
         {
-            GenerateDatabase(new ColumnDescription(), new MsSql2016());
+            GenerateDatabase(new ColumnDescription(), SqlEngines.MsSql2016);
         }
 
         public class Index : DatabaseDeclaration
@@ -96,7 +96,7 @@
         [TestMethod]
         public void GenerateDatabase_DefaultValue()
         {
-            GenerateDatabase(new DefaultValue(), new MsSql2016());
+            GenerateDatabase(new DefaultValue(), SqlEngines.MsSql2016);
         }
 
         public class DefaultValue : DatabaseDeclaration
@@ -119,7 +119,7 @@
         [TestMethod]
         public void DatabaseDefinitionWithSchemaAndDefaultSchema()
         {
-            GenerateDatabase(new SchemaTableNameDefaultSchema(), new MsSql2016());
+            GenerateDatabase(new SchemaTableNameDefaultSchema(), SqlEngines.MsSql2016);
         }
 
         public class SchemaTableNameSeparator : DatabaseDeclaration

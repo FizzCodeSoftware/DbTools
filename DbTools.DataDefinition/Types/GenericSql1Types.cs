@@ -61,6 +61,12 @@
         public override bool HasScale => false;
     }
 
+    public class SqlText : GenericSqlType1
+    {
+        public override bool HasLength => false;
+        public override bool HasScale => false;
+    }
+
     public class SqlFloatSmall : GenericSqlType1
     {
         public override bool HasLength => false;

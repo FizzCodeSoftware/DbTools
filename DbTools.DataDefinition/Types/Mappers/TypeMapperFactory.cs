@@ -16,6 +16,9 @@
             if (version is Configuration.Oracle12c)
                 return new OracleTypeMapper12c();
 
+            if (version is Configuration.Generic1)
+                return new GenericTypeMapper1();
+
             throw new NotImplementedException($"Not implemented {version}.");
         }
     }

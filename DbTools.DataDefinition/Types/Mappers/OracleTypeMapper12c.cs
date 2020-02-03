@@ -1,9 +1,13 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System;
+    using FizzCode.DbTools.Configuration;
+    using FizzCode.DbTools.DataDefinition.Generic1;
 
     public class OracleTypeMapper12c : TypeMapper
     {
+        public override SqlVersion SqlVersion => SqlEngines.Oracle12c;
+
         public SqlType MapSqlTypeFromReaderInfo(string type, bool isNullable, int dataPrecision, int dataScale)
         {
             // TODO VARCHAR2(20 BYTE) VS VARCHAR2(20 CHAR)
@@ -77,6 +81,24 @@
                 Generic1.SqlDateTime _ => genericType.Create(OracleType12c.Date),
                 Generic1.SqlDate _ => genericType.Create(OracleType12c.Date),
                 _ => throw new NotImplementedException($"Unmapped type {genericType.SqlTypeInfo}"),
+            };
+        }
+
+        public override SqlType MapToGeneric1(SqlType sqlType)
+        {
+            return sqlType.SqlTypeInfo switch
+            {
+                Oracle12c.SqlChar _ => sqlType.Create(GenericSqlType1.Char),
+                Oracle12c.SqlNChar _ => sqlType.Create(GenericSqlType1.NChar),
+                Oracle12c.SqlVarChar _ => sqlType.Create(GenericSqlType1.VarChar),
+                Oracle12c.SqlNVarChar2 _ => sqlType.Create(GenericSqlType1.NVarChar),
+                Oracle12c.SqlBinaryFloat _ => sqlType.Create(GenericSqlType1.FloatSmall),
+                Oracle12c.SqlBinaryDouble _ => sqlType.Create(GenericSqlType1.FloatLarge),
+                // TODO iterations of number?
+                // TODO store original?
+                Oracle12c.SqlNumber _ => sqlType.Create(GenericSqlType1.Number),
+                Oracle12c.SqlDate _ => sqlType.Create(GenericSqlType1.Date),
+                _ => throw new NotImplementedException($"Unmapped type {sqlType.SqlTypeInfo}"),
             };
         }
     }

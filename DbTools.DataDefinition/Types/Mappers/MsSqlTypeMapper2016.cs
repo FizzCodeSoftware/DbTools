@@ -1,10 +1,19 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System;
+    using FizzCode.DbTools.Configuration;
+    using FizzCode.DbTools.DataDefinition.Generic1;
 
     public class GenericTypeMapper1 : TypeMapper
     {
+        public override SqlVersion SqlVersion => SqlEngines.Generic1;
+
         public override SqlType MapFromGeneric1(SqlType genericType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override SqlType MapToGeneric1(SqlType sqlType)
         {
             throw new NotImplementedException();
         }
@@ -12,6 +21,8 @@
 
     public class MsSqlTypeMapper2016 : TypeMapper
     {
+        public override SqlVersion SqlVersion => SqlEngines.MsSql2016;
+
         public SqlType MapSqlTypeFromReaderInfo(string type, bool isNullable, int numericPrecision, int numericSale, int characterMaximumLength, int datetimePrecision)
         {
             switch (type.ToUpper())
@@ -95,6 +106,32 @@
                 Generic1.SqlDateTime _ => genericType.Create(MsSqlType2016.DateTime),
                 Generic1.SqlDate _ => genericType.Create(MsSqlType2016.Date),
                 _ => throw new NotImplementedException($"Unmapped type {genericType.SqlTypeInfo}"),
+            };
+        }
+
+        public override SqlType MapToGeneric1(SqlType sqlType)
+        {
+            return sqlType.SqlTypeInfo switch
+            {
+                MsSql2016.SqlChar  _ => sqlType.Create(GenericSqlType1.Char),
+                MsSql2016.SqlNChar _ => sqlType.Create(GenericSqlType1.NChar),
+                MsSql2016.SqlVarChar _ => sqlType.Create(GenericSqlType1.VarChar),
+                MsSql2016.SqlNVarChar _ => sqlType.Create(GenericSqlType1.NVarChar),
+                MsSql2016.SqlFloat  _ => sqlType.Create(GenericSqlType1.FloatSmall),
+                MsSql2016.SqlReal _ => sqlType.Create(GenericSqlType1.FloatLarge),
+                MsSql2016.SqlBit _ => sqlType.Create(GenericSqlType1.Bit),
+                MsSql2016.SqlTinyInt _ => sqlType.Create(GenericSqlType1.Byte),
+                MsSql2016.SqlSmallInt _ => sqlType.Create(GenericSqlType1.Int16),
+                MsSql2016.SqlInt _ => sqlType.Create(GenericSqlType1.Int32),
+                MsSql2016.SqlBigInt _ => sqlType.Create(GenericSqlType1.Int64),
+                MsSql2016.SqlDateTime _ => sqlType.Create(GenericSqlType1.DateTime),
+                MsSql2016.SqlDateTime2 _ => sqlType.Create(GenericSqlType1.DateTime),
+                MsSql2016.SqlDate _ => sqlType.Create(GenericSqlType1.Date),
+                MsSql2016.SqlSmallDateTime _ => sqlType.Create(GenericSqlType1.Date),
+                MsSql2016.SqlDecimal _ => sqlType.Create(GenericSqlType1.Number),
+                MsSql2016.SqlNumeric _ => sqlType.Create(GenericSqlType1.Number),
+                MsSql2016.SqlMoney _ => sqlType.Create(GenericSqlType1.Number),
+                _ => throw new NotImplementedException($"Unmapped type {sqlType.SqlTypeInfo}"),
             };
         }
     }

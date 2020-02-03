@@ -1,13 +1,12 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Generic1
 {
-    using System;
-
     public abstract class GenericSqlType1 : SqlTypeInfo
     {
         public static SqlChar Char { get; } = new SqlChar();
         public static SqlNChar NChar { get; } = new SqlNChar();
         public static SqlVarChar VarChar { get; } = new SqlVarChar();
         public static SqlNVarChar NVarChar { get; } = new SqlNVarChar();
+        public static SqlText Text { get; } = new SqlText();
         public static SqlFloatSmall FloatSmall { get; } = new SqlFloatSmall();
         public static SqlFloatLarge FloatLarge { get; } = new SqlFloatLarge();
         public static SqlBit Bit { get; } = new SqlBit();
@@ -19,11 +18,6 @@
         public static SqlDate Date { get; } = new SqlDate();
         public static SqlTime Time { get; } = new SqlTime();
         public static SqlDateTime DateTime { get; } = new SqlDateTime();
-
-
-
-
-
     }
 }
 

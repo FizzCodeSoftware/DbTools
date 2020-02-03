@@ -1,7 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Generic1;
@@ -16,7 +14,7 @@
         {
             var context = new DocumenterContext
             {
-                Settings = TestHelper.GetDefaultTestSettings(new MsSql2016()),
+                Settings = TestHelper.GetDefaultTestSettings(SqlEngines.MsSql2016),
                 DocumenterSettings = new DocumenterSettings(),
                 Customizer = customizer ?? new EmptyTableCustomizer(),
                 Logger = TestHelper.CreateLogger()

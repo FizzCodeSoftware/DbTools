@@ -37,7 +37,7 @@
         {
             var version = SqlEngines.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), version.VersionString, connectionString);
+            var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), connectionString, version.VersionString);
 
             var context = CreateContext(version);
 
@@ -73,7 +73,7 @@
         {
             var version = SqlEngines.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), version.VersionString, connectionString);
+            var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), connectionString, version.VersionString);
 
             var context = CreateContext(version);
 
@@ -101,7 +101,7 @@
         {
             var version = SqlEngines.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), version.VersionString, connectionString);
+            var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), connectionString, version.VersionString);
 
             var context = CreateContext(version);
 
@@ -175,7 +175,7 @@
         {
             var version = SqlEngines.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider("", SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), version.VersionString, connectionString);
+            var connectionStringWithProvider = new ConnectionStringWithProvider("", SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), connectionString, version.VersionString);
 
             var context = CreateContext(version);
 
