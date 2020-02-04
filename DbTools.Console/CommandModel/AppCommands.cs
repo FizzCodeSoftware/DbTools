@@ -35,7 +35,7 @@
             [Option(LongName = "flags", ShortName = "f")]
             List<DocumenterFlag> flags)
         {
-            var version = SqlEngines.GetVersion(sqlType);
+            var version = SqlVersions.GetVersion(sqlType);
 
             var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), connectionString, version.VersionString);
 
@@ -71,7 +71,7 @@
             [Option(LongName = "patternFileName", ShortName = "p")]
             string patternFileName)
         {
-            var version = SqlEngines.GetVersion(sqlType);
+            var version = SqlVersions.GetVersion(sqlType);
 
             var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), connectionString, version.VersionString);
 
@@ -99,7 +99,7 @@
             [Option(LongName = "patternFileName", ShortName = "p")]
             string patternFileName)
         {
-            var version = SqlEngines.GetVersion(sqlType);
+            var version = SqlVersions.GetVersion(sqlType);
 
             var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), connectionString, version.VersionString);
 
@@ -173,7 +173,7 @@
             string sqlType
             )
         {
-            var version = SqlEngines.GetVersion(sqlType);
+            var version = SqlVersions.GetVersion(sqlType);
 
             var connectionStringWithProvider = new ConnectionStringWithProvider("", SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), connectionString, version.VersionString);
 

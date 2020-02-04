@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using FizzCode.DbTools.Configuration;
-
-namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition
 {
+    using System;
+    using System.Linq;
+
     internal static class RegisteredForeignKeysCreator
     {
-        internal static void PrimaryKeySingleColumn(DatabaseDefinition definition, SqlTable sqlTable, ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn fkRegistration, Dictionary<SqlVersion, TypeMapper> TypeMappers)
+        internal static void PrimaryKeySingleColumn(DatabaseDefinition definition, SqlTable sqlTable, ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn fkRegistration)
         {
             var referredTable = definition.GetTable(fkRegistration.ReferredTableName);
             var referredPk = GetReferredPK(referredTable);
@@ -33,18 +31,8 @@ namespace FizzCode.DbTools.DataDefinition
             sqlTable.Columns.Remove(placeHolderColumn.Name);
 
             sqlTable.Columns.Add(col.Name, col, order);
-            // CreateOtherTypes(sqlTable, TypeMappers, col);
 
             fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(col, pkColumn));
-        }
-
-        private static void CreateOtherTypes(SqlTable sqlTable, Dictionary<SqlVersion, TypeMapper> TypeMappers, SqlColumn col)
-        {
-            foreach (var typeMapper in TypeMappers)
-            {
-                var othertype = typeMapper.Value.MapFromGeneric1(col.Types[new Configuration.Generic1()]);
-                SqlColumnHelper.Add(typeMapper.Key, sqlTable, col.Name, othertype);
-            }
         }
 
         public static void PrimaryKey(DatabaseDefinition definition, SqlTable sqlTable, ForeignKeyRegistrationToTableWithPrimaryKey fkRegistration, IForeignKeyNamingStrategy fkNaming)

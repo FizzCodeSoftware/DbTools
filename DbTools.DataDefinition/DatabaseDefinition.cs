@@ -60,7 +60,7 @@
                 }
             }
 
-            if (MainVersion != SqlEngines.Generic1)
+            if (MainVersion != null && MainVersion != Configuration.SqlVersions.Generic1)
             {
                 var typeMapper = TypeMapperFactory.GetTypeMapper(MainVersion);
                 foreach (var column in sqlTable.Columns)
@@ -72,7 +72,7 @@
                     if (!column.Types.ContainsKey(new Configuration.Generic1()))
                     {
                         var genericType = typeMapper.MapToGeneric1(column.Types[MainVersion]);
-                        SqlColumnHelper.Add(SqlEngines.Generic1, sqlTable, column.Name, genericType);
+                        SqlColumnHelper.Add(Configuration.SqlVersions.Generic1, sqlTable, column.Name, genericType);
                     }
                 }
             }

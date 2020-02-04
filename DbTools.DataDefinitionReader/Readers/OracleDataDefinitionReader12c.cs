@@ -15,7 +15,7 @@
 
         public override DatabaseDefinition GetDatabaseDefinition()
         {
-            var dd = new DatabaseDefinition(Executer.ConnectionStringWithProvider.SqlEngineVersion, SqlEngines.Generic1);
+            var dd = new DatabaseDefinition(Executer.ConnectionStringWithProvider.SqlEngineVersion, SqlVersions.Generic1);
 
             Log(LogSeverity.Debug, "Reading table definitions from database.");
 

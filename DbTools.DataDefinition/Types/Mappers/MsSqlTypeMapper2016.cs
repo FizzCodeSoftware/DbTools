@@ -1,12 +1,13 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System;
+    using System.Globalization;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition.Generic1;
 
     public class GenericTypeMapper1 : TypeMapper
     {
-        public override SqlVersion SqlVersion => SqlEngines.Generic1;
+        public override SqlVersion SqlVersion => SqlVersions.Generic1;
 
         public override SqlType MapFromGeneric1(SqlType genericType)
         {
@@ -21,71 +22,45 @@
 
     public class MsSqlTypeMapper2016 : TypeMapper
     {
-        public override SqlVersion SqlVersion => SqlEngines.MsSql2016;
+        public override SqlVersion SqlVersion => SqlVersions.MsSql2016;
 
         public SqlType MapSqlTypeFromReaderInfo(string type, bool isNullable, int numericPrecision, int numericSale, int characterMaximumLength, int datetimePrecision)
         {
-            switch (type.ToUpper())
+            return (type.ToUpper(CultureInfo.InvariantCulture)) switch
             {
-                case "CHAR":
-                    return base.MapSqlType(MsSqlType2016.Char, isNullable, characterMaximumLength);
-                case "NCHAR":
-                    return base.MapSqlType(MsSqlType2016.NChar, isNullable, characterMaximumLength);
-                case "VARCHAR": // TODO max length allowed - what is in Row?
-                    return base.MapSqlType(MsSqlType2016.VarChar, isNullable, characterMaximumLength);
-                case "NVARCHAR": // TODO max length allowed - what is in Row?
-                    return base.MapSqlType(MsSqlType2016.NVarChar, isNullable, characterMaximumLength);
-                case "BIT":
-                    return base.MapSqlType(MsSqlType2016.Bit, isNullable);
-                case "TINYINT":
-                    return base.MapSqlType(MsSqlType2016.TinyInt, isNullable);
-                case "SMALLINT":
-                    return base.MapSqlType(MsSqlType2016.SmallInt, isNullable);
-                case "INT":
-                    return base.MapSqlType(MsSqlType2016.Int, isNullable);
-                case "BIGINT":
-                    return base.MapSqlType(MsSqlType2016.BigInt, isNullable);
-                case "DECIMAL":
-                    return base.MapSqlType(MsSqlType2016.Decimal, isNullable, numericPrecision, numericSale);
-                case "NUMERIC":
-                    return base.MapSqlType(MsSqlType2016.Numeric, isNullable, numericPrecision, numericSale);
-                case "MONEY":
-                    return base.MapSqlType(MsSqlType2016.Money, isNullable);
-                case "SMALLMONEY":
-                    return base.MapSqlType(MsSqlType2016.SmallMoney, isNullable);
-                case "FLOAT":
-                    return base.MapSqlType(MsSqlType2016.Float, isNullable);
-                case "REAL":
-                    return base.MapSqlType(MsSqlType2016.Real, isNullable);
-                case "DATE":
-                    return base.MapSqlType(MsSqlType2016.Date, isNullable);
-                case "DATETIME":
-                    return base.MapSqlType(MsSqlType2016.DateTime, isNullable);
-                case "SMALLDATETIME":
-                    return base.MapSqlType(MsSqlType2016.SmallDateTime, isNullable);
-                case "TIME":
-                    return base.MapSqlType(MsSqlType2016.Time, isNullable, datetimePrecision);
-                case "DATETIME2":
-                    return base.MapSqlType(MsSqlType2016.DateTime2, isNullable, datetimePrecision);
-                case "DATETIMEOFFSET":
-                    return base.MapSqlType(MsSqlType2016.DateTimeOffset, isNullable, datetimePrecision);
-                case "BINARY":
-                    return base.MapSqlType(MsSqlType2016.Binary, isNullable, characterMaximumLength); // TODO which length?
-                case "VARBINARY": // TODO max length allowed - what is in Row?
-                    return base.MapSqlType(MsSqlType2016.VarBinary, isNullable, characterMaximumLength); // TODO which length?
-                case "IMAGE":
-                    return base.MapSqlType(MsSqlType2016.Image, isNullable);
-                case "XML":
-                    return base.MapSqlType(MsSqlType2016.Xml, isNullable);
-                case "UNIQUEIDENTIFIER":
-                    return base.MapSqlType(MsSqlType2016.UniqueIdentifier, isNullable);
-                case "TEXT":
-                    return base.MapSqlType(MsSqlType2016.Text, isNullable);
-                case "NTEXT":
-                    return base.MapSqlType(MsSqlType2016.NText, isNullable);
-                default:
-                    throw new NotImplementedException($"Unmapped SqlType: {type}.");
-            }
+                "CHAR" => base.MapSqlType(MsSqlType2016.Char, isNullable, characterMaximumLength),
+                "NCHAR" => base.MapSqlType(MsSqlType2016.NChar, isNullable, characterMaximumLength),
+                // TODO max length allowed - what is in Row?
+                "VARCHAR" => base.MapSqlType(MsSqlType2016.VarChar, isNullable, characterMaximumLength),
+                // TODO max length allowed - what is in Row?
+                "NVARCHAR" => base.MapSqlType(MsSqlType2016.NVarChar, isNullable, characterMaximumLength),
+                "BIT" => base.MapSqlType(MsSqlType2016.Bit, isNullable),
+                "TINYINT" => base.MapSqlType(MsSqlType2016.TinyInt, isNullable),
+                "SMALLINT" => base.MapSqlType(MsSqlType2016.SmallInt, isNullable),
+                "INT" => base.MapSqlType(MsSqlType2016.Int, isNullable),
+                "BIGINT" => base.MapSqlType(MsSqlType2016.BigInt, isNullable),
+                "DECIMAL" => base.MapSqlType(MsSqlType2016.Decimal, isNullable, numericPrecision, numericSale),
+                "NUMERIC" => base.MapSqlType(MsSqlType2016.Numeric, isNullable, numericPrecision, numericSale),
+                "MONEY" => base.MapSqlType(MsSqlType2016.Money, isNullable),
+                "SMALLMONEY" => base.MapSqlType(MsSqlType2016.SmallMoney, isNullable),
+                "FLOAT" => base.MapSqlType(MsSqlType2016.Float, isNullable),
+                "REAL" => base.MapSqlType(MsSqlType2016.Real, isNullable),
+                "DATE" => base.MapSqlType(MsSqlType2016.Date, isNullable),
+                "DATETIME" => base.MapSqlType(MsSqlType2016.DateTime, isNullable),
+                "SMALLDATETIME" => base.MapSqlType(MsSqlType2016.SmallDateTime, isNullable),
+                "TIME" => base.MapSqlType(MsSqlType2016.Time, isNullable, datetimePrecision),
+                "DATETIME2" => base.MapSqlType(MsSqlType2016.DateTime2, isNullable, datetimePrecision),
+                "DATETIMEOFFSET" => base.MapSqlType(MsSqlType2016.DateTimeOffset, isNullable, datetimePrecision),
+                "BINARY" => base.MapSqlType(MsSqlType2016.Binary, isNullable, characterMaximumLength),// TODO which length?
+                                                                                                      // TODO max length allowed - what is in Row?
+                "VARBINARY" => base.MapSqlType(MsSqlType2016.VarBinary, isNullable, characterMaximumLength),// TODO which length?
+                "IMAGE" => base.MapSqlType(MsSqlType2016.Image, isNullable),
+                "XML" => base.MapSqlType(MsSqlType2016.Xml, isNullable),
+                "UNIQUEIDENTIFIER" => base.MapSqlType(MsSqlType2016.UniqueIdentifier, isNullable),
+                "TEXT" => base.MapSqlType(MsSqlType2016.Text, isNullable),
+                "NTEXT" => base.MapSqlType(MsSqlType2016.NText, isNullable),
+                _ => throw new NotImplementedException($"Unmapped SqlType: {type}."),
+            };
         }
 
         public override SqlType MapFromGeneric1(SqlType genericType)

@@ -7,7 +7,7 @@
 
     public class SqLiteTypeMapper3 : TypeMapper
     {
-        public override SqlVersion SqlVersion => SqlEngines.SqLite3;
+        public override SqlVersion SqlVersion => SqlVersions.SqLite3;
 
         public override SqlType MapFromGeneric1(SqlType genericType)
         {

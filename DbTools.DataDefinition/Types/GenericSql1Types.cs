@@ -4,37 +4,6 @@
 
     public abstract class GenericSqlType : SqlTypeInfo
     {
-        /*public bool IsLengthMandatory
-        {
-            get
-            {
-                if (IsLengthMandatoryInternal.HasValue)
-                    return IsLengthMandatoryInternal.Value;
-                else
-                    if (!HasLength)
-                    return false;
-                else
-                    throw new Exception();
-            }
-        }
-
-        public bool IsScaleMandatory
-        {
-            get
-            {
-                if (IsScaleMandatoryInternal.HasValue)
-                    return IsScaleMandatoryInternal.Value;
-                else
-                    if (!HasScale)
-                    return false;
-                else
-                    throw new Exception();
-            }
-        }
-
-        protected virtual bool? IsLengthMandatoryInternal { get; }
-
-        public virtual bool? IsScaleMandatoryInternal { get; }*/
     }
 
     public class SqlChar : GenericSqlType1

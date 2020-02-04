@@ -7,12 +7,12 @@
       "ConnectionString": "FullUri=file::memory:?cache=shared;",
       "Version": "3"
     },
-    "MsSql": {
+    "MsSql2016": {
       "ProviderName": "System.Data.SqlClient",
       "ConnectionString": "Data Source=(local);Initial Catalog=DbTools_DataDefinitionExecuter_Tests;Integrated Security=SSPI;Connection Timeout=5",
       "Version": "2016"
     },
-    "Oracle": {
+    "Oracle12c": {
       "ProviderName": "Oracle.ManagedDataAccess.Client",
       "ConnectionString": "",
       "Version": "12c"

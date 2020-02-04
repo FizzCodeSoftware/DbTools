@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿#pragma warning disable CA1720 // Identifier contains type name
+
+namespace FizzCode.DbTools.DataDefinition
 {
     using FizzCode.DbTools.DataDefinition.Oracle12c;
 

@@ -1,66 +1,43 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System;
+    using System.Globalization;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition.Generic1;
 
     public class OracleTypeMapper12c : TypeMapper
     {
-        public override SqlVersion SqlVersion => SqlEngines.Oracle12c;
+        public override SqlVersion SqlVersion => SqlVersions.Oracle12c;
 
         public SqlType MapSqlTypeFromReaderInfo(string type, bool isNullable, int dataPrecision, int dataScale)
         {
             // TODO VARCHAR2(20 BYTE) VS VARCHAR2(20 CHAR)
 
-            switch (type.ToUpper())
+            return (type.ToUpper(CultureInfo.InvariantCulture)) switch
             {
-                case "CHAR":
-                    return base.MapSqlType(OracleType12c.Char, isNullable, dataPrecision);
-                case "NCHAR":
-                    return base.MapSqlType(OracleType12c.NChar, isNullable, dataPrecision);
-                case "VARCHAR":
-                    return base.MapSqlType(OracleType12c.VarChar, isNullable, dataPrecision);
-                case "VARCHAR2":
-                    return base.MapSqlType(OracleType12c.VarChar2, isNullable, dataPrecision);
-                case "NVARCHAR2":
-                    return base.MapSqlType(OracleType12c.NVarChar2, isNullable, dataPrecision);
-
-                case "BLOB":
-                    return base.MapSqlType(OracleType12c.Blob, isNullable);
-                case "CLOB":
-                    return base.MapSqlType(OracleType12c.Clob, isNullable);
-                case "NCLOB":
-                    return base.MapSqlType(OracleType12c.NClob, isNullable);
-                case "BFILE":
-                    return base.MapSqlType(OracleType12c.BFile, isNullable);
-                case "LONG": // TODO handle deprecated
-                    return base.MapSqlType(OracleType12c.Long, isNullable, dataPrecision);
-                case "LONG RAW": // TODO handle deprecated
-                    return base.MapSqlType(OracleType12c.LongRaw, isNullable, dataPrecision);
-
-                case "NUMBER":
-                    return base.MapSqlType(OracleType12c.Number, isNullable, dataPrecision, dataScale);
-
-                case "BINARY_FLOAT":
-                    return base.MapSqlType(OracleType12c.BinaryFloat, isNullable);
-                case "BINARY_DOUBLE":
-                    return base.MapSqlType(OracleType12c.BinaryDouble, isNullable);
-
-                case "DATE":
-                    return base.MapSqlType(OracleType12c.Date, isNullable);
-                case "TIMESTAMP WITH TIME ZONE":
-                    return base.MapSqlType(OracleType12c.TimeStampWithTimeZone, isNullable);
-                case "TIMESTAMP WITH LOCAL TIME ZONE":
-                    return base.MapSqlType(OracleType12c.TimeStampWithLocalTimeZone, isNullable);
-
-                case "XMLTYPE":
-                    return base.MapSqlType(OracleType12c.XmlType, isNullable);
-                case "URITYPE":
-                    return base.MapSqlType(OracleType12c.UriType, isNullable);
-
-                default:
-                    throw new NotImplementedException($"Unmapped SqlType: {type}.");
-            }
+                "CHAR" => base.MapSqlType(OracleType12c.Char, isNullable, dataPrecision),
+                "NCHAR" => base.MapSqlType(OracleType12c.NChar, isNullable, dataPrecision),
+                "VARCHAR" => base.MapSqlType(OracleType12c.VarChar, isNullable, dataPrecision),
+                "VARCHAR2" => base.MapSqlType(OracleType12c.VarChar2, isNullable, dataPrecision),
+                "NVARCHAR2" => base.MapSqlType(OracleType12c.NVarChar2, isNullable, dataPrecision),
+                "BLOB" => base.MapSqlType(OracleType12c.Blob, isNullable),
+                "CLOB" => base.MapSqlType(OracleType12c.Clob, isNullable),
+                "NCLOB" => base.MapSqlType(OracleType12c.NClob, isNullable),
+                "BFILE" => base.MapSqlType(OracleType12c.BFile, isNullable),
+                // TODO handle deprecated
+                "LONG" => base.MapSqlType(OracleType12c.Long, isNullable, dataPrecision),
+                // TODO handle deprecated
+                "LONG RAW" => base.MapSqlType(OracleType12c.LongRaw, isNullable, dataPrecision),
+                "NUMBER" => base.MapSqlType(OracleType12c.Number, isNullable, dataPrecision, dataScale),
+                "BINARY_FLOAT" => base.MapSqlType(OracleType12c.BinaryFloat, isNullable),
+                "BINARY_DOUBLE" => base.MapSqlType(OracleType12c.BinaryDouble, isNullable),
+                "DATE" => base.MapSqlType(OracleType12c.Date, isNullable),
+                "TIMESTAMP WITH TIME ZONE" => base.MapSqlType(OracleType12c.TimeStampWithTimeZone, isNullable),
+                "TIMESTAMP WITH LOCAL TIME ZONE" => base.MapSqlType(OracleType12c.TimeStampWithLocalTimeZone, isNullable),
+                "XMLTYPE" => base.MapSqlType(OracleType12c.XmlType, isNullable),
+                "URITYPE" => base.MapSqlType(OracleType12c.UriType, isNullable),
+                _ => throw new NotImplementedException($"Unmapped SqlType: {type}."),
+            };
         }
 
         public override SqlType MapFromGeneric1(SqlType genericType)

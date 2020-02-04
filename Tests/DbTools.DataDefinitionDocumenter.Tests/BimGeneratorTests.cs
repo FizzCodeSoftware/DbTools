@@ -14,7 +14,7 @@
         {
             var context = new DocumenterContext
             {
-                Settings = TestHelper.GetDefaultTestSettings(SqlEngines.MsSql2016),
+                Settings = TestHelper.GetDefaultTestSettings(SqlVersions.MsSql2016),
                 DocumenterSettings = new DocumenterSettings(),
                 Customizer = customizer ?? new EmptyTableCustomizer(),
                 Logger = TestHelper.CreateLogger()

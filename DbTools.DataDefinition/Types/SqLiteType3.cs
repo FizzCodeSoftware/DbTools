@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition.SqLite3
+﻿#pragma warning disable CA1720 // Identifier contains type name
+
+namespace FizzCode.DbTools.DataDefinition.SqLite3
 {
     public abstract class SqLiteType3 : SqLiteType
     {
@@ -11,11 +13,6 @@
         public static SqlBlob Blob { get; } = new SqlBlob();
 
     }
-
-    public abstract class SqLiteType : SqlTypeInfo
-    {
-    }
-
 
     public class SqlText : SqLiteType3
     {

@@ -17,7 +17,7 @@
         public Generator(GeneratorContext context)
         {
             Context = context;
-            Version = SqlEngines.Generic1;
+            Version = SqlVersions.Generic1;
         }
 
         // Get a SqlTable

@@ -13,7 +13,7 @@
         public OracleGenerator12c(Context context)
             : base(context)
         {
-            Version = SqlEngines.Oracle12c;
+            Version = SqlVersions.Oracle12c;
         }
 
         protected override string GuardKeywords(string name)

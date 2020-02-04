@@ -83,9 +83,9 @@ namespace FizzCode.DbTools.Configuration
         }
     }
 
-    public static class SqlEngines
+    public static class SqlVersions
     {
-        static SqlEngines()
+        static SqlVersions()
         {
             Versions.Add(Generic1);
             Versions.Add(MsSql2016);

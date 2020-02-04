@@ -22,7 +22,7 @@
             ProviderName = providerName;
             ConnectionString = connectionString;
             var sqlVersionType = SqlDialectHelper.GetSqlVersionTypeFromProviderName(providerName);
-            SqlEngineVersion = SqlEngines.GetVersion(sqlVersionType, versionString);
+            SqlEngineVersion = SqlVersions.GetVersion(sqlVersionType, versionString);
         }
 
         public override string ToString()

@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Generic1
+﻿#pragma warning disable CA1720 // Identifier contains type name
+
+namespace FizzCode.DbTools.DataDefinition.Generic1
 {
     public abstract class GenericSqlType1 : SqlTypeInfo
     {

@@ -14,6 +14,7 @@
         public void DocumentTest(SqlVersion version)
         {
             var db = new TestDatabaseFks();
+            db.SetVersions(version);
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(), version, "TestDatabaseFks");
 
             documenter.Document(db);
@@ -24,6 +25,7 @@
         public void TableCustomizerTest(SqlVersion version)
         {
             var db = new TestDatabaseFks();
+            db.SetVersions(version);
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(new TableCustomizer()), version, "TestDatabaseFks");
             documenter.Document(db);
         }
@@ -33,6 +35,7 @@
         public void DocumentTestForeignKeyComposite(SqlVersion version)
         {
             var db = new ForeignKeyComposite();
+            db.SetVersions(version);
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(), version, "ForeignKeyComposite");
             documenter.Document(db);
         }

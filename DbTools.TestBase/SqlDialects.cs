@@ -43,7 +43,7 @@
     {
         public LatestSqlVersionsAttribute()
         {
-            Versions = SqlEngines.GetLatestExecutableVersions();
+            Versions = SqlVersions.GetLatestExecutableVersions();
         }
     }
 
@@ -52,7 +52,7 @@
     {
         public SqlVersionsAttribute()
         {
-            Versions = SqlEngines.Versions;
+            Versions = SqlVersions.Versions;
         }
 
         public SqlVersionsAttribute(params Type[] versionTypes) : base(versionTypes)

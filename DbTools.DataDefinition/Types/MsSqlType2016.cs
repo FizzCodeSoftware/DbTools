@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿#pragma warning disable CA1720 // Identifier contains type name
+
+namespace FizzCode.DbTools.DataDefinition
 {
     using FizzCode.DbTools.DataDefinition.MsSql2016;
 
@@ -44,20 +46,6 @@
         public static bool IsBit(this SqlType sqlType)
         {
             return sqlType.SqlTypeInfo is SqlBit;
-        }
-    }
-
-    public static class MSqlType2016Extensions
-    {
-        public static bool AnyOf(this SqlType sqlType, params SqlTypeInfo[] sqlTypeInfos)
-        {
-            foreach (var sqlTypeInfo in sqlTypeInfos)
-            {
-                if (sqlType.SqlTypeInfo.GetType().Name == sqlTypeInfo.GetType().Name)
-                    return true;
-            }
-
-            return false;
         }
     }
 }

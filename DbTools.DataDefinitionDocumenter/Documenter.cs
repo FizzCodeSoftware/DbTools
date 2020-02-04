@@ -223,9 +223,7 @@
             foreach (var column in table.Columns)
             {
                 // TODO Create ISqlTypeMapper according to SqlDialect
-
-
-                var sqlType = column.Types.PreferredType;
+                var sqlType = column.Type;
 
                 var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
                 var description = "";

@@ -35,7 +35,7 @@
                     if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
                         fkRegistration.ReferredTableName.Schema = DefaultSchema;
 
-                    RegisteredForeignKeysCreator.PrimaryKeySingleColumn(this, sqlTable, fkRegistration, TypeMappers);
+                    RegisteredForeignKeysCreator.PrimaryKeySingleColumn(this, sqlTable, fkRegistration);
                 }
 
                 foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithPrimaryKey>(sqlTable))

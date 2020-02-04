@@ -14,26 +14,11 @@
             }
         }
 
-        // TODO move to converter?
-        public SqlType PreferredType
-        {
-            get
-            {
-                if (Keys.Count == 1)
-                    return Values.First();
-
-                if (Keys.Any(k => SqlEngines.GetVersions<IGenericDialect>().Contains(k)))
-                    return this[SqlEngines.GetLatestVersion<IGenericDialect>()];
-
-                return null;
-            }
-        }
-
         public string Describe()
         {
-            if (Keys.Any(k => SqlEngines.GetVersions<IGenericDialect>().Contains(k)))
+            if (Keys.Any(k => SqlVersions.GetVersions<IGenericDialect>().Contains(k)))
             {
-                return Describe(SqlEngines.GetLatestVersion<IGenericDialect>());
+                return Describe(SqlVersions.GetLatestVersion<IGenericDialect>());
             }
 
             return Describe(Keys.Last());

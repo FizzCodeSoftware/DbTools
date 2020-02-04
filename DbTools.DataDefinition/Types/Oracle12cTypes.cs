@@ -1,46 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Oracle12c
 {
-    using System;
-    using System.Globalization;
-
-    public abstract class OracleType : SqlTypeInfo
-    {
-        public bool IsLengthMandatory
-        {
-            get
-            {
-                if (IsLengthMandatoryInternal.HasValue)
-                    return IsLengthMandatoryInternal.Value;
-                else
-                    if (HasLength)
-                        return false;
-                else
-                    throw new Exception();
-            }
-        }
-
-        public bool IsScaleMandatory
-        {
-            get
-            {
-                if (IsScaleMandatoryInternal.HasValue)
-                    return IsScaleMandatoryInternal.Value;
-                else
-                    if (HasScale)
-                        return true;
-                else
-                    throw new Exception();
-            }
-        }
-
-        protected virtual bool? IsLengthMandatoryInternal { get; }
-
-        protected virtual bool? IsScaleMandatoryInternal { get; }
-
-        public override string SqlDataType => base.SqlDataType.ToUpper(CultureInfo.InvariantCulture);
-    }
-
-
     public class SqlChar : OracleType12c
     {
         public override bool HasLength => true;
@@ -126,8 +85,8 @@
 
         public override bool HasScale => true;
 
-        protected override bool? IsLengthMandatoryInternal => false;
-        protected override bool? IsScaleMandatoryInternal => false;
+        public override bool IsLengthMandatory => false;
+        public override bool IsScaleMandatory => false;
     }
 
     public class SqlBinaryFloat : OracleType12c

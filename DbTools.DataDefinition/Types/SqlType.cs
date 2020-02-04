@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition
 {
     public class SqlType
     {

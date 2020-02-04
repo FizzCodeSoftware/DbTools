@@ -9,7 +9,7 @@
     {
         public OracleCsGeneratorColumns12c(Context context) : base(context)
         {
-            Version = SqlEngines.Oracle12c;
+            Version = SqlVersions.Oracle12c;
         }
 
         protected override string GetColumnCreationMethod(SqlColumn column)

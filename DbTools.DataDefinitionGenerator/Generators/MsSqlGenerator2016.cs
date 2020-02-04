@@ -12,7 +12,7 @@
         public MsSqlGenerator2016(Context context)
             : base(context)
         {
-            Version = SqlEngines.MsSql2016;
+            Version = SqlVersions.MsSql2016;
         }
 
         protected override string GuardKeywords(string name)
