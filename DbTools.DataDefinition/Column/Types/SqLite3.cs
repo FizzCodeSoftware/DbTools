@@ -4,8 +4,6 @@
     {
         private static readonly Configuration.SqLite3 Version = new Configuration.SqLite3();
 
-        private static readonly SqLiteTypeMapper3 TypeMapper = new SqLiteTypeMapper3();
-
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
         {
             return SqlColumnHelper.Add(Version, table, name, sqlType);
