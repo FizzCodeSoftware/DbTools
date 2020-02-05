@@ -78,7 +78,6 @@ WHERE type = 'U'";
             ColumnDocumentationReader.GetColumnDocumentation(sqlTable);
 
             sqlTable.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlTable.SchemaAndTableName, Executer.Generator.Context);
-
             return sqlTable;
         }
 

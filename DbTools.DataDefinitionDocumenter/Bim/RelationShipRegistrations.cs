@@ -31,12 +31,7 @@
                 return false;
 
             var tos = _fromTo[bimRelationship.FromTableSchemaAndTableName];
-
-            if (!tos.Any(r => r.FromColumn.Name == bimRelationship.FromColumn.Name
-                 && r.ToKey == bimRelationship.ToKey))
-                return false;
-
-            return true;
+            return tos.Any(r => r.FromColumn.Name == bimRelationship.FromColumn.Name && r.ToKey == bimRelationship.ToKey);
         }
     }
 }

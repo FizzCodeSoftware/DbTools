@@ -42,13 +42,7 @@
 
         private ISqlGenerator _generator;
 
-        public ISqlGenerator Generator
-        {
-            get
-            {
-                return _generator ?? (_generator = CreateGenerator());
-            }
-        }
+        public ISqlGenerator Generator => _generator ?? (_generator = CreateGenerator());
     }
 
     public class MsSqlMigrationGenerator : GenericSqlMigrationGenerator

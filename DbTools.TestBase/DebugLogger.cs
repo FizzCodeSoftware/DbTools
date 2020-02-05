@@ -20,7 +20,6 @@ namespace FizzCode.DbTools.TestBase
             if (args.Exception != null)
                 OnException(sender, args);
 
-
             var values = new List<object>();
             values.AddRange(args.Arguments);
 
@@ -60,8 +59,7 @@ namespace FizzCode.DbTools.TestBase
                 lvl++;
             }
 
-            _logger.Fatal("[{Module}], " + "{Message}",
-                msg);
+            _logger.Fatal("[{Module}], {Message}", msg);
         }
 
         private void GetOpsMessages(Exception ex, List<string> messages)

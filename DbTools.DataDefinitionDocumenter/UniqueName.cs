@@ -8,6 +8,7 @@
     public class UniqueName
     {
         private readonly int _maxNameLength;
+
         public UniqueName(int maxNameLength = 31)
         {
             _maxNameLength = maxNameLength;
@@ -36,10 +37,9 @@
             {
                 var existingNumber = _maxLenghtNamePartToNumber[maxLengthName];
 
-                if (existingNumber == 1)
-                    uniqueName = maxLengthName;
-                else
-                    uniqueName = GetNameWithNumberAtEnd(name);
+                uniqueName = existingNumber == 1
+                    ? maxLengthName
+                    : GetNameWithNumberAtEnd(name);
             }
 
             while (_originalNamesToUniqueNames.Any(i => string.Equals(i.Value, uniqueName, StringComparison.OrdinalIgnoreCase)))

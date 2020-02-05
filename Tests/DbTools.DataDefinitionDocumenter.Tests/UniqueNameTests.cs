@@ -128,7 +128,6 @@
             var r10 = uniqueName.GetUniqueName("ANamePartThatIs31CharactersLong9");
             var r11 = uniqueName.GetUniqueName("ANamePartThatIs31CharactersLongA");
 
-
             Assert.AreEqual("ANamePartThatIs31CharactersLong", r01);
             Assert.AreEqual("ANamePartThatIs31CharactersLon1", r02);
             Assert.AreEqual("ANamePartThatIs31CharactersLon2", r03);
@@ -140,7 +139,6 @@
             Assert.AreEqual("ANamePartThatIs31CharactersLon8", r09);
             Assert.AreEqual("ANamePartThatIs31CharactersLon9", r10);
             Assert.AreEqual("ANamePartThatIs31CharactersLo10", r11);
-
         }
     }
 }

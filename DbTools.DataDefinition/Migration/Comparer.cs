@@ -1,8 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
     using FizzCode.DbTools.Common;
 
     public class Comparer
@@ -14,7 +12,9 @@
             Context = context;
         }
 
+#pragma warning disable CA1822 // Mark members as static
         public List<object> Compare(DatabaseDefinition originalDd, DatabaseDefinition newDd)
+#pragma warning restore CA1822 // Mark members as static
         {
             // TODO needs to be ordered
             var changes = new List<object>();

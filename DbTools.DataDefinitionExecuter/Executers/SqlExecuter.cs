@@ -177,7 +177,7 @@
             return result;
         }
 
-        protected void Log(LogSeverity severity, string text, params object[] args )
+        protected void Log(LogSeverity severity, string text, params object[] args)
         {
             var module = "Executer/" + Generator.Version.ToString();
             Logger.Log(severity, text, module, args);
