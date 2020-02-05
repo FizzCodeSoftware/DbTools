@@ -57,7 +57,6 @@
             return Add(table, name, sqlType);
         }
 
-
         public static SqlColumn AddNVarChar2(this SqlTable table, string name, int length, bool isNullable = false)
         {
             var sqlType = new SqlType
