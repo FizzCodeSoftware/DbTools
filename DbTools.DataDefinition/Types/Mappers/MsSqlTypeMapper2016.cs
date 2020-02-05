@@ -92,6 +92,8 @@
                 MsSql2016.SqlNChar _ => sqlType.Create(GenericSqlType1.NChar),
                 MsSql2016.SqlVarChar _ => sqlType.Create(GenericSqlType1.VarChar),
                 MsSql2016.SqlNVarChar _ => sqlType.Create(GenericSqlType1.NVarChar),
+                MsSql2016.SqlText _ => sqlType.Create(GenericSqlType1.Text),
+                MsSql2016.SqlNText _ => sqlType.Create(GenericSqlType1.Text),
                 MsSql2016.SqlFloat _ => sqlType.Create(GenericSqlType1.FloatSmall),
                 MsSql2016.SqlReal _ => sqlType.Create(GenericSqlType1.FloatLarge),
                 MsSql2016.SqlBit _ => sqlType.Create(GenericSqlType1.Bit),
@@ -106,6 +108,11 @@
                 MsSql2016.SqlDecimal _ => sqlType.Create(GenericSqlType1.Number),
                 MsSql2016.SqlNumeric _ => sqlType.Create(GenericSqlType1.Number),
                 MsSql2016.SqlMoney _ => sqlType.Create(GenericSqlType1.Number),
+                MsSql2016.SqlXml _ => sqlType.Create(GenericSqlType1.Text),
+                MsSql2016.SqlUniqueIdentifier _ => sqlType.Create(GenericSqlType1.Text),
+                MsSql2016.SqlBinary _ => sqlType.Create(GenericSqlType1.Text),
+                MsSql2016.SqlVarBinary _ => sqlType.Create(GenericSqlType1.Text),
+                MsSql2016.SqlImage _ => sqlType.Create(GenericSqlType1.Text),
                 _ => throw new NotImplementedException($"Unmapped type {sqlType.SqlTypeInfo}"),
             };
         }
