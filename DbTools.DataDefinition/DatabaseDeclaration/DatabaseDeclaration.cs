@@ -99,7 +99,7 @@
         {
             var properties = GetType()
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(pi => pi.PropertyType == typeof(SqlTable));
+                .Where(pi => typeof(SqlTable).IsAssignableFrom(pi.PropertyType));
 
             foreach (var property in properties)
             {

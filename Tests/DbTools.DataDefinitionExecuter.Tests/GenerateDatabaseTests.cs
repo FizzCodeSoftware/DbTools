@@ -22,6 +22,13 @@
 
         [TestMethod]
         [LatestSqlVersions]
+        public void GenerateTestDatabaseSimple2(SqlVersion version)
+        {
+            GenerateDatabase(new TestDatabaseSimple2(), version);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
         public void GenerateForeignKeyCompositeTestDatabase(SqlVersion version)
         {
             GenerateDatabase(new ForeignKeyComposite(), version);
