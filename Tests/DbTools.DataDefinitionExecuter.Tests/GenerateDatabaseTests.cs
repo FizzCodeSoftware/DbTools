@@ -108,7 +108,8 @@
         }
 
         [TestMethod]
-        [SqlVersions(typeof(MsSql2016), typeof(Oracle12c))]
+        //[SqlVersions(typeof(MsSql2016), typeof(Oracle12c))]
+        [LatestSqlVersions]
         public void DatabaseDefinitionWithSchemaTableNameSeparator(SqlVersion version)
         {
             GenerateDatabase(new SchemaTableNameSeparator(), version);
