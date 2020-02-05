@@ -1,7 +1,7 @@
-﻿using FizzCode.DbTools.Configuration;
-
-namespace FizzCode.DbTools.Common
+﻿namespace FizzCode.DbTools.Common
 {
+    using FizzCode.DbTools.Configuration;
+
     public static class Features
     {
         static Features()

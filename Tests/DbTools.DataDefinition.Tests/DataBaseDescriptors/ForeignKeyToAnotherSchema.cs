@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Tests
 {
-    using System.Collections.Generic;
     using FizzCode.DbTools.DataDefinition.Generic1;
 
     // TODO
@@ -18,6 +17,5 @@
             table.AddInt32("Id").SetPK().SetIdentity();
             table.AddNVarChar("Name", 100);
         });
-
     }
 }

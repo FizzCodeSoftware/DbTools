@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
-    using System;
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;

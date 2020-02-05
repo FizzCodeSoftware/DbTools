@@ -13,7 +13,6 @@
 
     public static class GeneratorColumnsFactory
     {
-
         public static GeneratorColumns CreateGeneratorColumns(SqlVersion version, Context context)
         {
             if (version is IGenericDialect)
@@ -199,7 +198,7 @@
 
             foreach (var column in pkColumns)
             {
-                var columnCreation = _generatorColumns.GetColumnCreation(column); 
+                var columnCreation = _generatorColumns.GetColumnCreation(column);
                 sb.AppendLine(columnCreation);
             }
 

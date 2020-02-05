@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataGenerator.Tests
 {
-    using System;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.DataGenerator;

@@ -1,7 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Generic1
 {
-    using System;
-
     public abstract class GenericSqlType : SqlTypeInfo
     {
     }

@@ -16,7 +16,7 @@
                 Length = Length,
                 Scale = Scale
             };
-            
+
             return sqlType;
         }
 

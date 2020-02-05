@@ -10,5 +10,4 @@
 
         public override string SqlDataType => base.SqlDataType.ToUpper(CultureInfo.InvariantCulture);
     }
-
 }

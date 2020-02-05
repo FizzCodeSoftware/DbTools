@@ -22,7 +22,7 @@
                 SqlChar _ => $"AddChar(\"{column.Name}\", {type.Length}",
                 SqlNChar _ => $"AddNChar(\"{column.Name}\", {type.Length}",
                 SqlVarChar _ => $"AddVarChar(\"{column.Name}\", {type.Length}",
-                SqlNVarChar t_ => $"AddNVarChar(\"{column.Name}\", {type.Length}",
+                SqlNVarChar _ => $"AddNVarChar(\"{column.Name}\", {type.Length}",
                 SqlFloatSmall _ => $"AddFloat(\"{column.Name}\"",
                 SqlFloatLarge _ => $"AddReal(\"{column.Name}\"",
                 SqlBit _ => $"AddBit(\"{column.Name}\"",

@@ -98,7 +98,6 @@ namespace FizzCode.DbTools.Configuration
         public static SqLite3 SqLite3 { get; } = new SqLite3();
         public static Oracle12c Oracle12c { get; } = new Oracle12c();
 
-
         public static List<SqlVersion> Versions { get; } = new List<SqlVersion>();
 
         public static SqlVersion GetLatestVersion<T>() where T : ISqlDialect
@@ -121,13 +120,13 @@ namespace FizzCode.DbTools.Configuration
 
         public static SqlVersion GetVersion(Type sqlDialectType, string versionString)
         {
-            var result = Versions.Where(v => sqlDialectType.IsAssignableFrom(v.GetType()) && v.VersionString == versionString).First();
+            var result = Versions.First(v => sqlDialectType.IsAssignableFrom(v.GetType()) && v.VersionString == versionString);
             return result;
         }
 
         public static SqlVersion GetVersion(string sqlType)
         {
-            var result = Versions.Where(v => v.GetType().Name == sqlType).First();
+            var result = Versions.First(v => v.GetType().Name == sqlType);
             return result;
         }
     }

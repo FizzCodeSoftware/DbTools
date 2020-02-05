@@ -81,11 +81,10 @@ SELECT
 
                 var referencedSqlTable = table.DatabaseDefinition.GetTable(referencedSqlTableSchemaAndTableNameAsToStore);
 
-                
-
                 if (!table.Properties.OfType<ForeignKey>().Any(fk => fk.SqlTable.SchemaAndTableName == table.SchemaAndTableName && fk.ReferredTable.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk.Name == fkName))
-                    table.Properties.Add(
-                        new ForeignKey(table, referencedSqlTable, fkName));
+                {
+                    table.Properties.Add(new ForeignKey(table, referencedSqlTable, fkName));
+                }
 
                 var referencedSqlColumn = referencedSqlTable[referencedColumn];
 

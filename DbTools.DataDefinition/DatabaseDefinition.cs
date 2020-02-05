@@ -21,7 +21,7 @@
             MainVersion = mainVersion;
         }
 
-        public DatabaseDefinition(SqlVersion mainVersion,  params SqlVersion[] versions)
+        public DatabaseDefinition(SqlVersion mainVersion, params SqlVersion[] versions)
         {
             SetVersions(mainVersion, versions);
         }

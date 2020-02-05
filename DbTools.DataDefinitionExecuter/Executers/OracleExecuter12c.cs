@@ -96,7 +96,7 @@
         public override void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {
             var sqlStatements = BreakIfMultipleCommands(sqlStatementWithParameters);
-            foreach(var sqlStatement in sqlStatements)
+            foreach (var sqlStatement in sqlStatements)
                 base.ExecuteNonQuery(sqlStatement);
         }
 

@@ -79,7 +79,7 @@
         public override bool Deprecated => true;
     }
 
-    public class SqlNumber  : OracleType12c
+    public class SqlNumber : OracleType12c
     {
         public override bool HasLength => true;
 
@@ -141,5 +141,4 @@
 
         public override bool HasScale => false;
     }
-
 }

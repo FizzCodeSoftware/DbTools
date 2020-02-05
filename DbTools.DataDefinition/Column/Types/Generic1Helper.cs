@@ -3,7 +3,7 @@
     public static class Generic1Helper
     {
         private static readonly Configuration.Generic1 Version = new Configuration.Generic1();
-       
+
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
         {
             return SqlColumnHelper.Add(Version, table, name, sqlType);

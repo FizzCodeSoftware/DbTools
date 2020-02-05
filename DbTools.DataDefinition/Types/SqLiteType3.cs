@@ -11,7 +11,6 @@ namespace FizzCode.DbTools.DataDefinition.SqLite3
         public static SqlReal Real { get; } = new SqlReal();
         public static SqlInteger Integer { get; } = new SqlInteger();
         public static SqlBlob Blob { get; } = new SqlBlob();
-
     }
 
     public class SqlText : SqLiteType3

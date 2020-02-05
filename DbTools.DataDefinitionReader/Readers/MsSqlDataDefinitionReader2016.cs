@@ -49,7 +49,7 @@ WHERE type = 'U'";
                 if (Executer.Generator.Context.Settings.Options.ShouldUseDefaultSchema)
                     schemaNames.Add(Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
 
-                sqlStatement += $" AND ss.name IN({string.Join(',',schemaNames.Select(s => "'" + s + "'").ToList())})";
+                sqlStatement += $" AND ss.name IN({string.Join(',', schemaNames.Select(s => "'" + s + "'").ToList())})";
             }
 
             return Executer.ExecuteQuery(sqlStatement).Rows

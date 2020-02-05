@@ -1,7 +1,7 @@
-﻿using System.Drawing;
-
-namespace FizzCode.DbTools.DataDefinitionDocumenter
+﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
+    using System.Drawing;
+
     public interface IDocumenterWriter
     {
         void SetSheetColor(string sheetName, Color color);

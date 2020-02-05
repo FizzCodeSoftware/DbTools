@@ -1,19 +1,13 @@
-﻿using System;
-
-namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition
 {
+    using System;
+
     public abstract class SqlTypeInfo
     {
         public abstract bool HasLength { get; }
         public abstract bool HasScale { get; }
-        
-        public virtual bool Deprecated
-        {
-            get
-            {
-                return false;
-            }
-        }
+
+        public virtual bool Deprecated => false;
 
         public virtual string SqlDataType
         {
@@ -21,12 +15,9 @@ namespace FizzCode.DbTools.DataDefinition
             {
                 var fullTypeName = GetType().Name;
 
-                string typeName;
-
-                if (fullTypeName.StartsWith("Sql", StringComparison.InvariantCulture))
-                    typeName = fullTypeName.Remove(0, 3);
-                else
-                    typeName = fullTypeName;
+                var typeName = fullTypeName.StartsWith("Sql", StringComparison.InvariantCulture)
+                    ? fullTypeName.Remove(0, 3)
+                    : fullTypeName;
 
                 return typeName;
             }

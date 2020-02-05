@@ -88,11 +88,11 @@
         {
             return sqlType.SqlTypeInfo switch
             {
-                MsSql2016.SqlChar  _ => sqlType.Create(GenericSqlType1.Char),
+                MsSql2016.SqlChar _ => sqlType.Create(GenericSqlType1.Char),
                 MsSql2016.SqlNChar _ => sqlType.Create(GenericSqlType1.NChar),
                 MsSql2016.SqlVarChar _ => sqlType.Create(GenericSqlType1.VarChar),
                 MsSql2016.SqlNVarChar _ => sqlType.Create(GenericSqlType1.NVarChar),
-                MsSql2016.SqlFloat  _ => sqlType.Create(GenericSqlType1.FloatSmall),
+                MsSql2016.SqlFloat _ => sqlType.Create(GenericSqlType1.FloatSmall),
                 MsSql2016.SqlReal _ => sqlType.Create(GenericSqlType1.FloatLarge),
                 MsSql2016.SqlBit _ => sqlType.Create(GenericSqlType1.Bit),
                 MsSql2016.SqlTinyInt _ => sqlType.Create(GenericSqlType1.Byte),

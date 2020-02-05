@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using FizzCode.DbTools.Common.Logger;
-using Serilog;
-using Serilog.Events;
-
-namespace FizzCode.DbTools.Console
+﻿namespace FizzCode.DbTools.Console
 {
+    using System;
+    using System.Collections.Generic;
+    using FizzCode.DbTools.Common.Logger;
+    using Serilog;
+    using Serilog.Events;
+
     public class ConsoleLogger
     {
         private ILogger _logger;

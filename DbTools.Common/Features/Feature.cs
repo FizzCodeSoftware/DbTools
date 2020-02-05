@@ -21,7 +21,7 @@
 
         public void Add(List<SqlVersion> versions, Support support, string description = null)
         {
-            foreach(var version in versions)
+            foreach (var version in versions)
                 Support.Add(version, new FeatureSupport(support, description));
         }
     }

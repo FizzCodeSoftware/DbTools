@@ -1,7 +1,5 @@
 ﻿namespace FizzCode.DbTools.TestBase
 {
-    using System.IO;
-    using System.Reflection;
     using Serilog;
     using Serilog.Events;
     using Serilog.Exceptions;
