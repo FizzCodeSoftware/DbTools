@@ -111,6 +111,9 @@
         [SqlVersions(typeof(MsSql2016), typeof(Oracle12c))]
         public void DatabaseDefinitionWithSchemaTableNameSeparator(SqlVersion version)
         {
+            if (!TestHelper.ShouldRunIntegrationTest(version))
+                return;
+
             GenerateDatabase(new SchemaTableNameSeparator(), version);
         }
 

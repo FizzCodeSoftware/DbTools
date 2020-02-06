@@ -25,8 +25,8 @@
         {
             foreach (var item in Versions)
             {
-                if (TestHelper.ShouldRunIntegrationTest(item))
-                    yield return new[] { (object)item };
+                //if (TestHelper.ShouldRunIntegrationTest(item))
+                yield return new[] { (object)item };
             }
         }
 
