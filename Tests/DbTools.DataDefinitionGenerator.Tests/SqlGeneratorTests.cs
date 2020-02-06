@@ -57,13 +57,7 @@
 
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
 
-            var context = new Context
-            {
-                Logger = TestHelper.CreateLogger(),
-                Settings = Helper.GetDefaultSettings(version, null)
-            };
-
-            var generator = SqlGeneratorFactory.CreateGenerator(version, context);
+            var generator = SqlGeneratorFactory.CreateGenerator(version, _sqlExecuterTestAdapter.GetContext(version));
             var sql = generator.DropTable(table);
             var result = _sqlExecuterTestAdapter.ExecuteNonQuery(version.ToString(), sql);
 

@@ -25,8 +25,8 @@
         {
             foreach (var item in Versions)
             {
-                //if (TestHelper.ShouldRunIntegrationTest(item))
-                yield return new[] { (object)item };
+                if (TestHelper.ShouldRunIntegrationTest(item))
+                    yield return new[] { (object)item };
             }
         }
 
@@ -43,19 +43,6 @@
         public LatestSqlVersionsAttribute()
         {
             Versions = SqlVersions.GetLatestExecutableVersions();
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
-    public class SqlVersionsAttribute : SqlVersionsBasAttribute
-    {
-        public SqlVersionsAttribute()
-        {
-            Versions = SqlVersions.Versions;
-        }
-
-        public SqlVersionsAttribute(params Type[] versionTypes) : base(versionTypes)
-        {
         }
     }
 }

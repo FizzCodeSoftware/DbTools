@@ -108,20 +108,19 @@
         }
 
         [TestMethod]
-        //[SqlVersions(typeof(MsSql2016), typeof(Oracle12c))]
         [LatestSqlVersions]
         public void DatabaseDefinitionWithSchemaTableNameSeparator(SqlVersion version)
         {
-            if (!TestHelper.ShouldRunIntegrationTest(version))
-                return;
-
+            TestHelper.CheckFeature(version, "Schema");
             GenerateDatabase(new SchemaTableNameSeparator(), version);
         }
 
         [TestMethod]
-        public void DatabaseDefinitionWithSchemaAndDefaultSchema()
+        [LatestSqlVersions]
+        public void DatabaseDefinitionWithSchemaAndDefaultSchema(SqlVersion version)
         {
-            GenerateDatabase(new SchemaTableNameDefaultSchema(), SqlVersions.MsSql2016);
+            TestHelper.CheckFeature(version, "Schema");
+            GenerateDatabase(new SchemaTableNameDefaultSchema(), version);
         }
 
         public class SchemaTableNameSeparator : DatabaseDeclaration
