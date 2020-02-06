@@ -10,7 +10,7 @@
     {
         public MsSqlCsGeneratorColumns2016(Context context) : base(context)
         {
-            Version = SqlVersions.Generic1;
+            Version = SqlVersions.MsSql2016;
         }
 
         protected override string GetColumnCreationMethod(SqlColumn column)

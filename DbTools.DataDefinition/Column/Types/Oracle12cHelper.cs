@@ -1,12 +1,12 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Oracle12c
+﻿using FizzCode.DbTools.Configuration;
+
+namespace FizzCode.DbTools.DataDefinition.Oracle12c
 {
     public static class Oracle12cHelper
     {
-        private static readonly Configuration.Oracle12c Version = new Configuration.Oracle12c();
-
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
         {
-            return SqlColumnHelper.Add(Version, table, name, sqlType);
+            return SqlColumnHelper.Add(SqlVersions.Oracle12c, table, name, sqlType);
         }
 
         public static SqlColumn AddChar(this SqlTable table, string name, int length, bool isNullable = false)

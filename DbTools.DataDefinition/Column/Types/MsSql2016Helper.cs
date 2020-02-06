@@ -1,12 +1,12 @@
-﻿namespace FizzCode.DbTools.DataDefinition.MsSql2016
+﻿using FizzCode.DbTools.Configuration;
+
+namespace FizzCode.DbTools.DataDefinition.MsSql2016
 {
     public static class MsSql2016Helper
     {
-        private static readonly Configuration.MsSql2016 Version = new Configuration.MsSql2016();
-
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
         {
-            return SqlColumnHelper.Add(Version, table, name, sqlType);
+            return SqlColumnHelper.Add(SqlVersions.MsSql2016, table, name, sqlType);
         }
 
         public static SqlColumn AddChar(this SqlTable table, string name, int length, bool isNullable = false)

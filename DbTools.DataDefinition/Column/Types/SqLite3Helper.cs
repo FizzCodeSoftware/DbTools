@@ -1,12 +1,12 @@
-﻿namespace FizzCode.DbTools.DataDefinition.SqLite3
-{
-    public static class SqLite3
-    {
-        private static readonly Configuration.SqLite3 Version = new Configuration.SqLite3();
+﻿using FizzCode.DbTools.Configuration;
 
+namespace FizzCode.DbTools.DataDefinition.SqLite3
+{
+    public static class SqLite3Helper
+    {
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
         {
-            return SqlColumnHelper.Add(Version, table, name, sqlType);
+            return SqlColumnHelper.Add(SqlVersions.SqLite3, table, name, sqlType);
         }
 
         public static SqlColumn AddInteger(this SqlTable table, string name, bool isNullable = false)

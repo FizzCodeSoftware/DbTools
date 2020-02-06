@@ -9,7 +9,14 @@
     public class CsGeneratorTests
     {
         [TestMethod]
-        [LatestSqlVersions]
+        public void GeneratorTestDatabaseFks()
+        {
+            GeneratorTestDatabaseFks(SqlVersions.MsSql2016);
+            GeneratorTestDatabaseFks(SqlVersions.Generic1);
+            GeneratorTestDatabaseFks(SqlVersions.Oracle12c);
+            GeneratorTestDatabaseFks(SqlVersions.SqLite3);
+        }
+
         public void GeneratorTestDatabaseFks(SqlVersion version)
         {
             var db = new TestDatabaseFks();

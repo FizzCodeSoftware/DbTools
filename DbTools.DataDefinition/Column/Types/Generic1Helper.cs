@@ -1,12 +1,12 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Generic1
+﻿using FizzCode.DbTools.Configuration;
+
+namespace FizzCode.DbTools.DataDefinition.Generic1
 {
     public static class Generic1Helper
     {
-        private static readonly Configuration.Generic1 Version = new Configuration.Generic1();
-
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
         {
-            return SqlColumnHelper.Add(Version, table, name, sqlType);
+            return SqlColumnHelper.Add(SqlVersions.Generic1, table, name, sqlType);
         }
 
         public static SqlColumn AddChar(this SqlTable table, string name, int length, bool isNullable = false)

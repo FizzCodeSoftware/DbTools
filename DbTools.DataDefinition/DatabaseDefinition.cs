@@ -8,7 +8,7 @@
     {
         public Dictionary<SqlVersion, TypeMapper> TypeMappers { get; set; } = new Dictionary<SqlVersion, TypeMapper>();
 
-        public DatabaseDefinition() : this(null, new Configuration.MsSql2016(), new Configuration.Oracle12c(), new Configuration.SqLite3())
+        public DatabaseDefinition() : this(null, Configuration.SqlVersions.MsSql2016, Configuration.SqlVersions.Oracle12c, Configuration.SqlVersions.SqLite3)
         {
         }
 
@@ -52,10 +52,10 @@
                         continue;
 
                     // TODO only map FROM Gen1 for now
-                    if (!column.Types.ContainsKey(new Configuration.Generic1()))
+                    if (!column.Types.ContainsKey(Configuration.SqlVersions.Generic1))
                         continue;
 
-                    var othertype = typeMapper.Value.MapFromGeneric1(column.Types[new Configuration.Generic1()]);
+                    var othertype = typeMapper.Value.MapFromGeneric1(column.Types[Configuration.SqlVersions.Generic1]);
                     SqlColumnHelper.Add(typeMapper.Key, sqlTable, column.Name, othertype);
                 }
             }
@@ -69,7 +69,7 @@
                         continue;
 
                     // map TO Gen1 if not present
-                    if (!column.Types.ContainsKey(new Configuration.Generic1()))
+                    if (!column.Types.ContainsKey(Configuration.SqlVersions.Generic1))
                     {
                         var genericType = typeMapper.MapToGeneric1(column.Types[MainVersion]);
                         SqlColumnHelper.Add(Configuration.SqlVersions.Generic1, sqlTable, column.Name, genericType);
