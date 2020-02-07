@@ -13,19 +13,19 @@
 
     public static class GeneratorColumnsFactory
     {
-        public static GeneratorColumns CreateGeneratorColumns(SqlVersion version, Context context)
+        public static GeneratorTypeSpecific GeneratorTypeSpecific(SqlVersion version, Context context)
         {
             if (version is IGenericDialect)
-                return new GenericGeneratorColumns1(context);
+                return new GenericGenerator1(context);
 
             if (version is ISqLiteDialect)
-                return new SqLiteCsGeneratorColumns3(context);
+                return new SqLiteCsGenerator3(context);
 
             if (version is IMsSqlDialect)
-                return new MsSqlCsGeneratorColumns2016(context);
+                return new MsSqlCsGenerator2016(context);
 
             if (version is IOracleDialect)
-                return new OracleCsGeneratorColumns12c(context);
+                return new OracleCsGenerator12c(context);
 
             throw new NotImplementedException($"Not implemented {version}.");
         }
@@ -35,14 +35,14 @@
     {
         private readonly string _namespace;
 
-        private readonly GeneratorColumns _generatorColumns;
+        private readonly GeneratorTypeSpecific _generator;
 
         public CsGenerator(DocumenterContext context, SqlVersion version, string databaseName, string @namespace)
             : base(context, version, databaseName)
         {
             _namespace = @namespace;
             // TODO handle versions
-            _generatorColumns = GeneratorColumnsFactory.CreateGeneratorColumns(Version, context);
+            _generator = GeneratorColumnsFactory.GeneratorTypeSpecific(Version, context);
         }
 
         public void GenerateMultiFile(DatabaseDefinition databaseDefinition)
@@ -127,6 +127,7 @@
             .AppendLine(_namespace)
             .AppendLine("{")
             .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
+            .AppendLine(1, _generator.GetSqlTypeNamespace())
             .AppendLine()
             .Append(1, "public partial class ")
             .Append(DatabaseName)
@@ -140,7 +141,8 @@
             sb.Append("namespace ")
             .AppendLine(_namespace)
             .AppendLine("{")
-            .AppendLine("\tusing FizzCode.DbTools.DataDefinition;")
+            .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
+            .AppendLine(1, _generator.GetSqlTypeNamespace())
             .AppendLine()
             .Append(1, "public class ")
             .Append(DatabaseName)
@@ -198,7 +200,7 @@
 
             foreach (var column in pkColumns)
             {
-                var columnCreation = _generatorColumns.GetColumnCreation(column);
+                var columnCreation = _generator.GetColumnCreation(column);
                 sb.AppendLine(columnCreation);
             }
 
@@ -208,7 +210,7 @@
 
             foreach (var column in regularColumns)
             {
-                var columnCreation = _generatorColumns.GetColumnCreation(column);
+                var columnCreation = _generator.GetColumnCreation(column);
                 sb.AppendLine(columnCreation);
             }
 

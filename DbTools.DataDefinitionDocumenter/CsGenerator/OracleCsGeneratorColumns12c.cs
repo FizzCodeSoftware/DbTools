@@ -6,9 +6,9 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Oracle12c;
 
-    public class OracleCsGeneratorColumns12c : GeneratorColumns
+    public class OracleCsGenerator12c : GeneratorTypeSpecific
     {
-        public OracleCsGeneratorColumns12c(Context context) : base(context)
+        public OracleCsGenerator12c(Context context) : base(context)
         {
             Version = SqlVersions.Oracle12c;
         }

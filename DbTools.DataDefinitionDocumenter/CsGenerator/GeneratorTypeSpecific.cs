@@ -7,12 +7,12 @@
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
 
-    public abstract class GeneratorColumns
+    public abstract class GeneratorTypeSpecific
     {
         public Context Context { get; }
         public SqlVersion Version { get; protected set; }
 
-        protected GeneratorColumns(Context context)
+        protected GeneratorTypeSpecific(Context context)
         {
             Context = context;
         }
@@ -92,6 +92,11 @@
                 return ", true";
 
             return "";
+        }
+
+        public virtual string GetSqlTypeNamespace()
+        {
+            return $"using FizzCode.DbTools.DataDefinition.{Version};";
         }
     }
 }

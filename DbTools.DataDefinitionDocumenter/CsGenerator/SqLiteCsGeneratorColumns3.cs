@@ -6,9 +6,9 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqLite3;
 
-    public class SqLiteCsGeneratorColumns3 : GeneratorColumns
+    public class SqLiteCsGenerator3 : GeneratorTypeSpecific
     {
-        public SqLiteCsGeneratorColumns3(Context context) : base(context)
+        public SqLiteCsGenerator3(Context context) : base(context)
         {
             Version = SqlVersions.SqLite3;
         }

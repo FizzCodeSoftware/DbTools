@@ -6,9 +6,9 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Generic1;
 
-    public class GenericGeneratorColumns1 : GeneratorColumns
+    public class GenericGenerator1 : GeneratorTypeSpecific
     {
-        public GenericGeneratorColumns1(Context context) : base(context)
+        public GenericGenerator1(Context context) : base(context)
         {
             Version = SqlVersions.Generic1;
         }
