@@ -69,6 +69,28 @@ namespace FizzCode.DbTools.DataDefinition.Oracle12c
             return Add(table, name, sqlType);
         }
 
+        public static SqlColumn AddBinaryFloat(this SqlTable table, string name, bool isNullable = false)
+        {
+            var sqlType = new SqlType
+            {
+                SqlTypeInfo = new SqlBinaryFloat(),
+                IsNullable = isNullable
+            };
+
+            return Add(table, name, sqlType);
+        }
+
+        public static SqlColumn AddBinaryDouble(this SqlTable table, string name, bool isNullable = false)
+        {
+            var sqlType = new SqlType
+            {
+                SqlTypeInfo = new SqlBinaryDouble(),
+                IsNullable = isNullable
+            };
+
+            return Add(table, name, sqlType);
+        }
+
         public static SqlColumn AddBlob(this SqlTable table, string name, bool isNullable = false)
         {
             var sqlType = new SqlType
@@ -129,6 +151,39 @@ namespace FizzCode.DbTools.DataDefinition.Oracle12c
             var sqlType = new SqlType
             {
                 SqlTypeInfo = new SqlLongRaw(),
+                IsNullable = isNullable
+            };
+
+            return Add(table, name, sqlType);
+        }
+
+        public static SqlColumn AddDate(this SqlTable table, string name, bool isNullable = false)
+        {
+            var sqlType = new SqlType
+            {
+                SqlTypeInfo = new SqlDate(),
+                IsNullable = isNullable
+            };
+
+            return Add(table, name, sqlType);
+        }
+
+        public static SqlColumn AddTimeStampWithTimeZone(this SqlTable table, string name, bool isNullable = false)
+        {
+            var sqlType = new SqlType
+            {
+                SqlTypeInfo = new SqlTimeStampWithTimeZone(),
+                IsNullable = isNullable
+            };
+
+            return Add(table, name, sqlType);
+        }
+
+        public static SqlColumn AddTimeStampWithLocalTimeZone(this SqlTable table, string name, bool isNullable = false)
+        {
+            var sqlType = new SqlType
+            {
+                SqlTypeInfo = new SqlTimeStampWithLocalTimeZone(),
                 IsNullable = isNullable
             };
 

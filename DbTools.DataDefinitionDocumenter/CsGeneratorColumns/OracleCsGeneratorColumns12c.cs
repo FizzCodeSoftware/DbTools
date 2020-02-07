@@ -4,6 +4,7 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Oracle12c;
 
     public class OracleCsGeneratorColumns12c : GeneratorColumns
     {
@@ -14,7 +15,27 @@
 
         protected override string GetColumnCreationMethod(SqlColumn column)
         {
-            throw new NotImplementedException();
+            var type = column.Types[Version];
+            return type.SqlTypeInfo switch
+            {
+                SqlChar _ => $"{nameof(Oracle12cHelper.AddChar)}(\"{column.Name}\", {type.Length}",
+                SqlNChar _ => $"{nameof(Oracle12cHelper.AddNChar)}(\"{column.Name}\", {type.Length}",
+                SqlVarChar _ => $"{nameof(Oracle12cHelper.AddVarChar)}(\"{column.Name}\", {type.Length}",
+                SqlVarChar2 _ => $"{nameof(Oracle12cHelper.AddVarChar2)}(\"{column.Name}\", {type.Length}",
+                SqlNVarChar2 _ => $"{nameof(Oracle12cHelper.AddNVarChar2)}(\"{column.Name}\", {type.Length}",
+                SqlBinaryFloat _ => $"{nameof(Oracle12cHelper.AddBinaryFloat)}(\"{column.Name}\"",
+                SqlBinaryDouble _ => $"{nameof(Oracle12cHelper.AddBinaryDouble)}(\"{column.Name}\"",
+                SqlBfile _ => $"{nameof(Oracle12cHelper.AddBfile)}(\"{column.Name}\"",
+                SqlBlob _ => $"{nameof(Oracle12cHelper.AddBlob)}(\"{column.Name}\"",
+                SqlClob _ => $"{nameof(Oracle12cHelper.AddClob)}(\"{column.Name}\"",
+                SqlLong _ => $"{nameof(Oracle12cHelper.AddLong)}(\"{column.Name}\"",
+                SqlLongRaw _ => $"{nameof(Oracle12cHelper.AddLongRaw)}(\"{column.Name}\"",
+                SqlNumber _ => $"{nameof(Oracle12cHelper.AddLongRaw)}(\"{column.Name}\", {type.Length}, {type.Scale}",
+                SqlDate _ => $"{nameof(Oracle12cHelper.AddDate)}(\"{column.Name}\"",
+                SqlTimeStampWithTimeZone _ => $"{nameof(Oracle12cHelper.AddTimeStampWithTimeZone)}(\"{column.Name}\"",
+                SqlTimeStampWithLocalTimeZone _ => $"{nameof(Oracle12cHelper.AddTimeStampWithLocalTimeZone)}(\"{column.Name}\"",
+                _ => throw new NotImplementedException($"Unmapped type: {type.SqlTypeInfo}"),
+            };
         }
 
         /*

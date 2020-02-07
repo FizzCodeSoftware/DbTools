@@ -323,5 +323,16 @@ namespace FizzCode.DbTools.DataDefinition.MsSql2016
 
             return Add(table, name, sqlType);
         }
+
+        public static SqlColumn AddXml(this SqlTable table, string name, bool isNullable = false)
+        {
+            var sqlType = new SqlType
+            {
+                SqlTypeInfo = MsSqlType2016.Xml,
+                IsNullable = isNullable,
+            };
+
+            return Add(table, name, sqlType);
+        }
     }
 }
