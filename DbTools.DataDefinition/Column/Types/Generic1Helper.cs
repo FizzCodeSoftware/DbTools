@@ -1,7 +1,7 @@
-﻿using FizzCode.DbTools.Configuration;
-
-namespace FizzCode.DbTools.DataDefinition.Generic1
+﻿namespace FizzCode.DbTools.DataDefinition.Generic1
 {
+    using FizzCode.DbTools.Configuration;
+
     public static class Generic1Helper
     {
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)

@@ -1,7 +1,7 @@
-﻿using FizzCode.DbTools.Configuration;
-
-namespace FizzCode.DbTools.DataDefinition.MsSql2016
+﻿namespace FizzCode.DbTools.DataDefinition.MsSql2016
 {
+    using FizzCode.DbTools.Configuration;
+
     public static class MsSql2016Helper
     {
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
