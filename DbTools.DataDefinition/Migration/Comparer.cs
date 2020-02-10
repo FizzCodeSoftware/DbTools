@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
+    using System;
     using System.Collections.Generic;
     using FizzCode.DbTools.Common;
 
@@ -42,6 +43,48 @@
                 {
                     var tableNew = new TableNew(tableNewDd);
                     changes.Add(tableNew);
+                }
+            }
+
+            foreach (var tableOriginal in originalDd.GetTables())
+            {
+                // not deleted
+                if (newDd.Contains(tableOriginal.SchemaAndTableName))
+                {
+                    var tableNew = newDd.Tables[tableOriginal.SchemaAndTableName];
+                    changes.AddRange(CompareColumns(tableOriginal, tableNew));
+                }
+            }
+
+            return changes;
+        }
+
+        private List<object> CompareColumns(SqlTable tableOriginal, SqlTable tableNew)
+        {
+            var changes = new List<object>();
+            foreach (var columnOriginal in tableOriginal.Columns)
+            {
+                tableNew.Columns.TryGetValue(columnOriginal.Name, out var columnNew);
+                if (columnNew == null)
+                {
+                    var columnDelete = new ColumnDelete
+                    {
+                        SqlColumn = columnOriginal.CopyTo(new SqlColumn())
+                    };
+                    changes.Add(columnDelete);
+                }
+            }
+
+            foreach (var columnNew in tableNew.Columns)
+            {
+                tableOriginal.Columns.TryGetValue(columnNew.Name, out var columnOriginal);
+                if (columnOriginal == null)
+                {
+                    var column = new ColumnNew
+                    {
+                        SqlColumn = columnNew.CopyTo(new SqlColumn())
+                    };
+                    changes.Add(column);
                 }
             }
 

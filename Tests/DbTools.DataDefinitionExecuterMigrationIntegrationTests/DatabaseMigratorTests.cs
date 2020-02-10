@@ -96,5 +96,55 @@
 
             databaseMigrator.DeleteTable(first);
         }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void RemoveColumnTest(SqlVersion version)
+        {
+            var dd = new TestDatabaseSimple();
+            Init(version, dd);
+
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
+                _sqlExecuterTestAdapter.ConnectionStrings[version.ToString()]
+                , _sqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
+            var ddInDatabase = ddlReader.GetDatabaseDefinition();
+
+            dd.GetTable("Company").Columns.Remove("Name");
+
+            var comparer = new Comparer(_sqlExecuterTestAdapter.GetContext(version));
+            var changes = comparer.Compare(ddInDatabase, dd);
+
+            var first = changes[0] as ColumnDelete;
+            Assert.AreEqual("Name", first.SqlColumn.Name);
+
+            /*var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(version.ToString()), SqlGeneratorFactory.CreateMigrationGenerator(version, _sqlExecuterTestAdapter.GetContext(version)));
+
+            databaseMigrator.DeleteTable(first);*/
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void AddColumnTest(SqlVersion version)
+        {
+            var dd = new TestDatabaseSimple();
+            Init(version, dd);
+
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
+                _sqlExecuterTestAdapter.ConnectionStrings[version.ToString()]
+                , _sqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
+            var ddInDatabase = ddlReader.GetDatabaseDefinition();
+
+            dd.GetTable("Company").AddVarChar("Name2", 100);
+
+            var comparer = new Comparer(_sqlExecuterTestAdapter.GetContext(version));
+            var changes = comparer.Compare(ddInDatabase, dd);
+
+            var first = changes[0] as ColumnNew;
+            Assert.AreEqual("Name2", first.SqlColumn.Name);
+
+            /*var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(version.ToString()), SqlGeneratorFactory.CreateMigrationGenerator(version, _sqlExecuterTestAdapter.GetContext(version)));
+
+            databaseMigrator.DeleteTable(first);*/
+        }
     }
 }
