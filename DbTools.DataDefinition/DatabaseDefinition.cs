@@ -29,7 +29,17 @@
         public void SetVersions(SqlVersion mainVersion, params SqlVersion[] versions)
         {
             MainVersion = mainVersion;
-            SqlVersions.AddRange(versions);
+            if (versions == null)
+                SqlVersions.Clear();
+            else
+            {
+                SqlVersions.AddRange(versions);
+            }
+
+            if(MainVersion != null && !SqlVersions.Contains(MainVersion))
+                SqlVersions.Add(MainVersion);
+
+            TypeMappers.Clear();
 
             foreach (var version in SqlVersions)
             {
@@ -44,37 +54,9 @@
         {
             sqlTable.DatabaseDefinition = this;
 
-            foreach (var typeMapper in TypeMappers)
+            foreach (var column in sqlTable.Columns)
             {
-                foreach (var column in sqlTable.Columns)
-                {
-                    if (column is SqlColumnFKRegistration)
-                        continue;
-
-                    // TODO only map FROM Gen1 for now
-                    if (!column.Types.ContainsKey(Configuration.SqlVersions.Generic1))
-                        continue;
-
-                    var othertype = typeMapper.Value.MapFromGeneric1(column.Types[Configuration.SqlVersions.Generic1]);
-                    SqlColumnHelper.Add(typeMapper.Key, sqlTable, column.Name, othertype);
-                }
-            }
-
-            if (MainVersion != null && MainVersion != Configuration.SqlVersions.Generic1)
-            {
-                var typeMapper = TypeMapperFactory.GetTypeMapper(MainVersion);
-                foreach (var column in sqlTable.Columns)
-                {
-                    if (column is SqlColumnFKRegistration)
-                        continue;
-
-                    // map TO Gen1 if not present
-                    if (!column.Types.ContainsKey(Configuration.SqlVersions.Generic1))
-                    {
-                        var genericType = typeMapper.MapToGeneric1(column.Types[MainVersion]);
-                        SqlColumnHelper.Add(Configuration.SqlVersions.Generic1, sqlTable, column.Name, genericType);
-                    }
-                }
+                SqlColumnHelper.MapFromGen1(column);
             }
 
             Tables.Add(sqlTable);

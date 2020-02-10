@@ -7,5 +7,8 @@
         ISqlGenerator Generator { get; }
         string CreateTable(TableNew tableNew);
         string DropTable(TableDelete tableDelete);
+
+        string DropColumns(params ColumnDelete[] columnDelete);
+        string CreateColumn(ColumnNew columnNew);
     }
 }

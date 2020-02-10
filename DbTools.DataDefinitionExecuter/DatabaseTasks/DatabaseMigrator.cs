@@ -35,5 +35,11 @@
             var sql = MigrationGenerator.DropTable(tableDelete);
             Executer.ExecuteNonQuery(sql);
         }
+
+        public void DeleteColumns(params ColumnDelete[] columnDeletes)
+        {
+            var sql = MigrationGenerator.DropColumns(columnDeletes);
+            Executer.ExecuteNonQuery(sql);
+        }
     }
 }

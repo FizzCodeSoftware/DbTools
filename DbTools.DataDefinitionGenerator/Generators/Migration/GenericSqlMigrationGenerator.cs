@@ -1,5 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
+    using System;
+    using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition.Migration;
 
@@ -22,7 +24,7 @@
 
         public virtual string RenameTable(TableRename tableRename)
         {
-            return "";
+            throw new NotImplementedException();
         }
 
         public virtual string CreateTable(TableNew tableNew)
@@ -32,6 +34,27 @@
         }
 
         protected abstract ISqlGenerator CreateGenerator();
+
+        public virtual string DropColumns(params ColumnDelete[] columnDelete)
+        {
+            var tableNames = columnDelete.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
+
+            if (tableNames.Count()
+                != 1)
+                throw new ArgumentOutOfRangeException(nameof(columnDelete), "All columns should be on the same table.");
+
+            var tableName = tableNames.First();
+
+            var columnsToDelete = columnDelete.Select(c => c.SqlColumn.Name).ToList();
+            return @$"
+ALTER TABLE {tableName}
+DROP COLUMN { string.Join(", ", columnsToDelete) }";
+        }
+
+        public string CreateColumn(ColumnNew columnNew)
+        {
+            throw new NotImplementedException();
+        }
 
         private ISqlGenerator _generator;
 

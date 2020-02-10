@@ -2,7 +2,7 @@
 {
     using FizzCode.DbTools.Configuration;
 
-    public static class SqlColumnHelper
+    public static class SqlColumnHelper 
     {
         public static SqlColumn Add(SqlVersion version, SqlTable table, string name, SqlType sqlType)
         {
@@ -23,7 +23,31 @@
 
             column.Types.Add(version, sqlType);
 
+            if (column.Table.DatabaseDefinition != null)
+            {
+                MapFromGen1(column);
+            }
+
             return column;
+        }
+
+        public static void MapFromGen1(SqlColumn column)
+        {
+            if (column is SqlColumnFKRegistration)
+                return;
+
+            // TODO only map FROM Gen1 for now
+            if (!column.Types.ContainsKey(SqlVersions.Generic1))
+                return;
+
+            foreach (var typeMapper in column.Table.DatabaseDefinition.TypeMappers.Values)
+            {
+                if (!column.Types.ContainsKey(typeMapper.SqlVersion))
+                {
+                    var othertype = typeMapper.MapFromGeneric1(column.Types[SqlVersions.Generic1]);
+                    column.Types.Add(typeMapper.SqlVersion, othertype);
+                }
+            }
         }
     }
 }
