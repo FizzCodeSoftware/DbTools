@@ -22,8 +22,6 @@
 
             // Compare tables
             // handle renamed tables - needs parameter / external info
-            // detect deleted tables
-            // detect new tables
             foreach (var tableOriginal in originalDd.GetTables())
             {
                 if (!newDd.Contains(tableOriginal.SchemaAndTableName))
@@ -85,6 +83,21 @@
                         SqlColumn = columnNew.CopyTo(new SqlColumn())
                     };
                     changes.Add(column);
+                }
+                else
+                {
+                    if ((columnOriginal.Type.SqlTypeInfo.HasLength && columnOriginal.Type.Length != columnNew.Type.Length)
+                        || (columnOriginal.Type.SqlTypeInfo.HasScale && columnOriginal.Type.Scale != columnNew.Type.Scale)
+                        || columnOriginal.Type.SqlTypeInfo.GetType().Name != columnNew.Type.SqlTypeInfo.GetType().Name
+                        || columnOriginal.Type.IsNullable != columnNew.Type.IsNullable)
+                    {
+                        var columnChange = new ColumnChange
+                        {
+                            SqlColumn = columnOriginal.CopyTo(new SqlColumn()),
+                            NewNameAndType = columnNew.CopyTo(new SqlColumn())
+                        };
+                        changes.Add(columnChange);
+                    }
                 }
             }
 

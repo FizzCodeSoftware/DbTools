@@ -146,5 +146,33 @@
 
             databaseMigrator.DeleteTable(first);*/
         }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void ChangeColumnLengthTest(SqlVersion version)
+        {
+            var dd = new TestDatabaseSimple();
+            dd.SetVersions(version);
+            Init(version, dd);
+
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
+                _sqlExecuterTestAdapter.ConnectionStrings[version.ToString()]
+                , _sqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
+            var ddInDatabase = ddlReader.GetDatabaseDefinition();
+
+            dd.GetTable("Company")["Name"].Type.Length += 1;
+
+            var comparer = new Comparer(_sqlExecuterTestAdapter.GetContext(version));
+            var changes = comparer.Compare(ddInDatabase, dd);
+
+            var first = changes[0] as ColumnChange;
+            Assert.AreEqual(100, ddInDatabase.GetTable("Company")["Name"].Type.Length);
+            Assert.AreEqual(100, first.SqlColumn.Type.Length);
+            Assert.AreEqual(101, first.NewNameAndType.Type.Length);
+
+            /*var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(version.ToString()), SqlGeneratorFactory.CreateMigrationGenerator(version, _sqlExecuterTestAdapter.GetContext(version)));
+
+            databaseMigrator.DeleteTable(first);*/
+        }
     }
 }
