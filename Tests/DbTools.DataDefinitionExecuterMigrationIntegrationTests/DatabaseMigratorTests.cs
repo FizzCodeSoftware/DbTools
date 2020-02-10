@@ -19,12 +19,6 @@
         [LatestSqlVersions]
         public void AddTableTest(SqlVersion version)
         {
-            // Create Test Db
-            // Read up DD
-            // Add a table
-            // Detect changes (one new table)
-            // Execute changes/migration
-
             var dd = new TestDatabaseSimple();
 
             Init(version, dd);

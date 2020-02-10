@@ -3,13 +3,6 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition.Migration;
 
-    public interface ISqlMigrationGenerator
-    {
-        ISqlGenerator Generator { get; }
-        string CreateTable(TableNew tableNew);
-        string DropTable(TableDelete tableDelete);
-    }
-
     public abstract class GenericSqlMigrationGenerator : ISqlMigrationGenerator
     {
         public Context Context { get; }
@@ -43,41 +36,5 @@
         private ISqlGenerator _generator;
 
         public ISqlGenerator Generator => _generator ?? (_generator = CreateGenerator());
-    }
-
-    public class MsSqlMigrationGenerator : GenericSqlMigrationGenerator
-    {
-        public MsSqlMigrationGenerator(Context context) : base(context)
-        {
-        }
-
-        protected override ISqlGenerator CreateGenerator()
-        {
-            return new MsSqlGenerator2016(Context);
-        }
-    }
-
-    public class SqLiteMigrationGenerator : GenericSqlMigrationGenerator
-    {
-        public SqLiteMigrationGenerator(Context context) : base(context)
-        {
-        }
-
-        protected override ISqlGenerator CreateGenerator()
-        {
-            return new SqLiteGenerator3(Context);
-        }
-    }
-
-    public class OracleMigrationGenerator : GenericSqlMigrationGenerator
-    {
-        public OracleMigrationGenerator(Context context) : base(context)
-        {
-        }
-
-        protected override ISqlGenerator CreateGenerator()
-        {
-            return new OracleGenerator12c(Context);
-        }
     }
 }
