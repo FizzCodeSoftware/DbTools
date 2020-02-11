@@ -46,7 +46,7 @@
                 {
                     sb.Append(".SetForeignKeyTo(nameof(")
                        // TODO spec name
-                       .Append(fkOnColumn.SqlTable.SchemaAndTableName.TableName)
+                       .Append(fkOnColumn.ReferredTable.SchemaAndTableName.TableName)
                        .Append("))");
                 }
                 else
