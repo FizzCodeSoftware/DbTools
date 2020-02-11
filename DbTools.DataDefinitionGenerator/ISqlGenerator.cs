@@ -34,5 +34,6 @@
 
         string GenerateCreateColumn(SqlColumn column);
         string GetSimplifiedSchemaAndTableName(SchemaAndTableName schemaAndTableName);
+        string GuardKeywords(string name);
     }
 }

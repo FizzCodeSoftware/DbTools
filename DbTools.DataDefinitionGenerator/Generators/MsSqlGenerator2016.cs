@@ -15,7 +15,7 @@
             Version = SqlVersions.MsSql2016;
         }
 
-        protected override string GuardKeywords(string name)
+        public override string GuardKeywords(string name)
         {
             return $"[{name}]";
         }

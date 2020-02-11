@@ -16,7 +16,7 @@
             Version = SqlVersions.Oracle12c;
         }
 
-        protected override string GuardKeywords(string name)
+        public override string GuardKeywords(string name)
         {
             return $"\"{ name}\"";
         }

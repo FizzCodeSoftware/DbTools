@@ -9,17 +9,17 @@
     {
         public override SqlVersion SqlVersion => SqlVersions.Oracle12c;
 
-        public SqlType MapSqlTypeFromReaderInfo(string type, bool isNullable, int dataPrecision, int dataScale)
+        public SqlType MapSqlTypeFromReaderInfo(string type, bool isNullable, int? charLength, int? dataPrecision, int? dataScale)
         {
             // TODO VARCHAR2(20 BYTE) VS VARCHAR2(20 CHAR)
 
             return (type.ToUpper(CultureInfo.InvariantCulture)) switch
             {
-                "CHAR" => base.MapSqlType(OracleType12c.Char, isNullable, dataPrecision),
-                "NCHAR" => base.MapSqlType(OracleType12c.NChar, isNullable, dataPrecision),
-                "VARCHAR" => base.MapSqlType(OracleType12c.VarChar, isNullable, dataPrecision),
-                "VARCHAR2" => base.MapSqlType(OracleType12c.VarChar2, isNullable, dataPrecision),
-                "NVARCHAR2" => base.MapSqlType(OracleType12c.NVarChar2, isNullable, dataPrecision),
+                "CHAR" => base.MapSqlType(OracleType12c.Char, isNullable, charLength),
+                "NCHAR" => base.MapSqlType(OracleType12c.NChar, isNullable, charLength),
+                "VARCHAR" => base.MapSqlType(OracleType12c.VarChar, isNullable, charLength),
+                "VARCHAR2" => base.MapSqlType(OracleType12c.VarChar2, isNullable, charLength),
+                "NVARCHAR2" => base.MapSqlType(OracleType12c.NVarChar2, isNullable, charLength),
                 "BLOB" => base.MapSqlType(OracleType12c.Blob, isNullable),
                 "CLOB" => base.MapSqlType(OracleType12c.Clob, isNullable),
                 "NCLOB" => base.MapSqlType(OracleType12c.NClob, isNullable),

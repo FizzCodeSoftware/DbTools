@@ -27,15 +27,20 @@
 
             foreach (var row in rows)
             {
+                // char_col_decl_length
+
                 var type = row.GetAs<string>("DATA_TYPE");
                 var dataPrecisionDecimal = row.GetAs<decimal?>("DATA_PRECISION");
                 var dataScaleDecimal = row.GetAs<decimal?>("DATA_SCALE");
-                var dataPrecision = (int)(dataPrecisionDecimal ?? 0);
-                var dataScale = (int)(dataScaleDecimal ?? 0);
+                var dataPrecision = (int?)dataPrecisionDecimal;
+                var dataScale = (int?)dataScaleDecimal;
+
+                var charLengthDecimal = row.GetAs<decimal?>("CHAR_COL_DECL_LENGTH");
+                var charLength = (int?)charLengthDecimal;
 
                 var isNullable = row.GetAs<string>("NULLABLE") != "N";
 
-                var sqlType = TypeMapper.MapSqlTypeFromReaderInfo(type, isNullable, dataPrecision, dataScale);
+                var sqlType = TypeMapper.MapSqlTypeFromReaderInfo(type, isNullable, charLength, dataPrecision, dataScale);
 
                 var column = new SqlColumn
                 {

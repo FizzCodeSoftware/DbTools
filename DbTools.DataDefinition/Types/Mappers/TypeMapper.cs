@@ -6,7 +6,7 @@
     {
         public abstract SqlVersion SqlVersion { get; }
 
-        protected virtual SqlType MapSqlType(SqlTypeInfo sqlTypeInfo, bool isNullable, int length = 0, int scale = 0)
+        protected virtual SqlType MapSqlType(SqlTypeInfo sqlTypeInfo, bool isNullable, int? length = null, int? scale = null)
         {
             var sqlType = new SqlType
             {

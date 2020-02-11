@@ -8,7 +8,7 @@
 
     public abstract class GenericSqlMigrationGenerator : ISqlMigrationGenerator
     {
-        public Context Context { get; }
+        public Context Context { get;  }
 
         protected GenericSqlMigrationGenerator(Context context)
         {
@@ -46,9 +46,9 @@
 
             var tableName = tableNames.First();
 
-            var columnsToDelete = columnDeletes.Select(c => c.SqlColumn.Name).ToList();
+            var columnsToDelete = columnDeletes.Select(c => Generator.GuardKeywords(c.SqlColumn.Name)).ToList();
             return @$"
-ALTER TABLE {tableName}
+ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}
 DROP COLUMN { string.Join(", ", columnsToDelete) }";
         }
 

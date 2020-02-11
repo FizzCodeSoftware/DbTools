@@ -282,7 +282,7 @@
                 .Append(")");
         }
 
-        protected abstract string GuardKeywords(string name);
+        public abstract string GuardKeywords(string name);
 
         public abstract string DropAllForeignKeys();
 
