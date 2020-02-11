@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Text;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition.Migration;
 
@@ -35,25 +36,48 @@
 
         protected abstract ISqlGenerator CreateGenerator();
 
-        public virtual string DropColumns(params ColumnDelete[] columnDelete)
+        public virtual string DropColumns(params ColumnDelete[] columnDeletes)
         {
-            var tableNames = columnDelete.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
+            var tableNames = columnDeletes.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
 
             if (tableNames.Count()
                 != 1)
-                throw new ArgumentOutOfRangeException(nameof(columnDelete), "All columns should be on the same table.");
+                throw new ArgumentOutOfRangeException(nameof(columnDeletes), "All columns should be on the same table.");
 
             var tableName = tableNames.First();
 
-            var columnsToDelete = columnDelete.Select(c => c.SqlColumn.Name).ToList();
+            var columnsToDelete = columnDeletes.Select(c => c.SqlColumn.Name).ToList();
             return @$"
 ALTER TABLE {tableName}
 DROP COLUMN { string.Join(", ", columnsToDelete) }";
         }
 
-        public string CreateColumn(ColumnNew columnNew)
+        public virtual string CreateColumns(params ColumnNew[] columnNews)
         {
-            throw new NotImplementedException();
+            var tableNames = columnNews.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
+
+            if (tableNames.Count()
+                != 1)
+                throw new ArgumentOutOfRangeException(nameof(columnNews), "All columns should be on the same table.");
+
+            var tableName = tableNames.First();
+
+            var columnsToAdd = columnNews.Select(c => c.SqlColumn.Name).ToList();
+
+            var sb = new StringBuilder();
+            sb.AppendLine($"ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}");
+            sb.Append("ADD ");
+
+            var idx = 0;
+            foreach (var columnNew in columnNews)
+            {
+                if (idx++ > 0)
+                    sb.AppendLine(",");
+
+                sb.AppendLine(Generator.GenerateCreateColumn(columnNew.SqlColumn));
+            }
+
+            return sb.ToString();
         }
 
         private ISqlGenerator _generator;

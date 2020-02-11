@@ -36,7 +36,6 @@
             if (column is SqlColumnFKRegistration)
                 return;
 
-            // TODO only map FROM Gen1 for now
             if (!column.Types.ContainsKey(SqlVersions.Generic1))
                 return;
 

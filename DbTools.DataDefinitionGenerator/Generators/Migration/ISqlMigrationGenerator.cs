@@ -8,7 +8,7 @@
         string CreateTable(TableNew tableNew);
         string DropTable(TableDelete tableDelete);
 
-        string DropColumns(params ColumnDelete[] columnDelete);
-        string CreateColumn(ColumnNew columnNew);
+        string DropColumns(params ColumnDelete[] columnDeletes);
+        string CreateColumns(params ColumnNew[] columnNews);
     }
 }

@@ -214,7 +214,7 @@
             return $"DROP TABLE {GetSimplifiedSchemaAndTableName(table.SchemaAndTableName)}";
         }
 
-        protected string GenerateCreateColumn(SqlColumn column)
+        public string GenerateCreateColumn(SqlColumn column)
         {
             var type = column.Types[Version];
 

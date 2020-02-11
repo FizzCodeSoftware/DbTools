@@ -143,9 +143,39 @@
             var first = changes[0] as ColumnNew;
             Assert.AreEqual("Name2", first.SqlColumn.Name);
 
-            /*var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(version.ToString()), SqlGeneratorFactory.CreateMigrationGenerator(version, _sqlExecuterTestAdapter.GetContext(version)));
+            var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(version.ToString()), SqlGeneratorFactory.CreateMigrationGenerator(version, _sqlExecuterTestAdapter.GetContext(version)));
 
-            databaseMigrator.DeleteTable(first);*/
+            databaseMigrator.CreateColumns(first);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void Add2ColumnTest(SqlVersion version)
+        {
+            var dd = new TestDatabaseSimple();
+            dd.SetVersions(version);
+            Init(version, dd);
+
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
+                _sqlExecuterTestAdapter.ConnectionStrings[version.ToString()]
+                , _sqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
+            var ddInDatabase = ddlReader.GetDatabaseDefinition();
+
+            dd.GetTable("Company").AddVarChar("Name2", 100);
+            dd.GetTable("Company").AddVarChar("Name3", 100, true);
+
+            var comparer = new Comparer(_sqlExecuterTestAdapter.GetContext(version));
+            var changes = comparer.Compare(ddInDatabase, dd);
+
+            var first = changes[0] as ColumnNew;
+            Assert.AreEqual("Name2", first.SqlColumn.Name);
+            var second = changes[1] as ColumnNew;
+            Assert.AreEqual("Name3", second.SqlColumn.Name);
+            Assert.AreEqual(true, second.SqlColumn.Type.IsNullable);
+
+            var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(version.ToString()), SqlGeneratorFactory.CreateMigrationGenerator(version, _sqlExecuterTestAdapter.GetContext(version)));
+
+            databaseMigrator.CreateColumns(first, second);
         }
 
         [TestMethod]

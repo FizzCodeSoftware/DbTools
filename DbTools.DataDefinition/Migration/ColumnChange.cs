@@ -9,11 +9,21 @@
     public class ColumnDelete
     {
         public SqlColumn SqlColumn { get; set; }
+
+        public override string ToString()
+        {
+            return SqlColumn.ToString();
+        }
     }
 
     public class ColumnNew
     {
         public SqlColumn SqlColumn { get; set; }
+
+        public override string ToString()
+        {
+            return SqlColumn.ToString();
+        }
     }
 
     public class TableRename
@@ -59,4 +69,6 @@
     // New Identity, Deleted Identity
 
     // (not implemented) Trigger
+
+    // SuspectedTableRename - if remove/add table but the internal schema is exactly the asame, suspect table rename
 }

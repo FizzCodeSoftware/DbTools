@@ -41,5 +41,11 @@
             var sql = MigrationGenerator.DropColumns(columnDeletes);
             Executer.ExecuteNonQuery(sql);
         }
+
+        public void CreateColumns(params ColumnNew[] columnNews)
+        {
+            var sql = MigrationGenerator.CreateColumns(columnNews);
+            Executer.ExecuteNonQuery(sql);
+        }
     }
 }
