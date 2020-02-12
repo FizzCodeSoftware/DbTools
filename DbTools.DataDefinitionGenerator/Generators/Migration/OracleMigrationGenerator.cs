@@ -61,7 +61,7 @@
 
             var sb = new StringBuilder();
             sb.AppendLine($"ALTER TABLE { Generator.GetSimplifiedSchemaAndTableName(tableName)}");
-            
+
 
             if (columnsToDelete.Count > 1)
             {

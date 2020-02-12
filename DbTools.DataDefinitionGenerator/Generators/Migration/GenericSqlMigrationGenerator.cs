@@ -8,7 +8,7 @@
 
     public abstract class GenericSqlMigrationGenerator : ISqlMigrationGenerator
     {
-        public Context Context { get;  }
+        public Context Context { get; }
 
         protected GenericSqlMigrationGenerator(Context context)
         {
@@ -40,8 +40,7 @@
         {
             var tableNames = columnDeletes.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
 
-            if (tableNames.Count()
-                != 1)
+            if (tableNames.Count() != 1)
                 throw new ArgumentOutOfRangeException(nameof(columnDeletes), "All columns should be on the same table.");
 
             var tableName = tableNames.First();
@@ -56,8 +55,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
         {
             var tableNames = columnNews.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
 
-            if (tableNames.Count()
-                != 1)
+            if (tableNames.Count() != 1)
                 throw new ArgumentOutOfRangeException(nameof(columnNews), "All columns should be on the same table.");
 
             var tableName = tableNames.First();
@@ -65,7 +63,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
             var columnsToAdd = columnNews.Select(c => c.SqlColumn.Name).ToList();
 
             var sb = new StringBuilder();
-            sb.AppendLine($"ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}");
+            sb.Append("ALTER TABLE ").AppendLine(Generator.GetSimplifiedSchemaAndTableName(tableName));
             sb.Append("ADD ");
 
             var idx = 0;

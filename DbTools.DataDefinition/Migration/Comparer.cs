@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
-    using System;
     using System.Collections.Generic;
     using FizzCode.DbTools.Common;
 
@@ -57,7 +56,7 @@
             return changes;
         }
 
-        private List<object> CompareColumns(SqlTable tableOriginal, SqlTable tableNew)
+        private static List<object> CompareColumns(SqlTable tableOriginal, SqlTable tableNew)
         {
             var changes = new List<object>();
             foreach (var columnOriginal in tableOriginal.Columns)
@@ -84,20 +83,17 @@
                     };
                     changes.Add(column);
                 }
-                else
+                else if ((columnOriginal.Type.SqlTypeInfo.HasLength && columnOriginal.Type.Length != columnNew.Type.Length)
+                     || (columnOriginal.Type.SqlTypeInfo.HasScale && columnOriginal.Type.Scale != columnNew.Type.Scale)
+                     || columnOriginal.Type.SqlTypeInfo.GetType().Name != columnNew.Type.SqlTypeInfo.GetType().Name
+                     || columnOriginal.Type.IsNullable != columnNew.Type.IsNullable)
                 {
-                    if ((columnOriginal.Type.SqlTypeInfo.HasLength && columnOriginal.Type.Length != columnNew.Type.Length)
-                        || (columnOriginal.Type.SqlTypeInfo.HasScale && columnOriginal.Type.Scale != columnNew.Type.Scale)
-                        || columnOriginal.Type.SqlTypeInfo.GetType().Name != columnNew.Type.SqlTypeInfo.GetType().Name
-                        || columnOriginal.Type.IsNullable != columnNew.Type.IsNullable)
+                    var columnChange = new ColumnChange
                     {
-                        var columnChange = new ColumnChange
-                        {
-                            SqlColumn = columnOriginal.CopyTo(new SqlColumn()),
-                            NewNameAndType = columnNew.CopyTo(new SqlColumn())
-                        };
-                        changes.Add(columnChange);
-                    }
+                        SqlColumn = columnOriginal.CopyTo(new SqlColumn()),
+                        NewNameAndType = columnNew.CopyTo(new SqlColumn())
+                    };
+                    changes.Add(columnChange);
                 }
             }
 

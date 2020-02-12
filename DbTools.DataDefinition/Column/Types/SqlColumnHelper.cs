@@ -2,7 +2,7 @@
 {
     using FizzCode.DbTools.Configuration;
 
-    public static class SqlColumnHelper 
+    public static class SqlColumnHelper
     {
         public static SqlColumn Add(SqlVersion version, SqlTable table, string name, SqlType sqlType)
         {
