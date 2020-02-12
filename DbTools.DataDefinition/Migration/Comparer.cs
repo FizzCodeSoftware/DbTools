@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
-    using System;
     using System.Collections.Generic;
     using FizzCode.DbTools.Common;
 

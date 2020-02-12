@@ -10,5 +10,7 @@
 
         string DropColumns(params ColumnDelete[] columnDeletes);
         string CreateColumns(params ColumnNew[] columnNews);
+
+        SqlStatementWithParameters ChangeColumns(params ColumnChange[] columnChanges);
     }
 }

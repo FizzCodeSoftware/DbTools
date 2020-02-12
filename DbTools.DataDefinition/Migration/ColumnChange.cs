@@ -1,46 +1,50 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
-    public class ColumnChange
+    public interface IMigration
+    { }
+
+    public abstract class ColumnMigration : IMigration
     {
         public SqlColumn SqlColumn { get; set; }
+
+        public override string ToString()
+        {
+            return SqlColumn.ToString();
+        }
+    }
+
+    public abstract class TableMigration : SqlTable, IMigration
+    {
+    }
+
+    public class ColumnChange : ColumnMigration
+    {
         public SqlColumn NewNameAndType { get; set; }
 
         public override string ToString()
         {
+            // TODO
             return base.ToString();
         }
     }
 
-    public class ColumnDelete
+    public class ColumnDelete : ColumnMigration
     {
-        public SqlColumn SqlColumn { get; set; }
-
-        public override string ToString()
-        {
-            return SqlColumn.ToString();
-        }
     }
 
-    public class ColumnNew
+    public class ColumnNew : ColumnMigration
     {
-        public SqlColumn SqlColumn { get; set; }
-
-        public override string ToString()
-        {
-            return SqlColumn.ToString();
-        }
     }
 
-    public class TableRename
+    public class TableRename : TableMigration
     {
-        public SqlTable SqlTable { get; set; }
         public string NewName { get; set; }
     }
 
-    public class TableDelete : SqlTable
+    public class TableDelete : TableMigration
     { }
 
-    public class TableNew : SqlTable
+    public class TableNew : TableMigration
     {
         public TableNew()
         {

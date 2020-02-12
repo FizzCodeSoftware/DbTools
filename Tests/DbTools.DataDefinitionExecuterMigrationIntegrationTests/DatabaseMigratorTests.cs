@@ -201,9 +201,9 @@
             Assert.AreEqual(100, first.SqlColumn.Type.Length);
             Assert.AreEqual(101, first.NewNameAndType.Type.Length);
 
-            /*var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(version.ToString()), SqlGeneratorFactory.CreateMigrationGenerator(version, _sqlExecuterTestAdapter.GetContext(version)));
+            var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(version.ToString()), SqlGeneratorFactory.CreateMigrationGenerator(version, _sqlExecuterTestAdapter.GetContext(version)));
 
-            databaseMigrator.DeleteTable(first);*/
+            databaseMigrator.ChangeColumns(first);
         }
 
         [TestMethod]

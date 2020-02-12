@@ -4,6 +4,7 @@
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Migration;
 
     public abstract class GenericSqlMigrationGenerator : ISqlMigrationGenerator
@@ -38,13 +39,7 @@
 
         public virtual string DropColumns(params ColumnDelete[] columnDeletes)
         {
-            var tableNames = columnDeletes.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
-
-            if (tableNames.Count()
-                != 1)
-                throw new ArgumentOutOfRangeException(nameof(columnDeletes), "All columns should be on the same table.");
-
-            var tableName = tableNames.First();
+            var tableName = CheckSameTable(columnDeletes);
 
             var columnsToDelete = columnDeletes.Select(c => Generator.GuardKeywords(c.SqlColumn.Name)).ToList();
             return @$"
@@ -54,13 +49,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
 
         public virtual string CreateColumns(params ColumnNew[] columnNews)
         {
-            var tableNames = columnNews.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
-
-            if (tableNames.Count()
-                != 1)
-                throw new ArgumentOutOfRangeException(nameof(columnNews), "All columns should be on the same table.");
-
-            var tableName = tableNames.First();
+            var tableName = CheckSameTable(columnNews);
 
             var columnsToAdd = columnNews.Select(c => c.SqlColumn.Name).ToList();
 
@@ -78,6 +67,39 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
             }
 
             return sb.ToString();
+        }
+
+        private static SchemaAndTableName CheckSameTable(ColumnMigration[] columnNews)
+        {
+            var tableNames = columnNews.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
+
+            if (tableNames.Count()
+                != 1)
+                throw new ArgumentOutOfRangeException(nameof(columnNews), "All columns should be on the same table.");
+            
+            return tableNames.First();
+        }
+
+        public SqlStatementWithParameters ChangeColumns(params ColumnChange[] columnChanges)
+        {
+            var tableName = CheckSameTable(columnChanges);
+            // TODO single
+            // ALTER TABLE <table>
+            // ALTER COLUMN
+            // xxx NUMERIC(18,0) 
+            // TODO multiple -> temp table
+            // TODO drop constraints then re add them
+
+            if (columnChanges.Length == 1)
+            {
+                return $@"
+ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}
+ALTER COLUMN {Generator.GenerateCreateColumn(columnChanges[0].NewNameAndType)}";
+            }
+            else
+            {
+                throw new NotImplementedException("ChangeColumns does not implemented for multiple column changes yet.");
+            }
         }
 
         private ISqlGenerator _generator;

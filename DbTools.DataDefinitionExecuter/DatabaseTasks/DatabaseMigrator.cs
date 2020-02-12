@@ -47,5 +47,11 @@
             var sql = MigrationGenerator.CreateColumns(columnNews);
             Executer.ExecuteNonQuery(sql);
         }
+
+        public void ChangeColumns(params ColumnChange[] columnChanges)
+        {
+            var sql = MigrationGenerator.ChangeColumns(columnChanges);
+            Executer.ExecuteNonQuery(sql);
+        }
     }
 }
