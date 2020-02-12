@@ -83,12 +83,6 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
         public SqlStatementWithParameters ChangeColumns(params ColumnChange[] columnChanges)
         {
             var tableName = CheckSameTable(columnChanges);
-            // TODO single
-            // ALTER TABLE <table>
-            // ALTER COLUMN
-            // xxx NUMERIC(18,0) 
-            // TODO multiple -> temp table
-            // TODO drop constraints then re add them
 
             if (columnChanges.Length == 1)
             {
@@ -98,7 +92,16 @@ ALTER COLUMN {Generator.GenerateCreateColumn(columnChanges[0].NewNameAndType)}";
             }
             else
             {
-                throw new NotImplementedException("ChangeColumns does not implemented for multiple column changes yet.");
+                var sbStatements = new StringBuilder();
+                // TODO Oprions ShouldMigrateColumnChangesAllAtOnce
+                // TODO multiple -> temp table
+                // TODO drop constraints then re add them
+                foreach (var columnChange in columnChanges)
+                {
+                    sbStatements.AppendLine(ChangeColumns(columnChange).Statement);
+                }
+
+                return new SqlStatementWithParameters(sbStatements.ToString());
             }
         }
 
