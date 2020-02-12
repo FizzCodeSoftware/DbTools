@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Text;
 
     internal static class RegisteredForeignKeysCreator
     {
@@ -68,10 +69,31 @@
             var referredTable = definiton.GetTable(fkRegistration.ReferredTableName);
             var referredPk = GetReferredPK(referredTable);
 
+            CheckValidity(fkRegistration, referredPk);
+
             var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
             var pkColumn = referredPk.SqlColumns[0].SqlColumn;
             fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkRegistration.SingleFkColumn, pkColumn));
+        }
+
+        private static void CheckValidity(ForeignKeyRegistrationToTableWithPrimaryKeyExistingColumn fkRegistration, PrimaryKey referredPk)
+        {
+            if (referredPk.SqlColumns.Count > 1)
+            {
+
+                var messageDescriptionSb = new StringBuilder();
+                try
+                {
+                    messageDescriptionSb.Append("FK: ");
+                    messageDescriptionSb.AppendLine(fkRegistration.SingleFkColumn.ToString());
+                    messageDescriptionSb.Append("PK: ");
+                    foreach (var referredColumn in referredPk.SqlColumns)
+                        messageDescriptionSb.AppendLine(referredColumn.SqlColumn.ToString());
+                }
+                finally { }
+                throw new InvalidForeignKeyRegistrationException("Single column FK refers to multi column PK. " + messageDescriptionSb.ToString());
+            }
         }
 
         public static void ReferredTableExistingColumns(DatabaseDefinition definition, SqlTable sqlTable, ForeignKeyRegistrationToReferredTableExistingColumns fkRegistration)
