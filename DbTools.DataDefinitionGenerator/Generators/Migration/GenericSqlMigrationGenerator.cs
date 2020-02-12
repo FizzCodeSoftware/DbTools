@@ -9,7 +9,7 @@
 
     public abstract class GenericSqlMigrationGenerator : ISqlMigrationGenerator
     {
-        public Context Context { get;  }
+        public Context Context { get; }
 
         protected GenericSqlMigrationGenerator(Context context)
         {
@@ -76,7 +76,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
             if (tableNames.Count()
                 != 1)
                 throw new ArgumentOutOfRangeException(nameof(columnNews), "All columns should be on the same table.");
-            
+
             return tableNames.First();
         }
 

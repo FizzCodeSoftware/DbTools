@@ -36,7 +36,7 @@
                 SqlVersions.AddRange(versions);
             }
 
-            if(MainVersion != null && !SqlVersions.Contains(MainVersion))
+            if (MainVersion != null && !SqlVersions.Contains(MainVersion))
                 SqlVersions.Add(MainVersion);
 
             TypeMappers.Clear();

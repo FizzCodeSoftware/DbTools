@@ -1,6 +1,8 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
+#pragma warning disable CA1040 // Avoid empty interfaces
     public interface IMigration
+#pragma warning restore CA1040 // Avoid empty interfaces
     { }
 
     public abstract class ColumnMigration : IMigration

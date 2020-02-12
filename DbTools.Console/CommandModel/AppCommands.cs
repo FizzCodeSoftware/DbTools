@@ -21,8 +21,6 @@
             Program.Terminated = true;
         }
 
-        // TODO sqldialect OR sqlVersion / detect version?
-
         [ApplicationMetadata(Name = "document", Description = "Generate excel documentation of an existing database")]
         public void Document(
             [Option(LongName = "connectionString", ShortName = "c")]
@@ -40,7 +38,6 @@
 
             var context = CreateContext(version);
 
-            // TODO provider-specific ConnectionStringBuilder class
             var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, context);
             var databaseName = sqlExecuter.GetDatabase();
 
