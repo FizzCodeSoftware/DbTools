@@ -14,19 +14,23 @@
             }
         }
 
-        public string Describe()
+        private SqlVersion GetVersion()
         {
             if (Keys.Any(k => SqlVersions.GetVersions<IGenericDialect>().Contains(k)))
             {
-                return Describe(SqlVersions.GetLatestVersion<IGenericDialect>());
+                return SqlVersions.GetLatestVersion<IGenericDialect>();
             }
 
-            return Describe(Keys.Last());
+            return Keys.Last();
         }
 
-        public string Describe(SqlVersion preferredVersion)
+        public string Describe(SqlVersion preferredVersion = null)
         {
-            return this[preferredVersion].ToString();
+            var version = preferredVersion;
+            if (preferredVersion == null)
+                version = GetVersion();
+
+            return this[version].ToString();
         }
 
         public SqlTypes CopyTo(SqlTypes sqlTypes)

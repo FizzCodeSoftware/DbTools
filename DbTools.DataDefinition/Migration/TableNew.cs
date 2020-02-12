@@ -1,21 +1,24 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
-    using System.Text;
-
-    public class ColumnChange : ColumnMigration
+    public class TableNew : TableMigration
     {
-        public SqlColumn NewNameAndType { get; set; }
-
-        public override string ToString()
+        public TableNew()
         {
-            var sb = new StringBuilder();
+        }
 
-            sb.AppendLine("New column: ");
-            sb.AppendLine(NewNameAndType.ToString());
-            sb.AppendLine("Original column: ");
-            sb.AppendLine(base.ToString());
+        public TableNew(SqlTable original)
+        {
+            SchemaAndTableName = original.SchemaAndTableName;
+            foreach (var column in original.Columns)
+            {
+                var newColumn = new SqlColumn
+                {
+                    Table = this
+                };
+                Columns.Add(column.CopyTo(newColumn));
+            }
 
-            return sb.ToString();
+            // TODO copy .Properties
         }
     }
 

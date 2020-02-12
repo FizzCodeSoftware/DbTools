@@ -30,7 +30,9 @@
         {
             MainVersion = mainVersion;
             if (versions == null)
+            {
                 SqlVersions.Clear();
+            }
             else
             {
                 SqlVersions.AddRange(versions);

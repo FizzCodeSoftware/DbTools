@@ -39,7 +39,6 @@
 
             var first = changes[0] as TableNew;
             Assert.AreEqual((SchemaAndTableName)"NewTableToMigrate", first.SchemaAndTableName);
-
         }
 
         private static void AddTable(TestDatabaseSimple dd)
@@ -158,6 +157,7 @@
             var changes = comparer.Compare(ddOriginal, dd);
 
             var first = changes[0] as ColumnChange;
+            
             Assert.AreEqual(100, ddOriginal.GetTable("Company")["Name"].Type.Length);
             Assert.AreEqual(100, first.SqlColumn.Type.Length);
             Assert.AreEqual(101, first.NewNameAndType.Type.Length);

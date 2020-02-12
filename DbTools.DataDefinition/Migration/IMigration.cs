@@ -1,23 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
-    using System.Text;
-
-    public class ColumnChange : ColumnMigration
-    {
-        public SqlColumn NewNameAndType { get; set; }
-
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-
-            sb.AppendLine("New column: ");
-            sb.AppendLine(NewNameAndType.ToString());
-            sb.AppendLine("Original column: ");
-            sb.AppendLine(base.ToString());
-
-            return sb.ToString();
-        }
-    }
+#pragma warning disable CA1040 // Avoid empty interfaces
+    public interface IMigration
+#pragma warning restore CA1040 // Avoid empty interfaces
+    { }
 
     // Other / all cases
     // New PK, Deleted OK, Renamed PK

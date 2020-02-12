@@ -15,7 +15,7 @@
 
         public override string ToString()
         {
-            return $"{Name} {Types.Describe()} on {Table.SchemaAndTableName}";
+            return $"{Name} {Types.Describe(Table?.DatabaseDefinition?.MainVersion)} on {Table.SchemaAndTableName}";
         }
 
         public SqlColumn CopyTo(SqlColumn column)

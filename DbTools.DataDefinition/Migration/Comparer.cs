@@ -13,11 +13,11 @@
         }
 
 #pragma warning disable CA1822 // Mark members as static
-        public List<object> Compare(DatabaseDefinition originalDd, DatabaseDefinition newDd)
+        public List<IMigration> Compare(DatabaseDefinition originalDd, DatabaseDefinition newDd)
 #pragma warning restore CA1822 // Mark members as static
         {
             // TODO needs to be ordered
-            var changes = new List<object>();
+            var changes = new List<IMigration>();
 
             // Compare tables
             // handle renamed tables - needs parameter / external info
@@ -56,9 +56,9 @@
             return changes;
         }
 
-        private static List<object> CompareColumns(SqlTable tableOriginal, SqlTable tableNew)
+        private static List<ColumnMigration> CompareColumns(SqlTable tableOriginal, SqlTable tableNew)
         {
-            var changes = new List<object>();
+            var changes = new List<ColumnMigration>();
             foreach (var columnOriginal in tableOriginal.Columns)
             {
                 tableNew.Columns.TryGetValue(columnOriginal.Name, out var columnNew);
