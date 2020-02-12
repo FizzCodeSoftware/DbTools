@@ -4,11 +4,6 @@
     {
         public SqlColumn SqlColumn { get; set; }
         public SqlColumn NewNameAndType { get; set; }
-
-        public override string ToString()
-        {
-            return base.ToString();
-        }
     }
 
     public class ColumnDelete
