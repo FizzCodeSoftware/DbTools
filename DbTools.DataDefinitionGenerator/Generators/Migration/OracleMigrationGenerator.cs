@@ -21,8 +21,7 @@
         {
             var tableNames = columnNews.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
 
-            if (tableNames.Count()
-                != 1)
+            if (tableNames.Count() != 1)
                 throw new ArgumentOutOfRangeException(nameof(columnNews), "All columns should be on the same table.");
 
             var tableName = tableNames.First();
@@ -30,7 +29,7 @@
             var columnsToAdd = columnNews.Select(c => c.SqlColumn.Name).ToList();
 
             var sb = new StringBuilder();
-            sb.AppendLine($"ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}");
+            sb.Append("ALTER TABLE ").AppendLine(Generator.GetSimplifiedSchemaAndTableName(tableName));
             sb.Append("ADD (");
 
             var idx = 0;
@@ -51,8 +50,7 @@
         {
             var tableNames = columnDeletes.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
 
-            if (tableNames.Count()
-                != 1)
+            if (tableNames.Count() != 1)
                 throw new ArgumentOutOfRangeException(nameof(columnDeletes), "All columns should be on the same table.");
 
             var tableName = tableNames.First();
@@ -60,8 +58,7 @@
             var columnsToDelete = columnDeletes.Select(c => Generator.GuardKeywords(c.SqlColumn.Name)).ToList();
 
             var sb = new StringBuilder();
-            sb.AppendLine($"ALTER TABLE { Generator.GetSimplifiedSchemaAndTableName(tableName)}");
-
+            sb.Append("ALTER TABLE ").AppendLine(Generator.GetSimplifiedSchemaAndTableName(tableName));
 
             if (columnsToDelete.Count > 1)
             {

@@ -39,7 +39,6 @@
 
             var first = changes[0] as TableNew;
             Assert.AreEqual((SchemaAndTableName)"NewTableToMigrate", first.SchemaAndTableName);
-
         }
 
         private static void AddTable(TestDatabaseSimple dd)
