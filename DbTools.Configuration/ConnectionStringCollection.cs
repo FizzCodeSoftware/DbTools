@@ -26,7 +26,7 @@
 
         public void Add(ConnectionStringWithProvider connectionString)
         {
-            _connectionStrings[connectionString.Name.ToLowerInvariant()] = connectionString;
+            _connectionStrings[connectionString.Name.ToUpperInvariant()] = connectionString;
         }
 
         public IEnumerator<ConnectionStringWithProvider> GetEnumerator()
@@ -38,7 +38,7 @@
         {
             get
             {
-                name = name.ToLowerInvariant();
+                name = name.ToUpperInvariant();
                 _connectionStrings.TryGetValue(name, out var value);
                 return value;
             }

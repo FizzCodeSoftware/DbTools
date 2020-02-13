@@ -1,17 +1,18 @@
 ﻿namespace FizzCode.DbTools.Common
 {
     using System;
+
     public abstract class DbToolsException : Exception
     {
-        public DbToolsException() : base()
+        protected DbToolsException()
         {
         }
 
-        public DbToolsException(string message) : base(message)
+        protected DbToolsException(string message) : base(message)
         {
         }
 
-        public DbToolsException(string message, Exception innerException) : base(message, innerException)
+        protected DbToolsException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

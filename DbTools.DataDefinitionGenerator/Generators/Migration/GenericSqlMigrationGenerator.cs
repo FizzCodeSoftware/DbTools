@@ -54,7 +54,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
             var columnsToAdd = columnNews.Select(c => c.SqlColumn.Name).ToList();
 
             var sb = new StringBuilder();
-            sb.AppendLine($"ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}");
+            sb.Append("ALTER TABLE ").AppendLine(Generator.GetSimplifiedSchemaAndTableName(tableName));
             sb.Append("ADD ");
 
             var idx = 0;
@@ -73,8 +73,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
         {
             var tableNames = columnNews.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
 
-            if (tableNames.Count()
-                != 1)
+            if (tableNames.Count() != 1)
                 throw new ArgumentOutOfRangeException(nameof(columnNews), "All columns should be on the same table.");
 
             return tableNames.First();
@@ -90,19 +89,17 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
 ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}
 ALTER COLUMN {Generator.GenerateCreateColumn(columnChanges[0].NewNameAndType)}";
             }
-            else
-            {
-                var sbStatements = new StringBuilder();
-                // TODO Oprions ShouldMigrateColumnChangesAllAtOnce
-                // TODO multiple -> temp table
-                // TODO drop constraints then re add them
-                foreach (var columnChange in columnChanges)
-                {
-                    sbStatements.AppendLine(ChangeColumns(columnChange).Statement);
-                }
 
-                return new SqlStatementWithParameters(sbStatements.ToString());
+            var sbStatements = new StringBuilder();
+            // TODO Oprions ShouldMigrateColumnChangesAllAtOnce
+            // TODO multiple -> temp table
+            // TODO drop constraints then re add them
+            foreach (var columnChange in columnChanges)
+            {
+                sbStatements.AppendLine(ChangeColumns(columnChange).Statement);
             }
+
+            return new SqlStatementWithParameters(sbStatements.ToString());
         }
 
         private ISqlGenerator _generator;

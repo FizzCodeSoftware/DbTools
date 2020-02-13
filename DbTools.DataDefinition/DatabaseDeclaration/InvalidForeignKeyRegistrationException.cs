@@ -5,7 +5,7 @@
 
     public class InvalidForeignKeyRegistrationException : DbToolsException
     {
-        public InvalidForeignKeyRegistrationException() : base()
+        public InvalidForeignKeyRegistrationException()
         {
         }
 

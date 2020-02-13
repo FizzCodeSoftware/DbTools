@@ -81,7 +81,6 @@
         {
             if (referredPk.SqlColumns.Count > 1)
             {
-
                 var messageDescriptionSb = new StringBuilder();
                 try
                 {
@@ -91,7 +90,10 @@
                     foreach (var referredColumn in referredPk.SqlColumns)
                         messageDescriptionSb.AppendLine(referredColumn.SqlColumn.ToString());
                 }
-                finally { }
+                finally
+                {
+                }
+
                 throw new InvalidForeignKeyRegistrationException("Single column FK refers to multi column PK. " + messageDescriptionSb.ToString());
             }
         }

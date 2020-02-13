@@ -64,12 +64,12 @@
                 if (idx == -1)
                     continue;
 
-                var name = v.Substring(0, idx).ToLowerInvariant();
+                var name = v.Substring(0, idx).ToUpperInvariant();
                 var value = v.Substring(idx + 1);
                 switch (name)
                 {
-                    case "server":
-                    case "data source":
+                    case "SERVER":
+                    case "DATA SOURCE":
                         result.Server = value;
                         // todo: support oracle's complex Data Source format:
                         /*if (KnownProvider == Configuration.KnownProvider.Oracle)
@@ -77,20 +77,20 @@
                             // Data Source=(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=MyHost)(PORT=MyPort))(CONNECT_DATA=(SERVICE_NAME=MyOracleSID)));
                         }*/
                         break;
-                    case "database":
-                    case "initial catalog":
+                    case "DATABASE":
+                    case "INITIAL CATALOG":
                         result.Database = value;
                         break;
-                    case "user id":
-                    case "uid":
+                    case "USER ID":
+                    case "UID":
                         result.UserId = value;
                         break;
-                    case "port":
+                    case "PORT":
                         if (int.TryParse(value, out var port))
                             result.Port = port;
                         break;
-                    case "integratedsecurity":
-                    case "integrated security":
+                    case "INTEGRATEDSECURITY":
+                    case "INTEGRATED SECURITY":
                         result.IntegratedSecurity = string.Equals(value, "yes", StringComparison.InvariantCultureIgnoreCase)
                             || string.Equals(value, "sspi", StringComparison.InvariantCultureIgnoreCase);
                         break;
