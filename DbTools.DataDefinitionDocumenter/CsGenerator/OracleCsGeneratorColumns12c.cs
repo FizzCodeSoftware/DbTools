@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using System;
+    using System.Globalization;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
@@ -18,11 +19,11 @@
             var type = column.Types[Version];
             return type.SqlTypeInfo switch
             {
-                SqlChar _ => $"{nameof(Oracle12cHelper.AddChar)}(\"{column.Name}\", {type.Length}",
-                SqlNChar _ => $"{nameof(Oracle12cHelper.AddNChar)}(\"{column.Name}\", {type.Length}",
-                SqlVarChar _ => $"{nameof(Oracle12cHelper.AddVarChar)}(\"{column.Name}\", {type.Length}",
-                SqlVarChar2 _ => $"{nameof(Oracle12cHelper.AddVarChar2)}(\"{column.Name}\", {type.Length}",
-                SqlNVarChar2 _ => $"{nameof(Oracle12cHelper.AddNVarChar2)}(\"{column.Name}\", {type.Length}",
+                SqlChar _ => $"{nameof(Oracle12cHelper.AddChar)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}",
+                SqlNChar _ => $"{nameof(Oracle12cHelper.AddNChar)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}",
+                SqlVarChar _ => $"{nameof(Oracle12cHelper.AddVarChar)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}",
+                SqlVarChar2 _ => $"{nameof(Oracle12cHelper.AddVarChar2)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}",
+                SqlNVarChar2 _ => $"{nameof(Oracle12cHelper.AddNVarChar2)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}",
                 SqlBinaryFloat _ => $"{nameof(Oracle12cHelper.AddBinaryFloat)}(\"{column.Name}\"",
                 SqlBinaryDouble _ => $"{nameof(Oracle12cHelper.AddBinaryDouble)}(\"{column.Name}\"",
                 SqlBfile _ => $"{nameof(Oracle12cHelper.AddBfile)}(\"{column.Name}\"",
@@ -30,7 +31,7 @@
                 SqlClob _ => $"{nameof(Oracle12cHelper.AddClob)}(\"{column.Name}\"",
                 SqlLong _ => $"{nameof(Oracle12cHelper.AddLong)}(\"{column.Name}\"",
                 SqlLongRaw _ => $"{nameof(Oracle12cHelper.AddLongRaw)}(\"{column.Name}\"",
-                SqlNumber _ => $"{nameof(Oracle12cHelper.AddLongRaw)}(\"{column.Name}\", {type.Length}, {type.Scale}",
+                SqlNumber _ => $"{nameof(Oracle12cHelper.AddLongRaw)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}, {type.Scale?.ToString("D", CultureInfo.InvariantCulture)}",
                 SqlDate _ => $"{nameof(Oracle12cHelper.AddDate)}(\"{column.Name}\"",
                 SqlTimeStampWithTimeZone _ => $"{nameof(Oracle12cHelper.AddTimeStampWithTimeZone)}(\"{column.Name}\"",
                 SqlTimeStampWithLocalTimeZone _ => $"{nameof(Oracle12cHelper.AddTimeStampWithLocalTimeZone)}(\"{column.Name}\"",

@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using System;
+    using System.Globalization;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
@@ -18,10 +19,10 @@
             var type = column.Types[Version];
             return type.SqlTypeInfo switch
             {
-                SqlChar _ => $"{nameof(MsSql2016Helper.AddChar)}(\"{column.Name}\", {type.Length}",
-                SqlNChar _ => $"{nameof(MsSql2016Helper.AddNChar)}(\"{column.Name}\", {type.Length}",
-                SqlVarChar _ => $"{nameof(MsSql2016Helper.AddVarChar)}(\"{column.Name}\", {type.Length}",
-                SqlNVarChar _ => $"{nameof(MsSql2016Helper.AddNVarChar)}(\"{column.Name}\", {type.Length}",
+                SqlChar _ => $"{nameof(MsSql2016Helper.AddChar)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}",
+                SqlNChar _ => $"{nameof(MsSql2016Helper.AddNChar)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}",
+                SqlVarChar _ => $"{nameof(MsSql2016Helper.AddVarChar)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}",
+                SqlNVarChar _ => $"{nameof(MsSql2016Helper.AddNVarChar)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}",
                 SqlNText _ => $"{nameof(MsSql2016Helper.AddNText)}(\"{column.Name}\"",
                 SqlFloat _ => $"{nameof(MsSql2016Helper.AddFloat)}(\"{column.Name}\"",
                 SqlReal _ => $"{nameof(MsSql2016Helper.AddReal)}(\"{column.Name}\"",
@@ -30,18 +31,18 @@
                 SqlTinyInt _ => $"{nameof(MsSql2016Helper.AddTinyInt)}(\"{column.Name}\"",
                 SqlInt _ => $"{nameof(MsSql2016Helper.AddInt)}(\"{column.Name}\"",
                 SqlBigInt _ => $"{nameof(MsSql2016Helper.AddBigInt)}(\"{column.Name}\"",
-                SqlDecimal _ => $"{nameof(MsSql2016Helper.AddDecimal)}(\"{column.Name}\", {type.Length}, {type.Scale}",
-                SqlNumeric _ => $"{nameof(MsSql2016Helper.AddNumeric)}(\"{column.Name}\", {type.Length}, {type.Scale}",
+                SqlDecimal _ => $"{nameof(MsSql2016Helper.AddDecimal)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}, {type.Scale?.ToString("D", CultureInfo.InvariantCulture)}",
+                SqlNumeric _ => $"{nameof(MsSql2016Helper.AddNumeric)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}, {type.Scale?.ToString("D", CultureInfo.InvariantCulture)}",
                 SqlMoney _ => $"{nameof(MsSql2016Helper.AddMoney)}(\"{column.Name}\"",
                 SqlSmallMoney _ => $"{nameof(MsSql2016Helper.AddSmallMoney)}(\"{column.Name}\"",
                 SqlDate _ => $"{nameof(MsSql2016Helper.AddDate)}(\"{column.Name}\"",
-                SqlTime _ => $"{nameof(MsSql2016Helper.AddTime)}(\"{column.Name}\", {type.Length}",
+                SqlTime _ => $"{nameof(MsSql2016Helper.AddTime)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}",
                 SqlDateTime _ => $"{nameof(MsSql2016Helper.AddDateTime)}(\"{column.Name}\"",
-                SqlDateTime2 _ => $"{nameof(MsSql2016Helper.AddDateTime2)}(\"{column.Name}\", {type.Length}",
-                SqlDateTimeOffset _ => $"{nameof(MsSql2016Helper.AddDateTimeOffset)}(\"{column.Name}\", {type.Length}",
+                SqlDateTime2 _ => $"{nameof(MsSql2016Helper.AddDateTime2)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}",
+                SqlDateTimeOffset _ => $"{nameof(MsSql2016Helper.AddDateTimeOffset)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}",
                 SqlSmallDateTime _ => $"{nameof(MsSql2016Helper.AddSmallDateTime)}(\"{column.Name}\"",
-                SqlBinary _ => $"{nameof(MsSql2016Helper.AddBinary)}(\"{column.Name}\", {type.Length}",
-                SqlVarBinary _ => $"{nameof(MsSql2016Helper.AddVarBinary)}(\"{column.Name}\", {type.Length}",
+                SqlBinary _ => $"{nameof(MsSql2016Helper.AddBinary)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}",
+                SqlVarBinary _ => $"{nameof(MsSql2016Helper.AddVarBinary)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}",
                 SqlImage _ => $"{nameof(MsSql2016Helper.AddImage)}(\"{column.Name}\"",
                 SqlXml _ => $"{nameof(MsSql2016Helper.AddXml)}(\"{column.Name}\"",
                 SqlUniqueIdentifier _ => $"AddUniqueIdentifier(\"{column.Name}\"",

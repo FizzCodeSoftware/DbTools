@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using FizzCode.DbTools.Common.Logger;
@@ -246,7 +247,7 @@
                 var identity = column.Properties.OfType<Identity>().FirstOrDefault();
 
                 if (identity != null)
-                    Write(table.SchemaAndTableName, $"IDENTITY ({identity.Seed}, {identity.Increment})");
+                    Write(table.SchemaAndTableName, $"IDENTITY ({identity.Seed.ToString("D", CultureInfo.InvariantCulture)}, {identity.Increment.ToString("D", CultureInfo.InvariantCulture)})");
                 else
                     Write(table.SchemaAndTableName, "");
 
@@ -295,7 +296,7 @@
                     DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", "");
 
                 if (identity != null)
-                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", $"IDENTITY ({identity.Seed}, {identity.Increment})");
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", $"IDENTITY ({identity.Seed.ToString("D", CultureInfo.InvariantCulture)}, {identity.Increment.ToString("D", CultureInfo.InvariantCulture)})");
                 else
                     DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", "");
 

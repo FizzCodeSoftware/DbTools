@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionGenerator
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.Common;
@@ -228,15 +229,15 @@
                 if (type.Length != null)
                 {
                     sb.Append("(")
-                        .Append(type.Length)
+                        .Append(type.Length?.ToString("D", CultureInfo.InvariantCulture))
                         .Append(", ")
-                        .Append(type.Scale)
+                        .Append(type.Scale?.ToString("D", CultureInfo.InvariantCulture))
                         .Append(")");
                 }
                 else
                 {
                     sb.Append("(")
-                        .Append(type.Scale)
+                        .Append(type.Scale?.ToString("D", CultureInfo.InvariantCulture))
                         .Append(")");
                 }
             }
@@ -246,7 +247,7 @@
                 if (type.Length == -1)
                     sb.Append("MAX");
                 else
-                    sb.Append(type.Length);
+                    sb.Append(type.Length?.ToString("D", CultureInfo.InvariantCulture));
 
                 sb.Append(")");
             }
