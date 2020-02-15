@@ -30,23 +30,23 @@
         {
             foreach (var sqlTable in Tables)
             {
-                foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn>(sqlTable))
+                foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithUniqueKeySingleColumn>(sqlTable))
                 {
                     if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
                         fkRegistration.ReferredTableName.Schema = DefaultSchema;
 
-                    RegisteredForeignKeysCreator.PrimaryKeySingleColumn(this, sqlTable, fkRegistration);
+                    RegisteredForeignKeysCreator.UniqueKeySingleColumn(this, sqlTable, fkRegistration);
                 }
 
-                foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithPrimaryKey>(sqlTable))
+                foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithUniqueKey>(sqlTable))
                 {
                     if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
                         fkRegistration.ReferredTableName.Schema = DefaultSchema;
 
-                    RegisteredForeignKeysCreator.PrimaryKey(this, sqlTable, fkRegistration, NamingStrategies.ForeignKey);
+                    RegisteredForeignKeysCreator.UniqueKey(this, sqlTable, fkRegistration, NamingStrategies.ForeignKey);
                 }
 
-                foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithPrimaryKeyExistingColumn>(sqlTable))
+                foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn>(sqlTable))
                 {
                     if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
                         fkRegistration.ReferredTableName.Schema = DefaultSchema;
@@ -84,6 +84,11 @@
                 foreach (var index in sqlTable.Properties.OfType<Index>().Where(idx => string.IsNullOrEmpty(idx.Name)))
                 {
                     NamingStrategies.Index.SetIndexName(index);
+                }
+
+                foreach (var uniqueConstraint in sqlTable.Properties.OfType<UniqueConstraint>().Where(uc => string.IsNullOrEmpty(uc.Name)))
+                {
+                    NamingStrategies.UniqueConstraint.SetUniqueConstraintName(uniqueConstraint);
                 }
 
                 foreach (var fk in sqlTable.Properties.OfType<ForeignKey>().Where(fk => string.IsNullOrEmpty(fk.Name)))

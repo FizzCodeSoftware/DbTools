@@ -147,5 +147,58 @@
                 table.AddNVarChar("Name", 100);
             });
         }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void UniqueConstratintAsFk(SqlVersion version)
+        {
+            if (version is ISqLiteDialect)
+                return;
+            // TODO SqLite - You can't add a constraint to existing table in SQLite - should work at create table time
+            GenerateDatabase(new DbUniqueConstratintAsFk(), version);
+        }
+
+        public class DbUniqueConstratintAsFk : DatabaseDeclaration
+        {
+            public SqlTable Primary { get; } = AddTable(table =>
+            {
+                table.AddInt32("Id");
+                table.AddNVarChar("Name", 100);
+                table.AddUniqueConstraint("Id");
+            });
+
+            public SqlTable Foreign { get; } = AddTable(table =>
+            {
+                table.AddInt32("Id").SetPK().SetIdentity();
+                table.AddInt32("PrimaryId").SetForeignKeyTo(nameof(Primary));
+            });
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void UniqueIndexAsFk(SqlVersion version)
+        {
+            if (version is IOracleDialect)
+                return;
+            
+            // TODO Unique index by default is not acceptable as reference for FK in Oracle
+            GenerateDatabase(new DbUniqueConstratintAsUniqueIndex(), version);
+        }
+
+        public class DbUniqueConstratintAsUniqueIndex : DatabaseDeclaration
+        {
+            public SqlTable Primary { get; } = AddTable(table =>
+            {
+                table.AddInt32("Id");
+                table.AddNVarChar("Name", 100);
+                table.AddIndex(true, "Id");
+            });
+
+            public SqlTable Foreign { get; } = AddTable(table =>
+            {
+                table.AddInt32("Id").SetPK().SetIdentity();
+                table.AddInt32("PrimaryId").SetForeignKeyTo(nameof(Primary));
+            });
+        }
     }
 }

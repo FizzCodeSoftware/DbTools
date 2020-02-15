@@ -19,6 +19,8 @@
 
         string CreateIndexes(SqlTable table);
 
+        string CreateUniqueConstrainsts(SqlTable table);
+
         SqlStatementWithParameters CreateDbTableDescription(SqlTable table);
         SqlStatementWithParameters CreateDbColumnDescription(SqlColumn column);
 
