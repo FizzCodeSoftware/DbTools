@@ -235,7 +235,7 @@
                 .Append(GuardKeywords(uniqueConstraint.Name))
                 .Append(" UNIQUE ")
                 .Append(clusteredPrefix)
-               
+
                 .AppendLine(" (")
                 .AppendLine(string.Join(", \r\n", uniqueConstraint.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)}"))) // Index column list
                 .AppendLine(");");

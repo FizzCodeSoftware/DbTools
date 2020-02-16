@@ -214,8 +214,85 @@
                 sb.AppendLine(columnCreation);
             }
 
-            // TODO Indexes + config
+            GenerateTableProperties(sb, table);
             sb.AppendLine(2, "});");
+        }
+
+        protected void GenerateTableProperties(StringBuilder sb, SqlTable table)
+        {
+            var indexes = table.Properties.OfType<DataDefinition.Index>().ToList();
+
+            foreach (var index in indexes)
+                GenerateIndex(sb, index);
+
+            var uniqueConstraints = table.Properties.OfType<UniqueConstraint>().ToList();
+
+            foreach (var uniqueConstraint in uniqueConstraints)
+                GenerateUniqueConstraint(sb, uniqueConstraint);
+        }
+
+        private static void GenerateIndex(StringBuilder sb, DataDefinition.Index index)
+        {
+            sb.Append(3, "table.AddIndexWithName(");
+            if (index.Includes.Count == 0)
+            {
+                if (index.Clustered == true)
+                    sb.Append("true, ");
+                else
+                    sb.Append("true, ");
+
+                sb.Append("\"")
+                    .Append(index.Name)
+                    .Append("\", ");
+
+                if (index.SqlColumns.Count == 1)
+                {
+                    sb.Append("\"")
+                        .Append(index.SqlColumns[0].SqlColumn.Name)
+                        .Append("\"");
+                }
+                else
+                {
+                    sb.Append("new [] {")
+                        .Append(string.Join(", ", index.SqlColumns.Select(i => "\"" + i.SqlColumn.Name + "\"").ToList()))
+                        .Append("}");
+                }
+            }
+            else
+            {
+                sb.Append("new [] {")
+                    .Append(string.Join(", ", index.SqlColumns.Select(i => "\"" + i.SqlColumn.Name + "\"").ToList()))
+                    .Append("}, ")
+                    .Append("new [] {")
+                    .Append(string.Join(", ", index.Includes.Select(i => "\"" + i.Name + "\"").ToList()))
+                    .Append("}");
+                if (index.Name == null && index.Clustered.HasValue && index.Clustered.Value)
+                {
+                    sb.Append("true");
+                }
+                else if (index.Clustered.HasValue)
+                {
+                    sb.Append(index.Clustered.Value.ToString(CultureInfo.InvariantCulture))
+                       .Append(", \"")
+                       .Append(index.Name)
+                       .Append("\"");
+                }
+            }
+
+            sb.AppendLine(");");
+        }
+
+        private static void GenerateUniqueConstraint(StringBuilder sb, UniqueConstraint uniqueConstraint)
+        {
+            sb.Append(3, "table.AddUniqueConstraintWithName(");
+
+            sb.Append("\"");
+            sb.Append(uniqueConstraint.Name);
+            sb.Append("\", ");
+
+            sb.Append(string.Join(", ", uniqueConstraint.SqlColumns.Select(c => "\"" + c.SqlColumn.Name + "\"").ToList()));
+
+            sb.Append(");");
         }
     }
 }

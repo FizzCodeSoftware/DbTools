@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinitionExecuter.Tests
+﻿#pragma warning disable CA1034 // Nested types should not be visible
+
+namespace FizzCode.DbTools.DataDefinitionExecuter.Tests
 {
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
@@ -68,7 +70,7 @@
                 table.AddInt32("Id").SetPK().SetIdentity();
                 table.AddNVarChar("Name", 100);
                 table.AddIndex("Name");
-                table.AddIndex("Id", "Name");
+                table.AddIndex( "Id", "Name");
             });
         }
 
@@ -180,12 +182,12 @@
         {
             if (version is IOracleDialect)
                 return;
-            
+
             // TODO Unique index by default is not acceptable as reference for FK in Oracle
-            GenerateDatabase(new DbUniqueConstratintAsUniqueIndex(), version);
+            GenerateDatabase(new DbUniqueIndexAsFk(), version);
         }
 
-        public class DbUniqueConstratintAsUniqueIndex : DatabaseDeclaration
+        public class DbUniqueIndexAsFk : DatabaseDeclaration
         {
             public SqlTable Primary { get; } = AddTable(table =>
             {
