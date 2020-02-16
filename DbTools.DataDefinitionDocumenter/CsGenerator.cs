@@ -245,18 +245,7 @@
                     .Append(index.Name)
                     .Append("\", ");
 
-                if (index.SqlColumns.Count == 1)
-                {
-                    sb.Append("\"")
-                        .Append(index.SqlColumns[0].SqlColumn.Name)
-                        .Append("\"");
-                }
-                else
-                {
-                    sb.Append("new [] {")
-                        .Append(string.Join(", ", index.SqlColumns.Select(i => "\"" + i.SqlColumn.Name + "\"").ToList()))
-                        .Append("}");
-                }
+                sb.Append(string.Join(", ", index.SqlColumns.Select(i => "\"" + i.SqlColumn.Name + "\"").ToList()));
             }
             else
             {
@@ -292,7 +281,7 @@
 
             sb.Append(string.Join(", ", uniqueConstraint.SqlColumns.Select(c => "\"" + c.SqlColumn.Name + "\"").ToList()));
 
-            sb.Append(");");
+            sb.AppendLine(");");
         }
     }
 }
