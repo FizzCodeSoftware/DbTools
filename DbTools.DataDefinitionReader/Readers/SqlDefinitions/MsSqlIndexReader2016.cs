@@ -102,7 +102,7 @@
                 {
                     index = new Index(table, row.GetAs<string>("index_name"))
                     {
-                        Unique = row.GetAs<byte>("is_unique") == 1,
+                        Unique = row.GetAs<bool>("is_unique"),
                         Clustered = row.GetAs<byte>("type") == 1,
                     };
 
@@ -131,7 +131,6 @@ SELECT schema_name(tab.schema_id) schema_name,
 	, is_unique, is_primary_key
 	, is_included_column, is_descending_key
     , i.is_unique_constraint
-    , is_primary_key
 FROM sys.tables tab
     INNER JOIN sys.indexes i
         ON tab.object_id = i.object_id 
