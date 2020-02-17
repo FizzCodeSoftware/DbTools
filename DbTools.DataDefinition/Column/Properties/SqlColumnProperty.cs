@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    public class SqlColumnProperty
+    public abstract class SqlColumnProperty
     {
         public SqlColumn SqlColumn { get; }
 
