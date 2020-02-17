@@ -94,7 +94,9 @@
         {
             Index index = null;
             var rows = QueryResult
-                .Where(row => !row.GetAs<bool>("is_primary_key") && !row.GetAs<bool>("is_unique_constraint") && DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table)).OrderBy(row => row.GetAs<int>("index_column_id"));
+                .Where(row => !row.GetAs<bool>("is_primary_key") && !row.GetAs<bool>("is_unique_constraint") && DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table)).OrderBy(row => row.GetAs<string>("index_name")).ThenBy(row => row.GetAs<int>("index_column_id"));
+
+            // TODO 
 
             foreach (var row in rows)
             {
@@ -111,11 +113,18 @@
 
                 var column = table.Columns[row.GetAs<string>("column_name")];
 
-                var ascDesc = row.GetAs<bool>("is_descending_key")
-                    ? AscDesc.Desc
-                    : AscDesc.Asc;
+                if (row.GetAs<bool>("is_included_column"))
+                {
+                    index.Includes.Add(column);
+                }
+                else
+                {
+                    var ascDesc = row.GetAs<bool>("is_descending_key")
+                        ? AscDesc.Desc
+                        : AscDesc.Asc;
 
-                index.SqlColumns.Add(new ColumnAndOrder(column, ascDesc));
+                    index.SqlColumns.Add(new ColumnAndOrder(column, ascDesc));
+                }
             }
         }
 

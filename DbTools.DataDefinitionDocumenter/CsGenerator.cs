@@ -100,6 +100,8 @@
 
         public void GenerateSingleFile(DatabaseDefinition databaseDefinition, string fileName)
         {
+            Log(LogSeverity.Information, "Starting on {DatabaseName}.", "CsGenerator", DatabaseName);
+
             var sb = new StringBuilder();
             WriteSingleFileHeader(sb);
 
@@ -118,6 +120,9 @@
             }
 
             WriteSingleFileFooter(sb);
+
+            Context.Logger.Log(LogSeverity.Information, "Writing Document file {FileName}", "Documenter", fileName);
+
             File.WriteAllText(fileName, sb.ToString(), Encoding.UTF8);
         }
 
@@ -233,13 +238,13 @@
 
         private static void GenerateIndex(StringBuilder sb, DataDefinition.Index index)
         {
+            // TODO clustered
+
             sb.Append(3, "table.AddIndexWithName(");
             if (index.Includes.Count == 0)
             {
-                if (index.Clustered == true)
-                    sb.Append("true, ");
-                else
-                    sb.Append("true, ");
+                sb.Append(index.Clustered.ToString().ToLower())
+                    .Append(", ");
 
                 sb.Append("\"")
                     .Append(index.Name)
@@ -249,23 +254,19 @@
             }
             else
             {
+                sb.Append(index.Clustered.ToString().ToLower())
+                    .Append(", ");
+
+                sb.Append("\"")
+                    .Append(index.Name)
+                    .Append("\", ");
+
                 sb.Append("new [] {")
                     .Append(string.Join(", ", index.SqlColumns.Select(i => "\"" + i.SqlColumn.Name + "\"").ToList()))
                     .Append("}, ")
                     .Append("new [] {")
                     .Append(string.Join(", ", index.Includes.Select(i => "\"" + i.Name + "\"").ToList()))
                     .Append("}");
-                if (index.Name == null && index.Clustered.HasValue && index.Clustered.Value)
-                {
-                    sb.Append("true");
-                }
-                else if (index.Clustered.HasValue)
-                {
-                    sb.Append(index.Clustered.Value.ToString(CultureInfo.InvariantCulture))
-                       .Append(", \"")
-                       .Append(index.Name)
-                       .Append("\"");
-                }
             }
 
             sb.AppendLine(");");
