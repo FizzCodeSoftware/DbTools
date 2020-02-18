@@ -4,7 +4,8 @@
 
     public class MsSqlMigrationGenerator : GenericSqlMigrationGenerator
     {
-        public MsSqlMigrationGenerator(Context context) : base(context)
+        public MsSqlMigrationGenerator(Context context)
+            : base(context)
         {
         }
 

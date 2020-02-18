@@ -2,16 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <PackageId>FizzCode.DbTools.Common</PackageId>
+    <PackageId>FizzCode.DbTools.DataDefinitionReader.Oracle</PackageId>
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>
-    <Description>Common classes for Fizzcode DbTools project</Description>
+    <Description>Microsoft SQL Server specific database definition reader for Fizzcode DbTools project</Description>
     <Copyright>Copyright © 2019 FizzCode Ltd.</Copyright>
     <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
     <Platforms>AnyCPU</Platforms>
     <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
-    <AssemblyName>FizzCode.DbTools.Common</AssemblyName>
-    <RootNamespace>FizzCode.DbTools.Common</RootNamespace>
+    <AssemblyName>FizzCode.DbTools.DataDefinitionReader.Oracle</AssemblyName>
+    <RootNamespace>FizzCode.DbTools.DataDefinitionReader</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
@@ -21,8 +21,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.1" />
     <PackageReference Include="Roslynator.Formatting.Analyzers" Version="1.0.0-rc">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -30,7 +28,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DbTools.Configuration\DbTools.Configuration.csproj" />
+    <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinitionExecuter.Oracle\DbTools.DataDefinitionExecuter.Oracle.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinitionExecuter\DbTools.DataDefinitionExecuter.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinitionGenerator\DbTools.DataDefinitionGenerator.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinitionReader\DbTools.DataDefinitionReader.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
   </ItemGroup>
 
 </Project>

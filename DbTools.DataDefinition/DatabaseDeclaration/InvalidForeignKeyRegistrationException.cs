@@ -9,11 +9,13 @@
         {
         }
 
-        public InvalidForeignKeyRegistrationException(string message) : base(message)
+        public InvalidForeignKeyRegistrationException(string message)
+            : base(message)
         {
         }
 
-        public InvalidForeignKeyRegistrationException(string message, Exception innerException) : base(message, innerException)
+        public InvalidForeignKeyRegistrationException(string message, Exception innerException)
+            : base(message, innerException)
         {
         }
     }

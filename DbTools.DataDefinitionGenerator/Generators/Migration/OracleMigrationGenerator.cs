@@ -8,7 +8,8 @@
 
     public class OracleMigrationGenerator : GenericSqlMigrationGenerator
     {
-        public OracleMigrationGenerator(Context context) : base(context)
+        public OracleMigrationGenerator(Context context)
+            : base(context)
         {
         }
 

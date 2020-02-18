@@ -3,16 +3,15 @@
     using System.Collections.Generic;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionExecuter;
 
     public abstract class GenericDataDefinitionReader : IDataDefinitionReader
     {
-        protected GenericDataDefinitionReader(ConnectionStringWithProvider connectionStringWithProvider, Context context, List<string> schemaNames = null)
+        protected GenericDataDefinitionReader(SqlExecuter executer, List<string> schemaNames = null)
         {
+            Executer = executer;
             SchemaNames = schemaNames;
-            Executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, context);
         }
 
         protected List<string> SchemaNames { get; } = new List<string>();

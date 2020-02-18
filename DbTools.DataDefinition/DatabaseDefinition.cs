@@ -8,7 +8,8 @@
     {
         public Dictionary<SqlVersion, TypeMapper> TypeMappers { get; set; } = new Dictionary<SqlVersion, TypeMapper>();
 
-        public DatabaseDefinition() : this(null, Configuration.SqlVersions.MsSql2016, Configuration.SqlVersions.Oracle12c, Configuration.SqlVersions.SqLite3)
+        public DatabaseDefinition()
+            : this(null, Configuration.SqlVersions.MsSql2016, Configuration.SqlVersions.Oracle12c, Configuration.SqlVersions.SqLite3)
         {
         }
 

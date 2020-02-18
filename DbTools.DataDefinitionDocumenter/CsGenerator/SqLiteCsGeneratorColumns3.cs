@@ -8,7 +8,8 @@
 
     public class SqLiteCsGenerator3 : GeneratorTypeSpecific
     {
-        public SqLiteCsGenerator3(Context context) : base(context)
+        public SqLiteCsGenerator3(Context context)
+            : base(context)
         {
             Version = SqlVersions.SqLite3;
         }

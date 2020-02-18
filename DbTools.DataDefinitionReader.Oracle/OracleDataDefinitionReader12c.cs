@@ -6,10 +6,13 @@
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinitionExecuter;
+    using FizzCode.DbTools.DataDefinitionGenerator;
 
     public class OracleDataDefinitionReader12c : GenericDataDefinitionReader
     {
-        public OracleDataDefinitionReader12c(ConnectionStringWithProvider connectionStringWithProvider, Context context, List<string> schemaNames = null) : base(connectionStringWithProvider, context, schemaNames)
+        public OracleDataDefinitionReader12c(ConnectionStringWithProvider connectionStringWithProvider, Context context, List<string> schemaNames = null)
+            : base(new OracleExecuter12c(connectionStringWithProvider, new OracleGenerator12c(context)), schemaNames)
         {
         }
 

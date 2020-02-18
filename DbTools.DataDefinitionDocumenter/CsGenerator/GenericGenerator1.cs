@@ -9,7 +9,8 @@
 
     public class GenericGenerator1 : GeneratorTypeSpecific
     {
-        public GenericGenerator1(Context context) : base(context)
+        public GenericGenerator1(Context context)
+            : base(context)
         {
             Version = SqlVersions.Generic1;
         }

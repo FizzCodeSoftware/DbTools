@@ -9,7 +9,8 @@
 
     public class OracleCsGenerator12c : GeneratorTypeSpecific
     {
-        public OracleCsGenerator12c(Context context) : base(context)
+        public OracleCsGenerator12c(Context context)
+            : base(context)
         {
             Version = SqlVersions.Oracle12c;
         }

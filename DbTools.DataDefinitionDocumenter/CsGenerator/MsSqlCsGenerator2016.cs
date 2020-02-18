@@ -9,7 +9,8 @@
 
     public class MsSqlCsGenerator2016 : GeneratorTypeSpecific
     {
-        public MsSqlCsGenerator2016(Context context) : base(context)
+        public MsSqlCsGenerator2016(Context context)
+            : base(context)
         {
             Version = SqlVersions.MsSql2016;
         }

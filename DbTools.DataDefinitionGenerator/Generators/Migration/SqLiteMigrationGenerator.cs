@@ -4,7 +4,8 @@
 
     public class SqLiteMigrationGenerator : GenericSqlMigrationGenerator
     {
-        public SqLiteMigrationGenerator(Context context) : base(context)
+        public SqLiteMigrationGenerator(Context context)
+            : base(context)
         {
         }
 

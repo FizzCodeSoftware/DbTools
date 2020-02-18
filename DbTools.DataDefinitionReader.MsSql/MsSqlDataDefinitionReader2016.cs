@@ -7,11 +7,13 @@
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinitionExecuter;
     using FizzCode.DbTools.DataDefinitionGenerator;
 
     public class MsSqlDataDefinitionReader2016 : GenericDataDefinitionReader
     {
-        public MsSqlDataDefinitionReader2016(ConnectionStringWithProvider connectionStringWithProvider, Context context, List<string> schemaNames = null) : base(connectionStringWithProvider, context, schemaNames)
+        public MsSqlDataDefinitionReader2016(ConnectionStringWithProvider connectionStringWithProvider, Context context, List<string> schemaNames = null)
+            : base(new MsSqlExecuter2016(connectionStringWithProvider, new MsSqlGenerator2016(context)), schemaNames)
         {
         }
 
