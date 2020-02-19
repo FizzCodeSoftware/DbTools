@@ -8,7 +8,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class CsGeneratorTests
+    public class CSharpGeneratorTests
     {
         [TestMethod]
         public void GeneratorTestDatabaseFks()

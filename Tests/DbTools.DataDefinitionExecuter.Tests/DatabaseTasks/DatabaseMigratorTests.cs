@@ -11,7 +11,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class DatabaseMigratorTests : DataDefinitionExecuterTests
+    public class DatabaseMigratorTests : DataDefinitionSqlExecuterTests
     {
         [TestMethod]
         [LatestSqlVersions]

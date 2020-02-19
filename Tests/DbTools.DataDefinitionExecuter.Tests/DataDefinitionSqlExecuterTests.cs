@@ -4,7 +4,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public abstract class DataDefinitionExecuterTests
+    public abstract class DataDefinitionSqlExecuterTests
     {
         protected static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new SqlExecuterTestAdapter();
 

@@ -10,7 +10,7 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class GenerateDatabaseTests : DataDefinitionExecuterTests
+    public class GenerateDatabaseTests : DataDefinitionSqlExecuterTests
     {
         [TestMethod]
         [LatestSqlVersions]

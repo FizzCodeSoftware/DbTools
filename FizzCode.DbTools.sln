@@ -34,9 +34,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionDocumenter.Tests", "Tests\DbTools.DataDefinitionDocumenter.Tests\DbTools.DataDefinitionDocumenter.Tests.csproj", "{3FF4B200-6057-4D2F-954D-030CDF48C821}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionExecuter.Tests", "Tests\DbTools.DataDefinitionExecuter.Tests\DbTools.DataDefinitionExecuter.Tests.csproj", "{401D6622-3FBC-43C5-9BBF-BA14F6532A5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.SqlExecuter.Tests", "Tests\DbTools.DataDefinitionExecuter.Tests\DbTools.DataDefinition.SqlExecuter.Tests.csproj", "{401D6622-3FBC-43C5-9BBF-BA14F6532A5B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionGenerator.Tests", "Tests\DbTools.DataDefinitionGenerator.Tests\DbTools.DataDefinitionGenerator.Tests.csproj", "{88209CDC-62E4-495C-9B83-1857958D40B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.SqlGenerator.Tests", "Tests\DbTools.DataDefinitionGenerator.Tests\DbTools.DataDefinition.SqlGenerator.Tests.csproj", "{88209CDC-62E4-495C-9B83-1857958D40B5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionReader.Tests", "Tests\DbTools.DataDefinitionReader.Tests\DbTools.DataDefinitionReader.Tests.csproj", "{84341D96-101A-450B-A41B-D3E17CE53C5A}"
 EndProject
