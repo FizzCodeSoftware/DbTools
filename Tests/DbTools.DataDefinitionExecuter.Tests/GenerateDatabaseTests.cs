@@ -1,4 +1,5 @@
-﻿namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
+﻿#pragma warning disable CA1034 // Nested types should not be visible
+namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
 {
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
@@ -145,6 +146,59 @@
             {
                 table.AddInt32("Id").SetPK().SetIdentity();
                 table.AddNVarChar("Name", 100);
+            });
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void UniqueConstratintAsFk(SqlEngineVersion version)
+        {
+            if (version is SqLiteVersion)
+                return;
+            // TODO SqLite - You can't add a constraint to existing table in SQLite - should work at create table time
+            GenerateDatabase(new DbUniqueConstratintAsFk(), version);
+        }
+
+        public class DbUniqueConstratintAsFk : TestDatabaseDeclaration
+        {
+            public SqlTable Primary { get; } = AddTable(table =>
+            {
+                table.AddInt32("Id");
+                table.AddNVarChar("Name", 100);
+                table.AddUniqueConstraint("Id");
+            });
+
+            public SqlTable Foreign { get; } = AddTable(table =>
+            {
+                table.AddInt32("Id").SetPK().SetIdentity();
+                table.AddInt32("PrimaryId").SetForeignKeyTo(nameof(Primary));
+            });
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void UniqueIndexAsFk(SqlEngineVersion version)
+        {
+            if (version is OracleVersion)
+                return;
+
+            // TODO Unique index by default is not acceptable as reference for FK in Oracle
+            GenerateDatabase(new DbUniqueIndexAsFk(), version);
+        }
+
+        public class DbUniqueIndexAsFk : TestDatabaseDeclaration
+        {
+            public SqlTable Primary { get; } = AddTable(table =>
+            {
+                table.AddInt32("Id");
+                table.AddNVarChar("Name", 100);
+                table.AddIndex(true, "Id");
+            });
+
+            public SqlTable Foreign { get; } = AddTable(table =>
+            {
+                table.AddInt32("Id").SetPK().SetIdentity();
+                table.AddInt32("PrimaryId").SetForeignKeyTo(nameof(Primary));
             });
         }
     }

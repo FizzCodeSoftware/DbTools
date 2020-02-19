@@ -33,10 +33,13 @@
                 CreateTable(sqlTable);
 
             foreach (var sqlTable in tables)
-                CreateForeignkeys(sqlTable);
+                CreateIndexes(sqlTable);
 
             foreach (var sqlTable in tables)
-                CreateIndexes(sqlTable);
+                CreateUniqueConstraints(sqlTable);
+
+            foreach (var sqlTable in tables)
+                CreateForeignkeys(sqlTable);
 
             foreach (var sqlTable in tables)
                 CreateDbDescriptions(sqlTable);
@@ -70,6 +73,13 @@
         public void CreateIndexes(SqlTable table)
         {
             var sql = Executer.Generator.CreateIndexes(table);
+            if (!string.IsNullOrEmpty(sql))
+                Executer.ExecuteNonQuery(sql);
+        }
+
+        public void CreateUniqueConstraints(SqlTable table)
+        {
+            var sql = Executer.Generator.CreateUniqueConstrainsts(table);
             if (!string.IsNullOrEmpty(sql))
                 Executer.ExecuteNonQuery(sql);
         }

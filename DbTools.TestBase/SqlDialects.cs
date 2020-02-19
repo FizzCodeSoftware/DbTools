@@ -18,7 +18,8 @@
             foreach (var versionType in versionTypes)
             {
                 var version = (SqlEngineVersion)Activator.CreateInstance(versionType);
-                Versions.Add(version);
+                if(!Versions.Contains(version))
+                    Versions.Add(version);
             }
         }
 
@@ -39,13 +40,32 @@
     }
 
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
-    public class LatestSqlVersionsAttribute : SqlVersionsBasAttribute
+    public sealed class LatestSqlVersionsAttribute : SqlVersionsBasAttribute
     {
         public LatestSqlVersionsAttribute()
         {
             Versions = SqlEngineVersions.GetLatestExecutableVersions()
                 .Where(x => x is MsSqlVersion || x is OracleVersion || x is SqLiteVersion)
                 .ToList();
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
+    public sealed class SqlVersionsAttribute : SqlVersionsBasAttribute
+    {
+        public SqlVersionsAttribute(params Type[] versionTypes)
+        {
+            Versions = new List<SqlEngineVersion>();
+            foreach (var versionType in versionTypes)
+            {
+                var version = (SqlEngineVersion)Activator.CreateInstance(versionType);
+
+                if (TestHelper.ShouldRunIntegrationTest(version))
+                    Versions.Add(version);
+
+                if(Versions.Count == 0)
+                    Versions.Add(SqLiteVersion.SqLite3);
+            }
         }
     }
 }

@@ -109,6 +109,7 @@
 
             var sb = new StringBuilder();
             sb.Append("CREATE ")
+                .Append(index.Unique ? "UNIQUE " : "")
                 .Append(clusteredPrefix)
                 .Append("INDEX ")
                 .Append(GuardKeywords(index.Name))
@@ -208,6 +209,38 @@
                 sb.Append(", ")
                     .Append(FKConstraint(fk));
             }
+        }
+
+        public string CreateUniqueConstrainsts(SqlTable table)
+        {
+            var sb = new StringBuilder();
+            foreach (var uniqueConstraint in table.Properties.OfType<UniqueConstraint>().ToList())
+                sb.AppendLine(CreateUniqueConstraint(uniqueConstraint));
+
+            return sb.ToString();
+        }
+
+        public string CreateUniqueConstraint(UniqueConstraint uniqueConstraint)
+        {
+            var clusteredPrefix = uniqueConstraint.Clustered != null
+                ? uniqueConstraint.Clustered == true
+                ? "CLUSTERED "
+                : "NONCLUSTERED "
+                : null;
+
+            var sb = new StringBuilder();
+            sb.Append("ALTER TABLE ")
+                .Append(GetSimplifiedSchemaAndTableName(uniqueConstraint.SqlTable.SchemaAndTableName))
+                .Append(" ADD CONSTRAINT ")
+                .Append(GuardKeywords(uniqueConstraint.Name))
+                .Append(" UNIQUE ")
+                .Append(clusteredPrefix)
+
+                .AppendLine(" (")
+                .AppendLine(string.Join(", \r\n", uniqueConstraint.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)}"))) // Index column list
+                .AppendLine(");");
+
+            return sb.ToString();
         }
 
         public string DropTable(SqlTable table)

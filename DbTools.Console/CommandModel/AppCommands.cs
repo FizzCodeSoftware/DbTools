@@ -59,8 +59,10 @@
 
         [ApplicationMetadata(Name = "generate", Description = "Generate database definition into cs files.")]
         public void Generate(
-            [Option(LongName = "connectionString", ShortName = "c")]
+            [Option(LongName = "connectionString", ShortName = "c", Description = "Provide a valid connection string to the database")]
             string connectionString,
+            [Option(LongName = "singleOrMulti", ShortName = "m", Description = "multi for multi file, single for single file generation")]
+            string singleOrMulti,
             [Option(LongName = "sqlType", ShortName = "t")]
             string sqlType,
             [Option(LongName = "namespace", ShortName = "n")]
@@ -89,7 +91,10 @@
             var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
             var generator = new CSharpGenerator(documenterContext, writer, version, newDatabaseName, @namespace);
 
-            generator.GenerateMultiFile(dd);
+            if(singleOrMulti == "s" || singleOrMulti == "single" )
+                generator.GenerateSingleFile(dd, newDatabaseName + ".cs");
+            else
+                generator.GenerateMultiFile(dd);
         }
 
         [ApplicationMetadata(Name = "bim", Description = "Generate database definition into bim (analysis services Model.bim xml) file.")]

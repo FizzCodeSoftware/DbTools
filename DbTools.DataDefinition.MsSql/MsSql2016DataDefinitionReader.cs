@@ -32,7 +32,7 @@
             Log(LogSeverity.Debug, "Reading table identities from database.");
             new MsSqlIdentityReader2016(Executer).GetIdentity(dd);
             Log(LogSeverity.Debug, "Reading table primary keys from database.");
-            new MsSqlPrimaryKeyReader2016(Executer).GetPrimaryKey(dd);
+            new MsSqlIndexReader2016(Executer).GetIndexes(dd);
             Logger.Log(LogSeverity.Debug, "Reading table foreign keys from database.", "Reader");
             new MsSqlForeignKeyReader2016(Executer).GetForeignKeys(dd);
 
@@ -71,7 +71,7 @@ WHERE type = 'U'";
 
             if (fullDefinition)
             {
-                new MsSqlPrimaryKeyReader2016(Executer).
+                new MsSqlIndexReader2016(Executer).
                 GetPrimaryKey(sqlTable);
                 new MsSqlForeignKeyReader2016(Executer).GetForeignKeys(sqlTable);
                 AddTableDocumentation(sqlTable);

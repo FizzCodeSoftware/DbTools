@@ -77,6 +77,8 @@
 
         public void GenerateSingleFile(DatabaseDefinition databaseDefinition, string fileName)
         {
+            Log(LogSeverity.Information, "Starting on {DatabaseName}.", "CsGenerator", DatabaseName);
+
             var sb = new StringBuilder();
             WriteSingleFileHeader(sb);
 
@@ -95,6 +97,9 @@
             }
 
             WriteSingleFileFooter(sb);
+
+            Context.Logger.Log(LogSeverity.Information, "Writing Document file {FileName}", "Documenter", fileName);
+
             File.WriteAllText(fileName, sb.ToString(), Encoding.UTF8);
         }
 
@@ -191,8 +196,70 @@
                 sb.AppendLine(columnCreation);
             }
 
-            // TODO Indexes + config
+            GenerateTableProperties(sb, table);
             sb.AppendLine(2, "});");
+        }
+
+        protected void GenerateTableProperties(StringBuilder sb, SqlTable table)
+        {
+            var indexes = table.Properties.OfType<DataDefinition.Index>().ToList();
+
+            foreach (var index in indexes)
+                GenerateIndex(sb, index);
+
+            var uniqueConstraints = table.Properties.OfType<UniqueConstraint>().ToList();
+
+            foreach (var uniqueConstraint in uniqueConstraints)
+                GenerateUniqueConstraint(sb, uniqueConstraint);
+        }
+
+        private static void GenerateIndex(StringBuilder sb, DataDefinition.Index index)
+        {
+            // TODO clustered
+
+            sb.Append(3, "table.AddIndexWithName(");
+            if (index.Includes.Count == 0)
+            {
+                sb.Append(index.Clustered.ToString().ToLower())
+                    .Append(", ");
+
+                sb.Append("\"")
+                    .Append(index.Name)
+                    .Append("\", ");
+
+                sb.Append(string.Join(", ", index.SqlColumns.Select(i => "\"" + i.SqlColumn.Name + "\"").ToList()));
+            }
+            else
+            {
+                sb.Append(index.Clustered.ToString().ToLower())
+                    .Append(", ");
+
+                sb.Append("\"")
+                    .Append(index.Name)
+                    .Append("\", ");
+
+                sb.Append("new [] {")
+                    .Append(string.Join(", ", index.SqlColumns.Select(i => "\"" + i.SqlColumn.Name + "\"").ToList()))
+                    .Append("}, ")
+                    .Append("new [] {")
+                    .Append(string.Join(", ", index.Includes.Select(i => "\"" + i.Name + "\"").ToList()))
+                    .Append("}");
+            }
+
+            sb.AppendLine(");");
+        }
+
+        private static void GenerateUniqueConstraint(StringBuilder sb, UniqueConstraint uniqueConstraint)
+        {
+            sb.Append(3, "table.AddUniqueConstraintWithName(");
+
+            sb.Append("\"");
+            sb.Append(uniqueConstraint.Name);
+            sb.Append("\", ");
+
+            sb.Append(string.Join(", ", uniqueConstraint.SqlColumns.Select(c => "\"" + c.SqlColumn.Name + "\"").ToList()));
+
+            sb.AppendLine(");");
         }
     }
 }
