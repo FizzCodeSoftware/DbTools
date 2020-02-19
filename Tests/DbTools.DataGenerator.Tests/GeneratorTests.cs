@@ -3,6 +3,7 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.DataGenerator;
+    using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -50,7 +51,7 @@
         }
     }
 
-    public class GeneratorTestSimpleDb : DatabaseDeclaration
+    public class GeneratorTestSimpleDb : TestDatabaseDeclaration
     {
         public SqlTable Table { get; } = AddTable(table =>
         {
@@ -59,7 +60,7 @@
         });
     }
 
-    public class GeneratorTestDateDb : DatabaseDeclaration
+    public class GeneratorTestDateDb : TestDatabaseDeclaration
     {
         public SqlTable Table { get; } = AddTable(table =>
         {
@@ -68,7 +69,7 @@
         });
     }
 
-    public class GeneratorTestNameDb : DatabaseDeclaration
+    public class GeneratorTestNameDb : TestDatabaseDeclaration
     {
         public SqlTable Table { get; } = AddTable(table =>
 #pragma warning disable RCS1021 // Simplify lambda expression.

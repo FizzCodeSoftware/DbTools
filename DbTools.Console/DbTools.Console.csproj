@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <PackageId>FizzCode.DbTools.Console</PackageId>
     <Authors>FizzCode Ltd.</Authors>
@@ -37,9 +38,8 @@
   <ItemGroup>
     <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj" />
     <ProjectReference Include="..\DbTools.Configuration\DbTools.Configuration.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.Factory\DbTools.DataDefinition.Factory.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinitionDocumenter\DbTools.DataDefinitionDocumenter.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinitionExecuter.Factory\DbTools.DataDefinitionExecuter.Factory.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinitionReader.Factory\DbTools.DataDefinitionReader.Factory.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinitionReader\DbTools.DataDefinitionReader.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
   </ItemGroup>

@@ -11,7 +11,8 @@
         public const char SchemaTableNameSeparator = 'ꜗ';
         public string DefaultSchema { get; }
 
-        protected DatabaseDeclaration(string defaultSchema = null, NamingStrategies namingStrategies = null)
+        protected DatabaseDeclaration(AbstractTypeMapper mainTypeMapper, AbstractTypeMapper[] secondaryTypeMappers = null, string defaultSchema = null, NamingStrategies namingStrategies = null)
+            : base(mainTypeMapper, secondaryTypeMappers)
         {
             DefaultSchema = defaultSchema;
             NamingStrategies = namingStrategies ?? new NamingStrategies();

@@ -5,18 +5,18 @@
 
     public static class Helper
     {
-        public static Settings GetDefaultSettings(SqlVersion version, IConfigurationRoot configuration)
+        public static Settings GetDefaultSettings(SqlEngineVersion version, IConfigurationRoot configuration)
         {
             var settings = new Settings();
 
             var sqlVersionSpecificSettings = new SqlVersionSpecificSettings();
 
-            if (version is IMsSqlDialect)
+            if (version is MsSqlVersion)
             {
                 sqlVersionSpecificSettings["DefaultSchema"] = "dbo";
             }
 
-            if (version is IOracleDialect)
+            if (version is OracleVersion)
             {
                 sqlVersionSpecificSettings["OracleDatabaseName"] = configuration["oracleDatabaseName"];
             }
@@ -26,13 +26,13 @@
             return settings;
         }
 
-        public static Settings GetDefaultSettings(SqlVersion version)
+        public static Settings GetDefaultSettings(SqlEngineVersion version)
         {
             var settings = new Settings();
 
             var sqlVersionSpecificSettings = new SqlVersionSpecificSettings();
 
-            if (version is IMsSqlDialect)
+            if (version is MsSqlVersion)
             {
                 sqlVersionSpecificSettings["DefaultSchema"] = "dbo";
             }

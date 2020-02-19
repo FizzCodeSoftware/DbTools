@@ -20,9 +20,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition", "D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionDocumenter", "DbTools.DataDefinitionDocumenter\DbTools.DataDefinitionDocumenter.csproj", "{C7120C83-7BBC-4B43-B9E2-64FB382A3CDE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionExecuter", "DbTools.DataDefinitionExecuter\DbTools.DataDefinitionExecuter.csproj", "{D65AFA4F-AA72-4704-94C6-175A7265174A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.SqlExecuter", "DbTools.DataDefinition.SqlExecuter\DbTools.DataDefinition.SqlExecuter.csproj", "{D65AFA4F-AA72-4704-94C6-175A7265174A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionGenerator", "DbTools.DataDefinitionGenerator\DbTools.DataDefinitionGenerator.csproj", "{D32C0AA5-AFF5-4012-BD2D-5C18BF849E28}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.SqlGenerator", "DbTools.DataDefinition.SqlGenerator\DbTools.DataDefinition.SqlGenerator.csproj", "{D32C0AA5-AFF5-4012-BD2D-5C18BF849E28}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionReader", "DbTools.DataDefinitionReader\DbTools.DataDefinitionReader.csproj", "{E1AEEA35-DC5E-4204-A941-3BBD274B167A}"
 EndProject
@@ -48,19 +48,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.Tabular", "DbTools.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionExecuterMigrationIntegrationTests", "Tests\DbTools.DataDefinitionExecuterMigrationIntegrationTests\DbTools.DataDefinitionExecuterMigrationIntegrationTests.csproj", "{D4D31827-17B7-45D7-BB6C-568C38CCDE84}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionExecuter.SqLite", "DbTools.DataDefinitionExecuter.SqLite\DbTools.DataDefinitionExecuter.SqLite.csproj", "{B7A06CF3-F041-433B-BBA9-C994E7006DF7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.MsSql", "DbTools.DataDefinition.MsSql\DbTools.DataDefinition.MsSql.csproj", "{4C79E665-85EE-4A83-817A-C814E92D18F1}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionExecuter.Factory", "DbTools.DataDefinitionExecuter.Factory\DbTools.DataDefinitionExecuter.Factory.csproj", "{A6293355-A655-4893-B17F-B4E10CC4FA68}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.Oracle", "DbTools.DataDefinition.Oracle\DbTools.DataDefinition.Oracle.csproj", "{D974B5C6-1E2D-41C3-8E2E-5BE2021FEB4D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionExecuter.MsSql", "DbTools.DataDefinitionExecuter.MsSql\DbTools.DataDefinitionExecuter.MsSql.csproj", "{57A6ED8E-F883-4B0C-84CF-CCA0B1DE5B38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.SqLite", "DbTools.DataDefinition.SqLite\DbTools.DataDefinition.SqLite.csproj", "{61175153-DD2E-4A6B-BECA-3648FAAAEF8E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionExecuter.Oracle", "DbTools.DataDefinitionExecuter.Oracle\DbTools.DataDefinitionExecuter.Oracle.csproj", "{A4FA2F61-C763-4A31-A1FF-6BBF094388C2}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionReader.MsSql", "DbTools.DataDefinitionReader.MsSql\DbTools.DataDefinitionReader.MsSql.csproj", "{A2CDF516-9A16-4E09-A4E5-FF1525572E14}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionReader.Oracle", "DbTools.DataDefinitionReader.Oracle\DbTools.DataDefinitionReader.Oracle.csproj", "{2C09B3E0-8A05-421C-A4AF-0032D467D171}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionReader.Factory", "DbTools.DataDefinitionReader.Factory\DbTools.DataDefinitionReader.Factory.csproj", "{09F126B3-E252-413D-BA01-6EC5AAEAE0DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.Factory", "DbTools.DataDefinition.Factory\DbTools.DataDefinition.Factory.csproj", "{4BAD1366-510A-47A7-A0D8-4B057DCBF64A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -140,34 +134,22 @@ Global
 		{D4D31827-17B7-45D7-BB6C-568C38CCDE84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4D31827-17B7-45D7-BB6C-568C38CCDE84}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4D31827-17B7-45D7-BB6C-568C38CCDE84}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B7A06CF3-F041-433B-BBA9-C994E7006DF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B7A06CF3-F041-433B-BBA9-C994E7006DF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B7A06CF3-F041-433B-BBA9-C994E7006DF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B7A06CF3-F041-433B-BBA9-C994E7006DF7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A6293355-A655-4893-B17F-B4E10CC4FA68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A6293355-A655-4893-B17F-B4E10CC4FA68}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A6293355-A655-4893-B17F-B4E10CC4FA68}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A6293355-A655-4893-B17F-B4E10CC4FA68}.Release|Any CPU.Build.0 = Release|Any CPU
-		{57A6ED8E-F883-4B0C-84CF-CCA0B1DE5B38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{57A6ED8E-F883-4B0C-84CF-CCA0B1DE5B38}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{57A6ED8E-F883-4B0C-84CF-CCA0B1DE5B38}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{57A6ED8E-F883-4B0C-84CF-CCA0B1DE5B38}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A4FA2F61-C763-4A31-A1FF-6BBF094388C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A4FA2F61-C763-4A31-A1FF-6BBF094388C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A4FA2F61-C763-4A31-A1FF-6BBF094388C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A4FA2F61-C763-4A31-A1FF-6BBF094388C2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A2CDF516-9A16-4E09-A4E5-FF1525572E14}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A2CDF516-9A16-4E09-A4E5-FF1525572E14}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A2CDF516-9A16-4E09-A4E5-FF1525572E14}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A2CDF516-9A16-4E09-A4E5-FF1525572E14}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2C09B3E0-8A05-421C-A4AF-0032D467D171}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2C09B3E0-8A05-421C-A4AF-0032D467D171}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2C09B3E0-8A05-421C-A4AF-0032D467D171}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2C09B3E0-8A05-421C-A4AF-0032D467D171}.Release|Any CPU.Build.0 = Release|Any CPU
-		{09F126B3-E252-413D-BA01-6EC5AAEAE0DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{09F126B3-E252-413D-BA01-6EC5AAEAE0DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{09F126B3-E252-413D-BA01-6EC5AAEAE0DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{09F126B3-E252-413D-BA01-6EC5AAEAE0DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C79E665-85EE-4A83-817A-C814E92D18F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C79E665-85EE-4A83-817A-C814E92D18F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C79E665-85EE-4A83-817A-C814E92D18F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C79E665-85EE-4A83-817A-C814E92D18F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D974B5C6-1E2D-41C3-8E2E-5BE2021FEB4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D974B5C6-1E2D-41C3-8E2E-5BE2021FEB4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D974B5C6-1E2D-41C3-8E2E-5BE2021FEB4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D974B5C6-1E2D-41C3-8E2E-5BE2021FEB4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61175153-DD2E-4A6B-BECA-3648FAAAEF8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61175153-DD2E-4A6B-BECA-3648FAAAEF8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61175153-DD2E-4A6B-BECA-3648FAAAEF8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61175153-DD2E-4A6B-BECA-3648FAAAEF8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BAD1366-510A-47A7-A0D8-4B057DCBF64A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BAD1366-510A-47A7-A0D8-4B057DCBF64A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BAD1366-510A-47A7-A0D8-4B057DCBF64A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BAD1366-510A-47A7-A0D8-4B057DCBF64A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

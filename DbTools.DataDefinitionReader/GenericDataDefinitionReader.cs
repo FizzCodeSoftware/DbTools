@@ -4,11 +4,11 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinitionExecuter;
+    using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
     public abstract class GenericDataDefinitionReader : IDataDefinitionReader
     {
-        protected GenericDataDefinitionReader(SqlExecuter executer, List<string> schemaNames = null)
+        protected GenericDataDefinitionReader(SqlStatementExecuter executer, List<string> schemaNames = null)
         {
             Executer = executer;
             SchemaNames = schemaNames;
@@ -16,7 +16,7 @@
 
         protected List<string> SchemaNames { get; } = new List<string>();
 
-        protected SqlExecuter Executer { get; set; }
+        protected SqlStatementExecuter Executer { get; set; }
 
         protected Logger Logger => Executer.Generator.Context.Logger;
 
@@ -27,7 +27,7 @@
 
         protected void Log(LogSeverity severity, string text, params object[] args)
         {
-            var module = "Reader/" + Executer.Generator.Version.ToString();
+            var module = "Reader/" + Executer.Generator.Version.UniqueName;
             Logger.Log(severity, text, module, args);
         }
 

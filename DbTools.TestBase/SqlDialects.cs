@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Reflection;
     using FizzCode.DbTools.Configuration;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -9,14 +10,14 @@
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
     public abstract class SqlVersionsBasAttribute : Attribute, ITestDataSource
     {
-        protected List<SqlVersion> Versions { get; set; }
+        protected List<SqlEngineVersion> Versions { get; set; }
 
         protected SqlVersionsBasAttribute(params Type[] versionTypes)
         {
-            Versions = new List<SqlVersion>();
+            Versions = new List<SqlEngineVersion>();
             foreach (var versionType in versionTypes)
             {
-                var version = (SqlVersion)Activator.CreateInstance(versionType);
+                var version = (SqlEngineVersion)Activator.CreateInstance(versionType);
                 Versions.Add(version);
             }
         }
@@ -32,7 +33,7 @@
 
         public string GetDisplayName(MethodInfo methodInfo, object[] data)
         {
-            var versionKey = (SqlVersion)data[0];
+            var versionKey = (SqlEngineVersion)data[0];
             return $"{methodInfo.Name} {versionKey}";
         }
     }
@@ -42,7 +43,9 @@
     {
         public LatestSqlVersionsAttribute()
         {
-            Versions = SqlVersions.GetLatestExecutableVersions();
+            Versions = SqlEngineVersions.GetLatestExecutableVersions()
+                .Where(x => x is MsSqlVersion || x is OracleVersion || x is SqLiteVersion)
+                .ToList();
         }
     }
 }

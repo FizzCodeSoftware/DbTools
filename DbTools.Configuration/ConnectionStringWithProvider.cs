@@ -9,20 +9,23 @@
     public class ConnectionStringWithProvider
     {
         public string Name { get; set; }
-        public string ProviderName { get => _providerName; set { _providerName = value; UpdateKnownProvider(); } }
-        public SqlVersion SqlEngineVersion { get; set; }
+        public string ProviderName { get => _providerName; set { _providerName = value; UpdateEngine(); } }
         public string ConnectionString { get; set; }
-        public KnownProvider? KnownProvider { get; private set; }
+        public string Version { get => _version; set { _version = value; UpdateEngine(); } }
+
+        public SqlEngine? SqlEngine { get; private set; }
+        public SqlEngineVersion SqlEngineVersion { get; set; }
 
         private string _providerName;
+        private string _version;
 
-        public ConnectionStringWithProvider(string name, string providerName, string connectionString, string versionString)
+        public ConnectionStringWithProvider(string name, string providerName, string connectionString, string version)
         {
             Name = name;
-            ProviderName = providerName;
             ConnectionString = connectionString;
-            var sqlVersionType = SqlDialectHelper.GetSqlVersionTypeFromProviderName(providerName);
-            SqlEngineVersion = SqlVersions.GetVersion(sqlVersionType, versionString);
+            _providerName = providerName;
+            _version = version;
+            UpdateEngine();
         }
 
         public override string ToString()
@@ -31,20 +34,25 @@
             return string.Format(CultureInfo.InvariantCulture, "{0}, {1}", Name, ProviderName);
         }
 
-        private void UpdateKnownProvider()
+        private void UpdateEngine()
         {
-            KnownProvider = null;
+            SqlEngine = null;
+            SqlEngineVersion = null;
 
-            if (string.Equals(ProviderName, "System.Data.SqlClient", StringComparison.InvariantCultureIgnoreCase))
-                KnownProvider = Configuration.KnownProvider.SqlServer;
-            else if (string.Equals(ProviderName, "System.Data.SQLite", StringComparison.InvariantCultureIgnoreCase))
-                KnownProvider = Configuration.KnownProvider.SQLite;
-            else if (string.Equals(ProviderName, "Oracle.ManagedDataAccess.Client", StringComparison.InvariantCultureIgnoreCase))
-                KnownProvider = Configuration.KnownProvider.OracleSql;
-            else if (string.Equals(ProviderName, "MySql.Data.MySqlClient", StringComparison.InvariantCultureIgnoreCase))
-                KnownProvider = Configuration.KnownProvider.MySql;
-            else if (string.Equals(ProviderName, "Npgsql", StringComparison.InvariantCultureIgnoreCase))
-                KnownProvider = Configuration.KnownProvider.PostgreSql;
+            var versionsByType = SqlEngineVersions.AllVersions.GroupBy(x => x.GetType());
+            foreach (var group in versionsByType)
+            {
+                var matches = group
+                    .Where(version => string.Equals(ProviderName, version.ProviderName, StringComparison.InvariantCultureIgnoreCase))
+                    .ToList();
+
+                if (matches.Count > 0)
+                {
+                    SqlEngine = matches[0].Engine;
+                    SqlEngineVersion = matches.Find(x => string.Equals(x.VersionString, Version, StringComparison.InvariantCultureIgnoreCase));
+                    break;
+                }
+            }
         }
 
         public ConnectionStringFields GetKnownConnectionStringFields()
@@ -102,26 +110,26 @@
 
         public string GetFriendlyProviderName()
         {
-            if (KnownProvider != null)
-                return KnownProvider.ToString();
+            if (SqlEngine != null)
+                return SqlEngine.ToString();
 
             return ProviderName;
         }
 
         public bool IsEscaped(string identifier)
         {
-            if (KnownProvider == null)
+            if (SqlEngine == null)
                 throw new NotSupportedException();
 
-            switch (KnownProvider)
+            switch (SqlEngine)
             {
-                case Configuration.KnownProvider.SqlServer:
+                case Configuration.SqlEngine.MsSql:
                     return identifier.StartsWith('[') && identifier.EndsWith(']');
-                case Configuration.KnownProvider.SQLite:
-                case Configuration.KnownProvider.PostgreSql:
-                case Configuration.KnownProvider.OracleSql:
+                case Configuration.SqlEngine.SqLite:
+                case Configuration.SqlEngine.PostgreSql:
+                case Configuration.SqlEngine.OracleSql:
                     return identifier.StartsWith('\"') && identifier.EndsWith('\"');
-                case Configuration.KnownProvider.MySql:
+                case Configuration.SqlEngine.MySql:
                     return identifier.StartsWith('`') && identifier.EndsWith('`');
             }
 
@@ -130,16 +138,16 @@
 
         public string Escape(string dbObject, string schema = null)
         {
-            if (KnownProvider == null)
+            if (SqlEngine == null)
                 throw new NotSupportedException();
 
-            switch (KnownProvider)
+            switch (SqlEngine)
             {
-                case Configuration.KnownProvider.SqlServer:
-                case Configuration.KnownProvider.SQLite:
-                case Configuration.KnownProvider.MySql:
-                case Configuration.KnownProvider.PostgreSql:
-                case Configuration.KnownProvider.OracleSql:
+                case Configuration.SqlEngine.MsSql:
+                case Configuration.SqlEngine.SqLite:
+                case Configuration.SqlEngine.MySql:
+                case Configuration.SqlEngine.PostgreSql:
+                case Configuration.SqlEngine.OracleSql:
                     if (!string.IsNullOrEmpty(schema))
                         return EscapeIdentifier(schema) + "." + EscapeIdentifier(dbObject);
 
@@ -151,19 +159,19 @@
 
         private string EscapeIdentifier(string identifier)
         {
-            switch (KnownProvider)
+            switch (SqlEngine)
             {
-                case Configuration.KnownProvider.SqlServer:
+                case Configuration.SqlEngine.MsSql:
                     return identifier.StartsWith('[') && identifier.EndsWith(']')
                          ? identifier
                          : "[" + identifier + "]";
-                case Configuration.KnownProvider.SQLite:
-                case Configuration.KnownProvider.PostgreSql:
-                case Configuration.KnownProvider.OracleSql:
+                case Configuration.SqlEngine.SqLite:
+                case Configuration.SqlEngine.PostgreSql:
+                case Configuration.SqlEngine.OracleSql:
                     return identifier.StartsWith('\"') && identifier.EndsWith('\"')
                         ? identifier
                         : "\"" + identifier + "\"";
-                case Configuration.KnownProvider.MySql:
+                case Configuration.SqlEngine.MySql:
                     return identifier.StartsWith('`') && identifier.EndsWith('`')
                         ? identifier
                         : "`" + identifier + "`";
@@ -174,21 +182,21 @@
 
         public string Unescape(string identifier)
         {
-            if (KnownProvider == null)
+            if (SqlEngine == null)
                 throw new NotSupportedException();
 
-            switch (KnownProvider)
+            switch (SqlEngine)
             {
-                case Configuration.KnownProvider.SqlServer:
+                case Configuration.SqlEngine.MsSql:
                     return identifier
                         .Replace("[", "", StringComparison.InvariantCulture)
                         .Replace("]", "", StringComparison.InvariantCulture);
-                case Configuration.KnownProvider.SQLite:
-                case Configuration.KnownProvider.PostgreSql:
-                case Configuration.KnownProvider.OracleSql:
+                case Configuration.SqlEngine.SqLite:
+                case Configuration.SqlEngine.PostgreSql:
+                case Configuration.SqlEngine.OracleSql:
                     return identifier
                         .Replace("\"", "", StringComparison.InvariantCulture);
-                case Configuration.KnownProvider.MySql:
+                case Configuration.SqlEngine.MySql:
                     return identifier
                         .Replace("`", "", StringComparison.InvariantCulture);
             }

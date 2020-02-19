@@ -47,25 +47,25 @@
             };
         }
 
-        public static bool ShouldRunIntegrationTest(SqlVersion version)
+        public static bool ShouldRunIntegrationTest(SqlEngineVersion version)
         {
             if (ShouldForceIntegrationTests())
                 return true;
 
-            if (version is IMsSqlDialect)
+            if (version is MsSqlVersion)
                 return false;
 
-            if (version is IOracleDialect)
+            if (version is OracleVersion)
                 return false;
 
             return true;
         }
 
-        public static Settings GetDefaultTestSettings(SqlVersion version)
+        public static Settings GetDefaultTestSettings(SqlEngineVersion version)
         {
             var settings = Helper.GetDefaultSettings(version, _configuration);
 
-            if (version is IOracleDialect)
+            if (version is OracleVersion)
             {
                 var executingAssembly = Assembly.GetExecutingAssembly();
                 var callerAssemblies = new StackTrace().GetFrames()
@@ -85,7 +85,7 @@
             return settings;
         }
 
-        public static void CheckFeature(SqlVersion version, string feature)
+        public static void CheckFeature(SqlEngineVersion version, string feature)
         {
             var featureSupport = Features.GetSupport(version, feature);
             if (featureSupport.Support == Support.NotSupported)
@@ -95,21 +95,21 @@
                 Assert.Inconclusive($"Test is skipped, feature {feature} is not implemented (yet). ({featureSupport.Description}).");
         }
 
-        public static void CheckProvider(SqlVersion version, IEnumerable<ConnectionStringWithProvider> connectionStringWithProviders)
+        public static void CheckProvider(SqlEngineVersion version, IEnumerable<ConnectionStringWithProvider> connectionStringWithProviders)
         {
             RegisterProviders();
             var usedVersions = GetSqlVersionsWithConfiguredConnectionStrting(connectionStringWithProviders);
             if (!usedVersions.Contains(version))
-                Assert.Inconclusive($"Test is skipped, .Net Framework Data Provider is not usabe for {version} engine version, provider name: {SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType())}. No valid connection string is configured.");
+                Assert.Inconclusive($"Test is skipped, .Net Framework Data Provider is not usabe for {version} engine version, provider name: {version.ProviderName}. No valid connection string is configured.");
         }
 
-        private static List<SqlVersion> _sqlVersionsWithConfiguredConnectionStrting;
+        private static List<SqlEngineVersion> _sqlVersionsWithConfiguredConnectionStrting;
 
-        private static List<SqlVersion> GetSqlVersionsWithConfiguredConnectionStrting(IEnumerable<ConnectionStringWithProvider> connectionStringCollection)
+        private static List<SqlEngineVersion> GetSqlVersionsWithConfiguredConnectionStrting(IEnumerable<ConnectionStringWithProvider> connectionStringCollection)
         {
             if (_sqlVersionsWithConfiguredConnectionStrting == null)
             {
-                _sqlVersionsWithConfiguredConnectionStrting = new List<SqlVersion>();
+                _sqlVersionsWithConfiguredConnectionStrting = new List<SqlEngineVersion>();
                 foreach (var connectionStringWithProvider in connectionStringCollection)
                 {
                     if (!string.IsNullOrEmpty(connectionStringWithProvider.ConnectionString))

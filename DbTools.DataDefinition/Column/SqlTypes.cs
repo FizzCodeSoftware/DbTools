@@ -4,7 +4,7 @@
     using System.Linq;
     using FizzCode.DbTools.Configuration;
 
-    public class SqlTypes : Dictionary<SqlVersion, SqlType>
+    public class SqlTypes : Dictionary<SqlEngineVersion, SqlType>
     {
         public void SetAllNullable(bool isNullable)
         {
@@ -14,17 +14,17 @@
             }
         }
 
-        private SqlVersion GetVersion()
+        private SqlEngineVersion GetVersion()
         {
-            if (Keys.Any(k => SqlVersions.GetVersions<IGenericDialect>().Contains(k)))
+            if (Keys.Any(k => SqlEngineVersions.GetAllVersions<GenericVersion>().Contains(k)))
             {
-                return SqlVersions.GetLatestVersion<IGenericDialect>();
+                return SqlEngineVersions.GetLatestVersionOfDialect<GenericVersion>();
             }
 
             return Keys.Last();
         }
 
-        public string Describe(SqlVersion preferredVersion = null)
+        public string Describe(SqlEngineVersion preferredVersion = null)
         {
             var version = preferredVersion;
             if (preferredVersion == null)

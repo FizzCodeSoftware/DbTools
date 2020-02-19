@@ -38,9 +38,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinitionExecuter.Factory\DbTools.DataDefinitionExecuter.Factory.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinitionExecuter\DbTools.DataDefinitionExecuter.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinitionGenerator\DbTools.DataDefinitionGenerator.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.Factory\DbTools.DataDefinition.Factory.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.SqlExecuter\DbTools.DataDefinition.SqlExecuter.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.SqlGenerator\DbTools.DataDefinition.SqlGenerator.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
   </ItemGroup>
 

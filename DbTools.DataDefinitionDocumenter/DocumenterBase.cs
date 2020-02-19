@@ -9,11 +9,11 @@
 
         protected DocumenterHelper Helper { get; set; }
 
-        protected SqlVersion Version { get; set; }
+        protected SqlEngineVersion Version { get; set; }
 
         protected string DatabaseName { get; }
 
-        protected DocumenterBase(DocumenterContext context, SqlVersion version, string databaseName = "")
+        protected DocumenterBase(DocumenterContext context, SqlEngineVersion version, string databaseName = "")
         {
             Context = context;
             Version = version;

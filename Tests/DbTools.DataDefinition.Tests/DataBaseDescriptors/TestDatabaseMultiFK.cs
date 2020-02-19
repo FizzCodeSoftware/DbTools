@@ -1,7 +1,7 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Tests
-{
-    using FizzCode.DbTools.DataDefinition;
+﻿using FizzCode.DbTools.TestBase;
 
-    public class TestDatabaseMultiFK : DatabaseDeclaration
+namespace FizzCode.DbTools.DataDefinition.Tests
+{
+    public class TestDatabaseMultiFK : TestDatabaseDeclaration
     { }
 }

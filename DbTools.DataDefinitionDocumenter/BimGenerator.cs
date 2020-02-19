@@ -17,7 +17,7 @@
 
     public class BimGenerator : DocumenterBase
     {
-        public BimGenerator(DocumenterContext context, SqlVersion version, string databaseName)
+        public BimGenerator(DocumenterContext context, SqlEngineVersion version, string databaseName)
             : base(context, version, databaseName)
         {
         }

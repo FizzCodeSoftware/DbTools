@@ -1,10 +1,10 @@
-﻿namespace FizzCode.DbTools.DataDefinitionExecuter.Tests
+﻿namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
 {
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Generic1;
+    using FizzCode.DbTools.DataDefinition.SqlExecuter;
     using FizzCode.DbTools.DataDefinition.Tests;
-    using FizzCode.DbTools.DataDefinitionExecuter;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -13,24 +13,24 @@
     {
         [TestMethod]
         [LatestSqlVersions]
-        public void GenerateTestDatabaseSimple(SqlVersion version)
+        public void GenerateTestDatabaseSimple(SqlEngineVersion version)
         {
             GenerateDatabase(new TestDatabaseSimple(), version);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void GenerateForeignKeyCompositeTestDatabase(SqlVersion version)
+        public void GenerateForeignKeyCompositeTestDatabase(SqlEngineVersion version)
         {
             GenerateDatabase(new ForeignKeyComposite(), version);
         }
 
-        public static void GenerateDatabase(DatabaseDefinition dd, SqlVersion version)
+        public static void GenerateDatabase(DatabaseDefinition dd, SqlEngineVersion version)
         {
             _sqlExecuterTestAdapter.Check(version);
-            _sqlExecuterTestAdapter.Initialize(version.ToString(), dd);
+            _sqlExecuterTestAdapter.Initialize(version.UniqueName, dd);
 
-            var databaseCreator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.ToString()));
+            var databaseCreator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.UniqueName));
 
             try
             {
@@ -44,7 +44,7 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void GenerateDatabase_Index(SqlVersion version)
+        public void GenerateDatabase_Index(SqlEngineVersion version)
         {
             GenerateDatabase(new Index(), version);
         }
@@ -52,16 +52,16 @@
         [TestMethod]
         public void GenerateDatabase_TableDescription()
         {
-            GenerateDatabase(new TableDescription(), SqlVersions.MsSql2016);
+            GenerateDatabase(new TableDescription(), MsSqlVersion.MsSql2016);
         }
 
         [TestMethod]
         public void GenerateDatabase_ColumnDescription()
         {
-            GenerateDatabase(new ColumnDescription(), SqlVersions.MsSql2016);
+            GenerateDatabase(new ColumnDescription(), MsSqlVersion.MsSql2016);
         }
 
-        public class Index : DatabaseDeclaration
+        public class Index : TestDatabaseDeclaration
         {
             public SqlTable Table { get; } = AddTable(table =>
             {
@@ -72,7 +72,7 @@
             });
         }
 
-        public class TableDescription : DatabaseDeclaration
+        public class TableDescription : TestDatabaseDeclaration
         {
             public SqlTable Table { get; } = AddTable(table =>
             {
@@ -82,7 +82,7 @@
             });
         }
 
-        public class ColumnDescription : DatabaseDeclaration
+        public class ColumnDescription : TestDatabaseDeclaration
         {
             public SqlTable Table { get; } = AddTable(table =>
             {
@@ -94,10 +94,10 @@
         [TestMethod]
         public void GenerateDatabase_DefaultValue()
         {
-            GenerateDatabase(new DefaultValue(), SqlVersions.MsSql2016);
+            GenerateDatabase(new DefaultValue(), MsSqlVersion.MsSql2016);
         }
 
-        public class DefaultValue : DatabaseDeclaration
+        public class DefaultValue : TestDatabaseDeclaration
         {
             public SqlTable Table { get; } = AddTable(table =>
             {
@@ -109,7 +109,7 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void DatabaseDefinitionWithSchemaTableNameSeparator(SqlVersion version)
+        public void DatabaseDefinitionWithSchemaTableNameSeparator(SqlEngineVersion version)
         {
             TestHelper.CheckFeature(version, "Schema");
             GenerateDatabase(new SchemaTableNameSeparator(), version);
@@ -117,13 +117,13 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void DatabaseDefinitionWithSchemaAndDefaultSchema(SqlVersion version)
+        public void DatabaseDefinitionWithSchemaAndDefaultSchema(SqlEngineVersion version)
         {
             TestHelper.CheckFeature(version, "Schema");
             GenerateDatabase(new SchemaTableNameDefaultSchema(), version);
         }
 
-        public class SchemaTableNameSeparator : DatabaseDeclaration
+        public class SchemaTableNameSeparator : TestDatabaseDeclaration
         {
             public SqlTable SchemaAꜗTable { get; } = AddTable(table =>
             {

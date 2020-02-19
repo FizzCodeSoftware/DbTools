@@ -14,7 +14,7 @@
         {
             var context = new DocumenterContext
             {
-                Settings = TestHelper.GetDefaultTestSettings(SqlVersions.MsSql2016),
+                Settings = TestHelper.GetDefaultTestSettings(MsSqlVersion.MsSql2016),
                 DocumenterSettings = new DocumenterSettings(),
                 Customizer = customizer ?? new EmptyTableCustomizer(),
                 Logger = TestHelper.CreateLogger()
@@ -29,7 +29,7 @@
     {
         [TestMethod]
         [LatestSqlVersions]
-        public void GeneratorTestDatabaseFks(SqlVersion version)
+        public void GeneratorTestDatabaseFks(SqlEngineVersion version)
         {
             var db = new TestDatabaseFks();
 
@@ -39,7 +39,7 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void GeneratorForeignKeyComposite(SqlVersion version)
+        public void GeneratorForeignKeyComposite(SqlEngineVersion version)
         {
             var db = new ForeignKeyComposite();
 
@@ -49,7 +49,7 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void GeneratorForeignKeyComposite1(SqlVersion version)
+        public void GeneratorForeignKeyComposite1(SqlEngineVersion version)
         {
             var db = new ForeignKeyComposite();
 
@@ -59,7 +59,7 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void GeneratorForeignKeyComposite2(SqlVersion version)
+        public void GeneratorForeignKeyComposite2(SqlEngineVersion version)
         {
             var db = new ForeignKeyCompositeSetForeignKeyTo();
             var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(new DocumenterTests.TableCustomizer()), version, "ForeignKeyCompositeSetForeignKeyTo");
@@ -68,7 +68,7 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void GeneratorTabularRelation(SqlVersion version)
+        public void GeneratorTabularRelation(SqlEngineVersion version)
         {
             var db = new TabularRelation();
 
@@ -77,7 +77,7 @@
         }
     }
 
-    public class TabularRelation : DatabaseDeclaration
+    public class TabularRelation : TestDatabaseDeclaration
     {
         public SqlTable KeyTable { get; } = AddTable(table =>
         {

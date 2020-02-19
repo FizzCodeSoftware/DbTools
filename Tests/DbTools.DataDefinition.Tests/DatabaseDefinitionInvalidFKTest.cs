@@ -1,9 +1,10 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Tests
 {
     using FizzCode.DbTools.DataDefinition.Generic1;
+    using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    public class TestDatabaseInvalidFK : DatabaseDeclaration
+    public class TestDatabaseInvalidFK : TestDatabaseDeclaration
     {
         public SqlTable Primary { get; } = AddTable(table =>
           {

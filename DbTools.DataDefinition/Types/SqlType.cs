@@ -9,7 +9,7 @@
         public int? Length { get; set; }
         public int? Scale { get; set; }
 
-        public SqlType Create(SqlTypeInfo sqlTypeInfo)
+        public SqlType Clone(SqlTypeInfo sqlTypeInfo)
         {
             var sqlType = new SqlType
             {

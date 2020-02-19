@@ -5,10 +5,9 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
+    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.SqlExecuter;
     using FizzCode.DbTools.DataDefinitionDocumenter;
-    using FizzCode.DbTools.DataDefinitionExecuter;
-    using FizzCode.DbTools.DataDefinitionGenerator;
-    using FizzCode.DbTools.DataDefinitionReader;
     using Microsoft.Extensions.Configuration;
 
     [ApplicationMetadata(Name = ">")]
@@ -32,9 +31,13 @@
             [Option(LongName = "flags", ShortName = "f")]
             List<DocumenterFlag> flags)
         {
-            var version = SqlVersions.GetVersion(sqlType);
+            var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), connectionString, version.VersionString);
+            var connectionStringWithProvider = new ConnectionStringWithProvider(
+                version.GetType().Name,
+                version.ProviderName,
+                connectionString,
+                version.VersionString);
 
             var context = CreateContext(version);
 
@@ -67,9 +70,13 @@
             [Option(LongName = "patternFileName", ShortName = "p")]
             string patternFileName)
         {
-            var version = SqlVersions.GetVersion(sqlType);
+            var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), connectionString, version.VersionString);
+            var connectionStringWithProvider = new ConnectionStringWithProvider(
+                version.GetType().Name,
+                version.ProviderName,
+                connectionString,
+                version.VersionString);
 
             var context = CreateContext(version);
 
@@ -79,7 +86,8 @@
 
             var documenterContext = CreateDocumenterContext(context, patternFileName);
 
-            var generator = new CsGenerator(documenterContext, version, newDatabaseName, @namespace);
+            var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
+            var generator = new CSharpGenerator(documenterContext, writer, version, newDatabaseName, @namespace);
 
             generator.GenerateMultiFile(dd);
         }
@@ -95,9 +103,13 @@
             [Option(LongName = "patternFileName", ShortName = "p")]
             string patternFileName)
         {
-            var version = SqlVersions.GetVersion(sqlType);
+            var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), connectionString, version.VersionString);
+            var connectionStringWithProvider = new ConnectionStringWithProvider(
+                version.GetType().Name,
+                version.ProviderName,
+                connectionString,
+                version.VersionString);
 
             var context = CreateContext(version);
 
@@ -129,7 +141,7 @@
             return logger;
         }
 
-        private static Context CreateContext(SqlVersion version)
+        private static Context CreateContext(SqlEngineVersion version)
         {
             var context = new Context
             {
@@ -169,9 +181,9 @@
             string sqlType
             )
         {
-            var version = SqlVersions.GetVersion(sqlType);
+            var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider("", SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), connectionString, version.VersionString);
+            var connectionStringWithProvider = new ConnectionStringWithProvider("", version.ProviderName, connectionString, version.VersionString);
 
             var context = CreateContext(version);
 

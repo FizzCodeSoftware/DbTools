@@ -12,7 +12,7 @@
     [TestClass]
     public class DatabaseMigratorTests
     {
-        public Context GetContext(SqlVersion version)
+        public Context GetContext(SqlEngineVersion version)
         {
             var context = new Context
             {
@@ -25,13 +25,13 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void AddTableTest(SqlVersion version)
+        public void AddTableTest(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(version);
+            ddOriginal.SetVersions(version.GetTypeMapper());
 
             var dd = new TestDatabaseSimple();
-            dd.SetVersions(version);
+            dd.SetVersions(version.GetTypeMapper());
             AddTable(dd);
 
             var comparer = new Comparer(GetContext(version));
@@ -58,19 +58,19 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void RemoveTableTest(SqlVersion version)
+        public void RemoveTableTest(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(version, null);
+            ddOriginal.SetVersions(version.GetTypeMapper());
             AddTable(ddOriginal);
 
             var dd = new TestDatabaseSimple();
-            dd.SetVersions(version, null);
+            dd.SetVersions(version.GetTypeMapper());
 
             var comparer = new Comparer(GetContext(version));
 
             var ddOrigin = new TestDatabaseSimple();
-            ddOrigin.SetVersions(version, null);
+            ddOrigin.SetVersions(version.GetTypeMapper());
 
             var changes = comparer.Compare(ddOriginal, ddOrigin);
 
@@ -80,13 +80,13 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void RemoveColumnTest(SqlVersion version)
+        public void RemoveColumnTest(SqlEngineVersion version)
         {
             var originalDd = new TestDatabaseSimple();
-            originalDd.SetVersions(version);
+            originalDd.SetVersions(version.GetTypeMapper());
 
             var dd = new TestDatabaseSimple();
-            dd.SetVersions(version);
+            dd.SetVersions(version.GetTypeMapper());
 
             dd.GetTable("Company").Columns.Remove("Name");
 
@@ -99,13 +99,13 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void AddColumnTest(SqlVersion version)
+        public void AddColumnTest(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(version);
+            ddOriginal.SetVersions(version.GetTypeMapper());
 
             var dd = new TestDatabaseSimple();
-            dd.SetVersions(version);
+            dd.SetVersions(version.GetTypeMapper());
 
             dd.GetTable("Company").AddVarChar("Name2", 100);
 
@@ -118,13 +118,13 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void Add2ColumnTest(SqlVersion version)
+        public void Add2ColumnTest(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(version);
+            ddOriginal.SetVersions(version.GetTypeMapper());
 
             var dd = new TestDatabaseSimple();
-            dd.SetVersions(version);
+            dd.SetVersions(version.GetTypeMapper());
 
             dd.GetTable("Company").AddVarChar("Name2", 100);
             dd.GetTable("Company").AddVarChar("Name3", 100, true);
@@ -141,15 +141,15 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void ChangeColumnLengthTest(SqlVersion version)
+        public void ChangeColumnLengthTest(SqlEngineVersion version)
         {
             TestHelper.CheckFeature(version, "ColumnLength");
 
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(version);
+            ddOriginal.SetVersions(version.GetTypeMapper());
 
             var dd = new TestDatabaseSimple();
-            dd.SetVersions(version);
+            dd.SetVersions(version.GetTypeMapper());
 
             dd.GetTable("Company")["Name"].Type.Length += 1;
 
@@ -165,14 +165,14 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void Remove2ColumnsTest(SqlVersion version)
+        public void Remove2ColumnsTest(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(version, null);
+            ddOriginal.SetVersions(version.GetTypeMapper());
             ddOriginal.GetTable("Company").AddNVarChar("Name2", 100);
 
             var dd = new TestDatabaseSimple();
-            dd.SetVersions(version, null);
+            dd.SetVersions(version.GetTypeMapper());
 
             dd.GetTable("Company").Columns.Remove("Name");
             dd.GetTable("Company").Columns.Remove("Name2");

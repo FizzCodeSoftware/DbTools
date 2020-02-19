@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PackageId>FizzCode.DbTools.DataDefinition.Factory</PackageId>
+    <Authors>FizzCode Ltd.</Authors>
+    <Product>FizzCode DbTools</Product>
+    <Description>DataDefinitionExecuter factory for Fizzcode DbTools project</Description>
+    <Copyright>Copyright © 2019 FizzCode Ltd.</Copyright>
+    <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
+    <Platforms>AnyCPU</Platforms>
+    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
+    <AssemblyName>FizzCode.DbTools.DataDefinition.Factory</AssemblyName>
+    <RootNamespace>FizzCode.DbTools.DataDefinition</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>CS1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Roslynator.Formatting.Analyzers" Version="1.0.0-rc">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DbTools.Configuration\DbTools.Configuration.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.MsSql\DbTools.DataDefinition.MsSql.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.Oracle\DbTools.DataDefinition.Oracle.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.SqlGenerator\DbTools.DataDefinition.SqlGenerator.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.SqLite\DbTools.DataDefinition.SqLite.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinitionDocumenter\DbTools.DataDefinitionDocumenter.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.SqlExecuter\DbTools.DataDefinition.SqlExecuter.csproj" />
+  </ItemGroup>
+
+</Project>

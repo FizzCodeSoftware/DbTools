@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
     <ProjectReference Include="..\..\DbTools.DataGenerator\DbTools.DataGenerator.csproj" />
+    <ProjectReference Include="..\..\DbTools.TestBase\DbTools.TestBase.csproj" />
   </ItemGroup>
 
 </Project>

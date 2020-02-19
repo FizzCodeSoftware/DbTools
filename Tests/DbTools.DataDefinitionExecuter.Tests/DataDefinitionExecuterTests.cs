@@ -1,4 +1,4 @@
-﻿namespace FizzCode.DbTools.DataDefinitionExecuter.Tests
+﻿namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
 {
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

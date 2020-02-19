@@ -10,10 +10,10 @@
     {
         protected static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new SqlExecuterTestAdapter();
 
-        protected static void Init(SqlVersion version, DatabaseDefinition dd)
+        protected static void Init(SqlEngineVersion version, DatabaseDefinition dd)
         {
             _sqlExecuterTestAdapter.Check(version);
-            _sqlExecuterTestAdapter.Initialize(version.ToString(), dd);
+            _sqlExecuterTestAdapter.Initialize(version.UniqueName, dd);
             TestHelper.CheckFeature(version, "ReadDdl");
 
             _sqlExecuterTestAdapter.GetContext(version).Settings.Options.ShouldUseDefaultSchema = true;

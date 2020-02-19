@@ -1,8 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Tests
 {
     using FizzCode.DbTools.DataDefinition.Generic1;
+    using FizzCode.DbTools.TestBase;
 
-    public class TestDatabaseSelfFK : DatabaseDeclaration
+    public class TestDatabaseSelfFK : TestDatabaseDeclaration
     {
         public SqlTable Company { get; } = AddTable(table =>
           {

@@ -12,12 +12,12 @@
         private readonly GeneratorContext Context;
 
         // TODO
-        private readonly SqlVersion Version;
+        private readonly SqlEngineVersion Version;
 
         public Generator(GeneratorContext context)
         {
             Context = context;
-            Version = SqlVersions.Generic1;
+            Version = GenericVersion.Generic1;
         }
 
         // Get a SqlTable

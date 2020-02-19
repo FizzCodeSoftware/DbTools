@@ -6,52 +6,31 @@
 
     public class DatabaseDefinition
     {
-        public Dictionary<SqlVersion, TypeMapper> TypeMappers { get; set; } = new Dictionary<SqlVersion, TypeMapper>();
-
-        public DatabaseDefinition()
-            : this(null, Configuration.SqlVersions.MsSql2016, Configuration.SqlVersions.Oracle12c, Configuration.SqlVersions.SqLite3)
-        {
-        }
-
-        public List<SqlVersion> SqlVersions { get; } = new List<SqlVersion>();
-
-        public SqlVersion MainVersion { get; protected set; }
-
-        public DatabaseDefinition(SqlVersion mainVersion)
-        {
-            MainVersion = mainVersion;
-        }
-
-        public DatabaseDefinition(SqlVersion mainVersion, params SqlVersion[] versions)
-        {
-            SetVersions(mainVersion, versions);
-        }
-
-        public void SetVersions(SqlVersion mainVersion, params SqlVersion[] versions)
-        {
-            MainVersion = mainVersion;
-            if (versions == null)
-            {
-                SqlVersions.Clear();
-            }
-            else
-            {
-                SqlVersions.AddRange(versions);
-            }
-
-            if (MainVersion != null && !SqlVersions.Contains(MainVersion))
-                SqlVersions.Add(MainVersion);
-
-            TypeMappers.Clear();
-
-            foreach (var version in SqlVersions)
-            {
-                if (!TypeMappers.ContainsKey(version))
-                    TypeMappers.Add(version, TypeMapperFactory.GetTypeMapper(version));
-            }
-        }
-
+        public Dictionary<SqlEngineVersion, AbstractTypeMapper> TypeMappers { get; set; } = new Dictionary<SqlEngineVersion, AbstractTypeMapper>();
+        public SqlEngineVersion MainVersion { get; private set; }
         internal Tables Tables { get; } = new Tables();
+
+        public DatabaseDefinition(AbstractTypeMapper mainTypeMapper, AbstractTypeMapper[] secondaryTypeMappers = null)
+        {
+            SetVersions(mainTypeMapper, secondaryTypeMappers);
+        }
+
+        public void SetVersions(AbstractTypeMapper mainTypeMapper, AbstractTypeMapper[] secondaryTypeMappers = null)
+        {
+            TypeMappers.Clear();
+            MainVersion = mainTypeMapper?.SqlVersion;
+
+            if (mainTypeMapper != null && (secondaryTypeMappers?.Contains(mainTypeMapper) != true))
+                TypeMappers.Add(mainTypeMapper.SqlVersion, mainTypeMapper);
+
+            if (secondaryTypeMappers != null)
+            {
+                foreach (var mapper in secondaryTypeMappers)
+                {
+                    TypeMappers.Add(mapper.SqlVersion, mapper);
+                }
+            }
+        }
 
         public void AddTable(SqlTable sqlTable)
         {

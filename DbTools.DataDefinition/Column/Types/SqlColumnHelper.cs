@@ -4,7 +4,7 @@
 
     public static class SqlColumnHelper
     {
-        public static SqlColumn Add(SqlVersion version, SqlTable table, string name, SqlType sqlType)
+        public static SqlColumn Add(SqlEngineVersion version, SqlTable table, string name, SqlType sqlType)
         {
             SqlColumn column;
             if (table.Columns.ContainsKey(name))
@@ -36,14 +36,14 @@
             if (column is SqlColumnFKRegistration)
                 return;
 
-            if (!column.Types.ContainsKey(SqlVersions.Generic1))
+            if (!column.Types.ContainsKey(GenericVersion.Generic1))
                 return;
 
             foreach (var typeMapper in column.Table.DatabaseDefinition.TypeMappers.Values)
             {
                 if (!column.Types.ContainsKey(typeMapper.SqlVersion))
                 {
-                    var othertype = typeMapper.MapFromGeneric1(column.Types[SqlVersions.Generic1]);
+                    var othertype = typeMapper.MapFromGeneric1(column.Types[GenericVersion.Generic1]);
                     column.Types.Add(typeMapper.SqlVersion, othertype);
                 }
             }
