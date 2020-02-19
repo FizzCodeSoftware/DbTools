@@ -26,10 +26,24 @@
 
         public static SqlTable AddIndexWithName(this SqlTable table, bool unique = false, string indexName = null, params string[] columnNames)
         {
-            var index = new Index(table, null, unique);
+            var index = new Index(table, indexName, unique);
 
             foreach (var columnName in columnNames)
                 index.SqlColumns.Add(new ColumnAndOrder(table.Columns[columnName], AscDesc.Asc));
+
+            table.Properties.Add(index);
+            return table;
+        }
+
+        public static SqlTable AddIndexWithName(this SqlTable table, bool unique, string indexName, string[] columnNames, string[] includeColumns)
+        {
+            var index = new Index(table, indexName, unique);
+
+            foreach (var columnName in columnNames)
+                index.SqlColumns.Add(new ColumnAndOrder(table.Columns[columnName], AscDesc.Asc));
+
+            foreach (var columnName in includeColumns)
+                index.Includes.Add(table[columnName]);
 
             table.Properties.Add(index);
             return table;
