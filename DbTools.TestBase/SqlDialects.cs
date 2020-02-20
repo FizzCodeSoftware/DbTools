@@ -53,19 +53,21 @@
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
     public sealed class SqlVersionsAttribute : SqlVersionsBasAttribute
     {
-        public SqlVersionsAttribute(params Type[] versionTypes)
+        public SqlVersionsAttribute(params string[] versionTypeNames)
         {
             Versions = new List<SqlEngineVersion>();
-            foreach (var versionType in versionTypes)
+            var allversions = SqlEngineVersions.AllVersions;
+            foreach (var versionTypeName in versionTypeNames)
             {
-                var version = (SqlEngineVersion)Activator.CreateInstance(versionType);
-
-                if (TestHelper.ShouldRunIntegrationTest(version))
+                var version = allversions.Find(v => v.UniqueName == versionTypeName);
+                if (version != null && TestHelper.ShouldRunIntegrationTest(version))
+                {
                     Versions.Add(version);
-
-                if(Versions.Count == 0)
-                    Versions.Add(SqLiteVersion.SqLite3);
+                }
             }
+
+            if (Versions.Count == 0)
+                Versions.Add(SqLiteVersion.SqLite3);
         }
     }
 }

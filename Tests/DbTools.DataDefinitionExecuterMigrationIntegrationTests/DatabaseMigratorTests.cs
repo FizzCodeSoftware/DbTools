@@ -297,7 +297,7 @@
         }
 
         [TestMethod]
-        [LatestSqlVersions]
+        [SqlVersions(nameof(MsSql2016), nameof(Oracle12c))]
         public void ChangeColumnDbTypeTest(SqlEngineVersion version)
         {
             var dd = new TestDatabaseSimple();
@@ -309,15 +309,28 @@
                 , _sqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
             var ddInDatabase = ddlReader.GetDatabaseDefinition();
 
-            dd.GetTable("Company")["Name"].Type.SqlTypeInfo = MsSqlType2016.NChar;
+            if (version == MsSqlVersion.MsSql2016)
+                dd.GetTable("Company")["Name"].Type.SqlTypeInfo = MsSqlType2016.NChar;
+            else if (version == OracleVersion.Oracle12c)
+                dd.GetTable("Company")["Name"].Type.SqlTypeInfo = OracleType12c.NChar;
 
             var comparer = new Comparer(_sqlExecuterTestAdapter.GetContext(version));
             var changes = comparer.Compare(ddInDatabase, dd);
 
             var first = changes[0] as ColumnChange;
-            Assert.IsTrue(ddInDatabase.GetTable("Company")["Name"].Type.SqlTypeInfo is DataDefinition.MsSql2016.SqlNVarChar);
-            Assert.IsTrue(first.SqlColumn.Type.SqlTypeInfo is DataDefinition.MsSql2016.SqlNVarChar);
-            Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is DataDefinition.MsSql2016.SqlNChar);
+
+            if (version == MsSqlVersion.MsSql2016)
+            {
+                Assert.IsTrue(ddInDatabase.GetTable("Company")["Name"].Type.SqlTypeInfo is MsSql2016.SqlNVarChar);
+                Assert.IsTrue(first.SqlColumn.Type.SqlTypeInfo is MsSql2016.SqlNVarChar);
+                Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is MsSql2016.SqlNChar);
+            }
+            else if (version == OracleVersion.Oracle12c)
+            {
+                Assert.IsTrue(ddInDatabase.GetTable("Company")["Name"].Type.SqlTypeInfo is Oracle12c.SqlNVarChar2);
+                Assert.IsTrue(first.SqlColumn.Type.SqlTypeInfo is Oracle12c.SqlNVarChar2);
+                Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is Oracle12c.SqlNChar);
+            }
 
             var databaseMigrator = new DatabaseMigrator(_sqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, _sqlExecuterTestAdapter.GetContext(version)));
 
@@ -325,10 +338,12 @@
         }
 
         [TestMethod]
-        [LatestSqlVersions]
+        //[SqlVersions(nameof(MsSql2016), nameof(Oracle12c))]
+        [SqlVersions(nameof(Oracle12c))]
         public void ChangeColumnMultipleTest(SqlEngineVersion version)
         {
             var dd = new TestDatabaseSimple();
+            // dd.DefaultSchema = _sqlExecuterTestAdapter.GetContext(version).Settings.SqlVersionSpecificSettings["OracleDatabaseName"];
             dd.SetVersions(version.GetTypeMapper());
             Init(version, dd);
 
@@ -337,7 +352,11 @@
                 , _sqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
             var ddInDatabase = ddlReader.GetDatabaseDefinition();
 
-            dd.GetTable("Company")["Name"].Type.SqlTypeInfo = MsSqlType2016.NChar;
+            if (version == MsSqlVersion.MsSql2016)
+                dd.GetTable("Company")["Name"].Type.SqlTypeInfo = MsSqlType2016.NChar;
+            else if (version == OracleVersion.Oracle12c)
+                dd.GetTable("Company")["Name"].Type.SqlTypeInfo = OracleType12c.NChar;
+
             dd.GetTable("Company")["Name"].Type.Length += 1;
             dd.GetTable("Company")["Name"].Type.IsNullable = !dd.GetTable("Company")["Name"].Type.IsNullable;
 
@@ -345,9 +364,20 @@
             var changes = comparer.Compare(ddInDatabase, dd);
 
             var first = changes[0] as ColumnChange;
-            Assert.IsTrue(ddInDatabase.GetTable("Company")["Name"].Type.SqlTypeInfo is DataDefinition.MsSql2016.SqlNVarChar);
-            Assert.IsTrue(first.SqlColumn.Type.SqlTypeInfo is DataDefinition.MsSql2016.SqlNVarChar);
-            Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is DataDefinition.MsSql2016.SqlNChar);
+
+            if (version == MsSqlVersion.MsSql2016)
+            {
+                Assert.IsTrue(ddInDatabase.GetTable("Company")["Name"].Type.SqlTypeInfo is MsSql2016.SqlNVarChar);
+                Assert.IsTrue(first.SqlColumn.Type.SqlTypeInfo is MsSql2016.SqlNVarChar);
+                Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is MsSql2016.SqlNChar);
+            }
+            else if (version == OracleVersion.Oracle12c)
+            {
+                Assert.IsTrue(ddInDatabase.GetTable("Company")["Name"].Type.SqlTypeInfo is Oracle12c.SqlNVarChar2);
+                Assert.IsTrue(first.SqlColumn.Type.SqlTypeInfo is Oracle12c.SqlNVarChar2);
+                Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is Oracle12c.SqlNChar);
+            }
+
             Assert.AreEqual(100, ddInDatabase.GetTable("Company")["Name"].Type.Length);
             Assert.AreEqual(100, first.SqlColumn.Type.Length);
             Assert.AreEqual(101, first.NewNameAndType.Type.Length);

@@ -1,9 +1,11 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Oracle12c
 {
     using System;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition.Migration;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
 
@@ -76,6 +78,99 @@
                 sb.Append("DROP COLUMN ");
                 sb.Append(columnsToDelete[0]);
             }
+
+            return sb.ToString();
+        }
+
+        public override SqlStatementWithParameters ChangeColumns(params ColumnChange[] columnChanges)
+        {
+            var tableName = CheckSameTable(columnChanges);
+
+            if (columnChanges.Length == 1)
+            {
+                return $@"
+ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}
+MODIFY {GenerateColumnChange(columnChanges[0].SqlColumn, columnChanges[0].NewNameAndType)}";
+            }
+
+            var sbStatements = new StringBuilder();
+            // TODO Options ShouldMigrateColumnChangesAllAtOnce
+            // TODO multiple -> temp table
+            // TODO drop constraints then re add them
+            foreach (var columnChange in columnChanges)
+            {
+                sbStatements.AppendLine(ChangeColumns(columnChange).Statement);
+            }
+
+            return new SqlStatementWithParameters(sbStatements.ToString());
+        }
+
+        public string GenerateColumnChange(SqlColumn columnOriginal, SqlColumn columnNew)
+        {
+            var typeOld = columnOriginal.Types[OracleVersion.Oracle12c];
+            var typeNew = columnNew.Types[OracleVersion.Oracle12c];
+
+            var sb = new StringBuilder();
+            sb.Append(Generator.GuardKeywords(columnOriginal.Name));
+
+            if ((typeOld.SqlTypeInfo.HasLength && typeOld.Length != typeNew.Length)
+                || (typeOld.SqlTypeInfo.HasScale && typeOld.Scale != typeNew.Scale))
+            {
+                sb.Append(" ")
+                .Append(typeNew.SqlTypeInfo.SqlDataType);
+
+                if (typeNew.Scale.HasValue)
+                {
+                    if (typeNew.Length != null)
+                    {
+                        sb.Append("(")
+                            .Append(typeNew.Length?.ToString("D", CultureInfo.InvariantCulture))
+                            .Append(", ")
+                            .Append(typeNew.Scale?.ToString("D", CultureInfo.InvariantCulture))
+                            .Append(")");
+                    }
+                    else
+                    {
+                        sb.Append("(")
+                            .Append(typeNew.Scale?.ToString("D", CultureInfo.InvariantCulture))
+                            .Append(")");
+                    }
+                }
+                else if (typeNew.Length.HasValue)
+                {
+                    sb.Append("(")
+                        .Append(typeNew.Length?.ToString("D", CultureInfo.InvariantCulture))
+                        .Append(")");
+                }
+            }
+
+            // TODO not possible to remove identity in Oracle and MS SQL
+            /*var identityOld = columnNew.Properties.OfType<Identity>().FirstOrDefault();
+            var identityNew = columnNew.Properties.OfType<Identity>().FirstOrDefault();
+
+            if (identityNew != identityOld && identityNew != null)
+            {
+                GenerateCreateColumnIdentity(sb, identityNew);
+            }*/
+
+            var defaultValueOld = columnOriginal.Properties.OfType<DefaultValue>().FirstOrDefault();
+            var defaultValueNew = columnNew.Properties.OfType<DefaultValue>().FirstOrDefault();
+            if (defaultValueOld != defaultValueNew)
+            {
+                sb.Append(" DEFAULT(")
+                    .Append(defaultValueNew.Value)
+                    .Append(")");
+            }
+
+            if (typeOld.IsNullable != typeNew.IsNullable)
+            {
+                if (typeNew.IsNullable)
+                    sb.Append(" NULL");
+                else
+                    sb.Append(" NOT NULL");
+            }
+
+            sb.Append(";");
 
             return sb.ToString();
         }

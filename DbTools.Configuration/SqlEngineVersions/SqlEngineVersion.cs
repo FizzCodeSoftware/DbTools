@@ -19,20 +19,20 @@
 
         public override int GetHashCode()
         {
-            return GetType().GetHashCode();
+            return UniqueName.GetHashCode(System.StringComparison.InvariantCultureIgnoreCase);
         }
 
         public override bool Equals(object obj)
         {
-            if (obj == null)
+            if (!(obj is SqlEngineVersion s))
                 return false;
 
-            return obj.GetType() == GetType();
+            return s.UniqueName == UniqueName;
         }
 
         public override string ToString()
         {
-            return GetType().Name;
+            return UniqueName;
         }
     }
 }

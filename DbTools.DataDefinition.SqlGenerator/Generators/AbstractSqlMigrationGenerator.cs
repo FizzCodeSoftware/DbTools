@@ -69,7 +69,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
             return sb.ToString();
         }
 
-        private static SchemaAndTableName CheckSameTable(ColumnMigration[] columnNews)
+        protected SchemaAndTableName CheckSameTable(ColumnMigration[] columnNews)
         {
             var tableNames = columnNews.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
 
@@ -79,7 +79,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
             return tableNames.First();
         }
 
-        public SqlStatementWithParameters ChangeColumns(params ColumnChange[] columnChanges)
+        public virtual SqlStatementWithParameters ChangeColumns(params ColumnChange[] columnChanges)
         {
             var tableName = CheckSameTable(columnChanges);
 
@@ -91,7 +91,7 @@ ALTER COLUMN {Generator.GenerateCreateColumn(columnChanges[0].NewNameAndType)}";
             }
 
             var sbStatements = new StringBuilder();
-            // TODO Oprions ShouldMigrateColumnChangesAllAtOnce
+            // TODO Options ShouldMigrateColumnChangesAllAtOnce
             // TODO multiple -> temp table
             // TODO drop constraints then re add them
             foreach (var columnChange in columnChanges)

@@ -42,12 +42,12 @@ AND EXISTS (SELECT 1 FROM dba_objects o
 WHERE o.owner = u.username ) AND default_tablespace not in
 ('SYSTEM','SYSAUX') and ACCOUNT_STATUS = 'OPEN'";
 
-            if (SchemaNames != null)
-            {
-                var schemaNames = SchemaNames;
-                if (Executer.Generator.Context.Settings.Options.ShouldUseDefaultSchema)
-                    schemaNames.Add(Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
+            var schemaNames = SchemaNames;
+            if (Executer.Generator.Context.Settings.Options.ShouldUseDefaultSchema)
+                schemaNames.Add(Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
 
+            if (schemaNames != null)
+            {
                 sqlStatement += $" AND t.owner IN({string.Join(',', schemaNames.Select(s => "'" + s + "'").ToList())})";
             }
 
