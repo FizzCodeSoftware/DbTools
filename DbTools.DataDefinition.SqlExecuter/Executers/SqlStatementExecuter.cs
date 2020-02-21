@@ -2,6 +2,7 @@
 {
     using System;
     using System.Data.Common;
+    using System.Diagnostics;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
@@ -83,7 +84,8 @@
         {
             var connection = OpenConnection();
 
-            Log(LogSeverity.Verbose, "Executing non query {Query}.", sqlStatementWithParameters.Statement);
+            //Log(LogSeverity.Verbose, "Executing non query {Query}.", sqlStatementWithParameters.Statement);
+            var logTimer = LogTimer("Executing non query {Query}.", sqlStatementWithParameters.Statement);
 
             var command = PrepareSqlCommand(sqlStatementWithParameters);
             command.Connection = connection;
@@ -108,7 +110,8 @@
         {
             var connection = OpenConnection();
 
-            Log(LogSeverity.Verbose, "Executing query {Query}.", sqlStatementWithParameters.Statement);
+            //Log(LogSeverity.Verbose, "Executing query {Query}.", sqlStatementWithParameters.Statement);
+            var logTimer = LogTimer("Executing query {Query}.", sqlStatementWithParameters.Statement);
 
             var command = PrepareSqlCommand(sqlStatementWithParameters);
             command.Connection = connection;
@@ -131,8 +134,11 @@
                         rowSet.Rows.Add(row);
                     }
 
+                    logTimer.Done();
                     Log(LogSeverity.Verbose, "{rowCount} rows returned", rowCount);
                 }
+
+                logTimer.Done();
 
                 return rowSet;
             }
@@ -154,7 +160,8 @@
 
             var connection = OpenConnection();
 
-            Log(LogSeverity.Verbose, "Executing scalar {Query}.", sqlStatementWithParameters.Statement);
+            // Log(LogSeverity.Verbose, "Executing scalar {Query}.", sqlStatementWithParameters.Statement);
+            var logTimer = LogTimer("Executing scalar {Query}.", sqlStatementWithParameters.Statement);
 
             var command = PrepareSqlCommand(sqlStatementWithParameters);
             command.Connection = connection;
@@ -174,6 +181,8 @@
                 connection.Dispose();
             }
 
+            logTimer.Done();
+
             return result;
         }
 
@@ -181,6 +190,54 @@
         {
             var module = "Executer/" + Generator.Version.UniqueName;
             Logger.Log(severity, text, module, args);
+        }
+
+        protected LogTimer LogTimer(LogSeverity severity, string text, params object[] args)
+        {
+            var module = "Executer/" + Generator.Version.UniqueName;
+            var logTimer = new LogTimer(Logger, severity, text, module, args);
+            return logTimer;
+        }
+
+        protected LogTimer LogTimer(string text, params object[] args)
+        {
+            return LogTimer(LogSeverity.Verbose, text, args);
+        }
+    }
+
+    public class LogTimer
+    {
+        private readonly Stopwatch _sw;
+        private readonly LogSeverity _severity;
+        private readonly string _text;
+        private readonly string _module;
+        private readonly object[] _args;
+
+        public LogTimer(Logger logger, LogSeverity severity, string text, string module, params object[] args)
+        {
+            _logger = logger;
+            _severity = severity;
+            _text = text;
+            _module = module;
+            _args = args;
+
+            _sw = new Stopwatch();
+            _sw.Start();
+
+        }
+
+        public LogTimer(Logger logger, string text, string module, params object[] args)
+            : this(logger, LogSeverity.Verbose, text, module, args)
+        {
+        }
+
+        private readonly Logger _logger;
+
+        public void Done()
+        {
+            var _timerText = "Took {ms}: " + _text;
+            _sw.Stop();
+            _logger.Log(_severity, _timerText, _module, _sw.ElapsedMilliseconds, _args);
         }
     }
 }

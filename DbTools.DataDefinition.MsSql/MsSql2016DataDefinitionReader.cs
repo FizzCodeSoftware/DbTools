@@ -12,7 +12,7 @@
 
     public class MsSql2016DataDefinitionReader : GenericDataDefinitionReader
     {
-        public MsSql2016DataDefinitionReader(ConnectionStringWithProvider connectionStringWithProvider, Context context, List<string> schemaNames = null)
+        public MsSql2016DataDefinitionReader(ConnectionStringWithProvider connectionStringWithProvider, Context context, SchemaNamesToRead schemaNames)
             : base(new MsSql2016Executer(connectionStringWithProvider, new MsSql2016Generator(context)), schemaNames)
         {
         }
@@ -65,9 +65,9 @@ WHERE type = 'U'";
 
             if (fullDefinition)
             {
-                new MsSqlIndexReader2016(Executer).
+                new MsSqlIndexReader2016(Executer, SchemaNames).
                 GetPrimaryKey(sqlTable);
-                new MsSqlForeignKeyReader2016(Executer).GetForeignKeys(sqlTable);
+                new MsSqlForeignKeyReader2016(Executer, SchemaNames).GetForeignKeys(sqlTable);
                 AddTableDocumentation(sqlTable);
             }
 

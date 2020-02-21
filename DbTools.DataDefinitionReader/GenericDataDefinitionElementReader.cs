@@ -7,32 +7,31 @@
 
     public abstract class GenericDataDefinitionElementReader
     {
-        protected GenericDataDefinitionElementReader(SqlStatementExecuter executer, List<string> schemaNames = null)
+        protected GenericDataDefinitionElementReader(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
         {
             Executer = executer;
-            if (schemaNames != null)
-                SchemaNames = schemaNames;
+            SchemaNames = schemaNames;
         }
 
-        protected List<string> SchemaNames { get; } = new List<string>();
+        protected SchemaNamesToRead SchemaNames { get; }
 
-        protected SqlStatementExecuter Executer { get; set; }
+        protected SqlStatementExecuter Executer { get; }
 
         protected Logger Logger => Executer.Generator.Context.Logger;
 
-        protected void AddSchemaNamesFilter(ref string sqlStatement, string schemaColumnName)
+        protected virtual void AddSchemaNamesFilter(ref string sqlStatement, string schemaColumnName)
         {
-            var schemaNames = SchemaNames;
-            if (Executer.Generator.Context.Settings.Options.ShouldUseDefaultSchema
-                && !SchemaNames.Contains(Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema")))
+            var schemaNames = new List<string>();
+            if (SchemaNames == null || SchemaNames.AllDefault)
             {
-                schemaNames.Add(Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
+                if (Executer.Generator.Context.Settings.Options.ShouldUseDefaultSchema)
+                    schemaNames.Add(Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
             }
+            else if (!SchemaNames.All && SchemaNames.SchemaNames != null)
+                schemaNames = SchemaNames.SchemaNames;
 
-            if (schemaNames != null)
-            {
+            if (schemaNames.Count > 0)
                 sqlStatement += $" AND {schemaColumnName} IN({string.Join(',', schemaNames.Select(s => "'" + s + "'").ToList())})";
-            }
         }
     }
 }

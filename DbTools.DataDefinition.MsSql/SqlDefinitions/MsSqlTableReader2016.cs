@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
-    using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
@@ -14,7 +13,7 @@
 
         protected MsSql2016TypeMapper TypeMapper { get; } = new MsSql2016TypeMapper();
 
-        public MsSqlTableReader2016(SqlStatementExecuter executer, List<string> schemaNames = null)
+        public MsSqlTableReader2016(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
         }

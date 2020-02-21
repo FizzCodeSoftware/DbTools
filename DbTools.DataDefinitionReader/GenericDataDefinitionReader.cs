@@ -8,7 +8,7 @@
 
     public abstract class GenericDataDefinitionReader : GenericDataDefinitionElementReader, IDataDefinitionReader
     {
-        protected GenericDataDefinitionReader(SqlStatementExecuter executer, List<string> schemaNames = null)
+        protected GenericDataDefinitionReader(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
         }

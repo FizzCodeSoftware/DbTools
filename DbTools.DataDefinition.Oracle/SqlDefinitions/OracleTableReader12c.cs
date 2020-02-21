@@ -7,13 +7,49 @@
     using FizzCode.DbTools.DataDefinition.Oracle12c;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
-    public class OracleTableReader12c : GenericDataDefinitionElementReader
+    public class OracleDataDefinitionElementReader : GenericDataDefinitionElementReader
+    {
+        protected OracleDataDefinitionElementReader(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
+            : base(executer, schemaNames)
+        {
+        }
+
+        protected override void AddSchemaNamesFilter(ref string sqlStatement, string schemaColumnName)
+        {
+            var schemaNames = new List<string>();
+            if (SchemaNames == null || SchemaNames.AllDefault)
+            {
+                if (Executer.Generator.Context.Settings.Options.ShouldUseDefaultSchema)
+                    schemaNames.Add(Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
+            }
+            else
+            {
+                if (SchemaNames.AllNotSystem)
+                {
+                    sqlStatement += @"
+AND EXISTS (SELECT 1 FROM dba_objects o
+	WHERE o.owner = u.username ) AND u.default_tablespace not in
+	('SYSTEM','SYSAUX') and u.ACCOUNT_STATUS = 'OPEN'";
+                }
+
+                if (!SchemaNames.All && SchemaNames.SchemaNames != null)
+                {
+                    schemaNames = SchemaNames.SchemaNames;
+                }
+            }
+            
+            if (schemaNames.Count > 0)
+                sqlStatement += $" AND {schemaColumnName} IN({string.Join(',', schemaNames.Select(s => "'" + s + "'").ToList())})";
+        }
+    }
+
+    public class OracleTableReader12c : OracleDataDefinitionElementReader
     {
         private readonly ILookup<string, Row> _queryResult;
 
         protected Oracle12cTypeMapper TypeMapper { get; } = new Oracle12cTypeMapper();
 
-        public OracleTableReader12c(SqlStatementExecuter executer, List<string> schemaNames = null)
+        public OracleTableReader12c(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
             var sqlStatement = GetStatement();
@@ -64,15 +100,8 @@
 SELECT CONCAT(CONCAT(owner, '.'), table_name) SchemaAndTableName,
   column_id, column_name, data_type
   /*, char_length*/, char_col_decl_length, data_precision, data_scale, nullable
-  FROM all_tab_columns
- WHERE table_name IN (
-	SELECT t.table_name
-	FROM dba_tables t, dba_users u 
-	WHERE t.owner = u.username
-	AND EXISTS (SELECT 1 FROM dba_objects o
-	WHERE o.owner = u.username ) AND default_tablespace not in
-	('SYSTEM','SYSAUX') and ACCOUNT_STATUS = 'OPEN'
-    )";
+  FROM all_tab_columns, dba_users u
+ WHERE all_tab_columns.owner = u.username";
         }
     }
 }

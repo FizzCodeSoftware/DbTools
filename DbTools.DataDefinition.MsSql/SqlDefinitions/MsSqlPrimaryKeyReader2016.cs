@@ -16,7 +16,7 @@
                         .ThenBy(row => row.GetAs<int>("index_column_id"))
                         .ToList());
 
-        public MsSqlPrimaryKeyReader2016(SqlStatementExecuter executer, List<string> schemaNames = null)
+        public MsSqlPrimaryKeyReader2016(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
         }

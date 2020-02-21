@@ -12,7 +12,7 @@
         private ILookup<string, Row> _queryResult;
         private ILookup<string, Row> QueryResult => _queryResult ?? (_queryResult = Executer.ExecuteQuery(GetStatement()).Rows.ToLookup(x => x.GetAs<string>("SchemaAndTableName")));
 
-        public MsSqlColumnDocumentationReader2016(SqlStatementExecuter executer, List<string> schemaNames = null)
+        public MsSqlColumnDocumentationReader2016(SqlStatementExecuter executer, SchemaNamesToRead schemaNames = null)
             : base(executer, schemaNames)
         {
         }

@@ -6,11 +6,11 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
-    public class OraclePrimaryKeyReader12c : GenericDataDefinitionElementReader
+    public class OraclePrimaryKeyReader12c : OracleDataDefinitionElementReader
     {
         private readonly List<Row> _queryResult;
 
-        public OraclePrimaryKeyReader12c(SqlStatementExecuter executer, List<string> schemaNames = null)
+        public OraclePrimaryKeyReader12c(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
             var sqlStatement = GetKeySql();
@@ -59,10 +59,7 @@ FROM all_constraints cons, all_cons_columns cols, dba_users u
 WHERE cons.constraint_type = 'P'
 AND cons.owner = cols.owner
 AND cons.constraint_name = cols.constraint_name
-AND cons.owner = u.username
-AND EXISTS (SELECT 1 FROM dba_objects o
-	WHERE o.owner = u.username ) AND u.default_tablespace not in
-	('SYSTEM','SYSAUX') and u.ACCOUNT_STATUS = 'OPEN'";
+AND cons.owner = u.username";
         }
     }
 }

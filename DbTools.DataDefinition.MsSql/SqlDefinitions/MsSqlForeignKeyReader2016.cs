@@ -11,7 +11,7 @@
         private List<Row> _queryResult;
         private List<Row> QueryResult => _queryResult ?? (_queryResult = Executer.ExecuteQuery(GetStatement()).Rows);
 
-        public MsSqlForeignKeyReader2016(SqlStatementExecuter executer, List<string> schemaNames = null)
+        public MsSqlForeignKeyReader2016(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
         }

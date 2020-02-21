@@ -10,7 +10,7 @@
 
     public class Oracle12cDataDefinitionReader : GenericDataDefinitionReader
     {
-        public Oracle12cDataDefinitionReader(ConnectionStringWithProvider connectionStringWithProvider, Context context, List<string> schemaNames = null)
+        public Oracle12cDataDefinitionReader(ConnectionStringWithProvider connectionStringWithProvider, Context context, SchemaNamesToRead schemaNames)
             : base(new Oracle12cExecuter(connectionStringWithProvider, new Oracle12cGenerator(context)), schemaNames)
         {
         }
@@ -34,19 +34,7 @@
 
         public override List<SchemaAndTableName> GetSchemaAndTableNames()
         {
-            var sqlStatement = @"
-SELECT t.table_name tableName, t.owner schemaName
-FROM dba_tables t, dba_users u 
-WHERE t.owner = u.username
-AND EXISTS (SELECT 1 FROM dba_objects o
-WHERE o.owner = u.username ) AND default_tablespace not in
-('SYSTEM','SYSAUX') and ACCOUNT_STATUS = 'OPEN'";
-
-            AddSchemaNamesFilter(ref sqlStatement, "t.owner");
-
-            return Executer.ExecuteQuery(sqlStatement).Rows
-                .Select(row => new SchemaAndTableName(row.GetAs<string>("SCHEMANAME"), row.GetAs<string>("TABLENAME")))
-                .ToList();
+            return new OracleTablesReader(Executer, SchemaNames).GetSchemaAndTableNames();
         }
 
         private OracleTableReader12c _tableReader;
@@ -59,9 +47,9 @@ WHERE o.owner = u.username ) AND default_tablespace not in
 
             if (fullDefinition)
             {
-                new OraclePrimaryKeyReader12c(Executer).
+                new OraclePrimaryKeyReader12c(Executer, SchemaNames).
                 GetPrimaryKey(sqlTable);
-                new OracleForeignKeyReader12c(Executer).GetForeignKeys(sqlTable);
+                new OracleForeignKeyReader12c(Executer, SchemaNames).GetForeignKeys(sqlTable);
                 // TODO
                 //AddTableDocumentation(sqlTable);
             }

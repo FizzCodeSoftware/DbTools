@@ -6,11 +6,11 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
-    public class OracleForeignKeyReader12c : GenericDataDefinitionElementReader
+    public class OracleForeignKeyReader12c : OracleDataDefinitionElementReader
     {
         private readonly List<Row> _queryResult;
 
-        public OracleForeignKeyReader12c(SqlStatementExecuter executer, List<string> schemaNames = null)
+        public OracleForeignKeyReader12c(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
             var sqlStatement = GetStatement();
@@ -55,10 +55,7 @@ SELECT
 	
 	WHERE
 		cons.constraint_type = 'R'
-		AND cols.POSITION = refcols.POSITION
-	AND EXISTS (SELECT 1 FROM dba_objects o
-	WHERE o.owner = u.username ) AND u.default_tablespace not in
-	('SYSTEM','SYSAUX') and u.ACCOUNT_STATUS = 'OPEN'";
+		AND cols.POSITION = refcols.POSITION";
         }
 
         public void GetForeignKeys(SqlTable table)

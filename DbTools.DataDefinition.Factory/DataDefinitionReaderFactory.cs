@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System;
-    using System.Collections.Generic;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition.MsSql2016;
@@ -10,7 +9,7 @@
 
     public static class DataDefinitionReaderFactory
     {
-        public static IDataDefinitionReader CreateDataDefinitionReader(ConnectionStringWithProvider connectionStringWithProvider, Context context, List<string> schemaNames)
+        public static IDataDefinitionReader CreateDataDefinitionReader(ConnectionStringWithProvider connectionStringWithProvider, Context context, SchemaNamesToRead schemaNames)
         {
             if (connectionStringWithProvider.SqlEngineVersion is MsSqlVersion)
                 return new MsSql2016DataDefinitionReader(connectionStringWithProvider, context, schemaNames);
