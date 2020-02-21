@@ -6,20 +6,12 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
-    public abstract class GenericDataDefinitionReader : IDataDefinitionReader
+    public abstract class GenericDataDefinitionReader : GenericDataDefinitionElementReader, IDataDefinitionReader
     {
         protected GenericDataDefinitionReader(SqlStatementExecuter executer, List<string> schemaNames = null)
+            : base(executer, schemaNames)
         {
-            Executer = executer;
-            if(schemaNames != null)
-                SchemaNames = schemaNames;
         }
-
-        protected List<string> SchemaNames { get; } = new List<string>();
-
-        protected SqlStatementExecuter Executer { get; set; }
-
-        protected Logger Logger => Executer.Generator.Context.Logger;
 
         public abstract List<SchemaAndTableName> GetSchemaAndTableNames();
         public abstract SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition);

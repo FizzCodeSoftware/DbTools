@@ -30,11 +30,11 @@
             AddTableDocumentation(dd);
 
             Log(LogSeverity.Debug, "Reading table identities from database.");
-            new MsSqlIdentityReader2016(Executer).GetIdentity(dd);
+            new MsSqlIdentityReader2016(Executer, SchemaNames).GetIdentity(dd);
             Log(LogSeverity.Debug, "Reading table primary keys from database.");
-            new MsSqlIndexReader2016(Executer).GetIndexes(dd);
+            new MsSqlIndexReader2016(Executer, SchemaNames).GetIndexes(dd);
             Logger.Log(LogSeverity.Debug, "Reading table foreign keys from database.", "Reader");
-            new MsSqlForeignKeyReader2016(Executer).GetForeignKeys(dd);
+            new MsSqlForeignKeyReader2016(Executer, SchemaNames).GetForeignKeys(dd);
 
             return dd;
         }
@@ -45,14 +45,8 @@
 SELECT ss.name schemaName, so.name tableName FROM sys.objects so
 INNER JOIN sys.schemas ss ON ss.schema_id = so.schema_id
 WHERE type = 'U'";
-            if (SchemaNames != null)
-            {
-                var schemaNames = SchemaNames;
-                if (Executer.Generator.Context.Settings.Options.ShouldUseDefaultSchema)
-                    schemaNames.Add(Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
 
-                sqlStatement += $" AND ss.name IN({string.Join(',', schemaNames.Select(s => "'" + s + "'").ToList())})";
-            }
+            AddSchemaNamesFilter(ref sqlStatement, "ss.name");
 
             return Executer.ExecuteQuery(sqlStatement).Rows
                 .Select(row => new SchemaAndTableName(row.GetAs<string>("schemaName"), row.GetAs<string>("tableName")))
@@ -60,7 +54,7 @@ WHERE type = 'U'";
         }
 
         private MsSqlTableReader2016 _tableReader;
-        private MsSqlTableReader2016 TableReader => _tableReader ?? (_tableReader = new MsSqlTableReader2016(Executer));
+        private MsSqlTableReader2016 TableReader => _tableReader ?? (_tableReader = new MsSqlTableReader2016(Executer, SchemaNames));
 
         private MsSqlColumnDocumentationReader2016 _columnDocumentationReader;
         private MsSqlColumnDocumentationReader2016 ColumnDocumentationReader => _columnDocumentationReader ?? (_columnDocumentationReader = new MsSqlColumnDocumentationReader2016(Executer));

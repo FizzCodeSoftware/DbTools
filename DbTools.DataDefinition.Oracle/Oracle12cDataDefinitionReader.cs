@@ -25,9 +25,9 @@
                 dd.AddTable(GetTableDefinition(schemaAndTableName, false));
 
             Log(LogSeverity.Debug, "Reading table primary keys from database.");
-            new OraclePrimaryKeyReader12c(Executer).GetPrimaryKey(dd);
+            new OraclePrimaryKeyReader12c(Executer, SchemaNames).GetPrimaryKey(dd);
             Logger.Log(LogSeverity.Debug, "Reading table foreign keys from database.", "Reader");
-            new OracleForeignKeyReader12c(Executer).GetForeignKeys(dd);
+            new OracleForeignKeyReader12c(Executer, SchemaNames).GetForeignKeys(dd);
 
             return dd;
         }
@@ -42,14 +42,7 @@ AND EXISTS (SELECT 1 FROM dba_objects o
 WHERE o.owner = u.username ) AND default_tablespace not in
 ('SYSTEM','SYSAUX') and ACCOUNT_STATUS = 'OPEN'";
 
-            var schemaNames = SchemaNames;
-            if (Executer.Generator.Context.Settings.Options.ShouldUseDefaultSchema)
-                schemaNames.Add(Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
-
-            if (schemaNames != null)
-            {
-                sqlStatement += $" AND t.owner IN({string.Join(',', schemaNames.Select(s => "'" + s + "'").ToList())})";
-            }
+            AddSchemaNamesFilter(ref sqlStatement, "t.owner");
 
             return Executer.ExecuteQuery(sqlStatement).Rows
                 .Select(row => new SchemaAndTableName(row.GetAs<string>("SCHEMANAME"), row.GetAs<string>("TABLENAME")))
@@ -58,7 +51,7 @@ WHERE o.owner = u.username ) AND default_tablespace not in
 
         private OracleTableReader12c _tableReader;
 
-        private OracleTableReader12c TableReader => _tableReader ?? (_tableReader = new OracleTableReader12c(Executer));
+        private OracleTableReader12c TableReader => _tableReader ?? (_tableReader = new OracleTableReader12c(Executer, SchemaNames));
 
         public override SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition)
         {

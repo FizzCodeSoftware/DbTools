@@ -6,15 +6,14 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
-    public class MsSqlForeignKeyReader2016
+    public class MsSqlForeignKeyReader2016 : GenericDataDefinitionElementReader
     {
-        private readonly SqlStatementExecuter _executer;
         private List<Row> _queryResult;
-        private List<Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetStatement()).Rows);
+        private List<Row> QueryResult => _queryResult ?? (_queryResult = Executer.ExecuteQuery(GetStatement()).Rows);
 
-        public MsSqlForeignKeyReader2016(SqlStatementExecuter sqlExecuter)
+        public MsSqlForeignKeyReader2016(SqlStatementExecuter executer, List<string> schemaNames = null)
+            : base(executer, schemaNames)
         {
-            _executer = sqlExecuter;
         }
 
         public void GetForeignKeys(DatabaseDefinition dd)
@@ -71,7 +70,7 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
                 var referencedColumn = row.GetAs<string>("REFERENCED_COLUMN_NAME");
                 var fkName = row.GetAs<string>("FK_CONSTRAINT_NAME");
 
-                var referencedSqlTableSchemaAndTableNameAsToStore = GenericDataDefinitionReader.GetSchemaAndTableNameAsToStore(referencedSchemaAndTableName, _executer.Generator.Context);
+                var referencedSqlTableSchemaAndTableNameAsToStore = GenericDataDefinitionReader.GetSchemaAndTableNameAsToStore(referencedSchemaAndTableName, Executer.Generator.Context);
 
                 var referencedSqlTable = table.DatabaseDefinition.GetTable(referencedSqlTableSchemaAndTableNameAsToStore);
 

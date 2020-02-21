@@ -1,29 +1,31 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
+    using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Oracle12c;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
-    public class OracleTableReader12c
+    public class OracleTableReader12c : GenericDataDefinitionElementReader
     {
-        private readonly SqlStatementExecuter _executer;
-        private ILookup<string, Row> _queryResult;
-        private ILookup<string, Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetStatement()).Rows.ToLookup(x => x.GetAs<string>("SCHEMAANDTABLENAME")));
+        private readonly ILookup<string, Row> _queryResult;
 
         protected Oracle12cTypeMapper TypeMapper { get; } = new Oracle12cTypeMapper();
 
-        public OracleTableReader12c(SqlStatementExecuter sqlExecuter)
+        public OracleTableReader12c(SqlStatementExecuter executer, List<string> schemaNames = null)
+            : base(executer, schemaNames)
         {
-            _executer = sqlExecuter;
+            var sqlStatement = GetStatement();
+            AddSchemaNamesFilter(ref sqlStatement, "all_tab_columns.owner");
+            _queryResult = Executer.ExecuteQuery(sqlStatement).Rows.ToLookup(x => x.GetAs<string>("SCHEMAANDTABLENAME"));
         }
 
         public SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName)
         {
             var sqlTable = new SqlTable(schemaAndTableName);
 
-            var rows = QueryResult[schemaAndTableName.SchemaAndName]
+            var rows = _queryResult[schemaAndTableName.SchemaAndName]
                 .OrderBy(r => r.GetAs<decimal>("COLUMN_ID"));
 
             foreach (var row in rows)
@@ -47,7 +49,7 @@
                 {
                     Table = sqlTable
                 };
-                column.Types.Add(_executer.Generator.Version, sqlType);
+                column.Types.Add(Executer.Generator.Version, sqlType);
                 column.Name = row.GetAs<string>("COLUMN_NAME");
 
                 sqlTable.Columns.Add(column.Name, column);

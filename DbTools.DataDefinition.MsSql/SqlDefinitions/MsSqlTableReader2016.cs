@@ -1,22 +1,22 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
+    using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.MsSql2016;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
-    public class MsSqlTableReader2016
+    public class MsSqlTableReader2016 :  GenericDataDefinitionElementReader
     {
-        private readonly SqlStatementExecuter _executer;
         private ILookup<string, Row> _queryResult;
-        private ILookup<string, Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetStatement()).Rows.ToLookup(x => x.GetAs<string>("SchemaAndTableName")));
+        private ILookup<string, Row> QueryResult => _queryResult ?? (_queryResult = Executer.ExecuteQuery(GetStatement()).Rows.ToLookup(x => x.GetAs<string>("SchemaAndTableName")));
 
         protected MsSql2016TypeMapper TypeMapper { get; } = new MsSql2016TypeMapper();
 
-        public MsSqlTableReader2016(SqlStatementExecuter sqlExecuter)
+        public MsSqlTableReader2016(SqlStatementExecuter executer, List<string> schemaNames = null)
+            : base(executer, schemaNames)
         {
-            _executer = sqlExecuter;
         }
 
         public SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName)
@@ -43,7 +43,7 @@
                 {
                     Table = sqlTable
                 };
-                column.Types.Add(_executer.Generator.Version, sqlType);
+                column.Types.Add(Executer.Generator.Version, sqlType);
                 column.Name = row.GetAs<string>("COLUMN_NAME");
 
                 sqlTable.Columns.Add(column.Name, column);

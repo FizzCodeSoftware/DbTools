@@ -6,20 +6,19 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
-    public class MsSqlPrimaryKeyReader2016
+    public class MsSqlPrimaryKeyReader2016 : GenericDataDefinitionElementReader
     {
-        private readonly SqlStatementExecuter _executer;
         private List<Row> _queryResult;
 
-        private List<Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetKeySql()).Rows
+        private List<Row> QueryResult => _queryResult ?? (_queryResult = Executer.ExecuteQuery(GetKeySql()).Rows
                         .OrderBy(row => row.GetAs<string>("schema_name"))
                         .ThenBy(row => row.GetAs<string>("index_name"))
                         .ThenBy(row => row.GetAs<int>("index_column_id"))
                         .ToList());
 
-        public MsSqlPrimaryKeyReader2016(SqlStatementExecuter sqlExecuter)
+        public MsSqlPrimaryKeyReader2016(SqlStatementExecuter executer, List<string> schemaNames = null)
+            : base(executer, schemaNames)
         {
-            _executer = sqlExecuter;
         }
 
         public void GetPrimaryKey(DatabaseDefinition dd)

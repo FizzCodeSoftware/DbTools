@@ -6,15 +6,17 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
-    public class OracleForeignKeyReader12c
+    public class OracleForeignKeyReader12c : GenericDataDefinitionElementReader
     {
-        private readonly SqlStatementExecuter _executer;
-        private List<Row> _queryResult;
-        private List<Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetStatement()).Rows);
+        private readonly List<Row> _queryResult;
 
-        public OracleForeignKeyReader12c(SqlStatementExecuter sqlExecuter)
+        public OracleForeignKeyReader12c(SqlStatementExecuter executer, List<string> schemaNames = null)
+            : base(executer, schemaNames)
         {
-            _executer = sqlExecuter;
+            var sqlStatement = GetStatement();
+            AddSchemaNamesFilter(ref sqlStatement, "cons.owner");
+            sqlStatement += "\r\nORDER BY owner, table_name, position";
+            _queryResult = Executer.ExecuteQuery(sqlStatement).Rows.ToList();
         }
 
         public void GetForeignKeys(DatabaseDefinition dd)
@@ -56,14 +58,12 @@ SELECT
 		AND cols.POSITION = refcols.POSITION
 	AND EXISTS (SELECT 1 FROM dba_objects o
 	WHERE o.owner = u.username ) AND u.default_tablespace not in
-	('SYSTEM','SYSAUX') and u.ACCOUNT_STATUS = 'OPEN'
-	
-	ORDER BY owner, table_name, position";
+	('SYSTEM','SYSAUX') and u.ACCOUNT_STATUS = 'OPEN'";
         }
 
         public void GetForeignKeys(SqlTable table)
         {
-            var rows = QueryResult
+            var rows = _queryResult
                 .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "OWNER", "TABLE_NAME"));
 
             foreach (var row in rows)
@@ -77,7 +77,7 @@ SELECT
                 var referencedColumn = row.GetAs<string>("REF_COLUMN_NAME");
                 var fkName = row.GetAs<string>("CONSTRAINT_NAME");
 
-                var referencedSqlTableSchemaAndTableNameAsToStore = GenericDataDefinitionReader.GetSchemaAndTableNameAsToStore(referencedSchemaAndTableName, _executer.Generator.Context);
+                var referencedSqlTableSchemaAndTableNameAsToStore = GenericDataDefinitionReader.GetSchemaAndTableNameAsToStore(referencedSchemaAndTableName, Executer.Generator.Context);
 
                 var referencedSqlTable = table.DatabaseDefinition.GetTable(referencedSqlTableSchemaAndTableNameAsToStore);
 

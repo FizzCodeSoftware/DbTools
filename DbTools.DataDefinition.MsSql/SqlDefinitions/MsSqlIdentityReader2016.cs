@@ -6,15 +6,14 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
-    public class MsSqlIdentityReader2016
+    public class MsSqlIdentityReader2016 : GenericDataDefinitionElementReader
     {
-        private readonly SqlStatementExecuter _executer;
         private List<Row> _queryResult;
-        private List<Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetStatement()).Rows);
+        private List<Row> QueryResult => _queryResult ?? (_queryResult = Executer.ExecuteQuery(GetStatement()).Rows);
 
-        public MsSqlIdentityReader2016(SqlStatementExecuter sqlExecuter)
+        public MsSqlIdentityReader2016(SqlStatementExecuter executer, List<string> schemaNames = null)
+            : base(executer, schemaNames)
         {
-            _executer = sqlExecuter;
         }
 
         public void GetIdentity(DatabaseDefinition dd)

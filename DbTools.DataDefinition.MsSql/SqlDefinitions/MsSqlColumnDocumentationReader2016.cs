@@ -1,25 +1,25 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
-    public class MsSqlColumnDocumentationReader2016
+    public class MsSqlColumnDocumentationReader2016 : GenericDataDefinitionElementReader
     {
-        private readonly SqlStatementExecuter _executer;
         private ILookup<string, Row> _queryResult;
-        private ILookup<string, Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetStatement()).Rows.ToLookup(x => x.GetAs<string>("SchemaAndTableName")));
+        private ILookup<string, Row> QueryResult => _queryResult ?? (_queryResult = Executer.ExecuteQuery(GetStatement()).Rows.ToLookup(x => x.GetAs<string>("SchemaAndTableName")));
 
-        public MsSqlColumnDocumentationReader2016(SqlStatementExecuter sqlExecuter)
+        public MsSqlColumnDocumentationReader2016(SqlStatementExecuter executer, List<string> schemaNames = null)
+            : base(executer, schemaNames)
         {
-            _executer = sqlExecuter;
         }
 
         public void GetColumnDocumentation(SqlTable table)
         {
-            var defaultSchema = _executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
             var schemaAndTableName = (table.SchemaAndTableName.Schema ?? defaultSchema) + "." + table.SchemaAndTableName.TableName;
             var rows = QueryResult[schemaAndTableName];
 

@@ -6,16 +6,17 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
-    public class OraclePrimaryKeyReader12c
+    public class OraclePrimaryKeyReader12c : GenericDataDefinitionElementReader
     {
-        private readonly SqlStatementExecuter _executer;
-        private List<Row> _queryResult;
+        private readonly List<Row> _queryResult;
 
-        private List<Row> QueryResult => _queryResult ?? (_queryResult = _executer.ExecuteQuery(GetKeySql()).Rows.ToList());
-
-        public OraclePrimaryKeyReader12c(SqlStatementExecuter sqlExecuter)
+        public OraclePrimaryKeyReader12c(SqlStatementExecuter executer, List<string> schemaNames = null)
+            : base(executer, schemaNames)
         {
-            _executer = sqlExecuter;
+            var sqlStatement = GetKeySql();
+            AddSchemaNamesFilter(ref sqlStatement, "cons.owner");
+            sqlStatement += "\r\nORDER BY cols.table_name, cols.POSITION";
+            _queryResult = Executer.ExecuteQuery(sqlStatement).Rows.ToList();
         }
 
         public void GetPrimaryKey(DatabaseDefinition dd)
@@ -28,7 +29,7 @@
         {
             PrimaryKey pk = null;
 
-            var rows = QueryResult
+            var rows = _queryResult
                 .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table, "SCHEMA_NAME", "TABLE_NAME"));
 
             foreach (var row in rows)
@@ -61,8 +62,7 @@ AND cons.constraint_name = cols.constraint_name
 AND cons.owner = u.username
 AND EXISTS (SELECT 1 FROM dba_objects o
 	WHERE o.owner = u.username ) AND u.default_tablespace not in
-	('SYSTEM','SYSAUX') and u.ACCOUNT_STATUS = 'OPEN'
-ORDER BY cols.table_name, cols.POSITION";
+	('SYSTEM','SYSAUX') and u.ACCOUNT_STATUS = 'OPEN'";
         }
     }
 }
