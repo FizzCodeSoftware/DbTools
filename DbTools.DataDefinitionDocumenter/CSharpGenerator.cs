@@ -123,6 +123,7 @@
             sb.Append("namespace ")
             .AppendLine(_namespace)
             .AppendLine("{")
+            .AppendLine(1, "using FizzCode.DbTools.Configuration;")
             .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
             .AppendLine(1, _writer.GetSqlTypeNamespace())
             .AppendLine()
@@ -131,7 +132,10 @@
             .AppendLine(" : DatabaseDeclaration")
             .AppendLine(1, "{")
             .AppendLine(2, "public " + DatabaseName + "(string defaultSchema = null, NamingStrategies namingStrategies = null)")
-            .AppendLine(3, ": base(defaultSchema, namingStrategies)")
+            .Append(3, ": base(")
+            // TODO
+            .Append("MsSqlVersion.MsSql2016.GetTypeMapper()")
+            .AppendLine(", null, defaultSchema, namingStrategies)")
             .AppendLine(2, "{")
             .AppendLine(2, "}");
         }
