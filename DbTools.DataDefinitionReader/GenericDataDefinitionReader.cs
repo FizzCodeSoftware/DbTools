@@ -11,7 +11,8 @@
         protected GenericDataDefinitionReader(SqlStatementExecuter executer, List<string> schemaNames = null)
         {
             Executer = executer;
-            SchemaNames = schemaNames;
+            if(schemaNames != null)
+                SchemaNames = schemaNames;
         }
 
         protected List<string> SchemaNames { get; } = new List<string>();

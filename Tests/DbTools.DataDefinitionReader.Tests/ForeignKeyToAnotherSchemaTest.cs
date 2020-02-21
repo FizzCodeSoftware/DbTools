@@ -30,7 +30,7 @@
 
             TestHelper.CheckFeature(version, "ReadDdl");
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(_sqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], _sqlExecuterTestAdapter.GetContext(version), null);
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(_sqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], _sqlExecuterTestAdapter.GetContext(version), new ForeignKeyToAnotherSchema().GetSchemaNames().ToList());
             var db = ddlReader.GetDatabaseDefinition();
 
             var parent = db.GetTable("Parent", "Parent");
