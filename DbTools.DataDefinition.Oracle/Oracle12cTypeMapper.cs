@@ -47,15 +47,15 @@
                 Generic1.SqlChar _ => genericType.Clone(OracleType12c.Char),
                 Generic1.SqlNChar _ => genericType.Clone(OracleType12c.NChar),
                 Generic1.SqlVarChar _ => genericType.Clone(OracleType12c.VarChar),
-                Generic1.SqlNVarChar _ => genericType.Clone(OracleType12c.NVarChar2),
-                Generic1.SqlFloatSmall _ => genericType.Clone(OracleType12c.BinaryFloat),
-                Generic1.SqlFloatLarge _ => genericType.Clone(OracleType12c.BinaryDouble),
-                Generic1.SqlBit _ => genericType.Clone(OracleType12c.Number),
-                Generic1.SqlByte _ => genericType.Clone(OracleType12c.Number),
-                Generic1.SqlInt16 _ => genericType.Clone(OracleType12c.Number),
-                Generic1.SqlInt32 _ => genericType.Clone(OracleType12c.Number),
-                Generic1.SqlInt64 _ => genericType.Clone(OracleType12c.Number),
-                Generic1.SqlDateTime _ => genericType.Clone(OracleType12c.Date),
+                SqlNVarChar _ => genericType.Clone(OracleType12c.NVarChar2),
+                SqlFloatSmall _ => genericType.Clone(OracleType12c.BinaryFloat),
+                SqlFloatLarge _ => genericType.Clone(OracleType12c.BinaryDouble),
+                SqlBit _ => genericType.Clone(OracleType12c.Number),
+                SqlByte _ => genericType.Clone(OracleType12c.Number),
+                SqlInt16 _ => genericType.Clone(OracleType12c.Number),
+                SqlInt32 _ => genericType.Clone(OracleType12c.Number),
+                SqlInt64 _ => genericType.Clone(OracleType12c.Number),
+                SqlDateTime _ => genericType.Clone(OracleType12c.Date),
                 Generic1.SqlDate _ => genericType.Clone(OracleType12c.Date),
                 _ => throw new NotImplementedException($"Unmapped type {genericType.SqlTypeInfo}"),
             };
@@ -65,16 +65,16 @@
         {
             return sqlType.SqlTypeInfo switch
             {
-                Oracle12c.SqlChar _ => sqlType.Clone(GenericSqlType1.Char),
-                Oracle12c.SqlNChar _ => sqlType.Clone(GenericSqlType1.NChar),
-                Oracle12c.SqlVarChar _ => sqlType.Clone(GenericSqlType1.VarChar),
-                Oracle12c.SqlNVarChar2 _ => sqlType.Clone(GenericSqlType1.NVarChar),
-                Oracle12c.SqlBinaryFloat _ => sqlType.Clone(GenericSqlType1.FloatSmall),
-                Oracle12c.SqlBinaryDouble _ => sqlType.Clone(GenericSqlType1.FloatLarge),
+                SqlChar _ => sqlType.Clone(GenericSqlType1.Char),
+                SqlNChar _ => sqlType.Clone(GenericSqlType1.NChar),
+                SqlVarChar _ => sqlType.Clone(GenericSqlType1.VarChar),
+                SqlNVarChar2 _ => sqlType.Clone(GenericSqlType1.NVarChar),
+                SqlBinaryFloat _ => sqlType.Clone(GenericSqlType1.FloatSmall),
+                SqlBinaryDouble _ => sqlType.Clone(GenericSqlType1.FloatLarge),
                 // TODO iterations of number?
                 // TODO store original?
-                Oracle12c.SqlNumber _ => sqlType.Clone(GenericSqlType1.Number),
-                Oracle12c.SqlDate _ => sqlType.Clone(GenericSqlType1.Date),
+                SqlNumber _ => sqlType.Clone(GenericSqlType1.Number),
+                SqlDate _ => sqlType.Clone(GenericSqlType1.Date),
                 _ => throw new NotImplementedException($"Unmapped type {sqlType.SqlTypeInfo}"),
             };
         }

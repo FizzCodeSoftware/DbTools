@@ -138,12 +138,9 @@
 
         private static IndexBase GetReferredUniqueIndex(SqlTable referredTable)
         {
-            IndexBase uniqueIndex = null;
-            uniqueIndex = referredTable.Properties.OfType<IndexBase>().FirstOrDefault();
-            if (uniqueIndex == null)
-                uniqueIndex = referredTable.Properties.OfType<Index>().Where(i => i.Unique).FirstOrDefault();
-            if (uniqueIndex == null)
-                uniqueIndex = referredTable.Properties.OfType<UniqueConstraint>().FirstOrDefault();
+            var uniqueIndex = referredTable.Properties.OfType<IndexBase>().FirstOrDefault()
+                ?? referredTable.Properties.OfType<Index>().FirstOrDefault(i => i.Unique) as IndexBase
+                ?? referredTable.Properties.OfType<UniqueConstraint>().FirstOrDefault();
 
             if (uniqueIndex == null)
                 throw new Exception("Can't define ForeignKeyRegistrationToTableWithPrimaryKey against a table without primary key, unique index or unique constraint.");

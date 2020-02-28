@@ -69,7 +69,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
             return sb.ToString();
         }
 
-        protected SchemaAndTableName CheckSameTable(ColumnMigration[] columnNews)
+        protected static SchemaAndTableName CheckSameTable(ColumnMigration[] columnNews)
         {
             var tableNames = columnNews.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
 

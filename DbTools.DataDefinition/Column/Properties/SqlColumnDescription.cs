@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     /// <summary>
-    /// Contains the <see cref="SqlColumnDescription.Description"/>, to document the given column.
+    /// Contains the <see cref="Description"/>, to document the given column.
     /// </summary>
     public class SqlColumnDescription : SqlColumnProperty
     {

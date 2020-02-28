@@ -85,7 +85,7 @@
             var connection = OpenConnection();
 
             //Log(LogSeverity.Verbose, "Executing non query {Query}.", sqlStatementWithParameters.Statement);
-            var logTimer = LogTimer("Executing non query {Query}.", sqlStatementWithParameters.Statement);
+            _ = LogTimer("Executing non query {Query}.", sqlStatementWithParameters.Statement);
 
             var command = PrepareSqlCommand(sqlStatementWithParameters);
             command.Connection = connection;
@@ -223,7 +223,6 @@
 
             _sw = new Stopwatch();
             _sw.Start();
-
         }
 
         public LogTimer(Logger logger, string text, string module, params object[] args)

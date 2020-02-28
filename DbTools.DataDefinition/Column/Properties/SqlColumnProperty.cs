@@ -4,7 +4,7 @@
     {
         public SqlColumn SqlColumn { get; }
 
-        public SqlColumnProperty(SqlColumn sqlColumn)
+        protected SqlColumnProperty(SqlColumn sqlColumn)
         {
             SqlColumn = sqlColumn;
         }

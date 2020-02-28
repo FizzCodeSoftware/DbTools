@@ -204,9 +204,9 @@
             sb.AppendLine(2, "});");
         }
 
-        protected void GenerateTableProperties(StringBuilder sb, SqlTable table)
+        protected static void GenerateTableProperties(StringBuilder sb, SqlTable table)
         {
-            var indexes = table.Properties.OfType<DataDefinition.Index>().ToList();
+            var indexes = table.Properties.OfType<Index>().ToList();
 
             foreach (var index in indexes)
                 GenerateIndex(sb, index);
@@ -217,14 +217,15 @@
                 GenerateUniqueConstraint(sb, uniqueConstraint);
         }
 
-        private static void GenerateIndex(StringBuilder sb, DataDefinition.Index index)
+#pragma warning disable CA1308 // Normalize strings to uppercase
+        private static void GenerateIndex(StringBuilder sb, Index index)
         {
             // TODO clustered
 
             sb.Append(3, "table.AddIndexWithName(");
             if (index.Includes.Count == 0)
             {
-                sb.Append(index.Clustered.ToString().ToLower())
+                sb.Append(index.Clustered.ToString().ToLowerInvariant())
                     .Append(", ");
 
                 sb.Append("\"")
@@ -235,7 +236,7 @@
             }
             else
             {
-                sb.Append(index.Clustered.ToString().ToLower())
+                sb.Append(index.Clustered.ToString().ToLowerInvariant())
                     .Append(", ");
 
                 sb.Append("\"")
@@ -252,6 +253,7 @@
 
             sb.AppendLine(");");
         }
+#pragma warning restore CA1308 // Normalize strings to uppercase
 
         private static void GenerateUniqueConstraint(StringBuilder sb, UniqueConstraint uniqueConstraint)
         {

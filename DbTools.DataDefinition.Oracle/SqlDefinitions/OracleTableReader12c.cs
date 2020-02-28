@@ -17,7 +17,7 @@
         protected override void AddSchemaNamesFilter(ref string sqlStatement, string schemaColumnName)
         {
             var schemaNames = new List<string>();
-            if (SchemaNames == null || SchemaNames.AllDefault)
+            if (SchemaNames?.AllDefault != false)
             {
                 if (Executer.Generator.Context.Settings.Options.ShouldUseDefaultSchema)
                     schemaNames.Add(Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
@@ -37,7 +37,7 @@ AND EXISTS (SELECT 1 FROM dba_objects o
                     schemaNames = SchemaNames.SchemaNames;
                 }
             }
-            
+
             if (schemaNames.Count > 0)
                 sqlStatement += $" AND {schemaColumnName} IN({string.Join(',', schemaNames.Select(s => "'" + s + "'").ToList())})";
         }

@@ -1,10 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
     using System.Collections.Generic;
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
     public class SchemaNamesToRead
     {
@@ -13,10 +9,11 @@
             SchemaNames = schemaNames;
         }
 
-        public SchemaNamesToRead(bool AllDefaultNotSystem = true, bool AllNotSytem = false, bool all = false)
+        public SchemaNamesToRead(bool allDefaultNotSystem = true, bool allNotSystem = false, bool all = false)
         {
-            AllDefault = AllDefaultNotSystem;
+            AllDefault = allDefaultNotSystem;
             All = all;
+            AllNotSystem = allNotSystem;
         }
 
         public bool All { get; set; }
@@ -27,7 +24,7 @@
 
         public static implicit operator SchemaNamesToRead(List<string> schemaNames)
         {
-            if(schemaNames.Count == 0)
+            if (schemaNames.Count == 0)
                 return new SchemaNamesToRead(true);
 
             return new SchemaNamesToRead(schemaNames);

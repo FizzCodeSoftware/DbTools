@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Oracle12c
 {
     using System.Collections.Generic;
-    using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
