@@ -3,7 +3,7 @@
     public class MySqlVersion : SqlEngineVersion
     {
         internal MySqlVersion(string uniqueName, string versionString, string versionNumber)
-            : base(SqlEngine.PostgreSql, uniqueName, versionString, versionNumber, "MySql.Data.MySqlClient")
+            : base(SqlEngine.MySql, uniqueName, versionString, versionNumber, "MySql.Data.MySqlClient")
         {
         }
 
