@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using FizzCode.DbTools.Common.Logger;
-using Serilog;
-using Serilog.Events;
-
-namespace FizzCode.DbTools.Console
+﻿namespace FizzCode.DbTools.Console
 {
+    using System;
+    using System.Collections.Generic;
+    using FizzCode.DbTools.Common.Logger;
+    using Serilog;
+    using Serilog.Events;
+
     public class ConsoleLogger
     {
         private ILogger _logger;
@@ -65,8 +65,7 @@ namespace FizzCode.DbTools.Console
                 lvl++;
             }
 
-            _logger.Fatal("[{Module}], " + "{Message}",
-                msg);
+            _logger.Fatal("[{Module}], {Message}", msg);
         }
 
         private void GetOpsMessages(Exception ex, List<string> messages)

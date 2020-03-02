@@ -6,19 +6,18 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinitionExecuter;
-    using FizzCode.DbTools.DataDefinitionGenerator;
+    using FizzCode.DbTools.DataDefinition.SqlExecuter;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     public class SqlExecuterTestAdapter : ConfigurationBase
     {
-        private readonly Dictionary<string, (SqlExecuter SqlExecuter, SqlVersion Version)> sqlExecutersAndDialects = new Dictionary<string, (SqlExecuter, SqlVersion)>();
+        private readonly Dictionary<string, (SqlStatementExecuter SqlExecuter, SqlEngineVersion Version)> sqlExecutersAndDialects = new Dictionary<string, (SqlStatementExecuter, SqlEngineVersion)>();
 
         private readonly List<DatabaseDefinition> _dds = new List<DatabaseDefinition>();
 
         public override string ConfigurationFileName => "testconfig";
 
-        public void Check(SqlVersion version)
+        public void Check(SqlEngineVersion version)
         {
             TestHelper.CheckProvider(version, ConnectionStrings.All);
 
@@ -48,21 +47,21 @@
             if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
             {
                 var generator = SqlGeneratorFactory.CreateGenerator(connectionStringWithProvider.SqlEngineVersion, GetContext(connectionStringWithProvider.SqlEngineVersion));
-                var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
-                sqlExecutersAndDialects.Add(connectionStringKey, (sqlExecuter, connectionStringWithProvider.SqlEngineVersion));
+                var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
+                sqlExecutersAndDialects.Add(connectionStringKey, (executer, connectionStringWithProvider.SqlEngineVersion));
 
                 if (shouldCreate && TestHelper.ShouldRunIntegrationTest(connectionStringWithProvider.SqlEngineVersion))
                 {
-                    sqlExecuter.InitializeDatabase(false, dds);
+                    executer.InitializeDatabase(false, dds);
                 }
             }
 
             return connectionStringWithProvider;
         }
 
-        private readonly Dictionary<SqlVersion, Context> _contextPerSqlVersion = new Dictionary<SqlVersion, Context>();
+        private readonly Dictionary<SqlEngineVersion, Context> _contextPerSqlVersion = new Dictionary<SqlEngineVersion, Context>();
 
-        public Context GetContext(SqlVersion version)
+        public Context GetContext(SqlEngineVersion version)
         {
             if (!_contextPerSqlVersion.ContainsKey(version))
             {
@@ -118,7 +117,7 @@
             return null;
         }
 
-        public SqlExecuter GetExecuter(string connectionStringKey)
+        public SqlStatementExecuter GetExecuter(string connectionStringKey)
         {
             return sqlExecutersAndDialects[connectionStringKey].SqlExecuter;
         }

@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace FizzCode.DbTools.DataGenerator
+﻿namespace FizzCode.DbTools.DataGenerator
 {
+    using System;
+
     public class GeneratorInt32 : GeneratorMinMax<int>
     {
         public GeneratorInt32()

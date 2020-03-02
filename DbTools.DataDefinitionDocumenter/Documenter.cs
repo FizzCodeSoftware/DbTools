@@ -2,12 +2,12 @@
 {
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinitionGenerator;
 
     public class Documenter : DocumenterBase
     {
@@ -16,12 +16,12 @@
         private readonly string _fileName;
         private readonly HashSet<DocumenterFlag> _flags;
 
-        public Documenter(DocumenterContext context, SqlVersion version, string databaseName = "", string fileName = null, HashSet<DocumenterFlag> flags = null)
+        public Documenter(DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null, HashSet<DocumenterFlag> flags = null)
             : this(new DocumenterWriterExcel(), context, version, databaseName, fileName, flags)
         {
         }
 
-        public Documenter(IDocumenterWriter documenterWriter, DocumenterContext context, SqlVersion version, string databaseName = "", string fileName = null, HashSet<DocumenterFlag> flags = null)
+        public Documenter(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null, HashSet<DocumenterFlag> flags = null)
             : base(context, version, databaseName)
         {
             DocumenterWriter = documenterWriter;
@@ -247,7 +247,7 @@
                 var identity = column.Properties.OfType<Identity>().FirstOrDefault();
 
                 if (identity != null)
-                    Write(table.SchemaAndTableName, $"IDENTITY ({identity.Seed}, {identity.Increment})");
+                    Write(table.SchemaAndTableName, $"IDENTITY ({identity.Seed.ToString("D", CultureInfo.InvariantCulture)}, {identity.Increment.ToString("D", CultureInfo.InvariantCulture)})");
                 else
                     Write(table.SchemaAndTableName, "");
 
@@ -296,7 +296,7 @@
                     DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", "");
 
                 if (identity != null)
-                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", $"IDENTITY ({identity.Seed}, {identity.Increment})");
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", $"IDENTITY ({identity.Seed.ToString("D", CultureInfo.InvariantCulture)}, {identity.Increment.ToString("D", CultureInfo.InvariantCulture)})");
                 else
                     DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", "");
 

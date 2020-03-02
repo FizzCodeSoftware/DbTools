@@ -11,10 +11,10 @@
     {
         [TestMethod]
         [LatestSqlVersions]
-        public void DocumentTest(SqlVersion version)
+        public void DocumentTest(SqlEngineVersion version)
         {
             var db = new TestDatabaseFks();
-            db.SetVersions(version);
+            db.SetVersions(version.GetTypeMapper());
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(), version, "TestDatabaseFks");
 
             documenter.Document(db);
@@ -22,20 +22,20 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void TableCustomizerTest(SqlVersion version)
+        public void TableCustomizerTest(SqlEngineVersion version)
         {
             var db = new TestDatabaseFks();
-            db.SetVersions(version);
+            db.SetVersions(version.GetTypeMapper());
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(new TableCustomizer()), version, "TestDatabaseFks");
             documenter.Document(db);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void DocumentTestForeignKeyComposite(SqlVersion version)
+        public void DocumentTestForeignKeyComposite(SqlEngineVersion version)
         {
             var db = new ForeignKeyComposite();
-            db.SetVersions(version);
+            db.SetVersions(version.GetTypeMapper());
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(), version, "ForeignKeyComposite");
             documenter.Document(db);
         }

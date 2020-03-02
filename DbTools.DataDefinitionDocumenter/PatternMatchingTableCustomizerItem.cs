@@ -1,7 +1,7 @@
-﻿using FizzCode.DbTools.DataDefinition;
-
-namespace FizzCode.DbTools.DataDefinitionDocumenter
+﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
+    using FizzCode.DbTools.DataDefinition;
+
     public class PatternMatchingTableCustomizerItem
     {
         public PatternMatchingTableCustomizerItem(SchemaAndTableName pattern, SchemaAndTableName patternExcept, bool shouldSkip, string category, string backGroundColor)

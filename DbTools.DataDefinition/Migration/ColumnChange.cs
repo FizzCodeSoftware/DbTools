@@ -1,49 +1,21 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
-    public class ColumnChange
+    using System.Text;
+
+    public class ColumnChange : ColumnMigration
     {
-        public SqlColumn SqlColumn { get; set; }
         public SqlColumn NewNameAndType { get; set; }
-    }
 
-    public class ColumnDelete
-    {
-        public SqlColumn SqlColumn { get; set; }
-    }
-
-    public class ColumnNew
-    {
-        public SqlColumn SqlColumn { get; set; }
-    }
-
-    public class TableRename
-    {
-        public SqlTable SqlTable { get; set; }
-        public string NewName { get; set; }
-    }
-
-    public class TableDelete : SqlTable
-    { }
-
-    public class TableNew : SqlTable
-    {
-        public TableNew()
+        public override string ToString()
         {
-        }
+            var sb = new StringBuilder();
 
-        public TableNew(SqlTable original)
-        {
-            SchemaAndTableName = original.SchemaAndTableName;
-            foreach (var column in original.Columns)
-            {
-                var newColumn = new SqlColumn
-                {
-                    Table = this
-                };
-                Columns.Add(column.CopyTo(newColumn));
-            }
+            sb.AppendLine("New column: ");
+            sb.AppendLine(NewNameAndType.ToString());
+            sb.AppendLine("Original column: ");
+            sb.AppendLine(base.ToString());
 
-            // TODO copy .Properties
+            return sb.ToString();
         }
     }
 
@@ -59,4 +31,6 @@
     // New Identity, Deleted Identity
 
     // (not implemented) Trigger
+
+    // SuspectedTableRename - if remove/add table but the internal schema is exactly the asame, suspect table rename
 }

@@ -1,8 +1,7 @@
-﻿using System;
-using FizzCode.DbTools.DataDefinition;
-
-namespace FizzCode.DbTools.DataDefinitionDocumenter
+﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
+    using FizzCode.DbTools.DataDefinition;
+
     public static class BimHelper
     {
         public static void SetDefaultAnnotations(BimDTO.BimGeneratorModel bimGeneratorModel)

@@ -4,9 +4,10 @@ namespace FizzCode.DbTools.DataDefinition.Tests
     using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.DataDefinition.Generic1;
+    using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    public class TestDatabaseOtherChainIsCircular : DatabaseDeclaration
+    public class TestDatabaseOtherChainIsCircular : TestDatabaseDeclaration
     {
         public SqlTable Start { get; } = AddTable(table =>
           {
@@ -27,7 +28,7 @@ namespace FizzCode.DbTools.DataDefinition.Tests
           });
     }
 
-    public class TestDatabaseOtherTwoChainsAreCircular : DatabaseDeclaration
+    public class TestDatabaseOtherTwoChainsAreCircular : TestDatabaseDeclaration
     {
         public SqlTable Start { get; } = AddTable(table =>
           {

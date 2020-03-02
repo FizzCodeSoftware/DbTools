@@ -4,7 +4,7 @@
     using System.Linq;
     using FizzCode.DbTools.Configuration;
 
-    public class SqlTypes : Dictionary<SqlVersion, SqlType>
+    public class SqlTypes : Dictionary<SqlEngineVersion, SqlType>
     {
         public void SetAllNullable(bool isNullable)
         {
@@ -14,19 +14,23 @@
             }
         }
 
-        public string Describe()
+        private SqlEngineVersion GetVersion()
         {
-            if (Keys.Any(k => SqlVersions.GetVersions<IGenericDialect>().Contains(k)))
+            if (Keys.Any(k => SqlEngineVersions.GetAllVersions<GenericVersion>().Contains(k)))
             {
-                return Describe(SqlVersions.GetLatestVersion<IGenericDialect>());
+                return SqlEngineVersions.GetLatestVersionOfDialect<GenericVersion>();
             }
 
-            return Describe(Keys.Last());
+            return Keys.Last();
         }
 
-        public string Describe(SqlVersion preferredVersion)
+        public string Describe(SqlEngineVersion preferredVersion = null)
         {
-            return this[preferredVersion].ToString();
+            var version = preferredVersion;
+            if (preferredVersion == null)
+                version = GetVersion();
+
+            return this[version].ToString();
         }
 
         public SqlTypes CopyTo(SqlTypes sqlTypes)

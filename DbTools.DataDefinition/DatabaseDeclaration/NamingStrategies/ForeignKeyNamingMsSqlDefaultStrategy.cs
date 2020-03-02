@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System;
+    using System.Globalization;
     using System.Linq;
 
     public class ForeignKeyNamingMsSqlDefaultStrategy : ForeignKeyNamingDefaultStrategy
@@ -24,7 +25,7 @@
             }
 
             fk.Name = sameNameFks.Count > 0
-                ? $"{fkName}_{sameNameFks.Count + 1}"
+                ? $"{fkName}_{(sameNameFks.Count + 1).ToString("D", CultureInfo.InvariantCulture)}"
                 : fkName;
         }
     }

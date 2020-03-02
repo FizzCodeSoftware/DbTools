@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition
 {
+    using System.Collections.Generic;
+
     internal class ForeignKeyRegistrationToReferredTable : ForeignKeyRegistrationNonExsistingColumn
     {
         public List<ColumnReference> Map { get; set; }

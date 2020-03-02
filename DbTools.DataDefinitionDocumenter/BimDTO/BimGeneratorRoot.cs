@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.BimDTO
 {
     using System.Collections.Generic;
+    using System.Globalization;
 
     public class BimGeneratorRoot
     {
@@ -67,7 +68,7 @@
 
         public override string ToString()
         {
-            return FromTable + "." + FromColumn + " -> " + ToTable + "." + ToColumn + " (" + IsActive + ")";
+            return FromTable + "." + FromColumn + " -> " + ToTable + "." + ToColumn + " (" + IsActive.ToString(CultureInfo.InvariantCulture) + ")";
         }
     }
 }

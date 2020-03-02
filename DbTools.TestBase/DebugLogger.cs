@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using FizzCode.DbTools.Common.Logger;
-using Serilog;
-using Serilog.Events;
-
-namespace FizzCode.DbTools.TestBase
+﻿namespace FizzCode.DbTools.TestBase
 {
+    using System;
+    using System.Collections.Generic;
+    using FizzCode.DbTools.Common.Logger;
+    using Serilog;
+    using Serilog.Events;
+
     public class DebugLogger
     {
         private ILogger _logger;
@@ -19,7 +19,6 @@ namespace FizzCode.DbTools.TestBase
         {
             if (args.Exception != null)
                 OnException(sender, args);
-
 
             var values = new List<object>();
             values.AddRange(args.Arguments);
@@ -60,8 +59,7 @@ namespace FizzCode.DbTools.TestBase
                 lvl++;
             }
 
-            _logger.Fatal("[{Module}], " + "{Message}",
-                msg);
+            _logger.Fatal("[{Module}], {Message}", msg);
         }
 
         private void GetOpsMessages(Exception ex, List<string> messages)

@@ -1,45 +1,44 @@
-﻿namespace FizzCode.DbTools.DataDefinitionExecuter.Tests
+﻿#pragma warning disable CA1034 // Nested types should not be visible
+namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
 {
-    using System;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Generic1;
+    using FizzCode.DbTools.DataDefinition.SqlExecuter;
     using FizzCode.DbTools.DataDefinition.Tests;
-    using FizzCode.DbTools.DataDefinitionExecuter;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class GenerateDatabaseTests : DataDefinitionExecuterTests
+    public class GenerateDatabaseTests : DataDefinitionSqlExecuterTests
     {
         [TestMethod]
         [LatestSqlVersions]
-        public void GenerateTestDatabaseSimple(SqlVersion version)
+        public void GenerateTestDatabaseSimple(SqlEngineVersion version)
         {
             GenerateDatabase(new TestDatabaseSimple(), version);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void GenerateTestDatabaseSimple2(SqlVersion version)
+        public void GenerateTestDatabaseSimple2(SqlEngineVersion version)
         {
             GenerateDatabase(new TestDatabaseSimple2(), version);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void GenerateForeignKeyCompositeTestDatabase(SqlVersion version)
+        public void GenerateForeignKeyCompositeTestDatabase(SqlEngineVersion version)
         {
             GenerateDatabase(new ForeignKeyComposite(), version);
         }
 
-        public static void GenerateDatabase(DatabaseDefinition dd, SqlVersion version)
+        public static void GenerateDatabase(DatabaseDefinition dd, SqlEngineVersion version)
         {
             _sqlExecuterTestAdapter.Check(version);
-            _sqlExecuterTestAdapter.Initialize(version.ToString(), dd);
+            _sqlExecuterTestAdapter.Initialize(version.UniqueName, dd);
 
-            var databaseCreator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.ToString()));
+            var databaseCreator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.UniqueName));
 
             try
             {
@@ -53,7 +52,7 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void GenerateDatabase_Index(SqlVersion version)
+        public void GenerateDatabase_Index(SqlEngineVersion version)
         {
             GenerateDatabase(new Index(), version);
         }
@@ -61,16 +60,16 @@
         [TestMethod]
         public void GenerateDatabase_TableDescription()
         {
-            GenerateDatabase(new TableDescription(), SqlVersions.MsSql2016);
+            GenerateDatabase(new TableDescription(), MsSqlVersion.MsSql2016);
         }
 
         [TestMethod]
         public void GenerateDatabase_ColumnDescription()
         {
-            GenerateDatabase(new ColumnDescription(), SqlVersions.MsSql2016);
+            GenerateDatabase(new ColumnDescription(), MsSqlVersion.MsSql2016);
         }
 
-        public class Index : DatabaseDeclaration
+        public class Index : TestDatabaseDeclaration
         {
             public SqlTable Table { get; } = AddTable(table =>
             {
@@ -81,7 +80,7 @@
             });
         }
 
-        public class TableDescription : DatabaseDeclaration
+        public class TableDescription : TestDatabaseDeclaration
         {
             public SqlTable Table { get; } = AddTable(table =>
             {
@@ -91,7 +90,7 @@
             });
         }
 
-        public class ColumnDescription : DatabaseDeclaration
+        public class ColumnDescription : TestDatabaseDeclaration
         {
             public SqlTable Table { get; } = AddTable(table =>
             {
@@ -103,10 +102,10 @@
         [TestMethod]
         public void GenerateDatabase_DefaultValue()
         {
-            GenerateDatabase(new DefaultValue(), SqlVersions.MsSql2016);
+            GenerateDatabase(new DefaultValue(), MsSqlVersion.MsSql2016);
         }
 
-        public class DefaultValue : DatabaseDeclaration
+        public class DefaultValue : TestDatabaseDeclaration
         {
             public SqlTable Table { get; } = AddTable(table =>
             {
@@ -117,19 +116,22 @@
         }
 
         [TestMethod]
-        [SqlVersions(typeof(MsSql2016), typeof(Oracle12c))]
-        public void DatabaseDefinitionWithSchemaTableNameSeparator(SqlVersion version)
+        [LatestSqlVersions]
+        public void DatabaseDefinitionWithSchemaTableNameSeparator(SqlEngineVersion version)
         {
+            TestHelper.CheckFeature(version, "Schema");
             GenerateDatabase(new SchemaTableNameSeparator(), version);
         }
 
         [TestMethod]
-        public void DatabaseDefinitionWithSchemaAndDefaultSchema()
+        [LatestSqlVersions]
+        public void DatabaseDefinitionWithSchemaAndDefaultSchema(SqlEngineVersion version)
         {
-            GenerateDatabase(new SchemaTableNameDefaultSchema(), SqlVersions.MsSql2016);
+            TestHelper.CheckFeature(version, "Schema");
+            GenerateDatabase(new SchemaTableNameDefaultSchema(), version);
         }
 
-        public class SchemaTableNameSeparator : DatabaseDeclaration
+        public class SchemaTableNameSeparator : TestDatabaseDeclaration
         {
             public SqlTable SchemaAꜗTable { get; } = AddTable(table =>
             {
@@ -151,6 +153,59 @@
             {
                 table.AddInt32("Id").SetPK().SetIdentity();
                 table.AddNVarChar("Name", 100);
+            });
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void UniqueConstratintAsFk(SqlEngineVersion version)
+        {
+            if (version is SqLiteVersion)
+                return;
+            // TODO SqLite - You can't add a constraint to existing table in SQLite - should work at create table time
+            GenerateDatabase(new DbUniqueConstratintAsFk(), version);
+        }
+
+        public class DbUniqueConstratintAsFk : TestDatabaseDeclaration
+        {
+            public SqlTable Primary { get; } = AddTable(table =>
+            {
+                table.AddInt32("Id");
+                table.AddNVarChar("Name", 100);
+                table.AddUniqueConstraint("Id");
+            });
+
+            public SqlTable Foreign { get; } = AddTable(table =>
+            {
+                table.AddInt32("Id").SetPK().SetIdentity();
+                table.AddInt32("PrimaryId").SetForeignKeyTo(nameof(Primary));
+            });
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void UniqueIndexAsFk(SqlEngineVersion version)
+        {
+            if (version is OracleVersion)
+                return;
+
+            // TODO Unique index by default is not acceptable as reference for FK in Oracle
+            GenerateDatabase(new DbUniqueIndexAsFk(), version);
+        }
+
+        public class DbUniqueIndexAsFk : TestDatabaseDeclaration
+        {
+            public SqlTable Primary { get; } = AddTable(table =>
+            {
+                table.AddInt32("Id");
+                table.AddNVarChar("Name", 100);
+                table.AddIndex(true, "Id");
+            });
+
+            public SqlTable Foreign { get; } = AddTable(table =>
+            {
+                table.AddInt32("Id").SetPK().SetIdentity();
+                table.AddInt32("PrimaryId").SetForeignKeyTo(nameof(Primary));
             });
         }
     }

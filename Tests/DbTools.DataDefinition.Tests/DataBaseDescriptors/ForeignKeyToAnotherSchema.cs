@@ -1,10 +1,10 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Tests
 {
-    using System.Collections.Generic;
     using FizzCode.DbTools.DataDefinition.Generic1;
+    using FizzCode.DbTools.TestBase;
 
     // TODO
-    public class ForeignKeyToAnotherSchema : DatabaseDeclaration
+    public class ForeignKeyToAnotherSchema : TestDatabaseDeclaration
     {
         public SqlTable ChildꜗChild { get; } = AddTable(table =>
         {
@@ -18,6 +18,5 @@
             table.AddInt32("Id").SetPK().SetIdentity();
             table.AddNVarChar("Name", 100);
         });
-
     }
 }

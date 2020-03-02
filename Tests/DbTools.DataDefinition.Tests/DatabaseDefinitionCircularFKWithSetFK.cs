@@ -2,9 +2,10 @@
 {
     using System.Linq;
     using FizzCode.DbTools.DataDefinition.Generic1;
+    using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    public class TestDatabaseCircularFKSetPK : DatabaseDeclaration
+    public class TestDatabaseCircularFKSetPK : TestDatabaseDeclaration
     {
         public SqlTable FK1 { get; } = AddTable(table =>
           {

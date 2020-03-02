@@ -1,5 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
+    using System.Globalization;
+
     public class SqlType
     {
         public SqlTypeInfo SqlTypeInfo { get; set; }
@@ -7,7 +9,7 @@
         public int? Length { get; set; }
         public int? Scale { get; set; }
 
-        public SqlType Create(SqlTypeInfo sqlTypeInfo)
+        public SqlType Clone(SqlTypeInfo sqlTypeInfo)
         {
             var sqlType = new SqlType
             {
@@ -16,7 +18,7 @@
                 Length = Length,
                 Scale = Scale
             };
-            
+
             return sqlType;
         }
 
@@ -36,7 +38,7 @@
         public override string ToString()
         {
             var nullable = IsNullable ? " NULL" : " NOT NULL";
-            return $"{SqlTypeInfo} ({Length}, {Scale}){nullable}";
+            return $"{SqlTypeInfo} ({Length?.ToString("D", CultureInfo.InvariantCulture)}, {Scale?.ToString("D", CultureInfo.InvariantCulture)}){nullable}";
         }
     }
 }

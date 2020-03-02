@@ -17,8 +17,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EPPlus" Version="4.5.3.2" />
+    <PackageReference Include="EPPlus" Version="4.5.3.3" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Roslynator.Formatting.Analyzers" Version="1.0.0-rc">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -26,7 +30,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinitionGenerator\DbTools.DataDefinitionGenerator.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.SqlGenerator\DbTools.DataDefinition.SqlGenerator.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
     <ProjectReference Include="..\DbTools.Tabular\DbTools.Tabular.csproj" />
   </ItemGroup>

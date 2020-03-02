@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
     using System.IO;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.DataDefinitionDocumenter;
@@ -127,9 +126,9 @@
             }
 
             var db = new TestDatabaseFks();
-            db.SetVersions(SqlVersions.Generic1);
+            db.SetVersions(Configuration.GenericVersion.Generic1.GetTypeMapper());
             var patternMatching = PatternMatchingTableCustomizerFromPatterns.FromCsv("TestDatabaseFks", null);
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(patternMatching), SqlVersions.Generic1, "TestDatabaseFks");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(patternMatching), Configuration.GenericVersion.Generic1, "TestDatabaseFks");
             documenter.Document(db);
         }
 

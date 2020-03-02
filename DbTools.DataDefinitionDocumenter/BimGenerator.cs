@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -16,7 +17,7 @@
 
     public class BimGenerator : DocumenterBase
     {
-        public BimGenerator(DocumenterContext context, SqlVersion version, string databaseName)
+        public BimGenerator(DocumenterContext context, SqlEngineVersion version, string databaseName)
             : base(context, version, databaseName)
         {
         }
@@ -107,7 +108,7 @@
             var dd = rr.FromColumn.Table.DatabaseDefinition;
             var toSqlTable = dd.GetTable(rr.ToTableSchemaAndTableName);
 
-            var suffix = " " + i;
+            var suffix = " " + i.ToString("D", CultureInfo.InvariantCulture);
             if (rr.RelationshipIdentifier != null)
                 suffix = " " + rr.RelationshipIdentifier;
 
@@ -180,7 +181,7 @@
                 {
                     // TODO mapping
                     Name = sqlColumn.Name,
-                    DataType =  sqlColumn.Types[Version].SqlTypeInfo.SqlDataType,
+                    DataType = sqlColumn.Types[Version].SqlTypeInfo.SqlDataType,
                     SourceColumn = sqlColumn.Name
                 };
 

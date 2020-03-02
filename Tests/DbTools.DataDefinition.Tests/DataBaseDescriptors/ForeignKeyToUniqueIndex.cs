@@ -1,10 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Tests
 {
-    using System.Collections.Generic;
-    using FizzCode.DbTools.DataDefinition.Generic1;
+    using FizzCode.DbTools.TestBase;
 
     // TODO
-    public class ForeignKeyToUniqueIndex : DatabaseDeclaration
+    public class ForeignKeyToUniqueIndex : TestDatabaseDeclaration
     {
     }
 }

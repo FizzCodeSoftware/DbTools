@@ -16,13 +16,13 @@
             ExcelPackage = new ExcelPackage();
             _uniqueName = new UniqueName();
         }
+
         private readonly Dictionary<string, Sheet> _sheets = new Dictionary<string, Sheet>();
 
         protected string GetSheetName(string name)
         {
             return _uniqueName.GetUniqueName(name);
         }
-
 
         public Sheet Sheet(string name)
         {

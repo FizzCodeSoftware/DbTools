@@ -20,13 +20,13 @@
                     name: child.Key,
                     providerName: child.GetValue<string>("ProviderName"),
                     connectionString: child.GetValue<string>("ConnectionString"),
-                    versionString: child.GetValue<string>("Version") ));
+                    version: child.GetValue<string>("Version")));
             }
         }
 
         public void Add(ConnectionStringWithProvider connectionString)
         {
-            _connectionStrings[connectionString.Name.ToLowerInvariant()] = connectionString;
+            _connectionStrings[connectionString.Name.ToUpperInvariant()] = connectionString;
         }
 
         public IEnumerator<ConnectionStringWithProvider> GetEnumerator()
@@ -38,7 +38,7 @@
         {
             get
             {
-                name = name.ToLowerInvariant();
+                name = name.ToUpperInvariant();
                 _connectionStrings.TryGetValue(name, out var value);
                 return value;
             }

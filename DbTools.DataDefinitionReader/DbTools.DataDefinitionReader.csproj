@@ -21,12 +21,16 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Roslynator.Formatting.Analyzers" Version="1.0.0-rc">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinitionExecuter\DbTools.DataDefinitionExecuter.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinitionGenerator\DbTools.DataDefinitionGenerator.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.SqlExecuter\DbTools.DataDefinition.SqlExecuter.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.SqlGenerator\DbTools.DataDefinition.SqlGenerator.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
   </ItemGroup>
 

@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
 
     public static class ForeignKeyHelper
@@ -18,7 +19,7 @@
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
 
-            var fk = new ForeignKeyRegistrationToTableWithPrimaryKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, fkName);
+            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, fkName);
 
             singleFkColumn.Table.Properties.Add(fk);
 
@@ -40,9 +41,9 @@
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
 
-            var fk = new ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn(table, referredTableNameWithSchema, singleFkColumnName, isNullable, fkName);
+            var fk = new ForeignKeyRegistrationToTableWithUniqueKeySingleColumn(table, referredTableNameWithSchema, singleFkColumnName, isNullable, fkName);
 
-            var placeHolderColumnName = $"*{referredTableNameWithSchema}.{singleFkColumnName}.{table.Columns.Count}";
+            var placeHolderColumnName = $"*{referredTableNameWithSchema}.{singleFkColumnName}.{table.Columns.Count.ToString("D", CultureInfo.InvariantCulture)}";
             table.Columns.Add(new SqlColumnFKRegistration(placeHolderColumnName, fk));
 
             table.Properties.Add(fk);
@@ -59,7 +60,7 @@
 
             var mapColumnNames = string.Join("_", map.Select(m => m.ColumnName).ToList());
 
-            var placeHolderColumnName = $"*{referredTableNameWithSchema}.{mapColumnNames}.{table.Columns.Count}";
+            var placeHolderColumnName = $"*{referredTableNameWithSchema}.{mapColumnNames}.{table.Columns.Count.ToString("D", CultureInfo.InvariantCulture)}";
             table.Columns.Add(new SqlColumnFKRegistration(placeHolderColumnName, fk));
 
             return table;
@@ -69,9 +70,9 @@
         {
             var referredTableNameWithSchema = new SchemaAndTableName(nameOfReferredTableWithPrimaryKey);
 
-            var fk = new ForeignKeyRegistrationToTableWithPrimaryKey(table, referredTableNameWithSchema, isNullable, prefix, fkName);
+            var fk = new ForeignKeyRegistrationToTableWithUniqueKey(table, referredTableNameWithSchema, isNullable, prefix, fkName);
 
-            var placeHolderColumnName = $"*{referredTableNameWithSchema}.{table.Columns.Count}";
+            var placeHolderColumnName = $"*{referredTableNameWithSchema}.{table.Columns.Count.ToString("D", CultureInfo.InvariantCulture)}";
             table.Columns.Add(new SqlColumnFKRegistration(placeHolderColumnName, fk));
 
             table.Properties.Add(fk);

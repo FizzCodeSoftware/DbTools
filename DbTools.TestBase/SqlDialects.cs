@@ -10,15 +10,16 @@
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
     public abstract class SqlVersionsBasAttribute : Attribute, ITestDataSource
     {
-        protected List<SqlVersion> Versions { get; set;  }
+        protected List<SqlEngineVersion> Versions { get; set; }
 
         protected SqlVersionsBasAttribute(params Type[] versionTypes)
         {
-            Versions = new List<SqlVersion>();
+            Versions = new List<SqlEngineVersion>();
             foreach (var versionType in versionTypes)
             {
-                var version = (SqlVersion)Activator.CreateInstance(versionType);
-                Versions.Add(version);
+                var version = (SqlEngineVersion)Activator.CreateInstance(versionType);
+                if(!Versions.Contains(version))
+                    Versions.Add(version);
             }
         }
 
@@ -33,30 +34,40 @@
 
         public string GetDisplayName(MethodInfo methodInfo, object[] data)
         {
-            var versionKey = (SqlVersion)data[0];
+            var versionKey = (SqlEngineVersion)data[0];
             return $"{methodInfo.Name} {versionKey}";
         }
     }
 
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
-    public class LatestSqlVersionsAttribute : SqlVersionsBasAttribute
+    public sealed class LatestSqlVersionsAttribute : SqlVersionsBasAttribute
     {
         public LatestSqlVersionsAttribute()
         {
-            Versions = SqlVersions.GetLatestExecutableVersions();
+            Versions = SqlEngineVersions.GetLatestExecutableVersions()
+                .Where(x => x is MsSqlVersion || x is OracleVersion || x is SqLiteVersion)
+                .ToList();
         }
     }
 
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
-    public class SqlVersionsAttribute : SqlVersionsBasAttribute
+    public sealed class SqlVersionsAttribute : SqlVersionsBasAttribute
     {
-        public SqlVersionsAttribute()
+        public SqlVersionsAttribute(params string[] versionTypeNames)
         {
-            Versions = SqlVersions.Versions;
-        }
+            Versions = new List<SqlEngineVersion>();
+            var allversions = SqlEngineVersions.AllVersions;
+            foreach (var versionTypeName in versionTypeNames)
+            {
+                var version = allversions.Find(v => v.UniqueName == versionTypeName);
+                if (version != null && TestHelper.ShouldRunIntegrationTest(version))
+                {
+                    Versions.Add(version);
+                }
+            }
 
-        public SqlVersionsAttribute(params Type[] versionTypes) : base(versionTypes)
-        {
+            if (Versions.Count == 0)
+                Versions.Add(SqLiteVersion.SqLite3);
         }
     }
 }

@@ -7,10 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.0.0" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
     <PackageReference Include="coverlet.collector" Version="1.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Roslynator.Formatting.Analyzers" Version="1.0.0-rc">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -19,7 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\DbTools.Common\DbTools.Common.csproj" />
     <ProjectReference Include="..\..\DbTools.Configuration\DbTools.Configuration.csproj" />
-    <ProjectReference Include="..\..\DbTools.DataDefinitionExecuter\DbTools.DataDefinitionExecuter.csproj" />
+    <ProjectReference Include="..\..\DbTools.DataDefinition.SqlExecuter\DbTools.DataDefinition.SqlExecuter.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinitionReader\DbTools.DataDefinitionReader.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
     <ProjectReference Include="..\..\DbTools.TestBase\DbTools.TestBase.csproj" />

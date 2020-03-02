@@ -6,75 +6,39 @@
 
     public class DatabaseDefinition
     {
-        public Dictionary<SqlVersion, TypeMapper> TypeMappers { get; set; } = new Dictionary<SqlVersion, TypeMapper>();
+        public Dictionary<SqlEngineVersion, AbstractTypeMapper> TypeMappers { get; set; } = new Dictionary<SqlEngineVersion, AbstractTypeMapper>();
+        public SqlEngineVersion MainVersion { get; private set; }
+        internal Tables Tables { get; } = new Tables();
 
-        public DatabaseDefinition() : this(null, new Configuration.MsSql2016(), new Configuration.Oracle12c(), new Configuration.SqLite3())
+        public DatabaseDefinition(AbstractTypeMapper mainTypeMapper, AbstractTypeMapper[] secondaryTypeMappers = null)
         {
+            SetVersions(mainTypeMapper, secondaryTypeMappers);
         }
 
-        public List<SqlVersion> SqlVersions { get; } = new List<SqlVersion>();
-
-        public SqlVersion MainVersion { get; protected set; }
-
-        public DatabaseDefinition(SqlVersion mainVersion)
+        public void SetVersions(AbstractTypeMapper mainTypeMapper, AbstractTypeMapper[] secondaryTypeMappers = null)
         {
-            MainVersion = mainVersion;
-        }
+            TypeMappers.Clear();
+            MainVersion = mainTypeMapper?.SqlVersion;
 
-        public DatabaseDefinition(SqlVersion mainVersion,  params SqlVersion[] versions)
-        {
-            SetVersions(mainVersion, versions);
-        }
+            if (mainTypeMapper != null && (secondaryTypeMappers?.Contains(mainTypeMapper) != true))
+                TypeMappers.Add(mainTypeMapper.SqlVersion, mainTypeMapper);
 
-        public void SetVersions(SqlVersion mainVersion, params SqlVersion[] versions)
-        {
-            MainVersion = mainVersion;
-            SqlVersions.AddRange(versions);
-
-            foreach (var version in SqlVersions)
+            if (secondaryTypeMappers != null)
             {
-                if (!TypeMappers.ContainsKey(version))
-                    TypeMappers.Add(version, TypeMapperFactory.GetTypeMapper(version));
+                foreach (var mapper in secondaryTypeMappers)
+                {
+                    TypeMappers.Add(mapper.SqlVersion, mapper);
+                }
             }
         }
-
-        internal Tables Tables { get; } = new Tables();
 
         public void AddTable(SqlTable sqlTable)
         {
             sqlTable.DatabaseDefinition = this;
 
-            foreach (var typeMapper in TypeMappers)
+            foreach (var column in sqlTable.Columns)
             {
-                foreach (var column in sqlTable.Columns)
-                {
-                    if (column is SqlColumnFKRegistration)
-                        continue;
-
-                    // TODO only map FROM Gen1 for now
-                    if (!column.Types.ContainsKey(new Configuration.Generic1()))
-                        continue;
-
-                    var othertype = typeMapper.Value.MapFromGeneric1(column.Types[new Configuration.Generic1()]);
-                    SqlColumnHelper.Add(typeMapper.Key, sqlTable, column.Name, othertype);
-                }
-            }
-
-            if (MainVersion != null && MainVersion != Configuration.SqlVersions.Generic1)
-            {
-                var typeMapper = TypeMapperFactory.GetTypeMapper(MainVersion);
-                foreach (var column in sqlTable.Columns)
-                {
-                    if (column is SqlColumnFKRegistration)
-                        continue;
-
-                    // map TO Gen1 if not present
-                    if (!column.Types.ContainsKey(new Configuration.Generic1()))
-                    {
-                        var genericType = typeMapper.MapToGeneric1(column.Types[MainVersion]);
-                        SqlColumnHelper.Add(Configuration.SqlVersions.Generic1, sqlTable, column.Name, genericType);
-                    }
-                }
+                SqlColumnHelper.MapFromGen1(column);
             }
 
             Tables.Add(sqlTable);

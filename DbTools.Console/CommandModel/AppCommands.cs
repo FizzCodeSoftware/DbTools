@@ -6,10 +6,8 @@
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.SqlExecuter;
     using FizzCode.DbTools.DataDefinitionDocumenter;
-    using FizzCode.DbTools.DataDefinitionExecuter;
-    using FizzCode.DbTools.DataDefinitionGenerator;
-    using FizzCode.DbTools.DataDefinitionReader;
     using Microsoft.Extensions.Configuration;
 
     [ApplicationMetadata(Name = ">")]
@@ -22,8 +20,6 @@
             Program.Terminated = true;
         }
 
-        // TODO sqldialect OR sqlVersion / detect version?
-
         [ApplicationMetadata(Name = "document", Description = "Generate excel documentation of an existing database")]
         public void Document(
             [Option(LongName = "connectionString", ShortName = "c")]
@@ -35,13 +31,16 @@
             [Option(LongName = "flags", ShortName = "f")]
             List<DocumenterFlag> flags)
         {
-            var version = SqlVersions.GetVersion(sqlType);
+            var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), connectionString, version.VersionString);
+            var connectionStringWithProvider = new ConnectionStringWithProvider(
+                version.GetType().Name,
+                version.ProviderName,
+                connectionString,
+                version.VersionString);
 
             var context = CreateContext(version);
 
-            // TODO provider-specific ConnectionStringBuilder class
             var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, context);
             var databaseName = sqlExecuter.GetDatabase();
 
@@ -60,8 +59,10 @@
 
         [ApplicationMetadata(Name = "generate", Description = "Generate database definition into cs files.")]
         public void Generate(
-            [Option(LongName = "connectionString", ShortName = "c")]
+            [Option(LongName = "connectionString", ShortName = "c", Description = "Provide a valid connection string to the database")]
             string connectionString,
+            [Option(LongName = "singleOrMulti", ShortName = "m", Description = "multi for multi file, single for single file generation")]
+            string singleOrMulti,
             [Option(LongName = "sqlType", ShortName = "t")]
             string sqlType,
             [Option(LongName = "namespace", ShortName = "n")]
@@ -71,9 +72,13 @@
             [Option(LongName = "patternFileName", ShortName = "p")]
             string patternFileName)
         {
-            var version = SqlVersions.GetVersion(sqlType);
+            var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), connectionString, version.VersionString);
+            var connectionStringWithProvider = new ConnectionStringWithProvider(
+                version.GetType().Name,
+                version.ProviderName,
+                connectionString,
+                version.VersionString);
 
             var context = CreateContext(version);
 
@@ -83,9 +88,13 @@
 
             var documenterContext = CreateDocumenterContext(context, patternFileName);
 
-            var generator = new CsGenerator(documenterContext, version, newDatabaseName, @namespace);
+            var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
+            var generator = new CSharpGenerator(documenterContext, writer, version, newDatabaseName, @namespace);
 
-            generator.GenerateMultiFile(dd);
+            if(singleOrMulti == "s" || singleOrMulti == "single" )
+                generator.GenerateSingleFile(dd, newDatabaseName + ".cs");
+            else
+                generator.GenerateMultiFile(dd);
         }
 
         [ApplicationMetadata(Name = "bim", Description = "Generate database definition into bim (analysis services Model.bim xml) file.")]
@@ -99,9 +108,13 @@
             [Option(LongName = "patternFileName", ShortName = "p")]
             string patternFileName)
         {
-            var version = SqlVersions.GetVersion(sqlType);
+            var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider(version.GetType().Name, SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), connectionString, version.VersionString);
+            var connectionStringWithProvider = new ConnectionStringWithProvider(
+                version.GetType().Name,
+                version.ProviderName,
+                connectionString,
+                version.VersionString);
 
             var context = CreateContext(version);
 
@@ -133,7 +146,7 @@
             return logger;
         }
 
-        private static Context CreateContext(SqlVersion version)
+        private static Context CreateContext(SqlEngineVersion version)
         {
             var context = new Context
             {
@@ -173,9 +186,9 @@
             string sqlType
             )
         {
-            var version = SqlVersions.GetVersion(sqlType);
+            var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider("", SqlDialectHelper.GetProviderNameFromSqlDialect(version.GetType()), connectionString, version.VersionString);
+            var connectionStringWithProvider = new ConnectionStringWithProvider("", version.ProviderName, connectionString, version.VersionString);
 
             var context = CreateContext(version);
 

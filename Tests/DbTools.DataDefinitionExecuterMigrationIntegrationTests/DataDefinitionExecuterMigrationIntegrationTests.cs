@@ -1,4 +1,4 @@
-﻿namespace FizzCode.DbTools.DataDefinitionExecuterMigrationIntegration.Tests
+﻿namespace FizzCode.DbTools.DataDefinition.SqlExecuterMigrationIntegration.Tests
 {
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

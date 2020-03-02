@@ -2,8 +2,9 @@
 {
     using System.Collections.Generic;
     using FizzCode.DbTools.DataDefinition.Generic1;
+    using FizzCode.DbTools.TestBase;
 
-    public class ForeignKeyComposite : DatabaseDeclaration
+    public class ForeignKeyComposite : TestDatabaseDeclaration
     {
         public SqlTable OrderHeader { get; } = AddTable(table =>
         {
@@ -42,7 +43,7 @@
         });
     }
 
-    public class ForeignKeyCompositeSetForeignKeyTo : DatabaseDeclaration
+    public class ForeignKeyCompositeSetForeignKeyTo : TestDatabaseDeclaration
     {
         public SqlTable OrderHeader { get; } = AddTable(table =>
         {

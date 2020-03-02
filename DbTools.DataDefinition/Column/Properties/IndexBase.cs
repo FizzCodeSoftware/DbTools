@@ -11,10 +11,11 @@
         public bool Unique { get; set; }
         public bool? Clustered { get; set; }
 
-        protected IndexBase(SqlTable sqlTable, string name)
+        protected IndexBase(SqlTable sqlTable, string name, bool unique = false)
             : base(sqlTable)
         {
             Name = name;
+            Unique = unique;
         }
     }
 }

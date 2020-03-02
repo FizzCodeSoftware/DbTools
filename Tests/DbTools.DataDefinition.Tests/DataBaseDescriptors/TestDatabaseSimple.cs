@@ -1,8 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Tests
 {
     using FizzCode.DbTools.DataDefinition.Generic1;
+    using FizzCode.DbTools.TestBase;
 
-    public class TestDatabaseSimple : DatabaseDeclaration
+    public class TestDatabaseSimple : TestDatabaseDeclaration
     {
         public SqlTable Company { get; } = AddTable(table =>
         {
@@ -36,8 +37,28 @@
         }
     }
 
-    public class TestDatabaseSimple2 : DatabaseDeclaration
+    public class TestDatabaseSimple2 : TestDatabaseDeclaration
     {
         public Company Company { get; } = new Company();
+    }
+
+    public class TestDatabaseIndex : TestDatabaseDeclaration
+    {
+        public SqlTable Company { get; } = AddTable(table =>
+        {
+            table.AddInt32("Id").SetPK().SetIdentity();
+            table.AddNVarChar("Name", 100);
+            table.AddIndex("Name");
+        });
+    }
+
+    public class TestDatabaseUniqueIndex : TestDatabaseDeclaration
+    {
+        public SqlTable Company { get; } = AddTable(table =>
+        {
+            table.AddInt32("Id").SetPK().SetIdentity();
+            table.AddNVarChar("Name", 100);
+            table.AddIndex(true, "Name");
+        });
     }
 }

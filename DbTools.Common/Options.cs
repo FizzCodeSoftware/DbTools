@@ -3,5 +3,6 @@
     public class Options
     {
         public bool ShouldUseDefaultSchema { get; set; }
+        public bool ShouldMigrateColumnChangesAllAtOnce { get; set; }
     }
 }

@@ -2,17 +2,18 @@
 {
     using System;
     using System.Linq;
+    using System.Text;
 
     internal static class RegisteredForeignKeysCreator
     {
-        internal static void PrimaryKeySingleColumn(DatabaseDefinition definition, SqlTable sqlTable, ForeignKeyRegistrationToTableWithPrimaryKeySingleColumn fkRegistration)
+        internal static void UniqueKeySingleColumn(DatabaseDefinition definition, SqlTable sqlTable, ForeignKeyRegistrationToTableWithUniqueKeySingleColumn fkRegistration)
         {
             var referredTable = definition.GetTable(fkRegistration.ReferredTableName);
-            var referredPk = GetReferredPK(referredTable);
+            var referredUniqueKey = GetReferredUniqueIndex(referredTable);
 
             var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
-            var pkColumn = referredPk.SqlColumns[0].SqlColumn;
+            var pkColumn = referredUniqueKey.SqlColumns[0].SqlColumn;
 
             var col = new SqlColumn();
             pkColumn.CopyTo(col);
@@ -35,10 +36,10 @@
             fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(col, pkColumn));
         }
 
-        public static void PrimaryKey(DatabaseDefinition definition, SqlTable sqlTable, ForeignKeyRegistrationToTableWithPrimaryKey fkRegistration, IForeignKeyNamingStrategy fkNaming)
+        public static void UniqueKey(DatabaseDefinition definition, SqlTable sqlTable, ForeignKeyRegistrationToTableWithUniqueKey fkRegistration, IForeignKeyNamingStrategy fkNaming)
         {
             var referredTable = definition.GetTable(fkRegistration.ReferredTableName);
-            var referredPk = GetReferredPK(referredTable);
+            var referredUniqueIndex = GetReferredUniqueIndex(referredTable);
 
             var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
@@ -46,7 +47,7 @@
             var order = sqlTable.Columns.GetOrder(placeHolderColumn.Name);
             sqlTable.Columns.Remove(placeHolderColumn.Name);
 
-            foreach (var pkColumn in referredPk.SqlColumns.Select(x => x.SqlColumn))
+            foreach (var pkColumn in referredUniqueIndex.SqlColumns.Select(x => x.SqlColumn))
             {
                 var col = new SqlColumn();
                 pkColumn.CopyTo(col);
@@ -63,15 +64,38 @@
             }
         }
 
-        public static void PrimaryKeyExistingColumn(DatabaseDefinition definiton, SqlTable sqlTable, ForeignKeyRegistrationToTableWithPrimaryKeyExistingColumn fkRegistration)
+        public static void PrimaryKeyExistingColumn(DatabaseDefinition definiton, SqlTable sqlTable, ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn fkRegistration)
         {
             var referredTable = definiton.GetTable(fkRegistration.ReferredTableName);
-            var referredPk = GetReferredPK(referredTable);
+            var referredUniqueIndex = GetReferredUniqueIndex(referredTable);
+
+            CheckValidity(fkRegistration, referredUniqueIndex);
 
             var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
-            var pkColumn = referredPk.SqlColumns[0].SqlColumn;
+            var pkColumn = referredUniqueIndex.SqlColumns[0].SqlColumn;
             fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkRegistration.SingleFkColumn, pkColumn));
+        }
+
+        private static void CheckValidity(ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn fkRegistration, IndexBase referredUnique)
+        {
+            if (referredUnique.SqlColumns.Count > 1)
+            {
+                var messageDescriptionSb = new StringBuilder();
+                try
+                {
+                    messageDescriptionSb.Append("FK: ");
+                    messageDescriptionSb.AppendLine(fkRegistration.SingleFkColumn.ToString());
+                    messageDescriptionSb.Append("UK: ");
+                    foreach (var referredColumn in referredUnique.SqlColumns)
+                        messageDescriptionSb.AppendLine(referredColumn.SqlColumn.ToString());
+                }
+                finally
+                {
+                }
+
+                throw new InvalidForeignKeyRegistrationException("Single column FK refers to multi column PK or unique index or unique constraint. " + messageDescriptionSb.ToString());
+            }
         }
 
         public static void ReferredTableExistingColumns(DatabaseDefinition definition, SqlTable sqlTable, ForeignKeyRegistrationToReferredTableExistingColumns fkRegistration)
@@ -112,13 +136,16 @@
             }
         }
 
-        private static PrimaryKey GetReferredPK(SqlTable referredTable)
+        private static IndexBase GetReferredUniqueIndex(SqlTable referredTable)
         {
-            var referredPk = referredTable.Properties.OfType<PrimaryKey>().FirstOrDefault();
-            if (referredPk == null)
-                throw new Exception("Can't define ForeignKeyRegistrationToTableWithPrimaryKey against a table without primary key!");
+            var uniqueIndex = referredTable.Properties.OfType<IndexBase>().FirstOrDefault()
+                ?? referredTable.Properties.OfType<Index>().FirstOrDefault(i => i.Unique) as IndexBase
+                ?? referredTable.Properties.OfType<UniqueConstraint>().FirstOrDefault();
 
-            return referredPk;
+            if (uniqueIndex == null)
+                throw new Exception("Can't define ForeignKeyRegistrationToTableWithPrimaryKey against a table without primary key, unique index or unique constraint.");
+
+            return uniqueIndex;
         }
 
         private static ForeignKey ReplaceFKRegistrationWithNewFK(SqlTable sqlTable, ForeignKeyRegistrationBase fkRegistration, SqlTable referredTable)
