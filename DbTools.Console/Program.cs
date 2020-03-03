@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Text.RegularExpressions;
     using CommandDotNet;
-    using CommandDotNet.Models;
+    using CommandDotNet.Help;
     using FizzCode.DbTools.Configuration;
     using Microsoft.Extensions.Configuration;
 
@@ -68,12 +68,11 @@
         {
             return new AppSettings()
             {
-                EnableVersionOption = false,
-                Case = Case.KebabCase,
                 Help = new AppHelpSettings()
                 {
                     TextStyle = HelpTextStyle.Basic,
-                    UsageAppNameStyle = UsageAppNameStyle.GlobalTool,
+                    UsageAppName = ">",
+                    PrintHelpOption = false,
                 },
             };
         }

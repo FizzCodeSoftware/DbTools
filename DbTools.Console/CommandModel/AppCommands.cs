@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.Console
 {
     using System.Collections.Generic;
-    using CommandDotNet.Attributes;
+    using CommandDotNet;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
@@ -10,17 +10,17 @@
     using FizzCode.DbTools.DataDefinitionDocumenter;
     using Microsoft.Extensions.Configuration;
 
-    [ApplicationMetadata(Name = ">")]
+    [Command(Name = ">")]
 #pragma warning disable CA1812
     internal class AppCommands
     {
-        [ApplicationMetadata(Name = "exit", Description = "Exit from the command-line utility.")]
+        [Command(Name = "exit", Description = "Exit from the command-line utility.")]
         public void Exit()
         {
             Program.Terminated = true;
         }
 
-        [ApplicationMetadata(Name = "document", Description = "Generate excel documentation of an existing database")]
+        [Command(Name = "document", Description = "Generate excel documentation of an existing database")]
         public void Document(
             [Option(LongName = "connectionString", ShortName = "c")]
             string connectionString,
@@ -57,7 +57,7 @@
             documenter.Document(dd);
         }
 
-        [ApplicationMetadata(Name = "generate", Description = "Generate database definition into cs files.")]
+        [Command(Name = "generate", Description = "Generate database definition into cs files.")]
         public void Generate(
             [Option(LongName = "connectionString", ShortName = "c", Description = "Provide a valid connection string to the database")]
             string connectionString,
@@ -97,7 +97,7 @@
                 generator.GenerateMultiFile(dd);
         }
 
-        [ApplicationMetadata(Name = "bim", Description = "Generate database definition into bim (analysis services Model.bim xml) file.")]
+        [Command(Name = "bim", Description = "Generate database definition into bim (analysis services Model.bim xml) file.")]
         public void Bim(
             [Option(LongName = "connectionString", ShortName = "c")]
             string connectionString,
@@ -178,7 +178,7 @@
             return documenterContext;
         }
 
-        [ApplicationMetadata(Name = "dropall", Description = "Drop every object from a database.")]
+        [Command(Name = "dropall", Description = "Drop every object from a database.")]
         public void DropAll(
             [Option(LongName = "connectionString", ShortName = "c")]
             string connectionString,
