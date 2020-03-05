@@ -6,7 +6,7 @@
     using FizzCode.DbTools.DataDefinition.MsSql2016;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
-    public class MsSqlTableReader2016 :  GenericDataDefinitionElementReader
+    public class MsSqlTableReader2016 : GenericDataDefinitionElementReader
     {
         private ILookup<string, Row> _queryResult;
         private ILookup<string, Row> QueryResult => _queryResult ?? (_queryResult = Executer.ExecuteQuery(GetStatement()).Rows.ToLookup(x => x.GetAs<string>("SchemaAndTableName")));

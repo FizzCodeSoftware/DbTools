@@ -4,9 +4,20 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
     <CodeAnalysisRuleSet>..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
+    <AssemblyName>FizzCode.DbTools.DataDefinitionReader.Tests</AssemblyName>
+    <RootNamespace>FizzCode.DbTools.DataDefinitionReader.Tests</RootNamespace>
+    <Description>Tests for FizzCode.DbTools.DataDefinitionReader</Description>
+    <Copyright>Copyright © 2019-2020 FizzCode Ltd.</Copyright>
+    <Authors>FizzCode Ltd.</Authors>
+    <Company>FizzCode Ltd.</Company>
+    <Product>FizzCode DbTools</Product>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
     <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />

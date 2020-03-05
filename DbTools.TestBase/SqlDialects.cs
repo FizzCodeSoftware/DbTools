@@ -18,7 +18,7 @@
             foreach (var versionType in versionTypes)
             {
                 var version = (SqlEngineVersion)Activator.CreateInstance(versionType);
-                if(!Versions.Contains(version))
+                if (!Versions.Contains(version))
                     Versions.Add(version);
             }
         }

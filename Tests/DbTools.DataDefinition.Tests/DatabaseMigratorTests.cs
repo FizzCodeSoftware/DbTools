@@ -12,7 +12,7 @@
     [TestClass]
     public class DatabaseMigratorTests
     {
-        public Context GetContext(SqlEngineVersion version)
+        public static Context GetContext(SqlEngineVersion version)
         {
             var context = new Context
             {
