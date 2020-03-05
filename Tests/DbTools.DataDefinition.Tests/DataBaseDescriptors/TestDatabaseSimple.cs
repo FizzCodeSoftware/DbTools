@@ -12,36 +12,6 @@
         });
     }
 
-    public class Company : SqlTable
-    {
-        private SqlColumn _id;
-        public SqlColumn Id
-        {
-            get
-            {
-                if (_id == null)
-                    _id = this.AddInt32("Id").SetPK().SetIdentity();
-                return _id;
-            }
-        }
-
-        private SqlColumn _name;
-        public SqlColumn Name
-        {
-            get
-            {
-                if (_name == null)
-                    _name = this.AddNVarChar("Name", 100);
-                return _name;
-            }
-        }
-    }
-
-    public class TestDatabaseSimple2 : TestDatabaseDeclaration
-    {
-        public Company Company { get; } = new Company();
-    }
-
     public class TestDatabaseIndex : TestDatabaseDeclaration
     {
         public SqlTable Company { get; } = AddTable(table =>

@@ -74,6 +74,10 @@
             var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
             var pkColumn = referredUniqueIndex.SqlColumns[0].SqlColumn;
+
+            if (fkRegistration.SingleFkColumn.Types.Count == 0)
+                pkColumn.Types.CopyTo(fkRegistration.SingleFkColumn.Types);
+
             fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkRegistration.SingleFkColumn, pkColumn));
         }
 
