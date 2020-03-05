@@ -4,6 +4,12 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
     <CodeAnalysisRuleSet>..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
+    <AssemblyName>FizzCode.DbTools.DataGenerator.Tests</AssemblyName>
+    <RootNamespace>FizzCode.DbTools.DataGenerator.Tests</RootNamespace>
+    <Description>Tests for FizzCode.DbTools.DataGenerator</Description>
+    <Authors>FizzCode Ltd.</Authors>
+    <Company>FizzCode Ltd.</Company>
+    <Product>FizzCode DbTools</Product>
   </PropertyGroup>
 
   <ItemGroup>

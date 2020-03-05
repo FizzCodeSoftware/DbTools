@@ -4,6 +4,13 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IsPackable>false</IsPackable>
     <CodeAnalysisRuleSet>..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
+    <Copyright>Copyright © 2019-2020 FizzCode Ltd.</Copyright>
+    <Authors>FizzCode Ltd.</Authors>
+    <Product>FizzCode DbTools</Product>
+    <Description>Tests for FizzCode.DbTools.DataDefinition.SqlExecuter</Description>
+    <PackageId>FizzCode.DbTools.DataDefinition.SqlExecuter.Tests</PackageId>
+    <AssemblyName>FizzCode.DbTools.DataDefinition.SqlExecuter.Tests</AssemblyName>
+    <RootNamespace>FizzCode.DbTools.DataDefinition.SqlExecuter.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

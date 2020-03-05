@@ -8,7 +8,7 @@
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>
     <Description>Console project which accepts commands to execute DbTools features.</Description>
-    <Copyright>Copyright © 2019 FizzCode Ltd.</Copyright>
+    <Copyright>Copyright © 2019-2020 FizzCode Ltd.</Copyright>
     <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
     <Platforms>AnyCPU</Platforms>
     <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
