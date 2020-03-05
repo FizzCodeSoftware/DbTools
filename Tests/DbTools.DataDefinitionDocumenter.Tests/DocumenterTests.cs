@@ -40,7 +40,7 @@
             documenter.Document(db);
         }
 
-        public class TableCustomizer : ITableCustomizer
+        internal class TableCustomizer : ITableCustomizer
         {
             public string BackGroundColor(SchemaAndTableName tableName)
             {

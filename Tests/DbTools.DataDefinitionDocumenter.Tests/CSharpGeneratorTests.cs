@@ -19,7 +19,7 @@
             GeneratorTestDatabaseFks(SqLiteVersion.SqLite3);
         }
 
-        public void GeneratorTestDatabaseFks(SqlEngineVersion version)
+        public static void GeneratorTestDatabaseFks(SqlEngineVersion version)
         {
             var db = new TestDatabaseFks();
 
@@ -97,7 +97,7 @@
             generator.GenerateMultiFile(db);
         }
 
-        public class TestDatabaseUniqueConstraint : TestDatabaseDeclaration
+        internal class TestDatabaseUniqueConstraint : TestDatabaseDeclaration
         {
             public SqlTable Company { get; } = AddTable(table =>
             {

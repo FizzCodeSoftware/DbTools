@@ -1,6 +1,7 @@
 ﻿#pragma warning disable CA1034 // Nested types should not be visible
 namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
 {
+    using System.Globalization;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Generic1;
@@ -104,7 +105,7 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
             {
                 table.AddInt32("Id").SetPK().SetIdentity();
                 table.AddNVarChar("Name", 100).AddDefaultValue("'apple'");
-                table.AddDateTime("DateTime").AddDefaultValue("'" + new System.DateTime(2019, 8, 7, 13, 59, 57, 357).ToString("yyyy-M-d HH:mm:ss.fff") + "'");
+                table.AddDateTime("DateTime").AddDefaultValue("'" + new System.DateTime(2019, 8, 7, 13, 59, 57, 357).ToString("yyyy-M-d HH:mm:ss.fff", CultureInfo.InvariantCulture) + "'");
             });
         }
 

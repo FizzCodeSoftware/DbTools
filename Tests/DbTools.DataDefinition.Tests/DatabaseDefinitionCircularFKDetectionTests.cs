@@ -74,11 +74,11 @@ namespace FizzCode.DbTools.DataDefinition.Tests
             var fk1Cfks = db.GetTable("FK1").Properties.OfType<CircularFK>().ToList();
             var fk2Cfks = db.GetTable("FK2").Properties.OfType<CircularFK>().ToList();
 
-            Assert.AreEqual(1, startCfks.Count());
-            Assert.AreEqual(1, fk1Cfks.Count());
-            Assert.AreEqual(1, fk2Cfks.Count());
+            Assert.AreEqual(1, startCfks.Count);
+            Assert.AreEqual(1, fk1Cfks.Count);
+            Assert.AreEqual(1, fk2Cfks.Count);
 
-            Assert.AreEqual(3, startCfks[0].ForeignKeyChain.Count());
+            Assert.AreEqual(3, startCfks[0].ForeignKeyChain.Count);
             CheckeOtherChainIsCircular(db.GetTable("Start").Properties.OfType<ForeignKey>().First(), db.GetTable("FK1"), db.GetTable("FK2"), startCfks[0], fk1Cfks, fk2Cfks);
         }
 
@@ -94,22 +94,22 @@ namespace FizzCode.DbTools.DataDefinition.Tests
             var fkb1Cfks = db.GetTable("FKB1").Properties.OfType<CircularFK>().ToList();
             var fkb2Cfks = db.GetTable("FKB2").Properties.OfType<CircularFK>().ToList();
 
-            Assert.AreEqual(2, startCfks.Count());
-            Assert.AreEqual(1, fka1Cfks.Count());
-            Assert.AreEqual(1, fka2Cfks.Count());
-            Assert.AreEqual(1, fkb1Cfks.Count());
-            Assert.AreEqual(1, fkb2Cfks.Count());
+            Assert.AreEqual(2, startCfks.Count);
+            Assert.AreEqual(1, fka1Cfks.Count);
+            Assert.AreEqual(1, fka2Cfks.Count);
+            Assert.AreEqual(1, fkb1Cfks.Count);
+            Assert.AreEqual(1, fkb2Cfks.Count);
 
-            Assert.AreEqual(3, startCfks[0].ForeignKeyChain.Count());
+            Assert.AreEqual(3, startCfks[0].ForeignKeyChain.Count);
             CheckeOtherChainIsCircular(db.GetTable("Start").Properties.OfType<ForeignKey>().First(), db.GetTable("FKA1"), db.GetTable("FKA2"), startCfks[0], fka1Cfks, fka2Cfks);
-            Assert.AreEqual(3, startCfks[1].ForeignKeyChain.Count());
+            Assert.AreEqual(3, startCfks[1].ForeignKeyChain.Count);
             CheckeOtherChainIsCircular(db.GetTable("Start").Properties.OfType<ForeignKey>().ToList()[1], db.GetTable("FKB1"), db.GetTable("FKB2"), startCfks[1], fkb1Cfks, fkb2Cfks);
         }
 
         private static void CheckeOtherChainIsCircular(ForeignKey startFk, SqlTable fk1, SqlTable fk2, CircularFK startCfk, List<CircularFK> fk1Cfks, List<CircularFK> fk2Cfks)
         {
-            Assert.AreEqual(2, fk1Cfks[0].ForeignKeyChain.Count());
-            Assert.AreEqual(2, fk2Cfks[0].ForeignKeyChain.Count());
+            Assert.AreEqual(2, fk1Cfks[0].ForeignKeyChain.Count);
+            Assert.AreEqual(2, fk2Cfks[0].ForeignKeyChain.Count);
 
             Assert.AreEqual(startFk, startCfk.ForeignKeyChain[0]);
 

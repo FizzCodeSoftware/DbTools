@@ -6,12 +6,12 @@
     [TestClass]
     public abstract class DataDefinitionExecuterMigrationIntegrationTests
     {
-        protected static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new SqlExecuterTestAdapter();
+        protected static SqlExecuterTestAdapter SqlExecuterTestAdapter { get; } = new SqlExecuterTestAdapter();
 
         [AssemblyCleanup]
         public static void Cleanup()
         {
-            _sqlExecuterTestAdapter.Cleanup();
+            SqlExecuterTestAdapter.Cleanup();
         }
     }
 }

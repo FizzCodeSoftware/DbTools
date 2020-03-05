@@ -25,7 +25,7 @@
             CheckFK(tables, "Child", "ParentId");
         }
 
-        protected void CheckFK(IList<SqlTable> tables, string childName, string fkColumnName)
+        protected static void CheckFK(IList<SqlTable> tables, string childName, string fkColumnName)
         {
             var child = tables.First(t => t.SchemaAndTableName.TableName == childName);
             var fk = child.Properties.OfType<ForeignKey>().First();

@@ -91,7 +91,7 @@
             var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
             var generator = new CSharpGenerator(documenterContext, writer, version, newDatabaseName, @namespace);
 
-            if(singleOrMulti == "s" || singleOrMulti == "single" )
+            if (singleOrMulti == "s" || singleOrMulti == "single")
                 generator.GenerateSingleFile(dd, newDatabaseName + ".cs");
             else
                 generator.GenerateMultiFile(dd);
