@@ -109,7 +109,7 @@
             .AppendLine(_namespace)
             .AppendLine("{")
             .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
-            .AppendLine(1, _writer.GetSqlTypeNamespace())
+            .AppendLine(1, "using " + _writer.GetSqlTypeNamespace() + ";")
             .AppendLine()
             .Append(1, "public partial class ")
             .Append(DatabaseName)
@@ -123,9 +123,9 @@
             sb.Append("namespace ")
             .AppendLine(_namespace)
             .AppendLine("{")
-            .AppendLine(1, "using FizzCode.DbTools.Configuration;")
+            //.AppendLine(1, "using FizzCode.DbTools.Configuration;")
             .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
-            .AppendLine(1, _writer.GetSqlTypeNamespace())
+            .AppendLine(1, "using " + _writer.GetSqlTypeNamespace() + ";")
             .AppendLine()
             .Append(1, "public class ")
             .Append(DatabaseName)
@@ -133,9 +133,11 @@
             .AppendLine(1, "{")
             .AppendLine(2, "public " + DatabaseName + "(string defaultSchema = null, NamingStrategies namingStrategies = null)")
             .Append(3, ": base(")
-            // TODO
-            .Append("MsSqlVersion.MsSql2016.GetTypeMapper()")
-            .AppendLine(", null, defaultSchema, namingStrategies)")
+            .Append("new ")
+            .Append(string.Equals(_writer.TypeMapperType.Namespace, _writer.GetSqlTypeNamespace(), System.StringComparison.InvariantCultureIgnoreCase)
+                ? _writer.TypeMapperType.Name
+                : _writer.TypeMapperType.AssemblyQualifiedName)
+            .AppendLine("(), null, defaultSchema, namingStrategies)")
             .AppendLine(2, "{")
             .AppendLine(2, "}");
         }

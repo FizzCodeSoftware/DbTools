@@ -8,10 +8,9 @@
 
     public class SqLite3CSharpWriter : AbstractCSharpWriter
     {
-        public SqLite3CSharpWriter(Context context)
-            : base(context)
+        public SqLite3CSharpWriter(Context context, Type typeMapperType)
+            : base(context, SqLiteVersion.SqLite3, typeMapperType)
         {
-            Version = SqLiteVersion.SqLite3;
         }
 
         protected override string GetColumnCreationMethod(SqlColumn column)

@@ -9,10 +9,9 @@
 
     public class Oracle12cCSharpWriter : AbstractCSharpWriter
     {
-        public Oracle12cCSharpWriter(Context context)
-            : base(context)
+        public Oracle12cCSharpWriter(Context context, Type typeMapperType)
+            : base(context, OracleVersion.Oracle12c, typeMapperType)
         {
-            Version = OracleVersion.Oracle12c;
         }
 
         protected override string GetColumnCreationMethod(SqlColumn column)

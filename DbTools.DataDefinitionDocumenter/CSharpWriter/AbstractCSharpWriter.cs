@@ -10,11 +10,14 @@
     public abstract class AbstractCSharpWriter
     {
         public Context Context { get; }
-        public SqlEngineVersion Version { get; protected set; }
+        public SqlEngineVersion Version { get; }
+        public Type TypeMapperType { get; }
 
-        protected AbstractCSharpWriter(Context context)
+        protected AbstractCSharpWriter(Context context, SqlEngineVersion version, Type typeMapperType)
         {
             Context = context;
+            Version = version;
+            TypeMapperType = typeMapperType;
         }
 
         public string GetColumnCreation(SqlColumn column)
@@ -96,7 +99,7 @@
 
         public virtual string GetSqlTypeNamespace()
         {
-            return $"using FizzCode.DbTools.DataDefinition.{Version};";
+            return $"FizzCode.DbTools.DataDefinition.{Version}";
         }
     }
 }

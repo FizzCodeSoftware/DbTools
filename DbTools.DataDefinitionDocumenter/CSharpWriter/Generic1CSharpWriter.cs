@@ -9,10 +9,9 @@
 
     public class Generic1CSharpWriter : AbstractCSharpWriter
     {
-        public Generic1CSharpWriter(Context context)
-            : base(context)
+        public Generic1CSharpWriter(Context context, Type typeMapperType)
+            : base(context, GenericVersion.Generic1, typeMapperType)
         {
-            Version = GenericVersion.Generic1;
         }
 
         protected override string GetColumnCreationMethod(SqlColumn column)

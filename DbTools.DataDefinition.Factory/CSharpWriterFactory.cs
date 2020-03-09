@@ -15,16 +15,16 @@
             // TODO handle versions
 
             if (version is GenericVersion)
-                return new Generic1CSharpWriter(context);
+                return new Generic1CSharpWriter(context, typeof(Generic1TypeMapper));
 
             if (version is SqLiteVersion)
-                return new SqLite3CSharpWriter(context);
+                return new SqLite3CSharpWriter(context, typeof(SqLite3TypeMapper));
 
             if (version is MsSqlVersion)
-                return new MsSql2016CSharpWriter(context);
+                return new MsSql2016CSharpWriter(context, typeof(MsSql2016TypeMapper));
 
             if (version is OracleVersion)
-                return new Oracle12cCSharpWriter(context);
+                return new Oracle12cCSharpWriter(context, typeof(Oracle12cTypeMapper));
 
             throw new NotImplementedException($"Not implemented {version}.");
         }

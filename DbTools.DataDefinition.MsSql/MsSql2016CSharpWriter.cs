@@ -9,10 +9,9 @@
 
     public class MsSql2016CSharpWriter : AbstractCSharpWriter
     {
-        public MsSql2016CSharpWriter(Context context)
-            : base(context)
+        public MsSql2016CSharpWriter(Context context, Type typeMapperType)
+            : base(context, MsSqlVersion.MsSql2016, typeMapperType)
         {
-            Version = MsSqlVersion.MsSql2016;
         }
 
         protected override string GetColumnCreationMethod(SqlColumn column)
