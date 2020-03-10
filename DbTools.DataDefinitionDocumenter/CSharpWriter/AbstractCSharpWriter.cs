@@ -40,6 +40,24 @@
                 sb.Append(".SetIdentity()");
             }
 
+            if(!Context.DocumenterSettings.NoForeignKeys)
+                AddForeignKeySettings(column, sb);
+
+            // TODO Default Value + config
+
+            sb.Append(";");
+
+            var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
+            if (!string.IsNullOrEmpty(descriptionProperty?.Description))
+            {
+                sb.Append(" // ").Append(descriptionProperty.Description.Replace("\r", "", StringComparison.OrdinalIgnoreCase).Replace("\n", "", StringComparison.OrdinalIgnoreCase));
+            }
+
+            return sb.ToString();
+        }
+
+        private void AddForeignKeySettings(SqlColumn column, StringBuilder sb)
+        {
             var fkOnColumn = column.Table.Properties.OfType<ForeignKey>().FirstOrDefault(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn == column));
             if (fkOnColumn != null)
             {
@@ -74,21 +92,8 @@
 
                         sb.Append(3, "})");
                     }
-                    // throw new NotImplementedException("Multiple FK columns");
                 }
             }
-
-            // TODO Default Value + config
-
-            sb.Append(";");
-
-            var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
-            if (!string.IsNullOrEmpty(descriptionProperty?.Description))
-            {
-                sb.Append(" // ").Append(descriptionProperty.Description.Replace("\r", "", StringComparison.OrdinalIgnoreCase).Replace("\n", "", StringComparison.OrdinalIgnoreCase));
-            }
-
-            return sb.ToString();
         }
 
         protected abstract string GetColumnCreationMethod(SqlColumn column);

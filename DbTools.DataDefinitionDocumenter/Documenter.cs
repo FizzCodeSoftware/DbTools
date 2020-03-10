@@ -382,12 +382,4 @@
             DocumenterWriter.WriteAndMerge(GetColor(schemaAndTableName), Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), mergeAmount, content);
         }
     }
-
-    public enum DocumenterSettingFlag
-    {
-        None,
-        NoForeignKeys,
-        NoIndexes,
-        NoInternalDataTypes,
-    }
 }
