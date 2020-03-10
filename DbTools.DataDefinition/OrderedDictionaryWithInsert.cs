@@ -63,10 +63,9 @@
 
         public IEnumerator<TValue> GetEnumerator()
         {
-            foreach (var orderKey in _order.Keys.OrderBy(k => k))
+            foreach (var kvp in _order)
             {
-                var dictionaryKey = _order[orderKey];
-                yield return _dictionary[dictionaryKey];
+                yield return _dictionary[kvp.Value];
             }
         }
 
@@ -82,7 +81,10 @@
 
         public void CopyTo(TValue[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            foreach (var kvp in _order)
+            {
+                array[arrayIndex++] = _dictionary[kvp.Value];
+            }
         }
 
         public bool Remove(TValue item)
