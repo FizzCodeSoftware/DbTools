@@ -4,6 +4,10 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>FizzCode.DbTools.Tabular</AssemblyName>
     <RootNamespace>FizzCode.DbTools.Tabular</RootNamespace>
+    <Authors>FizzCode Ltd.</Authors>
+    <Product>FizzCode DbTools</Product>
+    <Description>Tabular (bim) database definition generator for DbTools.</Description>
+    <Copyright>Copyright © 2019-2020 FizzCode Ltd.</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
