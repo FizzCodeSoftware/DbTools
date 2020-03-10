@@ -29,7 +29,7 @@
             [Option(LongName = "patternFileName", ShortName = "p")]
             string patternFileName,
             [Option(LongName = "flags", ShortName = "f")]
-            List<DocumenterFlag> flags)
+            List<string> flags)
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
 
@@ -48,11 +48,10 @@
 
             var dd = ddlReader.GetDatabaseDefinition();
 
-            var flagsSet = flags == null ? new HashSet<DocumenterFlag>() : new HashSet<DocumenterFlag>(flags);
-
             var documenterContext = CreateDocumenterContext(context, patternFileName);
+            SetSettingsFromFlags(flags, documenterContext.DocumenterSettings);
 
-            var documenter = new Documenter(documenterContext, version, databaseName, null, flagsSet);
+            var documenter = new Documenter(documenterContext, version, databaseName, null);
 
             documenter.Document(dd);
         }
@@ -70,7 +69,9 @@
             [Option(LongName = "newDatabaseName", ShortName = "b")]
             string newDatabaseName,
             [Option(LongName = "patternFileName", ShortName = "p")]
-            string patternFileName)
+            string patternFileName,
+            [Option(LongName = "flags", ShortName = "f")]
+            List<string> flags)
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
 
@@ -87,6 +88,7 @@
             var dd = ddlReader.GetDatabaseDefinition();
 
             var documenterContext = CreateDocumenterContext(context, patternFileName);
+            SetSettingsFromFlags(flags, documenterContext.DocumenterSettings);
 
             var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
             var generator = new CSharpGenerator(writer, version, newDatabaseName, @namespace);
@@ -95,6 +97,23 @@
                 generator.GenerateSingleFile(dd, newDatabaseName + ".cs");
             else
                 generator.GenerateMultiFile(dd);
+        }
+
+        private static void SetSettingsFromFlags(List<string> flagsAsStrings, DocumenterSettings settings)
+        {
+            foreach (var flagAsString in flagsAsStrings)
+            {
+                var flag = (DocumenterSettingFlag)System.Enum.Parse(typeof(DocumenterSettingFlag), flagAsString, true);
+
+                if (flag == DocumenterSettingFlag.NoIndexes)
+                    settings.NoIndexes = true;
+
+                if (flag == DocumenterSettingFlag.NoForeignKeys)
+                    settings.NoForeignKeys = true;
+
+                if (flag == DocumenterSettingFlag.NoInternalDataTypes)
+                    settings.NoInternalDataTypes = true;
+            }
         }
 
         [Command(Name = "bim", Description = "Generate database definition into bim (analysis services Model.bim xml) file.")]

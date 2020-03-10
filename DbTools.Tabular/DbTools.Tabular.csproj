@@ -7,7 +7,7 @@
     <RootNamespace>FizzCode.DbTools.Tabular</RootNamespace>
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>
-    <Description>Tabular (bim) database definition generator for DbTools.</Description>
+    <Description>Tabular (bim) database definition generator for DbTools project</Description>
     <Copyright>Copyright © 2019-2020 FizzCode Ltd.</Copyright>
     <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>FizzCode.DbTools.Tabular</AssemblyName>

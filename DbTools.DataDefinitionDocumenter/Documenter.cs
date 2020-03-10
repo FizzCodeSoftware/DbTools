@@ -14,22 +14,19 @@
         protected IDocumenterWriter DocumenterWriter { get; }
 
         private readonly string _fileName;
-        private readonly HashSet<DocumenterFlag> _flags;
 
-        public Documenter(DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null, HashSet<DocumenterFlag> flags = null)
-            : this(new DocumenterWriterExcel(), context, version, databaseName, fileName, flags)
+        public Documenter(DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
+            : this(new DocumenterWriterExcel(), context, version, databaseName, fileName)
         {
         }
 
-        public Documenter(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null, HashSet<DocumenterFlag> flags = null)
+        public Documenter(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
             : base(context, version, databaseName)
         {
             DocumenterWriter = documenterWriter;
             _fileName = fileName;
 
             Helper = new DocumenterHelper(context.Settings);
-
-            _flags = flags ?? new HashSet<DocumenterFlag>();
         }
 
         private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
@@ -92,7 +89,7 @@
 
                 WriteLine("Tables", "Category", "Schema", "Table Name", "Link", "Number of columns", "Description");
 
-                if (!_flags.Contains(DocumenterFlag.NoInternalDataTypes))
+                if(!Context.DocumenterSettings.NoInternalDataTypes)
                 {
                     WriteLine("All columns", "Category", "Schema", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Scale", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
                 }
@@ -104,7 +101,7 @@
             else
             {
                 WriteLine("Tables", "Schema", "Table Name", "Number of columns", "Description");
-                if (!_flags.Contains(DocumenterFlag.NoInternalDataTypes))
+                if(!Context.DocumenterSettings.NoInternalDataTypes)
                 {
                     WriteLine("All columns", "Schema", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Scale", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
                 }
@@ -125,7 +122,7 @@
                 if (sheetColor != null)
                     DocumenterWriter.SetSheetColor(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName), sheetColor.Value);
 
-                var mergeAmount = !_flags.Contains(DocumenterFlag.NoInternalDataTypes) ? 12 : 11;
+                var mergeAmount = !Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11;
 
                 WriteColor(table.SchemaAndTableName, "Schema");
                 WriteAndMerge(table.SchemaAndTableName, mergeAmount, table.SchemaAndTableName.Schema);
@@ -149,7 +146,7 @@
 
                 WriteLine(table.SchemaAndTableName);
 
-                if (!_flags.Contains(DocumenterFlag.NoInternalDataTypes))
+                if (!Context.DocumenterSettings.NoInternalDataTypes)
                     WriteLine(table.SchemaAndTableName, "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Scale", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key Name", "Referenced Table", "Link", "Referenced Column");
                 else
                     WriteLine(table.SchemaAndTableName, "Column Name", "Data Type", "Column Length", "Column Scale", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key Name", "Referenced Table", "Link", "Referenced Column");
@@ -234,7 +231,7 @@
 
                 // TODO internall data types are not OK this way
 
-                if (!_flags.Contains(DocumenterFlag.NoInternalDataTypes))
+                if (!Context.DocumenterSettings.NoInternalDataTypes)
                     Write(table.SchemaAndTableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
                 else
                     Write(table.SchemaAndTableName, column.Name, sqlType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
@@ -276,12 +273,12 @@
 
                 if (hasCategories)
                 {
-                    if (!_flags.Contains(DocumenterFlag.NoInternalDataTypes))
+                    if (!Context.DocumenterSettings.NoInternalDataTypes)
                         DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
                     else
                         DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
                 }
-                else if (!_flags.Contains(DocumenterFlag.NoInternalDataTypes))
+                else if (!Context.DocumenterSettings.NoInternalDataTypes)
                 {
                     DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
                 }
@@ -304,7 +301,7 @@
                 DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), "All columns", description);
             }
 
-            if (!_flags.Contains(DocumenterFlag.NoDetailedForeignKeys))
+            if (!Context.DocumenterSettings.NoForeignKeys)
             {
                 WriteLine(table.SchemaAndTableName);
                 WriteLine(table.SchemaAndTableName, "Foreign keys");
@@ -328,7 +325,7 @@
                     WriteLine(table.SchemaAndTableName);
             }
 
-            if (!_flags.Contains(DocumenterFlag.NoDetailedIndexes))
+            if (!Context.DocumenterSettings.NoIndexes)
             {
                 WriteLine(table.SchemaAndTableName);
                 WriteLine(table.SchemaAndTableName, "Indexes");
@@ -384,5 +381,13 @@
         {
             DocumenterWriter.WriteAndMerge(GetColor(schemaAndTableName), Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), mergeAmount, content);
         }
+    }
+
+    public enum DocumenterSettingFlag
+    {
+        None,
+        NoForeignKeys,
+        NoIndexes,
+        NoInternalDataTypes,
     }
 }

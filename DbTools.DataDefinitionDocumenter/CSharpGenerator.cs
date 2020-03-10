@@ -206,12 +206,15 @@
             sb.AppendLine(2, "});");
         }
 
-        protected static void GenerateTableProperties(StringBuilder sb, SqlTable table)
+        protected void GenerateTableProperties(StringBuilder sb, SqlTable table)
         {
             var indexes = table.Properties.OfType<Index>().ToList();
 
-            foreach (var index in indexes)
-                GenerateIndex(sb, index);
+            if (!Context.DocumenterSettings.NoIndexes)
+            {
+                foreach (var index in indexes)
+                    GenerateIndex(sb, index);
+            }
 
             var uniqueConstraints = table.Properties.OfType<UniqueConstraint>().ToList();
 
