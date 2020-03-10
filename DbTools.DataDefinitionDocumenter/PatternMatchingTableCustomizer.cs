@@ -95,7 +95,7 @@
             if (schemaOrTableName == null)
                 return null;
 
-            return Regex.Escape(schemaOrTableName).Replace(@"\*", ".*", StringComparison.OrdinalIgnoreCase).Replace(@"\?", ".", StringComparison.OrdinalIgnoreCase).Replace("#", @"\d", StringComparison.OrdinalIgnoreCase);
+            return Regex.Escape(schemaOrTableName).Replace(@"\*", ".*", StringComparison.OrdinalIgnoreCase).Replace(@"\?", ".", StringComparison.OrdinalIgnoreCase).Replace("#", @"\d", StringComparison.OrdinalIgnoreCase) + "$";
         }
 
         private static bool IsRegex(string pattern)
