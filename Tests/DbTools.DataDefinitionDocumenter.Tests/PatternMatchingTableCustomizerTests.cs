@@ -44,7 +44,7 @@
         public void GetPatternMatching_Dot_Test()
         {
             var pm = new PatternMatchingTableCustomizer();
-            pm.AddPattern(null, "ap?le", null, null, true, null, null);
+            pm.AddPattern(null, "ap?le*", null, null, true, null, null);
 
             Assert.IsTrue(pm.ShouldSkip("apple"));
             Assert.IsTrue(pm.ShouldSkip("apxle"));
