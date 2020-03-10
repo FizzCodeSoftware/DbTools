@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition.MsSql2016;
     using FizzCode.DbTools.DataDefinition.Oracle12c;
@@ -10,7 +9,7 @@
 
     public static class CSharpWriterFactory
     {
-        public static AbstractCSharpWriter GetCSharpWriter(SqlEngineVersion version, Context context)
+        public static AbstractCSharpWriter GetCSharpWriter(SqlEngineVersion version, DocumenterContext context)
         {
             // TODO handle versions
 

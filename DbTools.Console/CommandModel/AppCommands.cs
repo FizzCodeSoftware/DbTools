@@ -89,7 +89,7 @@
             var documenterContext = CreateDocumenterContext(context, patternFileName);
 
             var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
-            var generator = new CSharpGenerator(documenterContext, writer, version, newDatabaseName, @namespace);
+            var generator = new CSharpGenerator(writer, version, newDatabaseName, @namespace);
 
             if (singleOrMulti == "s" || singleOrMulti == "single")
                 generator.GenerateSingleFile(dd, newDatabaseName + ".cs");

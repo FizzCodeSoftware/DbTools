@@ -2,14 +2,13 @@
 {
     using System;
     using System.Globalization;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Generic1;
 
     public class Generic1CSharpWriter : AbstractCSharpWriter
     {
-        public Generic1CSharpWriter(Context context, Type typeMapperType)
+        public Generic1CSharpWriter(DocumenterContext context, Type typeMapperType)
             : base(context, GenericVersion.Generic1, typeMapperType)
         {
         }

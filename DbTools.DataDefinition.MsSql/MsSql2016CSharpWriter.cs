@@ -2,14 +2,13 @@
 {
     using System;
     using System.Globalization;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionDocumenter;
 
     public class MsSql2016CSharpWriter : AbstractCSharpWriter
     {
-        public MsSql2016CSharpWriter(Context context, Type typeMapperType)
+        public MsSql2016CSharpWriter(DocumenterContext context, Type typeMapperType)
             : base(context, MsSqlVersion.MsSql2016, typeMapperType)
         {
         }

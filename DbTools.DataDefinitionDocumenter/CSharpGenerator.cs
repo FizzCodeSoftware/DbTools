@@ -15,8 +15,8 @@
 
         private readonly AbstractCSharpWriter _writer;
 
-        public CSharpGenerator(DocumenterContext context, AbstractCSharpWriter writer, SqlEngineVersion version, string databaseName, string @namespace)
-            : base(context, version, databaseName)
+        public CSharpGenerator(AbstractCSharpWriter writer, SqlEngineVersion version, string databaseName, string @namespace)
+            : base(writer.Context, version, databaseName)
         {
             _namespace = @namespace;
             _writer = writer;

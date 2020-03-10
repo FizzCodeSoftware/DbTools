@@ -3,17 +3,16 @@
     using System;
     using System.Linq;
     using System.Text;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
 
     public abstract class AbstractCSharpWriter
     {
-        public Context Context { get; }
+        public DocumenterContext Context { get; }
         public SqlEngineVersion Version { get; }
         public Type TypeMapperType { get; }
 
-        protected AbstractCSharpWriter(Context context, SqlEngineVersion version, Type typeMapperType)
+        protected AbstractCSharpWriter(DocumenterContext context, SqlEngineVersion version, Type typeMapperType)
         {
             Context = context;
             Version = version;
@@ -44,6 +43,11 @@
             var fkOnColumn = column.Table.Properties.OfType<ForeignKey>().FirstOrDefault(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn == column));
             if (fkOnColumn != null)
             {
+                if (Context.Customizer.ShouldSkip(fkOnColumn.ReferredTable.SchemaAndTableName))
+                {
+                    sb.Append("; //");
+                }
+
                 // TODO gen AddForeignkeys?
                 if (fkOnColumn.ForeignKeyColumns.Count == 1)
                 {
