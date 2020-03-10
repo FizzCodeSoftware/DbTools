@@ -36,10 +36,4 @@
     <ProjectReference Include="..\..\DbTools.TestBase\DbTools.TestBase.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="testconfig.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
