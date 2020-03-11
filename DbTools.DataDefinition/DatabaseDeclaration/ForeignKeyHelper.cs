@@ -66,9 +66,9 @@
             return table;
         }
 
-        public static SqlTable AddForeignKey(this SqlTable table, string nameOfReferredTableWithPrimaryKey, bool isNullable = false, string prefix = null, string fkName = null)
+        public static SqlTable AddForeignKey(this SqlTable table, string nameOfReferredTableWithUniqueKey, bool isNullable = false, string prefix = null, string fkName = null)
         {
-            var referredTableNameWithSchema = new SchemaAndTableName(nameOfReferredTableWithPrimaryKey);
+            var referredTableNameWithSchema = new SchemaAndTableName(nameOfReferredTableWithUniqueKey);
 
             var fk = new ForeignKeyRegistrationToTableWithUniqueKey(table, referredTableNameWithSchema, isNullable, prefix, fkName);
 

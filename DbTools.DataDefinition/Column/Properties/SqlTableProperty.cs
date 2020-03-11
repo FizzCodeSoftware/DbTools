@@ -8,5 +8,7 @@
         {
             SqlTable = sqlTable;
         }
+
+        public SqlEngineVersionSpecificProperties SqlEngineVersionSpecificProperties { get; } = new SqlEngineVersionSpecificProperties();
     }
 }
