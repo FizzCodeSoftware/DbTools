@@ -26,11 +26,35 @@
             return singleFkColumn;
         }
 
+        public static SqlColumn SetForeignKeyTo(this SqlColumn singleFkColumn, string referredTableName, IEnumerable<SqlEngineVersionSpecificProperty> properties, string fkName = null)
+        {
+            var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
+
+            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, fkName);
+            fk.SqlEngineVersionSpecificProperties.Add(properties);
+
+            singleFkColumn.Table.Properties.Add(fk);
+
+            return singleFkColumn;
+        }
+
         public static SqlTable SetForeignKeyTo(this SqlTable table, string referredTableName, List<ColumnReference> map, string fkName = null)
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
 
             var fk = new ForeignKeyRegistrationToReferredTableExistingColumns(table, referredTableNameWithSchema, fkName, map);
+
+            table.Properties.Add(fk);
+
+            return table;
+        }
+
+        public static SqlTable SetForeignKeyTo(this SqlTable table, string referredTableName, List<ColumnReference> map, IEnumerable<SqlEngineVersionSpecificProperty> properties, string fkName = null)
+        {
+            var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
+
+            var fk = new ForeignKeyRegistrationToReferredTableExistingColumns(table, referredTableNameWithSchema, fkName, map);
+            fk.SqlEngineVersionSpecificProperties.Add(properties);
 
             table.Properties.Add(fk);
 

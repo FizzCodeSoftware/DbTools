@@ -152,6 +152,7 @@
         {
             sqlTable.Properties.Remove(fkRegistration);
             var fk = new ForeignKey(sqlTable, referredTable, fkRegistration.Name);
+            fk.SqlEngineVersionSpecificProperties.AddRange(fkRegistration.SqlEngineVersionSpecificProperties);
             sqlTable.Properties.Add(fk);
             return fk;
         }
