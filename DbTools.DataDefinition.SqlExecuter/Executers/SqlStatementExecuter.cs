@@ -84,8 +84,7 @@
         {
             var connection = OpenConnection();
 
-            //Log(LogSeverity.Verbose, "Executing non query {Query}.", sqlStatementWithParameters.Statement);
-            _ = LogTimer("Executing non query {Query}.", sqlStatementWithParameters.Statement);
+            var logTimer = LogTimer("Executing non query {Query}.", sqlStatementWithParameters.Statement);
 
             var command = PrepareSqlCommand(sqlStatementWithParameters);
             command.Connection = connection;
@@ -93,6 +92,7 @@
             try
             {
                 command.ExecuteNonQuery();
+                logTimer.Done();
             }
             catch (DbException ex)
             {

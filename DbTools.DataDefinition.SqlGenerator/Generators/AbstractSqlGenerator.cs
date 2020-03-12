@@ -144,35 +144,7 @@
                 .Append(")");
         }
 
-        public virtual string CreateForeignKeys(SqlTable table)
-        {
-            /* example: ALTER TABLE [dbo].[Dim_Currency]  WITH CHECK ADD  CONSTRAINT [FK_Dim_Currency_Dim_CurrencyGroup] FOREIGN KEY([Dim_CurrencyGroupId])
-            REFERENCES[dbo].[Dim_CurrencyGroup]([Dim_CurrencyGroupId])
-            
-            ALTER TABLE [dbo].[Dim_Currency] CHECK CONSTRAINT [FK_Dim_Currency_Dim_CurrencyGroup]
-            */
-
-            var allFks = table.Properties.OfType<ForeignKey>().ToList();
-
-            if (allFks.Count == 0)
-                return null;
-
-            var sb = new StringBuilder();
-
-            foreach (var fk in allFks)
-            {
-                sb.Append("ALTER TABLE ")
-                    .Append(GetSimplifiedSchemaAndTableName(table.SchemaAndTableName))
-                    .Append(" WITH CHECK ADD ")
-                    .AppendLine(FKConstraint(fk))
-                    .Append("ALTER TABLE ")
-                    .Append(GetSimplifiedSchemaAndTableName(table.SchemaAndTableName))
-                    .Append(" CHECK CONSTRAINT ")
-                    .AppendLine(GuardKeywords(fk.Name));
-            }
-
-            return sb.ToString();
-        }
+        public abstract string CreateForeignKeys(SqlTable table);
 
         protected string FKConstraint(ForeignKey fk)
         {

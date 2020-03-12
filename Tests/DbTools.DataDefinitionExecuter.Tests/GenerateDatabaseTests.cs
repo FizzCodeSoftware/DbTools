@@ -5,13 +5,12 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Generic1;
-    using FizzCode.DbTools.DataDefinition.SqlExecuter;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class GenerateDatabaseTests : DataDefinitionSqlExecuterTests
+    public class GenerateDatabaseTests : GenerateDatabaseTestsBase
     {
         [TestMethod]
         [LatestSqlVersions]
@@ -25,23 +24,6 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
         public void GenerateForeignKeyCompositeTestDatabase(SqlEngineVersion version)
         {
             GenerateDatabase(new ForeignKeyComposite(), version);
-        }
-
-        public static void GenerateDatabase(DatabaseDefinition dd, SqlEngineVersion version)
-        {
-            _sqlExecuterTestAdapter.Check(version);
-            _sqlExecuterTestAdapter.Initialize(version.UniqueName, dd);
-
-            var databaseCreator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.UniqueName));
-
-            try
-            {
-                databaseCreator.ReCreateDatabase(true);
-            }
-            finally
-            {
-                databaseCreator.CleanupDatabase();
-            }
         }
 
         [TestMethod]

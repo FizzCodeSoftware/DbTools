@@ -73,7 +73,7 @@ WHERE {column} = @{column}", value);
 
         public override string CreateForeignKeys(SqlTable table)
         {
-            /* example: ALTER TABLE [dbo].[Dim_Currency] ADD CONSTRAINT [FK_Dim_Currency_Dim_CurrencyGroup] FOREIGN KEY([Dim_CurrencyGroupId])
+            /* example: ALTER TABLE [dbo].[Dim_Currency] ADD CONSTRAINT [FK_Dim_Currency_Dim_CurrencyGroup] CreateForeignKeysEY([Dim_CurrencyGroupId])
             REFERENCES[dbo].[Dim_CurrencyGroup]([Dim_CurrencyGroupId])
 s            */
 

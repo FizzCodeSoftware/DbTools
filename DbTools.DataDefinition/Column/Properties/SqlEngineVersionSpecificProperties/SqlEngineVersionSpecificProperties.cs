@@ -8,11 +8,11 @@
     {
         private readonly Dictionary<string, SqlEngineVersionSpecificProperty> _properties = new Dictionary<string, SqlEngineVersionSpecificProperty>();
 
-        public SqlEngineVersionSpecificProperty this[SqlEngineVersion version, string name]
+        public string this[SqlEngineVersion version, string name]
         {
             get
             {
-                return _properties[version.ToString() + "/" + name];
+                return _properties[SqlEngineVersionSpecificProperty.GetKey(version, name)].Value;
             }
         }
 
@@ -45,6 +45,11 @@
             {
                 Add(property);
             }
+        }
+
+        public bool Contains(SqlEngineVersion version, string name)
+        {
+            return _properties.ContainsKey(SqlEngineVersionSpecificProperty.GetKey(version, name));
         }
     }
 }

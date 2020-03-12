@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
@@ -138,6 +139,44 @@ EXEC sp_executesql @sql";
             sqlStatementWithParameters.Parameters.Add("@ColumnName", column.Name);
 
             return sqlStatementWithParameters;
+        }
+
+        public override string CreateForeignKeys(SqlTable table)
+        {
+            /* example: ALTER TABLE [dbo].[Dim_Currency]  WITH CHECK ADD  CONSTRAINT [FK_Dim_Currency_Dim_CurrencyGroup] FOREIGN KEY([Dim_CurrencyGroupId])
+            REFERENCES[dbo].[Dim_CurrencyGroup]([Dim_CurrencyGroupId])
+            
+            ALTER TABLE [dbo].[Dim_Currency] CHECK CONSTRAINT [FK_Dim_Currency_Dim_CurrencyGroup]
+            */
+
+            var allFks = table.Properties.OfType<ForeignKey>().ToList();
+
+            if (allFks.Count == 0)
+                return null;
+
+            var sb = new StringBuilder();
+
+            foreach (var fk in allFks)
+            {
+                sb.Append("ALTER TABLE ")
+                    .Append(GetSimplifiedSchemaAndTableName(table.SchemaAndTableName));
+                if (fk.SqlEngineVersionSpecificProperties.Contains(Version, "Nocheck") && fk.SqlEngineVersionSpecificProperties[Version, "Nocheck"] == "true")
+                    sb.Append(" WITH NOCHECK ADD ");
+                else
+                    sb.Append(" WITH CHECK ADD ");
+
+                sb.AppendLine(FKConstraint(fk))
+                .Append("ALTER TABLE ")
+                .Append(GetSimplifiedSchemaAndTableName(table.SchemaAndTableName));
+                if (fk.SqlEngineVersionSpecificProperties.Contains(Version, "Nocheck") && fk.SqlEngineVersionSpecificProperties[Version, "Nocheck"] == "true")
+                    sb.Append(" NOCHECK CONSTRAINT ");
+                else
+                    sb.Append(" CHECK CONSTRAINT ");
+
+                sb.AppendLine(GuardKeywords(fk.Name));
+            }
+
+            return sb.ToString();
         }
     }
 }
