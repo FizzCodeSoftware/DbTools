@@ -20,8 +20,9 @@
     }
 
     // Other / all cases
-    // New PK, Deleted OK, Renamed PK
+    // New PK, Deleted PK, Renamed PK
     // New FK, Deleted FK, Renamed FK
+    // FK NoCheck change - SqlEngineVersionSpecificProperty change
     // New Index, Deleted Index, Renamed Index
 
     // New TableDescription, Deleted TableDescription

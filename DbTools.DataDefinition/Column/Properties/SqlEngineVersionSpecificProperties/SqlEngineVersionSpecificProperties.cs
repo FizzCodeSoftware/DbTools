@@ -14,6 +14,14 @@
             {
                 return _properties[SqlEngineVersionSpecificProperty.GetKey(version, name)].Value;
             }
+            set
+            {
+                var key = SqlEngineVersionSpecificProperty.GetKey(version, name);
+                if (!_properties.ContainsKey(key))
+                    Add(new SqlEngineVersionSpecificProperty(version, name, value));
+                else
+                    _properties[key].Value = value;
+            }
         }
 
         public void Add(SqlEngineVersionSpecificProperty property)

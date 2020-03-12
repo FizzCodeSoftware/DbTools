@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
@@ -36,6 +37,8 @@ SELECT
     ,KCU2.TABLE_NAME AS REFERENCED_TABLE_NAME
     ,KCU2.COLUMN_NAME AS REFERENCED_COLUMN_NAME
     ,KCU2.ORDINAL_POSITION AS REFERENCED_ORDINAL_POSITION
+	,OBJECTPROPERTY(OBJECT_ID(QUOTENAME(RC.CONSTRAINT_SCHEMA) + '.' + QUOTENAME(RC.CONSTRAINT_NAME)), 'CnstIsDisabled') AS [IsDisabled]
+	,OBJECTPROPERTY(OBJECT_ID(QUOTENAME(RC.CONSTRAINT_SCHEMA) + '.' + QUOTENAME(RC.CONSTRAINT_NAME)), 'CnstIsNotTrusted') AS [IsNotTrusted]	
 FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS AS RC
 
 INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU1
@@ -83,6 +86,12 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
                 var referencedSqlColumn = referencedSqlTable[referencedColumn];
 
                 var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
+
+                if (row.GetAs<int>("IsNotTrusted") == 1)
+                    fk.SqlEngineVersionSpecificProperties.Add(new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true"));
+                else if (row.GetAs<int>("IsNotTrusted") == 0)
+                    fk.SqlEngineVersionSpecificProperties.Add(new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "false"));
+
                 fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkColumn, referencedSqlColumn));
             }
         }

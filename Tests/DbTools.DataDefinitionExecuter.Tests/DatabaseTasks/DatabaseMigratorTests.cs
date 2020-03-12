@@ -33,7 +33,6 @@
 
             var databaseMigrator = new DatabaseMigrator(executer, migrationGenerator);
             var tableNew = new TableNew
-
             {
                 SchemaAndTableName = "NewTableToMigrate"
             };

@@ -419,5 +419,48 @@
 
             databaseMigrator.DeleteColumns(first, second);
         }
+
+        [TestMethod]
+        public void FkCheckNoCheckTest()
+        {
+            var version = MsSqlVersion.MsSql2016;
+
+            var dd = new TestDatabaseFk();
+            dd.SetVersions(version.GetTypeMapper());
+            Init(version, dd);
+
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
+                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
+                , SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
+            var ddInDatabase = ddlReader.GetDatabaseDefinition();
+
+            var fk = dd.GetTable("Foreign").Properties.OfType<ForeignKey>().First();
+
+            Assert.AreEqual("true", fk.SqlEngineVersionSpecificProperties[version, "Nocheck"]);
+
+            fk.SqlEngineVersionSpecificProperties[version, "Nocheck"] = "false";
+
+            var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
+            var changes = comparer.Compare(ddInDatabase, dd);
+
+            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
+
+            // TODO change FK
+            // databaseMigrator.
+        }
+    }
+
+    public class TestDatabaseFk : TestDatabaseDeclaration
+    {
+        public SqlTable Primary { get; } = AddTable(table =>
+        {
+            table.AddInt32("Id").SetPK();
+        });
+
+        public SqlTable Foreign { get; } = AddTable(table =>
+        {
+            table.AddInt32("Id").SetPK().SetIdentity();
+            table.AddInt32("PrimaryId").SetForeignKeyTo(nameof(Primary), new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true"));
+        });
     }
 }
