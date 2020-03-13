@@ -25,9 +25,9 @@
             }
         }
 
-        public static string GetKey(SqlEngineVersionSpecificProperty proeprty)
+        public static string GetKey(SqlEngineVersionSpecificProperty property)
         {
-            return GetKey(proeprty.Version, proeprty.Name);
+            return GetKey(property.Version, property.Name);
         }
 
         public static string GetKey(SqlEngineVersion version, string name)

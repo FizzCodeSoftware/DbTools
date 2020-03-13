@@ -1,9 +1,10 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
     using System.Collections.Generic;
+    using System.Linq;
     using FizzCode.DbTools.Common;
 
-    public class Comparer
+    public partial class Comparer
     {
         public Context Context { get; }
 
@@ -50,6 +51,53 @@
                 {
                     var tableNew = newDd.Tables[tableOriginal.SchemaAndTableName];
                     changes.AddRange(CompareColumns(tableOriginal, tableNew));
+                    changes.AddRange(CompareForeignKeys(tableOriginal, tableNew));
+                }
+            }
+
+            return changes;
+        }
+
+        private static List<ForeignKeyMigration> CompareForeignKeys(SqlTable tableOriginal, SqlTable tableNew)
+        {
+            var changes = new List<ForeignKeyMigration>();
+
+            foreach (var fkOriginal in tableOriginal.Properties.OfType<ForeignKey>())
+            {
+                if (!tableNew.Properties.OfType<ForeignKey>().Any(fkNew => fkNew.Name == fkOriginal.Name))
+                {
+                    changes.Add(new ForeignKeyDelete()
+                    {
+                        // ForeignKey = fkOriginal.CopyTo(new ForeignKey())
+                        ForeignKey = fkOriginal
+                    });
+                }
+            }
+
+            // TODO detect name change? (same FK elements but different name?)
+            foreach (var fkNew in tableNew.Properties.OfType<ForeignKey>())
+            {
+                var fkOriginal = tableOriginal.Properties.OfType<ForeignKey>().FirstOrDefault(fkOriginal => fkOriginal.Name == fkNew.Name);
+                if (fkOriginal == null)
+                {
+                    changes.Add(new ForeignKeyNew()
+                    {
+                        ForeignKey = fkNew
+                    });
+                }
+                else
+                {
+                    // compare ReferredTable
+                    // compare columns
+                    // compare SqlEngineVersionSpecificProperties - generally for SqlTableProperty
+                    if (fkOriginal.ReferredTable.SchemaAndTableName != fkNew.ReferredTable.SchemaAndTableName)
+                    {
+                        changes.Add(new ForeignKeyChange()
+                        {
+                            ForeignKey = fkOriginal,
+                            NewForeignKey = fkNew
+                        });
+                    }
                 }
             }
 
