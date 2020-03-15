@@ -1,10 +1,8 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
-    public partial class Comparer
+
+    public class ForeignKeyChange : ForeignKeyMigration
     {
-        public class ForeignKeyChange : ForeignKeyMigration
-        {
-            public ForeignKey NewForeignKey { get; set; }
-        }
+        public ForeignKey NewForeignKey { get; set; }
     }
 }
