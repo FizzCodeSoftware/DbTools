@@ -127,6 +127,8 @@
             var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
             var changes = comparer.Compare(ddInDatabase, dd);
 
+            var first = changes[0] as ForeignKeyChange;
+
             var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
 
             // TODO change FK

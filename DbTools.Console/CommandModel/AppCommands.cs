@@ -197,6 +197,33 @@
             return documenterContext;
         }
 
+        private static ChangeDocumenterContext CreateChangeDocumenterContext(Context context, string patternFileNameOriginal, string patternFileNameNew)
+        {
+            var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
+
+            ITableCustomizer customizerOriginal = null;
+            ITableCustomizer customizerNew = null;
+
+            if (patternFileNameOriginal != null)
+                customizerOriginal = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileNameOriginal, documenterSettings);
+
+            if (patternFileNameNew != null)
+                customizerNew = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileNameNew, documenterSettings);
+
+            customizerOriginal ??= new EmptyTableCustomizer();
+            customizerNew ??= new EmptyTableCustomizer();
+
+            var changeDocumenterContext = new ChangeDocumenterContext
+            {
+                DocumenterSettings = documenterSettings,
+                Settings = context.Settings,
+                Logger = context.Logger,
+                CustomizerOriginal = customizerOriginal,
+                CustomizerNew = customizerNew
+            };
+            return changeDocumenterContext;
+        }
+
         [Command(Name = "dropall", Description = "Drop every object from a database.")]
         public void DropAll(
             [Option(LongName = "connectionString", ShortName = "c")]
@@ -221,6 +248,69 @@
             dc.DropAllTables();
             // TODO needs databasedefinition
             // dc.DropAllSchemas();
+        }
+
+        [Command(Name = "changedocument", Description = "Generate compare excel documentation of two existing database")]
+        public void ChangeDocument(
+            [Option(LongName = "connectionStringOriginal")]
+            string connectionStringOriginal,
+            [Option(LongName = "connectionStringNew")]
+            string connectionStringNew,
+            [Option(LongName = "sqlTypeOriginal")]
+            string sqlTypeOriginal,
+            [Option(LongName = "sqlTypeNew")]
+            string sqlTypeNew,
+            [Option(LongName = "patternFileName", ShortName = "p")]
+            string patternFileName,
+            [Option(LongName = "patternFileNameOriginal")]
+            string patternFileNameOriginal,
+            [Option(LongName = "patternFileNameNew")]
+            string patternFileNameNew,
+            [Option(LongName = "flags", ShortName = "f")]
+            List<string> flags)
+        {
+            var version = SqlEngineVersions.GetVersion(sqlTypeNew);
+
+            var context = CreateContext(version);
+
+            var connectionStringWithProviderOriginal = new ConnectionStringWithProvider(
+                version.GetType().Name,
+                version.ProviderName,
+                connectionStringOriginal,
+                version.VersionString);
+
+            var sqlExecuterOriginal = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProviderOriginal, context);
+            var databaseNameOriginal = sqlExecuterOriginal.GetDatabase();
+
+            var ddlReaderOriginal = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProviderOriginal, context, null);
+
+            var ddOriginal = ddlReaderOriginal.GetDatabaseDefinition();
+
+            if (patternFileNameOriginal == null)
+                patternFileNameOriginal = patternFileName;
+
+            if (patternFileNameNew == null)
+                patternFileNameNew = patternFileName;
+
+            var changeDocumenterContext = CreateChangeDocumenterContext(context, patternFileNameOriginal, patternFileNameNew);
+            if(flags != null)
+                SetSettingsFromFlags(flags, changeDocumenterContext.DocumenterSettings);
+
+            var connectionStringWithProviderNew = new ConnectionStringWithProvider(
+                version.GetType().Name,
+                version.ProviderName,
+                connectionStringNew,
+                version.VersionString);
+
+            var sqlExecuterNew = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProviderNew, context);
+            var databaseNameNew = sqlExecuterNew.GetDatabase();
+
+            var ddlReaderNew = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProviderNew, context, null);
+
+            var ddNew = ddlReaderNew.GetDatabaseDefinition();
+
+            var changeDocumenter = new ChangeDocumenter(changeDocumenterContext, version, databaseNameOriginal, databaseNameNew);
+            changeDocumenter.Document(ddOriginal, ddNew);
         }
     }
 }

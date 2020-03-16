@@ -39,7 +39,7 @@
             foreach (var sqlTable in databaseDefinition.GetTables())
             {
                 if (!Context.Customizer.ShouldSkip(sqlTable.SchemaAndTableName)
-                    && !Documenter.ShouldSkipKnownTechnicalTable(sqlTable.SchemaAndTableName)
+                    && !DocumenterWriterBase.ShouldSkipKnownTechnicalTable(sqlTable.SchemaAndTableName)
                     )
                 {
                     root.Model.Tables.Add(GenerateTable(sqlTable));

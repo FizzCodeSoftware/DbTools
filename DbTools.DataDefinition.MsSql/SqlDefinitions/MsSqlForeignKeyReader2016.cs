@@ -90,7 +90,9 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
                         fk.SqlEngineVersionSpecificProperties.Add(new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "false"));
                 }
                 else
+                {
                     fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
+                }
 
                 var referencedSqlColumn = referencedSqlTable[referencedColumn];
 

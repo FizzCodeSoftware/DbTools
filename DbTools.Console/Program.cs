@@ -38,7 +38,7 @@
 
                 var lineArguments = regEx
                     .Matches(commandLine.Trim())
-                    .Select(x => x.Value)
+                    .Select(x => x.Value.Trim())
                     .ToArray();
 
                 var runner = new AppRunner<AppCommands>(GetAppSettings());

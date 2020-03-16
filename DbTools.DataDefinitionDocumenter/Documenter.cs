@@ -9,24 +9,45 @@
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
 
-    public class Documenter : DocumenterBase
+    public abstract class DocumenterWriterBase : DocumenterBase
     {
-        protected IDocumenterWriter DocumenterWriter { get; }
+        protected DocumenterWriterBase(DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
+            : base(context, version, databaseName)
+        {
+            FileName = fileName;
+        }
 
-        private readonly string _fileName;
+        protected DocumenterWriterBase(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
+            : base(context, version, databaseName)
+        {
+            DocumenterWriter = documenterWriter;
+            Helper = new DocumenterHelper(context.Settings);
+        }
 
+        protected IDocumenterWriter DocumenterWriter { get; set; }
+
+        protected string FileName { get; }
+
+        public static bool ShouldSkipKnownTechnicalTable(SchemaAndTableName schemaAndTableName)
+        {
+            // TODO MS Sql specific
+            // TODO Move
+            // TODO Options
+            return schemaAndTableName.SchemaAndName == "dbo.__RefactorLog"
+                || schemaAndTableName.SchemaAndName == "dbo.sysdiagrams";
+        }
+    }
+
+    public class Documenter : DocumenterWriterBase
+    {
         public Documenter(DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
             : this(new DocumenterWriterExcel(), context, version, databaseName, fileName)
         {
         }
 
         public Documenter(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
-            : base(context, version, databaseName)
+            : base(documenterWriter, context, version, databaseName, fileName)
         {
-            DocumenterWriter = documenterWriter;
-            _fileName = fileName;
-
-            Helper = new DocumenterHelper(context.Settings);
         }
 
         private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
@@ -166,7 +187,7 @@
             Log(LogSeverity.Information, "Generating Document content.", "Documenter");
             var content = DocumenterWriter.GetContent();
 
-            var fileName = _fileName ?? (DatabaseName?.Length == 0 ? "Database.xlsx" : DatabaseName + ".xlsx");
+            var fileName = FileName ?? (DatabaseName?.Length == 0 ? "Database.xlsx" : DatabaseName + ".xlsx");
 
             var path = Context.DocumenterSettings?.WorkingDirectory;
 
@@ -183,15 +204,6 @@
         private static List<SqlTable> RemoveKnownTechnicalTables(List<SqlTable> list)
         {
             return list.Where(x => !ShouldSkipKnownTechnicalTable(x.SchemaAndTableName)).ToList();
-        }
-
-        public static bool ShouldSkipKnownTechnicalTable(SchemaAndTableName schemaAndTableName)
-        {
-            // TODO MS Sql specific
-            // TODO Move
-            // TODO Options
-            return schemaAndTableName.SchemaAndName == "dbo.__RefactorLog"
-                || schemaAndTableName.SchemaAndName == "dbo.sysdiagrams";
         }
 
         protected void AddTableToTableList(string category, SqlTable table, bool hasCategories)
