@@ -1,48 +1,29 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
+    using System.IO;
+    using System.Linq;
     using FizzCode.DbTools.Common.Logger;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Migration;
 
-    public class ChangeDocumenterContext : DocumenterContext
-    {
-        private new ITableCustomizer Customizer { get; }
-
-        public ITableCustomizer CustomizerOriginal { get; set; }
-        public ITableCustomizer CustomizerNew { get; set; }
-    }
-
     public class ChangeDocumenter : DocumenterWriterBase
     {
-        protected string OriginalDatabaseName
-        {
-            get
-            {
-                return base.DatabaseName;
-            }
-        }
+        protected string OriginalDatabaseName => DatabaseName;
 
         protected string NewDatabaseName { get; }
 
-        private new string DatabaseName { get; }
-
-        protected new ChangeDocumenterContext Context
+        public new ChangeDocumenterContext Context { get;  }
+        
+        public ChangeDocumenter(ChangeDocumenterContext context, SqlEngineVersion version, string originalDatabaseName = "", string newDatabaseName = "", string fileName = null)
+            : this(new DocumenterWriterExcel(), context, version, originalDatabaseName, newDatabaseName, fileName)
         {
-            get
-            {
-                return (ChangeDocumenterContext)base.Context;
-            }
         }
 
-        public ChangeDocumenter(ChangeDocumenterContext context, Configuration.SqlEngineVersion version, string originalDatabaseName = "", string newDatabaseName = "", string fileName = null)
-            : base(context, version, originalDatabaseName, fileName)
-        {
-            NewDatabaseName = newDatabaseName;
-        }
-
-        public ChangeDocumenter(IDocumenterWriter documenterWriter, DocumenterContext context, Configuration.SqlEngineVersion version, string originalDatabaseName = "", string newDatabaseName = "", string fileName = null)
+        public ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocumenterContext context, SqlEngineVersion version, string originalDatabaseName = "", string newDatabaseName = "", string fileName = null)
             : base(documenterWriter, context, version, originalDatabaseName, fileName)
         {
+            Context = context;
             NewDatabaseName = newDatabaseName;
         }
 
@@ -57,6 +38,35 @@
             // new tables
             // changes
 
+            WriteLine("Database", "", "Original", "New");
+            WriteLine("Database", "Database name", OriginalDatabaseName, NewDatabaseName);
+            
+            var noOfTablesOriginal = originalDd.GetTables().Count;
+            var noOfNotSkippedTablesOriginal = originalDd.GetTables().Count(t => !Context.CustomizerOriginal.ShouldSkip(t.SchemaAndTableName));
+            var noOfTablesNew = newDd.GetTables().Count;
+            var noOfNotSkippedTablesNew = newDd.GetTables().Count(t => !Context.CustomizerNew.ShouldSkip(t.SchemaAndTableName));
+
+            WriteLine("Database", "Number of documented tables", noOfNotSkippedTablesOriginal, noOfNotSkippedTablesNew);
+            WriteLine("Database", "Number of skipped tables", noOfTablesOriginal - noOfNotSkippedTablesOriginal, noOfTablesNew - noOfNotSkippedTablesNew);
+            WriteLine("Database", "Number of tables", noOfTablesOriginal, noOfTablesNew);
+
+            Log(LogSeverity.Information, "Generating Document content.", "ChangeDocumenter");
+            var content = DocumenterWriter.GetContent();
+
+            var fileName = FileName ?? (OriginalDatabaseName == null && NewDatabaseName == null
+                    ? "DatabaseChanges.xlsx"
+                    : $"{OriginalDatabaseName}_vs_{NewDatabaseName}.xlsx");
+
+            var path = Context.DocumenterSettings?.WorkingDirectory;
+
+            Log(LogSeverity.Information, "Writing Document file {FileName} to folder {Folder}", "Documenter", fileName, path);
+
+            if (!string.IsNullOrEmpty(path))
+            {
+                fileName = Path.Combine(path, fileName);
+            }
+
+            File.WriteAllBytes(fileName, content);
         }
     }
 }

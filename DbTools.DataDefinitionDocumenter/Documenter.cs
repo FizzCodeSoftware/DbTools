@@ -9,35 +9,6 @@
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
 
-    public abstract class DocumenterWriterBase : DocumenterBase
-    {
-        protected DocumenterWriterBase(DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
-            : base(context, version, databaseName)
-        {
-            FileName = fileName;
-        }
-
-        protected DocumenterWriterBase(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
-            : base(context, version, databaseName)
-        {
-            DocumenterWriter = documenterWriter;
-            Helper = new DocumenterHelper(context.Settings);
-        }
-
-        protected IDocumenterWriter DocumenterWriter { get; set; }
-
-        protected string FileName { get; }
-
-        public static bool ShouldSkipKnownTechnicalTable(SchemaAndTableName schemaAndTableName)
-        {
-            // TODO MS Sql specific
-            // TODO Move
-            // TODO Options
-            return schemaAndTableName.SchemaAndName == "dbo.__RefactorLog"
-                || schemaAndTableName.SchemaAndName == "dbo.sysdiagrams";
-        }
-    }
-
     public class Documenter : DocumenterWriterBase
     {
         public Documenter(DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
@@ -52,17 +23,6 @@
 
         private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
         private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
-
-        private Color? GetColor(SchemaAndTableName schemaAndTableName)
-        {
-            // TODO coloring to incude schema
-            var hexColor = Context.Customizer.BackGroundColor(schemaAndTableName);
-
-            if (hexColor == null)
-                return null;
-
-            return ColorTranslator.FromHtml(hexColor);
-        }
 
         public void Document(DatabaseDefinition databaseDefinition)
         {
@@ -80,10 +40,13 @@
 
             var hasCategories = _sqlTablesByCategory.Any(x => !string.IsNullOrEmpty(x.Key));
 
+            var noOfTables = databaseDefinition.GetTables().Count;
+            var noOfNotSkippedTables = databaseDefinition.GetTables().Count(t => !Context.Customizer.ShouldSkip(t.SchemaAndTableName));
+
             WriteLine("Database", "Database name", DatabaseName);
-            WriteLine("Database", "Number of documented tables", databaseDefinition.GetTables().Count(t => !Context.Customizer.ShouldSkip(t.SchemaAndTableName)));
-            WriteLine("Database", "Number of skipped tables", databaseDefinition.GetTables().Count(t => Context.Customizer.ShouldSkip(t.SchemaAndTableName)));
-            WriteLine("Database", "Number of tables", databaseDefinition.GetTables().Count);
+            WriteLine("Database", "Number of documented tables", noOfNotSkippedTables);
+            WriteLine("Database", "Number of skipped tables", noOfTables - noOfNotSkippedTables);
+            WriteLine("Database", "Number of tables", noOfTables);
 
             if (hasCategories)
             {
@@ -357,41 +320,6 @@
                         Write(table.SchemaAndTableName, includeColumn.Name);
                 }
             }
-        }
-
-        protected void Write(string sheetName, params object[] content)
-        {
-            DocumenterWriter.Write(sheetName, content);
-        }
-
-        protected void WriteLine(string sheetName, params object[] content)
-        {
-            DocumenterWriter.WriteLine(sheetName, content);
-        }
-
-        protected void Write(SchemaAndTableName schemaAndTableName, params object[] content)
-        {
-            DocumenterWriter.Write(Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), content);
-        }
-
-        protected void WriteColor(SchemaAndTableName schemaAndTableName, params object[] content)
-        {
-            DocumenterWriter.Write(GetColor(schemaAndTableName), Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), content);
-        }
-
-        protected void WriteLine(SchemaAndTableName schemaAndTableName, params object[] content)
-        {
-            DocumenterWriter.WriteLine(Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), content);
-        }
-
-        protected void WriteLink(SchemaAndTableName schemaAndTableName, string text, SchemaAndTableName targetSchemaAndTableName, Color? backgroundColor = null)
-        {
-            DocumenterWriter.WriteLink(Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), text, Helper.GetSimplifiedSchemaAndTableName(targetSchemaAndTableName), backgroundColor);
-        }
-
-        protected void WriteAndMerge(SchemaAndTableName schemaAndTableName, int mergeAmount, params object[] content)
-        {
-            DocumenterWriter.WriteAndMerge(GetColor(schemaAndTableName), Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), mergeAmount, content);
         }
     }
 }

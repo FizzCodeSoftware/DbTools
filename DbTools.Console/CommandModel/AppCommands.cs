@@ -49,7 +49,8 @@
             var dd = ddlReader.GetDatabaseDefinition();
 
             var documenterContext = CreateDocumenterContext(context, patternFileName);
-            SetSettingsFromFlags(flags, documenterContext.DocumenterSettings);
+            if(flags != null)
+                SetSettingsFromFlags(flags, documenterContext.DocumenterSettings);
 
             var documenter = new Documenter(documenterContext, version, databaseName, null);
 
