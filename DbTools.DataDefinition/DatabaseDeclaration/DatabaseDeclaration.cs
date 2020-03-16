@@ -31,45 +31,50 @@
         {
             foreach (var sqlTable in Tables)
             {
-                foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithUniqueKeySingleColumn>(sqlTable))
-                {
-                    if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
-                        fkRegistration.ReferredTableName.Schema = DefaultSchema;
+                CreateRegisteredForeignKeys(sqlTable);
+            }
+        }
 
-                    RegisteredForeignKeysCreator.UniqueKeySingleColumn(this, sqlTable, fkRegistration);
-                }
+        public void CreateRegisteredForeignKeys(SqlTable sqlTable)
+        {
+            foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithUniqueKeySingleColumn>(sqlTable))
+            {
+                if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
+                    fkRegistration.ReferredTableName.Schema = DefaultSchema;
 
-                foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithUniqueKey>(sqlTable))
-                {
-                    if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
-                        fkRegistration.ReferredTableName.Schema = DefaultSchema;
+                RegisteredForeignKeysCreator.UniqueKeySingleColumn(this, sqlTable, fkRegistration);
+            }
 
-                    RegisteredForeignKeysCreator.UniqueKey(this, sqlTable, fkRegistration, NamingStrategies.ForeignKey);
-                }
+            foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithUniqueKey>(sqlTable))
+            {
+                if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
+                    fkRegistration.ReferredTableName.Schema = DefaultSchema;
 
-                foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn>(sqlTable))
-                {
-                    if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
-                        fkRegistration.ReferredTableName.Schema = DefaultSchema;
+                RegisteredForeignKeysCreator.UniqueKey(this, sqlTable, fkRegistration, NamingStrategies.ForeignKey);
+            }
 
-                    RegisteredForeignKeysCreator.PrimaryKeyExistingColumn(this, sqlTable, fkRegistration);
-                }
+            foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn>(sqlTable))
+            {
+                if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
+                    fkRegistration.ReferredTableName.Schema = DefaultSchema;
 
-                foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToReferredTableExistingColumns>(sqlTable))
-                {
-                    if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
-                        fkRegistration.ReferredTableName.Schema = DefaultSchema;
+                RegisteredForeignKeysCreator.PrimaryKeyExistingColumn(this, sqlTable, fkRegistration);
+            }
 
-                    RegisteredForeignKeysCreator.ReferredTableExistingColumns(this, sqlTable, fkRegistration);
-                }
+            foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToReferredTableExistingColumns>(sqlTable))
+            {
+                if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
+                    fkRegistration.ReferredTableName.Schema = DefaultSchema;
 
-                foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToReferredTable>(sqlTable))
-                {
-                    if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
-                        fkRegistration.ReferredTableName.Schema = DefaultSchema;
+                RegisteredForeignKeysCreator.ReferredTableExistingColumns(this, sqlTable, fkRegistration);
+            }
 
-                    RegisteredForeignKeysCreator.ReferredTable(this, sqlTable, fkRegistration);
-                }
+            foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToReferredTable>(sqlTable))
+            {
+                if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
+                    fkRegistration.ReferredTableName.Schema = DefaultSchema;
+
+                RegisteredForeignKeysCreator.ReferredTable(this, sqlTable, fkRegistration);
             }
         }
 

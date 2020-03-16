@@ -77,6 +77,31 @@
         [LatestSqlVersions]
         public void ChangeFkTest(SqlEngineVersion version)
         {
+            var dd = new TestDatabaseFkChange();
+            dd.SetVersions(version.GetTypeMapper());
+            Init(version, dd);
+
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
+                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
+                , SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
+            var ddInDatabase = ddlReader.GetDatabaseDefinition();
+
+            var ddFkChanged = new TestDatabaseFkChange();
+            ddFkChanged.GetTable("Foreign").Properties.Remove(
+                ddFkChanged.GetTable("Foreign").Properties.OfType<ForeignKey>().First()
+                );
+            ddFkChanged.GetTable("Foreign").Columns["PrimaryId"].SetForeignKeyTo("Primary2", "FkChange");
+            ddFkChanged.SetVersions(version.GetTypeMapper());
+
+            var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
+            var changes = comparer.Compare(ddInDatabase, ddFkChanged);
+
+            var first = changes[0] as ForeignKeyChange;
+
+            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
+
+            // TODO change FK
+            // databaseMigrator.
         }
 
         [TestMethod]
@@ -120,6 +145,25 @@
         {
             table.AddInt32("Id").SetPK().SetIdentity();
             table.AddInt32("PrimaryId").SetForeignKeyTo(nameof(Primary), new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true"));
+        });
+    }
+
+    public class TestDatabaseFkChange : TestDatabaseDeclaration
+    {
+        public SqlTable Primary1 { get; } = AddTable(table =>
+        {
+            table.AddInt32("Id").SetPK();
+        });
+
+        public SqlTable Primary2 { get; } = AddTable(table =>
+        {
+            table.AddInt32("Id").SetPK();
+        });
+
+        public SqlTable Foreign { get; } = AddTable(table =>
+        {
+            table.AddInt32("Id").SetPK().SetIdentity();
+            table.AddInt32("PrimaryId").SetForeignKeyTo(nameof(Primary1), "FkChange");
         });
     }
 }

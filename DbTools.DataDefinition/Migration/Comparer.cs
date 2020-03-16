@@ -1,10 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
     using System.Collections.Generic;
-    using System.Linq;
     using FizzCode.DbTools.Common;
 
-    public partial class Comparer
+    public class Comparer
     {
         public Context Context { get; }
 
@@ -58,8 +57,6 @@
             return changes;
         }
 
-
-
         private static List<ColumnMigration> CompareColumns(SqlTable tableOriginal, SqlTable tableNew)
         {
             var changes = new List<ColumnMigration>();
@@ -87,10 +84,7 @@
                     };
                     changes.Add(column);
                 }
-                else if ((columnOriginal.Type.SqlTypeInfo.HasLength && columnOriginal.Type.Length != columnNew.Type.Length)
-                     || (columnOriginal.Type.SqlTypeInfo.HasScale && columnOriginal.Type.Scale != columnNew.Type.Scale)
-                     || columnOriginal.Type.SqlTypeInfo.GetType().Name != columnNew.Type.SqlTypeInfo.GetType().Name
-                     || columnOriginal.Type.IsNullable != columnNew.Type.IsNullable)
+                else if (ColumnChanged(columnNew, columnOriginal))
                 {
                     var columnChange = new ColumnChange
                     {
@@ -102,6 +96,14 @@
             }
 
             return changes;
+        }
+
+        public static bool ColumnChanged(SqlColumn columnNew, SqlColumn columnOriginal)
+        {
+            return (columnOriginal.Type.SqlTypeInfo.HasLength && columnOriginal.Type.Length != columnNew.Type.Length)
+                                 || (columnOriginal.Type.SqlTypeInfo.HasScale && columnOriginal.Type.Scale != columnNew.Type.Scale)
+                                 || columnOriginal.Type.SqlTypeInfo.GetType().Name != columnNew.Type.SqlTypeInfo.GetType().Name
+                                 || columnOriginal.Type.IsNullable != columnNew.Type.IsNullable;
         }
     }
 }

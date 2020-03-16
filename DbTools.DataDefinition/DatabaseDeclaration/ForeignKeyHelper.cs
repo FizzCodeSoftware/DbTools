@@ -23,6 +23,8 @@
 
             singleFkColumn.Table.Properties.Add(fk);
 
+            Prepare(singleFkColumn.Table);
+
             return singleFkColumn;
         }
 
@@ -35,6 +37,8 @@
 
             singleFkColumn.Table.Properties.Add(fk);
 
+            Prepare(singleFkColumn.Table);
+
             return singleFkColumn;
         }
 
@@ -45,6 +49,8 @@
             var fk = new ForeignKeyRegistrationToReferredTableExistingColumns(table, referredTableNameWithSchema, fkName, map);
 
             table.Properties.Add(fk);
+
+            Prepare(table);
 
             return table;
         }
@@ -57,6 +63,8 @@
             fk.SqlEngineVersionSpecificProperties.Add(properties);
 
             table.Properties.Add(fk);
+
+            Prepare(table);
 
             return table;
         }
@@ -71,6 +79,8 @@
             table.Columns.Add(new SqlColumnFKRegistration(placeHolderColumnName, fk));
 
             table.Properties.Add(fk);
+
+            Prepare(table);
 
             return table;
         }
@@ -87,6 +97,8 @@
             var placeHolderColumnName = $"*{referredTableNameWithSchema}.{mapColumnNames}.{table.Columns.Count.ToString("D", CultureInfo.InvariantCulture)}";
             table.Columns.Add(new SqlColumnFKRegistration(placeHolderColumnName, fk));
 
+            Prepare(table);
+
             return table;
         }
 
@@ -100,7 +112,19 @@
             table.Columns.Add(new SqlColumnFKRegistration(placeHolderColumnName, fk));
 
             table.Properties.Add(fk);
+
+            Prepare(table);
+
             return table;
+        }
+
+        public static void Prepare(SqlTable table)
+        {
+            if (table.DatabaseDefinition is DatabaseDeclaration && table.DatabaseDefinition != null)
+            {
+                ((DatabaseDeclaration)table.DatabaseDefinition).CreateRegisteredForeignKeys(table);
+                ((DatabaseDeclaration)table.DatabaseDefinition).AddAutoNaming(new List<SqlTable>() { table });
+            }
         }
     }
 }

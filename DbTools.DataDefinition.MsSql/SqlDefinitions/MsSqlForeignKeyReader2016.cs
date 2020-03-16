@@ -77,20 +77,22 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
 
                 var referencedSqlTable = table.DatabaseDefinition.GetTable(referencedSqlTableSchemaAndTableNameAsToStore);
 
+                ForeignKey fk;
+
                 if (row.GetAs<int>("FK_ORDINAL_POSITION") == 1)
                 {
-                    table.Properties.Add(
-                        new ForeignKey(table, referencedSqlTable, fkName));
+                    fk = new ForeignKey(table, referencedSqlTable, fkName);
+                    table.Properties.Add(fk);
+
+                    if (row.GetAs<int>("IsNotTrusted") == 1)
+                        fk.SqlEngineVersionSpecificProperties.Add(new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true"));
+                    else if (row.GetAs<int>("IsNotTrusted") == 0)
+                        fk.SqlEngineVersionSpecificProperties.Add(new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "false"));
                 }
+                else
+                    fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
 
                 var referencedSqlColumn = referencedSqlTable[referencedColumn];
-
-                var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
-
-                if (row.GetAs<int>("IsNotTrusted") == 1)
-                    fk.SqlEngineVersionSpecificProperties.Add(new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true"));
-                else if (row.GetAs<int>("IsNotTrusted") == 0)
-                    fk.SqlEngineVersionSpecificProperties.Add(new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "false"));
 
                 fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkColumn, referencedSqlColumn));
             }

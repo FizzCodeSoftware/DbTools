@@ -5,9 +5,9 @@
 
     public static class ComparerForeignKey
     {
-        private static List<ForeignKeyMigration> CompareForeignKeys(SqlTable tableOriginal, SqlTable tableNew)
+        public static List<ForeignKeyMigration> CompareForeignKeys(SqlTable tableOriginal, SqlTable tableNew)
         {
-            var changes = new List<ForeignKeyMigration>();
+             var changes = new List<ForeignKeyMigration>();
 
             foreach (var fkOriginal in tableOriginal.Properties.OfType<ForeignKey>())
             {
@@ -34,19 +34,34 @@
                 }
                 else
                 {
+                    var fkChanged = false;
+                    var foreignKeyChange = new ForeignKeyChange()
+                    {
+                        ForeignKey = fkOriginal,
+                        NewForeignKey = fkNew
+                    };
+
                     // compare ReferredTable
                     // compare columns
                     // compare SqlEngineVersionSpecificProperties - generally for SqlTableProperty
                     if (fkOriginal.ReferredTable.SchemaAndTableName != fkNew.ReferredTable.SchemaAndTableName)
+                        fkChanged = true;
+
+                    if (CompareForeignKeyColumns(fkOriginal, fkNew))
                     {
-
-
-                        changes.Add(new ForeignKeyChange()
-                        {
-                            ForeignKey = fkOriginal,
-                            NewForeignKey = fkNew
-                        });
+                        fkChanged = true;
+                        foreignKeyChange.ForeignKeyInternalColumnChanges = new ForeignKeyInternalColumnChanges();
                     }
+
+                    var sqlEngineVersionSpecificPropertyChanges = CompareSqlEngineVersionSpecificPropertyChange(fkOriginal.SqlEngineVersionSpecificProperties, fkNew.SqlEngineVersionSpecificProperties);
+                    if (sqlEngineVersionSpecificPropertyChanges.Count > 0)
+                    {
+                        fkChanged = true;
+                        foreignKeyChange.SqlEngineVersionSpecificPropertyChanges.AddRange(sqlEngineVersionSpecificPropertyChanges);
+                    }
+
+                    if (fkChanged)
+                        changes.Add(foreignKeyChange);
                 }
             }
 
@@ -58,12 +73,58 @@
             if (fkOriginal.ForeignKeyColumns.Count != fkNew.ForeignKeyColumns.Count)
                 return false;
 
-            foreach (var fkColumnMapOriginal in fkOriginal.ForeignKeyColumns)
+            for (var i = 0; i < fkOriginal.ForeignKeyColumns.Count; i++)
             {
-                fkNew.ForeignKeyColumns.First(fkcm => fkcm.)
+                var fkColumnOriginal = fkOriginal.ForeignKeyColumns[i];
+                var fkColumnNew = fkNew.ForeignKeyColumns[i];
+
+                if (Comparer.ColumnChanged(fkColumnOriginal.ForeignKeyColumn, fkColumnNew.ForeignKeyColumn))
+                    return false;
+
+                if (Comparer.ColumnChanged(fkColumnOriginal.ReferredColumn, fkColumnNew.ReferredColumn))
+                    return false;
             }
 
             return true;
+        }
+
+        public static List<SqlEngineVersionSpecificPropertyMigration> CompareSqlEngineVersionSpecificPropertyChange(SqlEngineVersionSpecificProperties propertiesOriginal, SqlEngineVersionSpecificProperties propertiesNew)
+        {
+            var changes = new List<SqlEngineVersionSpecificPropertyMigration>();
+
+            foreach (var propertyOriginal in propertiesOriginal)
+            {
+                var propertyNew = propertiesNew.FirstOrDefault(p => p.Version == propertyOriginal.Version && p.Name == propertyOriginal.Name);
+                if (propertyNew == null)
+                {
+                    changes.Add(new SqlEngineVersionSpecificPropertyDelete()
+                    {
+                        SqlEngineVersionSpecificProperty = propertyOriginal
+                    });
+                }
+            }
+
+            foreach (var propertyNew in propertiesNew)
+            {
+                var propertyOriginal = propertiesOriginal.FirstOrDefault(p => p.Version == propertyNew.Version && p.Name == propertyNew.Name);
+                if (propertyOriginal == null)
+                {
+                    changes.Add(new SqlEngineVersionSpecificPropertyNew()
+                    {
+                        SqlEngineVersionSpecificProperty = propertyOriginal
+                    });
+                }
+                else if (propertyNew.Value != propertyOriginal.Value)
+                {
+                    changes.Add(new SqlEngineVersionSpecificPropertyChange()
+                    {
+                        SqlEngineVersionSpecificProperty = propertyOriginal,
+                        NewSqlEngineVersionSpecificProperty = propertyNew
+                    });
+                }
+            }
+
+            return changes;
         }
     }
 }
