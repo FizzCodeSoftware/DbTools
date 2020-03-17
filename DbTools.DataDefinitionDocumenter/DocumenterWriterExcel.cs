@@ -40,7 +40,6 @@
 
         public void WriteLine(string sheetName, params object[] content)
         {
-            sheetName = GetSheetName(sheetName);
             Write(sheetName, content);
 
             Sheet(sheetName).LastRow++;
@@ -49,7 +48,6 @@
 
         public void WriteLine(Color? backgroundColor, string sheetName, params object[] content)
         {
-            sheetName = GetSheetName(sheetName);
             Write(backgroundColor, sheetName, content);
 
             Sheet(sheetName, backgroundColor).LastRow++;
@@ -63,7 +61,7 @@
 
         public void Write(Color? backgroundColor, string sheetName, params object[] content)
         {
-            var sheet = Sheet(GetSheetName(sheetName), backgroundColor);
+            var sheet = Sheet(sheetName, backgroundColor);
             foreach (var value in content)
             {
                 sheet.SetValue(value, backgroundColor);
@@ -73,7 +71,7 @@
 
         public void WriteAndMerge(Color? backgroundColor, string sheetName, int mergeAmount, object content)
         {
-            var sheet = Sheet(GetSheetName(sheetName), backgroundColor);
+            var sheet = Sheet(sheetName, backgroundColor);
             sheet.SetValue(content, backgroundColor);
 
             var cell = sheet.ExcelWorksheet.Cells[sheet.LastRow, sheet.LastColumn, sheet.LastRow, sheet.LastColumn + mergeAmount];
@@ -152,7 +150,6 @@
 
         public void WriteLink(string sheetName, string text, string targetSheetName, Color? backgroundColor = null)
         {
-            sheetName = GetSheetName(sheetName);
             targetSheetName = GetSheetName(targetSheetName);
 
             Sheet(sheetName, backgroundColor).SetLink(text, targetSheetName, backgroundColor);
@@ -161,7 +158,6 @@
 
         public void SetSheetColor(string sheetName, Color color)
         {
-            sheetName = GetSheetName(sheetName);
             Sheet(sheetName).ExcelWorksheet.TabColor = color;
         }
     }

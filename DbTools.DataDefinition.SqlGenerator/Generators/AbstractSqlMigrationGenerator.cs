@@ -41,7 +41,7 @@
         {
             var tableName = CheckSameTable(columnDeletes);
 
-            var columnsToDelete = columnDeletes.Select(c => Generator.GuardKeywords(c.SqlColumn.Name)).ToList();
+            var columnsToDelete = columnDeletes.Select(c => Generator.GuardKeywords(c.Name)).ToList();
             return @$"
 ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}
 DROP COLUMN { string.Join(", ", columnsToDelete) }";
@@ -51,7 +51,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
         {
             var tableName = CheckSameTable(columnNews);
 
-            var columnsToAdd = columnNews.Select(c => c.SqlColumn.Name).ToList();
+            var columnsToAdd = columnNews.Select(c => c.Name).ToList();
 
             var sb = new StringBuilder();
             sb.Append("ALTER TABLE ").AppendLine(Generator.GetSimplifiedSchemaAndTableName(tableName));
@@ -63,7 +63,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
                 if (idx++ > 0)
                     sb.AppendLine(",");
 
-                sb.AppendLine(Generator.GenerateCreateColumn(columnNew.SqlColumn));
+                sb.AppendLine(Generator.GenerateCreateColumn(columnNew));
             }
 
             return sb.ToString();
@@ -71,7 +71,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
 
         protected static SchemaAndTableName CheckSameTable(ColumnMigration[] columnNews)
         {
-            var tableNames = columnNews.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
+            var tableNames = columnNews.Select(c => c.Table.SchemaAndTableName).Distinct();
 
             if (tableNames.Count() != 1)
                 throw new ArgumentOutOfRangeException(nameof(columnNews), "All columns should be on the same table.");

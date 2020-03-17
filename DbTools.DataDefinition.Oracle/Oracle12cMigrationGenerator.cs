@@ -18,14 +18,14 @@
 
         public override string CreateColumns(params ColumnNew[] columnNews)
         {
-            var tableNames = columnNews.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
+            var tableNames = columnNews.Select(c => c.Table.SchemaAndTableName).Distinct();
 
             if (tableNames.Count() != 1)
                 throw new ArgumentOutOfRangeException(nameof(columnNews), "All columns should be on the same table.");
 
             var tableName = tableNames.First();
 
-            var columnsToAdd = columnNews.Select(c => c.SqlColumn.Name).ToList();
+            var columnsToAdd = columnNews.Select(c => c.Name).ToList();
 
             var sb = new StringBuilder();
             sb.Append("ALTER TABLE ").AppendLine(Generator.GetSimplifiedSchemaAndTableName(tableName));
@@ -37,7 +37,7 @@
                 if (idx++ > 0)
                     sb.AppendLine(",");
 
-                sb.AppendLine(Generator.GenerateCreateColumn(columnNew.SqlColumn));
+                sb.AppendLine(Generator.GenerateCreateColumn(columnNew));
             }
 
             sb.Append(")");
@@ -47,14 +47,14 @@
 
         public override string DropColumns(params ColumnDelete[] columnDeletes)
         {
-            var tableNames = columnDeletes.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
+            var tableNames = columnDeletes.Select(c => c.Table.SchemaAndTableName).Distinct();
 
             if (tableNames.Count() != 1)
                 throw new ArgumentOutOfRangeException(nameof(columnDeletes), "All columns should be on the same table.");
 
             var tableName = tableNames.First();
 
-            var columnsToDelete = columnDeletes.Select(c => Generator.GuardKeywords(c.SqlColumn.Name)).ToList();
+            var columnsToDelete = columnDeletes.Select(c => Generator.GuardKeywords(c.Name)).ToList();
 
             var sb = new StringBuilder();
             sb.Append("ALTER TABLE ").AppendLine(Generator.GetSimplifiedSchemaAndTableName(tableName));
@@ -90,7 +90,7 @@
             {
                 return $@"
 ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}
-MODIFY {GenerateColumnChange(columnChanges[0].SqlColumn, columnChanges[0].NewNameAndType)}";
+MODIFY {GenerateColumnChange(columnChanges[0], columnChanges[0].NewNameAndType)}";
             }
 
             var sbStatements = new StringBuilder();

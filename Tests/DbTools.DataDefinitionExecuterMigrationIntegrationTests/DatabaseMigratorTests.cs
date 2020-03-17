@@ -100,7 +100,7 @@
             var changes = comparer.Compare(ddInDatabase, dd);
 
             var first = changes[0] as ColumnDelete;
-            Assert.AreEqual("Name", first.SqlColumn.Name);
+            Assert.AreEqual("Name", first.Name);
 
             var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
 
@@ -156,7 +156,7 @@
             var changes = comparer.Compare(ddInDatabase, dd);
 
             var first = changes[0] as ColumnNew;
-            Assert.AreEqual("Name2", first.SqlColumn.Name);
+            Assert.AreEqual("Name2", first.Name);
 
             var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
 
@@ -183,10 +183,10 @@
             var changes = comparer.Compare(ddInDatabase, dd);
 
             var first = changes[0] as ColumnNew;
-            Assert.AreEqual("Name2", first.SqlColumn.Name);
+            Assert.AreEqual("Name2", first.Name);
             var second = changes[1] as ColumnNew;
-            Assert.AreEqual("Name3", second.SqlColumn.Name);
-            Assert.AreEqual(true, second.SqlColumn.Type.IsNullable);
+            Assert.AreEqual("Name3", second.Name);
+            Assert.AreEqual(true, second.Type.IsNullable);
 
             var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
 
@@ -213,7 +213,7 @@
 
             var first = changes[0] as ColumnChange;
             Assert.AreEqual(100, ddInDatabase.GetTable("Company")["Name"].Type.Length);
-            Assert.AreEqual(100, first.SqlColumn.Type.Length);
+            Assert.AreEqual(100, first.Type.Length);
             Assert.AreEqual(101, first.NewNameAndType.Type.Length);
 
             var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
@@ -241,7 +241,7 @@
 
             var first = changes[0] as ColumnChange;
             Assert.AreEqual(false, ddInDatabase.GetTable("Company")["Name"].Type.IsNullable);
-            Assert.AreEqual(false, first.SqlColumn.Type.IsNullable);
+            Assert.AreEqual(false, first.Type.IsNullable);
             Assert.AreEqual(true, first.NewNameAndType.Type.IsNullable);
 
             var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
@@ -272,10 +272,10 @@
             Assert.AreEqual(100, ddInDatabase.GetTable("Company")["Name"].Type.Length);
             Assert.AreEqual(100, ddInDatabase.GetTable("Company")["Name2"].Type.Length);
             var first = changes[0] as ColumnChange;
-            Assert.AreEqual(100, first.SqlColumn.Type.Length);
+            Assert.AreEqual(100, first.Type.Length);
             Assert.AreEqual(101, first.NewNameAndType.Type.Length);
             var second = changes[1] as ColumnChange;
-            Assert.AreEqual(100, second.SqlColumn.Type.Length);
+            Assert.AreEqual(100, second.Type.Length);
             Assert.AreEqual(101, second.NewNameAndType.Type.Length);
 
             var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
@@ -309,13 +309,13 @@
             if (version == MsSqlVersion.MsSql2016)
             {
                 Assert.IsTrue(ddInDatabase.GetTable("Company")["Name"].Type.SqlTypeInfo is MsSql2016.SqlNVarChar);
-                Assert.IsTrue(first.SqlColumn.Type.SqlTypeInfo is MsSql2016.SqlNVarChar);
+                Assert.IsTrue(first.Type.SqlTypeInfo is MsSql2016.SqlNVarChar);
                 Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is MsSql2016.SqlNChar);
             }
             else if (version == OracleVersion.Oracle12c)
             {
                 Assert.IsTrue(ddInDatabase.GetTable("Company")["Name"].Type.SqlTypeInfo is Oracle12c.SqlNVarChar2);
-                Assert.IsTrue(first.SqlColumn.Type.SqlTypeInfo is Oracle12c.SqlNVarChar2);
+                Assert.IsTrue(first.Type.SqlTypeInfo is Oracle12c.SqlNVarChar2);
                 Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is Oracle12c.SqlNChar);
             }
 
@@ -355,21 +355,21 @@
             if (version == MsSqlVersion.MsSql2016)
             {
                 Assert.IsTrue(ddInDatabase.GetTable("Company")["Name"].Type.SqlTypeInfo is MsSql2016.SqlNVarChar);
-                Assert.IsTrue(first.SqlColumn.Type.SqlTypeInfo is MsSql2016.SqlNVarChar);
+                Assert.IsTrue(first.Type.SqlTypeInfo is MsSql2016.SqlNVarChar);
                 Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is MsSql2016.SqlNChar);
             }
             else if (version == OracleVersion.Oracle12c)
             {
                 Assert.IsTrue(ddInDatabase.GetTable("Company")["Name"].Type.SqlTypeInfo is Oracle12c.SqlNVarChar2);
-                Assert.IsTrue(first.SqlColumn.Type.SqlTypeInfo is Oracle12c.SqlNVarChar2);
+                Assert.IsTrue(first.Type.SqlTypeInfo is Oracle12c.SqlNVarChar2);
                 Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is Oracle12c.SqlNChar);
             }
 
             Assert.AreEqual(100, ddInDatabase.GetTable("Company")["Name"].Type.Length);
-            Assert.AreEqual(100, first.SqlColumn.Type.Length);
+            Assert.AreEqual(100, first.Type.Length);
             Assert.AreEqual(101, first.NewNameAndType.Type.Length);
             Assert.AreEqual(false, ddInDatabase.GetTable("Company")["Name"].Type.IsNullable);
-            Assert.AreEqual(false, first.SqlColumn.Type.IsNullable);
+            Assert.AreEqual(false, first.Type.IsNullable);
             Assert.AreEqual(true, first.NewNameAndType.Type.IsNullable);
 
             var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
@@ -398,9 +398,9 @@
             var changes = comparer.Compare(ddInDatabase, dd);
 
             var first = changes[0] as ColumnDelete;
-            Assert.AreEqual("Name", first.SqlColumn.Name);
+            Assert.AreEqual("Name", first.Name);
             var second = changes[1] as ColumnDelete;
-            Assert.AreEqual("Name2", second.SqlColumn.Name);
+            Assert.AreEqual("Name2", second.Name);
 
             var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
 

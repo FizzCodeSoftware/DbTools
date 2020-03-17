@@ -94,7 +94,7 @@
             var changes = comparer.Compare(originalDd, dd);
 
             var first = changes[0] as ColumnDelete;
-            Assert.AreEqual("Name", first.SqlColumn.Name);
+            Assert.AreEqual("Name", first.Name);
         }
 
         [TestMethod]
@@ -113,7 +113,7 @@
             var changes = comparer.Compare(ddOriginal, dd);
 
             var first = changes[0] as ColumnNew;
-            Assert.AreEqual("Name2", first.SqlColumn.Name);
+            Assert.AreEqual("Name2", first.Name);
         }
 
         [TestMethod]
@@ -133,10 +133,10 @@
             var changes = comparer.Compare(ddOriginal, dd);
 
             var first = changes[0] as ColumnNew;
-            Assert.AreEqual("Name2", first.SqlColumn.Name);
+            Assert.AreEqual("Name2", first.Name);
             var second = changes[1] as ColumnNew;
-            Assert.AreEqual("Name3", second.SqlColumn.Name);
-            Assert.AreEqual(true, second.SqlColumn.Type.IsNullable);
+            Assert.AreEqual("Name3", second.Name);
+            Assert.AreEqual(true, second.Type.IsNullable);
         }
 
         [TestMethod]
@@ -159,7 +159,7 @@
             var first = changes[0] as ColumnChange;
 
             Assert.AreEqual(100, ddOriginal.GetTable("Company")["Name"].Type.Length);
-            Assert.AreEqual(100, first.SqlColumn.Type.Length);
+            Assert.AreEqual(100, first.Type.Length);
             Assert.AreEqual(101, first.NewNameAndType.Type.Length);
         }
 
@@ -181,9 +181,9 @@
             var changes = comparer.Compare(ddOriginal, dd);
 
             var first = changes[0] as ColumnDelete;
-            Assert.AreEqual("Name", first.SqlColumn.Name);
+            Assert.AreEqual("Name", first.Name);
             var second = changes[1] as ColumnDelete;
-            Assert.AreEqual("Name2", second.SqlColumn.Name);
+            Assert.AreEqual("Name2", second.Name);
         }
     }
 }

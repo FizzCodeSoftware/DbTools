@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.Console
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using CommandDotNet;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
@@ -89,7 +90,8 @@
             var dd = ddlReader.GetDatabaseDefinition();
 
             var documenterContext = CreateDocumenterContext(context, patternFileName);
-            SetSettingsFromFlags(flags, documenterContext.DocumenterSettings);
+            if(flags != null)
+                SetSettingsFromFlags(flags, documenterContext.DocumenterSettings);
 
             var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
             var generator = new CSharpGenerator(writer, version, newDatabaseName, @namespace);
@@ -270,22 +272,23 @@
             [Option(LongName = "flags", ShortName = "f")]
             List<string> flags)
         {
-            var version = SqlEngineVersions.GetVersion(sqlTypeNew);
+            var versionOriginal = SqlEngineVersions.GetVersion(sqlTypeOriginal);
 
-            var context = CreateContext(version);
+            var contextOriginal = CreateContext(versionOriginal);
 
             var connectionStringWithProviderOriginal = new ConnectionStringWithProvider(
-                version.GetType().Name,
-                version.ProviderName,
+                versionOriginal.GetType().Name,
+                versionOriginal.ProviderName,
                 connectionStringOriginal,
-                version.VersionString);
+                versionOriginal.VersionString);
 
-            var sqlExecuterOriginal = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProviderOriginal, context);
+            var sqlExecuterOriginal = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProviderOriginal, contextOriginal);
             var databaseNameOriginal = sqlExecuterOriginal.GetDatabase();
 
-            var ddlReaderOriginal = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProviderOriginal, context, null);
+            var ddlReaderOriginal = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProviderOriginal, contextOriginal, null);
 
-            var ddOriginal = ddlReaderOriginal.GetDatabaseDefinition();
+            //var ddOriginal = ddlReaderOriginal.GetDatabaseDefinition();
+            var ddOriginalTask = Task.Run(() => ddlReaderOriginal.GetDatabaseDefinition());
 
             if (patternFileNameOriginal == null)
                 patternFileNameOriginal = patternFileName;
@@ -293,24 +296,33 @@
             if (patternFileNameNew == null)
                 patternFileNameNew = patternFileName;
 
-            var changeDocumenterContext = CreateChangeDocumenterContext(context, patternFileNameOriginal, patternFileNameNew);
+            var changeDocumenterContext = CreateChangeDocumenterContext(contextOriginal, patternFileNameOriginal, patternFileNameNew);
             if(flags != null)
                 SetSettingsFromFlags(flags, changeDocumenterContext.DocumenterSettings);
 
-            var connectionStringWithProviderNew = new ConnectionStringWithProvider(
-                version.GetType().Name,
-                version.ProviderName,
-                connectionStringNew,
-                version.VersionString);
+            var versionNew = SqlEngineVersions.GetVersion(sqlTypeNew);
 
-            var sqlExecuterNew = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProviderNew, context);
+            var contextNew = CreateContext(versionNew);
+
+            var connectionStringWithProviderNew = new ConnectionStringWithProvider(
+                versionNew.GetType().Name,
+                versionNew.ProviderName,
+                connectionStringNew,
+                versionNew.VersionString);
+
+            var sqlExecuterNew = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProviderNew, contextNew);
             var databaseNameNew = sqlExecuterNew.GetDatabase();
 
-            var ddlReaderNew = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProviderNew, context, null);
+            var ddlReaderNew = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProviderNew, contextNew, null);
 
-            var ddNew = ddlReaderNew.GetDatabaseDefinition();
+            //var ddNew = ddlReaderNew.GetDatabaseDefinition();
+            var ddNewTask = Task.Run(() => ddlReaderNew.GetDatabaseDefinition());
 
-            var changeDocumenter = new ChangeDocumenter(changeDocumenterContext, version, databaseNameOriginal, databaseNameNew);
+            var changeDocumenter = new ChangeDocumenter(changeDocumenterContext, versionOriginal, databaseNameOriginal, databaseNameNew);
+
+            var ddOriginal = ddOriginalTask.Result;
+            var ddNew = ddNewTask.Result;
+
             changeDocumenter.Document(ddOriginal, ddNew);
         }
     }

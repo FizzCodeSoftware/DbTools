@@ -65,10 +65,7 @@
                 tableNew.Columns.TryGetValue(columnOriginal.Name, out var columnNew);
                 if (columnNew == null)
                 {
-                    var columnDelete = new ColumnDelete
-                    {
-                        SqlColumn = columnOriginal.CopyTo(new SqlColumn())
-                    };
+                    var columnDelete = (ColumnDelete)columnOriginal.CopyTo(new ColumnDelete());
                     changes.Add(columnDelete);
                 }
             }
@@ -78,19 +75,13 @@
                 tableOriginal.Columns.TryGetValue(columnNew.Name, out var columnOriginal);
                 if (columnOriginal == null)
                 {
-                    var column = new ColumnNew
-                    {
-                        SqlColumn = columnNew.CopyTo(new SqlColumn())
-                    };
+                    var column = (ColumnNew)columnNew.CopyTo(new ColumnNew());
                     changes.Add(column);
                 }
                 else if (ColumnChanged(columnNew, columnOriginal))
                 {
-                    var columnChange = new ColumnChange
-                    {
-                        SqlColumn = columnOriginal.CopyTo(new SqlColumn()),
-                        NewNameAndType = columnNew.CopyTo(new SqlColumn())
-                    };
+                    var columnChange = (ColumnChange)columnOriginal.CopyTo(new ColumnChange());
+                    columnChange.NewNameAndType = columnNew.CopyTo(new SqlColumn());
                     changes.Add(columnChange);
                 }
             }

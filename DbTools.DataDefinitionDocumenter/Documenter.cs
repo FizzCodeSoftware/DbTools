@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using System.Collections.Generic;
-    using System.Drawing;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -106,34 +105,7 @@
                 if (sheetColor != null)
                     DocumenterWriter.SetSheetColor(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName), sheetColor.Value);
 
-                var mergeAmount = !Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11;
-
-                WriteColor(table.SchemaAndTableName, "Schema");
-                WriteAndMerge(table.SchemaAndTableName, mergeAmount, table.SchemaAndTableName.Schema);
-                WriteLine(table.SchemaAndTableName);
-
-                WriteColor(table.SchemaAndTableName, "Table name");
-                WriteAndMerge(table.SchemaAndTableName, mergeAmount, table.SchemaAndTableName.TableName);
-                WriteLine(table.SchemaAndTableName);
-
-                var tableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
-                WriteColor(table.SchemaAndTableName, "Description");
-                WriteAndMerge(table.SchemaAndTableName, mergeAmount, tableDescription?.Description);
-                WriteLine(table.SchemaAndTableName);
-
-                if (hasCategories && !string.IsNullOrEmpty(category))
-                {
-                    WriteColor(table.SchemaAndTableName, "Category");
-                    WriteAndMerge(table.SchemaAndTableName, mergeAmount, category);
-                    WriteLine(table.SchemaAndTableName);
-                }
-
-                WriteLine(table.SchemaAndTableName);
-
-                if (!Context.DocumenterSettings.NoInternalDataTypes)
-                    WriteLine(table.SchemaAndTableName, "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Scale", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key Name", "Referenced Table", "Link", "Referenced Column");
-                else
-                    WriteLine(table.SchemaAndTableName, "Column Name", "Data Type", "Column Length", "Column Scale", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key Name", "Referenced Table", "Link", "Referenced Column");
+                AddTableHeader(hasCategories, category, table);
 
                 AddTableDetails(category, table, hasCategories);
             }
@@ -164,11 +136,6 @@
             File.WriteAllBytes(fileName, content);
         }
 
-        private static List<SqlTable> RemoveKnownTechnicalTables(List<SqlTable> list)
-        {
-            return list.Where(x => !ShouldSkipKnownTechnicalTable(x.SchemaAndTableName)).ToList();
-        }
-
         protected void AddTableToTableList(string category, SqlTable table, bool hasCategories)
         {
             if (hasCategories)
@@ -197,52 +164,11 @@
                 // TODO Create ISqlTypeMapper according to SqlDialect
                 var sqlType = column.Type;
 
-                var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
-                var description = "";
-                if (descriptionProperty != null)
-                    description = descriptionProperty.Description;
+                var columnDocumentInfo = GetColumnDocumentInfo(pks, column);
 
-                var isPk = pks.Any(pk => pk.SqlColumns.Any(cao => cao.SqlColumn == column));
+                // TODO internal data types are not OK this way
 
-                // TODO internall data types are not OK this way
-
-                if (!Context.DocumenterSettings.NoInternalDataTypes)
-                    Write(table.SchemaAndTableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
-                else
-                    Write(table.SchemaAndTableName, column.Name, sqlType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
-
-                if (isPk)
-                    Write(table.SchemaAndTableName, true);
-                else
-                    Write(table.SchemaAndTableName, "");
-
-                var identity = column.Properties.OfType<Identity>().FirstOrDefault();
-
-                if (identity != null)
-                    Write(table.SchemaAndTableName, $"IDENTITY ({identity.Seed.ToString("D", CultureInfo.InvariantCulture)}, {identity.Increment.ToString("D", CultureInfo.InvariantCulture)})");
-                else
-                    Write(table.SchemaAndTableName, "");
-
-                var defaultValue = column.Properties.OfType<DefaultValue>().FirstOrDefault();
-
-                if (defaultValue != null)
-                    Write(table.SchemaAndTableName, defaultValue);
-                else
-                    Write(table.SchemaAndTableName, "");
-
-                Write(table.SchemaAndTableName, description.Trim());
-
-                // "Foreign Key name", "Priary Key table", "Priary Key column"
-                var fkOnColumn = table.Properties.OfType<ForeignKey>().FirstOrDefault(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn == column));
-
-                if (fkOnColumn != null)
-                {
-                    Write(table.SchemaAndTableName, fkOnColumn.Name);
-                    Write(table.SchemaAndTableName,
-                        Helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName));
-                    WriteLink(table.SchemaAndTableName, "link", fkOnColumn.ReferredTable.SchemaAndTableName);
-                    Write(table.SchemaAndTableName, fkOnColumn.ForeignKeyColumns.First(fkc => fkc.ForeignKeyColumn == column).ReferredColumn.Name);
-                }
+                AddColumnsToTableShet(column, columnDocumentInfo);
 
                 WriteLine(table.SchemaAndTableName);
 
@@ -262,18 +188,18 @@
                     DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
                 }
 
-                if (isPk)
+                if (columnDocumentInfo.IsPk)
                     DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", true);
                 else
                     DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", "");
 
-                if (identity != null)
-                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", $"IDENTITY ({identity.Seed.ToString("D", CultureInfo.InvariantCulture)}, {identity.Increment.ToString("D", CultureInfo.InvariantCulture)})");
+                if (columnDocumentInfo.Identity != null)
+                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", $"IDENTITY ({columnDocumentInfo.Identity.Seed.ToString("D", CultureInfo.InvariantCulture)}, {columnDocumentInfo.Identity.Increment.ToString("D", CultureInfo.InvariantCulture)})");
                 else
                     DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", "");
 
-                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", defaultValue);
-                DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), "All columns", description);
+                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", columnDocumentInfo.DefaultValue);
+                DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), "All columns", columnDocumentInfo.Description);
             }
 
             if (!Context.DocumenterSettings.NoForeignKeys)
