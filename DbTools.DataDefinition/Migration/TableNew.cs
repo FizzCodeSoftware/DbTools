@@ -6,10 +6,10 @@
         {
         }
 
-        public TableNew(SqlTable original)
+        public TableNew(SqlTable table)
         {
-            SchemaAndTableName = original.SchemaAndTableName;
-            foreach (var column in original.Columns)
+            SchemaAndTableName = table.SchemaAndTableName;
+            foreach (var column in table.Columns)
             {
                 var newColumn = new SqlColumn
                 {
@@ -19,6 +19,10 @@
             }
 
             // TODO copy .Properties
+        }
+        public override string ToString()
+        {
+            return "(New:) " + base.ToString();
         }
     }
 }

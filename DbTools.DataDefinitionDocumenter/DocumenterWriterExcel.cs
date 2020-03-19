@@ -79,6 +79,13 @@
             sheet.LastColumn += mergeAmount + 1;
         }
 
+        public void MergeUpFromPreviousRow(string sheetName, int mergeAmount)
+        {
+            var sheet = Sheet(sheetName);
+            var cell = sheet.ExcelWorksheet.Cells[sheet.LastRow - mergeAmount - 1, sheet.LastColumn, sheet.LastRow - 1, sheet.LastColumn];
+            cell.Merge = true;
+        }
+
         private double GetRenderedTextHeight(string text, ExcelFont font, double width)
         {
             using (var bm = new Bitmap(1, 1))

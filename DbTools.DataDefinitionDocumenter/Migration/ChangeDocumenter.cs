@@ -94,7 +94,7 @@
 
             var processedTables = new List<SchemaAndTableName>();
 
-            foreach (var change in changes.Where(c => !(c is TableNew )&& !(c is TableDelete)))
+            foreach (var change in changes.OfType<ColumnMigration>())
             {
                 switch (change)
                 {
@@ -126,8 +126,33 @@
                             AddColumnsToTableShet(column, columnDocumentInfo);
                             break;
                         }
-                    /*default:
-                        throw new NotImplementedException();*/
+                }
+            }
+
+            foreach (var change in changes.Where(c => (c is ForeignKeyNew) && (c is ForeignKeyDelete) && (c is ForeignKeyChange)))
+            {
+                switch (change)
+                {
+                    case ForeignKeyNew fkNew:
+                        {
+                            if (Context.CustomizerNew.ShouldSkip(fkNew.ForeignKey.ReferredTable.SchemaAndTableName))
+                                continue;
+
+                            ProcessTable(processedTables, fkNew.ForeignKey.ReferredTable);
+                            // var pks = column.Table.Properties.OfType<PrimaryKey>().ToList();
+                            // var columnDocumentInfo = GetColumnDocumentInfo(pks, column);
+                            WriteLine(fkNew.ForeignKey.ReferredTable.SchemaAndTableName, "New"); // TODO
+                            // AddColumnsToTableShet(column, columnDocumentInfo);
+                            break;
+                        }
+                    case ForeignKeyDelete fkDelete:
+                        {
+                            break;
+                        }
+                    case ForeignKeyChange fkChange:
+                        {
+                            break;
+                        }
                 }
             }
 

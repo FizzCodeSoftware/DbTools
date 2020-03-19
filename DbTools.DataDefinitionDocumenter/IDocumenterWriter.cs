@@ -16,5 +16,6 @@
         byte[] GetContent();
 
         void WriteLink(string sheetName, string text, string targetSheetName, Color? backgroundColor = null);
+        void MergeUpFromPreviousRow(string sheetName, int mergeAmount);
     }
 }

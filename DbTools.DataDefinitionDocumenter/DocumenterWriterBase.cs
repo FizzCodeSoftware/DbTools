@@ -65,6 +65,11 @@
             DocumenterWriter.WriteAndMerge(GetColor(schemaAndTableName), Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), mergeAmount, content);
         }
 
+        protected void MergeUpFromPreviousRow(SchemaAndTableName schemaAndTableName, int mergeAmount)
+        {
+            DocumenterWriter.MergeUpFromPreviousRow(Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), mergeAmount);
+        }
+
         protected virtual Color? GetColor(SchemaAndTableName schemaAndTableName)
         {
             // TODO coloring to incude schema

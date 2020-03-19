@@ -202,24 +202,38 @@
                 DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), "All columns", columnDocumentInfo.Description);
             }
 
+            var mergeAmount = 1 + (!Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11);
+
             if (!Context.DocumenterSettings.NoForeignKeys)
             {
                 WriteLine(table.SchemaAndTableName);
-                WriteLine(table.SchemaAndTableName, "Foreign keys");
+
+                WriteAndMerge(table.SchemaAndTableName, mergeAmount, "Foreign keys");
+                WriteLine(table.SchemaAndTableName);
+
+                // TODO allow nulls. Check / other properties?
+                WriteLine(table.SchemaAndTableName, "Foreign key name", "Referenced Table", "link", "Referenced Column", "Column");
 
                 var fks = table.Properties.OfType<ForeignKey>().ToList();
+                var countToMerge = 0;
                 foreach (var fk in fks)
                 {
-                    Write(table.SchemaAndTableName, fk.Name);
                     foreach (var fkColumn in fk.ForeignKeyColumns)
+                    {
+                        Write(table.SchemaAndTableName, fk.Name, Helper.GetSimplifiedSchemaAndTableName(fk.ReferredTable.SchemaAndTableName));
+                        WriteLink(table.SchemaAndTableName, "link", Helper.GetSimplifiedSchemaAndTableName(fk.ReferredTable.SchemaAndTableName), GetColor(fk.ReferredTable.SchemaAndTableName));
                         Write(table.SchemaAndTableName, fkColumn.ForeignKeyColumn.Name);
+                        WriteLine(table.SchemaAndTableName, fkColumn.ReferredColumn.Name);
 
-                    Write(table.SchemaAndTableName, "");
-                    Write(table.SchemaAndTableName, Helper.GetSimplifiedSchemaAndTableName(fk.ReferredTable.SchemaAndTableName));
-                    Write(table.SchemaAndTableName, "");
+                        countToMerge++;
+                    }
 
-                    foreach (var fkColumn in fk.ForeignKeyColumns)
-                        Write(table.SchemaAndTableName, fkColumn.ReferredColumn.Name);
+                    if (countToMerge > 1)
+                    {
+                        MergeUpFromPreviousRow(table.SchemaAndTableName, countToMerge - 1);
+                    }
+
+                    countToMerge = 0;
                 }
 
                 if (fks.Count > 0)
@@ -229,7 +243,9 @@
             if (!Context.DocumenterSettings.NoIndexes)
             {
                 WriteLine(table.SchemaAndTableName);
-                WriteLine(table.SchemaAndTableName, "Indexes");
+
+                WriteAndMerge(table.SchemaAndTableName, mergeAmount, "Indexes");
+                WriteLine(table.SchemaAndTableName);
 
                 foreach (var index in table.Properties.OfType<Index>())
                 {
