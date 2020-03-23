@@ -20,7 +20,7 @@
             TypeMapperType = typeMapperType;
         }
 
-        public string GetColumnCreation(SqlColumn column, DocumenterHelper helper)
+        public string GetColumnCreation(SqlColumn column, DocumenterHelper helper, string extraAnnotation, string comment)
         {
             var sb = new StringBuilder();
 
@@ -46,12 +46,31 @@
 
             // TODO Default Value + config
 
+            if (!string.IsNullOrEmpty(extraAnnotation))
+            {
+                sb.Append(extraAnnotation);
+            }
+
             sb.Append(";");
 
             var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
-            if (!string.IsNullOrEmpty(descriptionProperty?.Description))
+            var description = descriptionProperty?.Description
+                ?.Replace("\r", "", StringComparison.OrdinalIgnoreCase)
+                ?.Replace("\n", "", StringComparison.OrdinalIgnoreCase)
+                ?.Trim();
+
+            if (!string.IsNullOrEmpty(description))
             {
-                sb.Append(" // ").Append(descriptionProperty.Description.Replace("\r", "", StringComparison.OrdinalIgnoreCase).Replace("\n", "", StringComparison.OrdinalIgnoreCase));
+                sb.Append(" // ").Append(description);
+
+                if (!string.IsNullOrEmpty(comment))
+                {
+                    sb.Append(" ").Append(comment);
+                }
+            }
+            else if (!string.IsNullOrEmpty(comment))
+            {
+                sb.Append(" // ").Append(comment);
             }
 
             return sb.ToString();
