@@ -6,6 +6,7 @@
 
         public bool NoForeignKeys { get; set; }
         public bool NoIndexes { get; set; }
+        public bool NoUniqueConstraints { get; set; }
         public bool NoInternalDataTypes { get; set; }
     }
 }

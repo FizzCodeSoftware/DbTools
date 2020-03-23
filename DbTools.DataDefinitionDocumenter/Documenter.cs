@@ -232,6 +232,30 @@
                     }
                 }
             }
+
+            if (!Context.DocumenterSettings.NoUniqueConstraints)
+            {
+                WriteLine(table.SchemaAndTableName);
+
+                var mergeAmount = 1 + (!Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11);
+
+                WriteAndMerge(table.SchemaAndTableName, mergeAmount, "Unique constraints");
+                WriteLine(table.SchemaAndTableName);
+
+                var uniqueConstraints = table.Properties.OfType<UniqueConstraint>().ToList();
+
+                if (uniqueConstraints.Count > 0)
+                    WriteLine(table.SchemaAndTableName, "Unique constraint name", "Column");
+
+                foreach (var uniqueConstraint in uniqueConstraints)
+                {
+                    foreach (var indexColumn in uniqueConstraint.SqlColumns)
+                    {
+                        Write(table.SchemaAndTableName, uniqueConstraint.Name);
+                        WriteLine(table.SchemaAndTableName, indexColumn.SqlColumn.Name);
+                    }
+                }
+            }
         }
 
         private void AddForeignKeysToTableSheet(SqlTable table)

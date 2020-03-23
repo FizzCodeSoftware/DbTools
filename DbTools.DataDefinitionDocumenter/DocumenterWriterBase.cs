@@ -205,6 +205,10 @@
             }
         }
 
+        protected void AddUniqueConstraint(UniqueConstraint uc, string firstColumn = null)
+        {
+        }
+
         protected class ColumnDocumentInfo
         {
             public string Description { get; set; }

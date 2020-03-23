@@ -208,18 +208,19 @@
 
         protected void GenerateTableProperties(StringBuilder sb, SqlTable table)
         {
-            var indexes = table.Properties.OfType<Index>().ToList();
-
             if (!Context.DocumenterSettings.NoIndexes)
             {
+                var indexes = table.Properties.OfType<Index>().ToList();
                 foreach (var index in indexes)
                     GenerateIndex(sb, index);
             }
 
-            var uniqueConstraints = table.Properties.OfType<UniqueConstraint>().ToList();
-
-            foreach (var uniqueConstraint in uniqueConstraints)
-                GenerateUniqueConstraint(sb, uniqueConstraint);
+            if (!Context.DocumenterSettings.NoUniqueConstraints)
+            {
+                var uniqueConstraints = table.Properties.OfType<UniqueConstraint>().ToList();
+                foreach (var uniqueConstraint in uniqueConstraints)
+                    GenerateUniqueConstraint(sb, uniqueConstraint);
+            }
         }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase

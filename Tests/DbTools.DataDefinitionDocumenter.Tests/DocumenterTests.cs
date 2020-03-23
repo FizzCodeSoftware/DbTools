@@ -60,6 +60,17 @@
             documenter.Document(db);
         }
 
+        // 
+        [TestMethod]
+        [LatestSqlVersions]
+        public void DocumentTestUniqueConstraint(SqlEngineVersion version)
+        {
+            var db = new TestDatabaseUniqueConstraint();
+            db.SetVersions(version.GetTypeMapper());
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(version), version, "TestDatabaseUniqueConstraint");
+            documenter.Document(db);
+        }
+
         internal class TableCustomizer : ITableCustomizer
         {
             public string BackGroundColor(SchemaAndTableName tableName)

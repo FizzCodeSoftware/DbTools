@@ -2,7 +2,6 @@
 {
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -95,16 +94,6 @@
             var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
             var generator = new CSharpGenerator(writer, version, "TestDatabaseUniqueConstraint", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
-        }
-
-        internal class TestDatabaseUniqueConstraint : TestDatabaseDeclaration
-        {
-            public SqlTable Company { get; } = AddTable(table =>
-            {
-                table.AddInt32("Id").SetPK().SetIdentity();
-                table.AddNVarChar("Name", 100);
-                table.AddUniqueConstraint("Name");
-            });
         }
     }
 }

@@ -111,6 +111,9 @@
                 if (flag == DocumenterSettingFlag.NoIndexes)
                     settings.NoIndexes = true;
 
+                if (flag == DocumenterSettingFlag.NoUniqueConstraints)
+                    settings.NoUniqueConstraints = true;
+
                 if (flag == DocumenterSettingFlag.NoForeignKeys)
                     settings.NoForeignKeys = true;
 

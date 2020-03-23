@@ -5,15 +5,14 @@ namespace FizzCode.DbTools.DataDefinitionReader.Tests
     using System.Linq;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
-    using FizzCode.DbTools.TestBase;
+    using FizzCode.DbTools.DataDefinition.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class DataDefinitionReaderUniqueConstraintTest : DataDefinitionReaderTests
     {
-        [DataTestMethod]
+        [TestMethod]
         // [SqlVersions(typeof(MsSql2016))]
         //public void CreateTables(SqlVersion version)
         public void CreateTables()
@@ -25,7 +24,7 @@ namespace FizzCode.DbTools.DataDefinitionReader.Tests
             creator.ReCreateDatabase(true);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         //[SqlVersions(typeof(MsSql2016))]
         //public void ReadTables(SqlVersion version)
         public void ReadTables()
@@ -40,16 +39,6 @@ namespace FizzCode.DbTools.DataDefinitionReader.Tests
             var dd = ddlReader.GetDatabaseDefinition();
 
             var _ = dd.GetTable("Company").Properties.OfType<UniqueConstraint>().First();
-        }
-
-        public class TestDatabaseUniqueConstraint : TestDatabaseDeclaration
-        {
-            public SqlTable Company { get; } = AddTable(table =>
-            {
-                table.AddInt32("Id").SetPK().SetIdentity();
-                table.AddNVarChar("Name", 100);
-                table.AddUniqueConstraint("Name");
-            });
         }
     }
 }
