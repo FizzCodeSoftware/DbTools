@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using System;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.Configuration;
@@ -19,7 +20,7 @@
             TypeMapperType = typeMapperType;
         }
 
-        public string GetColumnCreation(SqlColumn column)
+        public string GetColumnCreation(SqlColumn column, DocumenterHelper helper)
         {
             var sb = new StringBuilder();
 
@@ -40,8 +41,8 @@
                 sb.Append(".SetIdentity()");
             }
 
-            if(!Context.DocumenterSettings.NoForeignKeys)
-                AddForeignKeySettings(column, sb);
+            if (!Context.DocumenterSettings.NoForeignKeys)
+                AddForeignKeySettings(column, sb, helper);
 
             // TODO Default Value + config
 
@@ -56,7 +57,7 @@
             return sb.ToString();
         }
 
-        private void AddForeignKeySettings(SqlColumn column, StringBuilder sb)
+        private void AddForeignKeySettings(SqlColumn column, StringBuilder sb, DocumenterHelper helper)
         {
             var fkOnColumn = column.Table.Properties.OfType<ForeignKey>().FirstOrDefault(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn == column));
             if (fkOnColumn != null)
@@ -71,7 +72,7 @@
                 {
                     sb.Append(".SetForeignKeyTo(nameof(")
                        // TODO spec name
-                       .Append(fkOnColumn.ReferredTable.SchemaAndTableName.TableName)
+                       .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
                        .Append("))");
                 }
                 else
@@ -81,7 +82,7 @@
                     {
                         sb.AppendLine(";")
                             .Append(3, "table.SetForeignKeyTo(nameof(")
-                            .Append(fkOnColumn.ReferredTable.SchemaAndTableName.TableName)
+                            .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
                             .AppendLine("), new List<ColumnReference>()")
                             .AppendLine(3, "{");
 

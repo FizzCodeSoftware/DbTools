@@ -39,7 +39,6 @@
             documnter.Document(ddOriginal);
         }
 
-
         [TestMethod]
         [LatestSqlVersions]
         public void ChangeFkTest(SqlEngineVersion version)
@@ -117,7 +116,11 @@
             var ddOriginal = new ForeignKeyComposite();
             ddOriginal.SetVersions(version.GetTypeMapper());
 
-            var fkOriginal = ddOriginal.GetTable("TopOrdersPerCompany").Properties.OfType<ForeignKey>().Where(fk => fk.ForeignKeyColumns.Any(fkcm => fkcm.ForeignKeyColumn.Name == "Top2A")).First();
+            var fkOriginal = ddOriginal
+                .GetTable("TopOrdersPerCompany").Properties
+                .OfType<ForeignKey>()
+                .First(fk => fk.ForeignKeyColumns.Any(fkcm => fkcm.ForeignKeyColumn.Name == "Top2A"));
+
             fkOriginal.Name = "FK_TopOrdersPerCompany_2";
 
             var ddFkChanged = new ForeignKeyComposite2();

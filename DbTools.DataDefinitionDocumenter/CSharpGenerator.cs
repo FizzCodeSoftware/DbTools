@@ -188,7 +188,7 @@
 
             foreach (var column in pkColumns)
             {
-                var columnCreation = _writer.GetColumnCreation(column);
+                var columnCreation = _writer.GetColumnCreation(column, Helper);
                 sb.AppendLine(columnCreation);
             }
 
@@ -198,7 +198,7 @@
 
             foreach (var column in regularColumns)
             {
-                var columnCreation = _writer.GetColumnCreation(column);
+                var columnCreation = _writer.GetColumnCreation(column, Helper);
                 sb.AppendLine(columnCreation);
             }
 
