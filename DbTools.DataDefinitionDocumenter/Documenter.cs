@@ -168,9 +168,7 @@
 
                 // TODO internal data types are not OK this way
 
-                AddColumnsToTableShet(column, columnDocumentInfo);
-
-                WriteLine(table.SchemaAndTableName);
+                AddColumnsToTableSheet(column, columnDocumentInfo);
 
                 if (hasCategories)
                 {
@@ -202,6 +200,42 @@
                 DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), "All columns", columnDocumentInfo.Description);
             }
 
+            AddForeignKeysToTableSheet(table);
+
+            if (!Context.DocumenterSettings.NoIndexes)
+            {
+                WriteLine(table.SchemaAndTableName);
+
+                var mergeAmount = 1 + (!Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11);
+
+                WriteAndMerge(table.SchemaAndTableName, mergeAmount, "Indexes");
+                WriteLine(table.SchemaAndTableName);
+
+                var indexes = table.Properties.OfType<Index>().ToList();
+
+                if (indexes.Count > 0)
+                    WriteLine(table.SchemaAndTableName, "Index name", "Column", "Order", "Include");
+
+                foreach (var index in indexes)
+                {
+                    foreach (var indexColumn in index.SqlColumns)
+                    {
+                        Write(table.SchemaAndTableName, index.Name);
+                        Write(table.SchemaAndTableName, indexColumn.SqlColumn.Name);
+                        WriteLine(table.SchemaAndTableName, indexColumn.OrderAsKeyword);
+                    }
+
+                    foreach (var includeColumn in index.Includes)
+                    {
+                        Write(table.SchemaAndTableName, index.Name, includeColumn.Name, "");
+                        WriteLine(table.SchemaAndTableName, "YES");
+                    }
+                }
+            }
+        }
+
+        private void AddForeignKeysToTableSheet(SqlTable table)
+        {
             var mergeAmount = 1 + (!Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11);
 
             if (!Context.DocumenterSettings.NoForeignKeys)
@@ -211,56 +245,19 @@
                 WriteAndMerge(table.SchemaAndTableName, mergeAmount, "Foreign keys");
                 WriteLine(table.SchemaAndTableName);
 
-                // TODO allow nulls. Check / other properties?
-                WriteLine(table.SchemaAndTableName, "Foreign key name", "Referenced Table", "link", "Referenced Column", "Column");
-
                 var fks = table.Properties.OfType<ForeignKey>().ToList();
-                var countToMerge = 0;
+
+                if (fks.Count > 0)
+                    // TODO allow nulls. Check / other properties?
+                    WriteLine(table.SchemaAndTableName, "Foreign key name", "Column", "Referenced Table", "link", "Referenced Column");
+
                 foreach (var fk in fks)
                 {
-                    foreach (var fkColumn in fk.ForeignKeyColumns)
-                    {
-                        Write(table.SchemaAndTableName, fk.Name, Helper.GetSimplifiedSchemaAndTableName(fk.ReferredTable.SchemaAndTableName));
-                        WriteLink(table.SchemaAndTableName, "link", Helper.GetSimplifiedSchemaAndTableName(fk.ReferredTable.SchemaAndTableName), GetColor(fk.ReferredTable.SchemaAndTableName));
-                        Write(table.SchemaAndTableName, fkColumn.ForeignKeyColumn.Name);
-                        WriteLine(table.SchemaAndTableName, fkColumn.ReferredColumn.Name);
-
-                        countToMerge++;
-                    }
-
-                    if (countToMerge > 1)
-                    {
-                        MergeUpFromPreviousRow(table.SchemaAndTableName, countToMerge - 1);
-                    }
-
-                    countToMerge = 0;
+                    AddForeignKey(fk);
                 }
 
                 if (fks.Count > 0)
                     WriteLine(table.SchemaAndTableName);
-            }
-
-            if (!Context.DocumenterSettings.NoIndexes)
-            {
-                WriteLine(table.SchemaAndTableName);
-
-                WriteAndMerge(table.SchemaAndTableName, mergeAmount, "Indexes");
-                WriteLine(table.SchemaAndTableName);
-
-                foreach (var index in table.Properties.OfType<Index>())
-                {
-                    Write(table.SchemaAndTableName, index.Name);
-                    foreach (var indexColumn in index.SqlColumns)
-                    {
-                        Write(table.SchemaAndTableName, indexColumn.SqlColumn.Name);
-                        Write(table.SchemaAndTableName, indexColumn);
-                    }
-
-                    Write(table.SchemaAndTableName, "");
-                    Write(table.SchemaAndTableName, "Includes:");
-                    foreach (var includeColumn in index.Includes)
-                        Write(table.SchemaAndTableName, includeColumn.Name);
-                }
             }
         }
     }

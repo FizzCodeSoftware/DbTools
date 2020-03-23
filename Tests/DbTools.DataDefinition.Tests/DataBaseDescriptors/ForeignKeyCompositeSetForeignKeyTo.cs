@@ -4,7 +4,7 @@
     using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.TestBase;
 
-    public class ForeignKeyComposite : TestDatabaseDeclaration
+    public class ForeignKeyCompositeSetForeignKeyTo : TestDatabaseDeclaration
     {
         public SqlTable OrderHeader { get; } = AddTable(table =>
         {
@@ -28,14 +28,18 @@
 
         public SqlTable TopOrdersPerCompany { get; } = AddTable(table =>
         {
-            table.AddForeignKey(nameof(Order), new List<ColumnReference>()
+            table.AddInt32("Top1A");
+            table.AddInt32("Top1B");
+            table.AddInt32("Top2A");
+            table.AddInt32("Top2B");
+
+            table.SetForeignKeyTo(nameof(Order), new List<ColumnReference>()
             {
                 new ColumnReference("Top1A", "OrderHeaderId"),
                 new ColumnReference("Top1B", "LineNumber"),
             });
 
-            table.AddForeignKey(nameof(Order), new List<ColumnReference>()
-
+            table.SetForeignKeyTo(nameof(Order), new List<ColumnReference>()
             {
                 new ColumnReference("Top2A", "OrderHeaderId"),
                 new ColumnReference("Top2B", "LineNumber"),

@@ -15,7 +15,7 @@
         {
             var db = new TestDatabaseFks();
             db.SetVersions(version.GetTypeMapper());
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(), version, "TestDatabaseFks");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(version), version, "TestDatabaseFks");
 
             documenter.Document(db);
         }
@@ -26,7 +26,7 @@
         {
             var db = new TestDatabaseFks();
             db.SetVersions(version.GetTypeMapper());
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(new TableCustomizer()), version, "TestDatabaseFks");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(version, new TableCustomizer()), version, "TestDatabaseFks");
             documenter.Document(db);
         }
 
@@ -36,7 +36,27 @@
         {
             var db = new ForeignKeyComposite();
             db.SetVersions(version.GetTypeMapper());
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(), version, "ForeignKeyComposite");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(version), version, "ForeignKeyComposite");
+            documenter.Document(db);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void DocumentTestIndexMultiColumn(SqlEngineVersion version)
+        {
+            var db = new TestDatabaseIndexMultiColumn();
+            db.SetVersions(version.GetTypeMapper());
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(version), version, "TestDatabaseIndexMultiColumn");
+            documenter.Document(db);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void DocumentTestIndexMultiColumnAndInclude(SqlEngineVersion version)
+        {
+            var db = new TestDatabaseIndexMultiColumnAndInclude();
+            db.SetVersions(version.GetTypeMapper());
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(version), version, "TestDatabaseIndexMultiColumnAndInclude");
             documenter.Document(db);
         }
 

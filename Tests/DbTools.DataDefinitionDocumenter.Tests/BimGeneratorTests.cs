@@ -10,17 +10,33 @@
 
     public static class DataDefinitionDocumenterTestsHelper
     {
-        public static DocumenterContext CreateTestContext(ITableCustomizer customizer = null)
+        public static DocumenterContext CreateTestContext(SqlEngineVersion version, ITableCustomizer customizer = null)
         {
             var context = new DocumenterContext
             {
-                Settings = TestHelper.GetDefaultTestSettings(MsSqlVersion.MsSql2016),
+                Settings = TestHelper.GetDefaultTestSettings(version),
                 DocumenterSettings = new DocumenterSettings(),
                 Customizer = customizer ?? new EmptyTableCustomizer(),
                 Logger = TestHelper.CreateLogger()
             };
 
             return context;
+        }
+
+        public static ChangeDocumenterContext CreateTestChangeContext(SqlEngineVersion version, ITableCustomizer customizerOriginal = null, ITableCustomizer customizerNew = null)
+        {
+            var documenterContext = CreateTestContext(version, null);
+
+            var changeDocumenterContext = new ChangeDocumenterContext
+            {
+                DocumenterSettings = documenterContext.DocumenterSettings,
+                Settings = documenterContext.Settings,
+                Logger = documenterContext.Logger,
+                CustomizerOriginal = customizerOriginal ?? new EmptyTableCustomizer(),
+                CustomizerNew = customizerNew ?? new EmptyTableCustomizer()
+            };
+
+            return changeDocumenterContext;
         }
     }
 
@@ -33,7 +49,7 @@
         {
             var db = new TestDatabaseFks();
 
-            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(new DocumenterTests.TableCustomizer()), version, "TestDatabaseFks");
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(version, new DocumenterTests.TableCustomizer()), version, "TestDatabaseFks");
             generator.Generate(db);
         }
 
@@ -43,7 +59,7 @@
         {
             var db = new ForeignKeyComposite();
 
-            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), version, "TestDatabaseFks");
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(version), version, "TestDatabaseFks");
             generator.Generate(db);
         }
 
@@ -53,7 +69,7 @@
         {
             var db = new ForeignKeyComposite();
 
-            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), version, "ForeignKeyComposite");
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(version), version, "ForeignKeyComposite");
             generator.Generate(db);
         }
 
@@ -62,7 +78,7 @@
         public void GeneratorForeignKeyComposite2(SqlEngineVersion version)
         {
             var db = new ForeignKeyCompositeSetForeignKeyTo();
-            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(new DocumenterTests.TableCustomizer()), version, "ForeignKeyCompositeSetForeignKeyTo");
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(version, new DocumenterTests.TableCustomizer()), version, "ForeignKeyCompositeSetForeignKeyTo");
             generator.Generate(db);
         }
 
@@ -72,7 +88,7 @@
         {
             var db = new TabularRelation();
 
-            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(), version, "TabularRelation");
+            var generator = new BimGenerator(DataDefinitionDocumenterTestsHelper.CreateTestContext(version), version, "TabularRelation");
             generator.Generate(db);
         }
     }

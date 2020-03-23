@@ -105,54 +105,67 @@
                             if (Context.CustomizerNew.ShouldSkip(column.Table.SchemaAndTableName))
                                 continue;
 
-                            ProcessTable(processedTables, column.Table);
-                            // TODO internal data types are not OK this way
-                            var pks = column.Table.Properties.OfType<PrimaryKey>().ToList();
-                            var columnDocumentInfo = GetColumnDocumentInfo(pks, column);
-                            WriteLine(column.Table.SchemaAndTableName, "New"); // TODO
-                            AddColumnsToTableShet(column, columnDocumentInfo);
+                            ProcessColumnMigration(processedTables, column, "New");
                             break;
                         }
                     case ColumnDelete column:
                         {
-                            if (Context.CustomizerNew.ShouldSkip(column.Table.SchemaAndTableName))
+                            if (Context.CustomizerOriginal.ShouldSkip(column.Table.SchemaAndTableName))
                                 continue;
 
-                            ProcessTable(processedTables, column.Table);
-                            // TODO internal data types are not OK this way
-                            var pks = column.Table.Properties.OfType<PrimaryKey>().ToList();
-                            var columnDocumentInfo = GetColumnDocumentInfo(pks, column);
-                            WriteLine(column.Table.SchemaAndTableName, "New"); // TODO
-                            AddColumnsToTableShet(column, columnDocumentInfo);
+                            ProcessColumnMigration(processedTables, column, "Delete");
+                            break;
+                        }
+                    case ColumnChange column:
+                        {
+                            if (Context.CustomizerNew.ShouldSkip(column.NewNameAndType.Table.SchemaAndTableName))
+                                continue;
+
+                            ProcessColumnMigration(processedTables, column, "Original");
+                            ProcessColumnMigration(processedTables, column.NewNameAndType, "Changed to");
                             break;
                         }
                 }
             }
 
-            foreach (var change in changes.Where(c => (c is ForeignKeyNew) && (c is ForeignKeyDelete) && (c is ForeignKeyChange)))
+            if (!Context.DocumenterSettings.NoForeignKeys)
             {
-                switch (change)
-                {
-                    case ForeignKeyNew fkNew:
-                        {
-                            if (Context.CustomizerNew.ShouldSkip(fkNew.ForeignKey.ReferredTable.SchemaAndTableName))
-                                continue;
+                var processedFKs = new List<SchemaAndTableName>();
 
-                            ProcessTable(processedTables, fkNew.ForeignKey.ReferredTable);
-                            // var pks = column.Table.Properties.OfType<PrimaryKey>().ToList();
-                            // var columnDocumentInfo = GetColumnDocumentInfo(pks, column);
-                            WriteLine(fkNew.ForeignKey.ReferredTable.SchemaAndTableName, "New"); // TODO
-                            // AddColumnsToTableShet(column, columnDocumentInfo);
-                            break;
-                        }
-                    case ForeignKeyDelete fkDelete:
-                        {
-                            break;
-                        }
-                    case ForeignKeyChange fkChange:
-                        {
-                            break;
-                        }
+                foreach (var change in changes.OfType<ForeignKeyMigration>())
+                {
+                    ProcessTable(processedTables, change.ForeignKey.SqlTable); // Ensure table header
+
+                    switch (change)
+                    {
+                        case ForeignKeyNew fkNew:
+                            {
+                                if (Context.CustomizerNew.ShouldSkip(fkNew.ForeignKey.ReferredTable.SchemaAndTableName))
+                                    continue;
+
+                                ProcessForeignKey(processedFKs, fkNew.ForeignKey, "New");
+                                break;
+                            }
+                        case ForeignKeyDelete fkDelete:
+                            {
+                                if (Context.CustomizerOriginal.ShouldSkip(fkDelete.ForeignKey.ReferredTable.SchemaAndTableName))
+                                    continue;
+
+                                ProcessForeignKey(processedFKs, fkDelete.ForeignKey, "Delete");
+
+                                break;
+                            }
+                        case ForeignKeyChange fkChange:
+                            {
+                                if (Context.CustomizerNew.ShouldSkip(fkChange.NewForeignKey.ReferredTable.SchemaAndTableName))
+                                    continue;
+
+                                ProcessForeignKey(processedFKs, fkChange.ForeignKey, "Original");
+                                ProcessForeignKey(processedFKs, fkChange.NewForeignKey, "Change to");
+
+                                break;
+                            }
+                    }
                 }
             }
 
@@ -175,13 +188,41 @@
             File.WriteAllBytes(fileName, content);
         }
 
+        private void ProcessForeignKey(List<SchemaAndTableName> processedFKs, ForeignKey fk, string firstColumn)
+        {
+            if (!processedFKs.Contains(fk.SqlTable.SchemaAndTableName))
+            {
+                processedFKs.Add(fk.SqlTable.SchemaAndTableName);
+
+                var mergeAmount = 1 + (!Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11);
+
+                WriteLine(fk.SqlTable.SchemaAndTableName);
+
+                WriteAndMerge(fk.SqlTable.SchemaAndTableName, mergeAmount, "Foreign keys");
+                WriteLine(fk.SqlTable.SchemaAndTableName);
+
+                // TODO allow nulls. Check / other properties?
+                WriteLine(fk.SqlTable.SchemaAndTableName, "Event", "Foreign key name", "Column", "Referenced Table", "link", "Referenced Column");
+            }
+
+            AddForeignKey(fk, firstColumn);
+        }
+
+        private void ProcessColumnMigration(List<SchemaAndTableName> processedTables, SqlColumn column, string firstColumn)
+        {
+            ProcessTable(processedTables, column.Table);
+            var pks = column.Table.Properties.OfType<PrimaryKey>().ToList();
+            var columnDocumentInfo = GetColumnDocumentInfo(pks, column);
+            AddColumnsToTableSheet(column, columnDocumentInfo, firstColumn);
+        }
+
         private void ProcessTable(List<SchemaAndTableName> processedTables, SqlTable table)
         {
             if(!processedTables.Contains(table.SchemaAndTableName))
             {
                 processedTables.Add(table.SchemaAndTableName);
                 // TODO category
-                AddTableHeader(false, null, table);
+                AddTableHeader(false, null, table, "Event");
             }
         }
 

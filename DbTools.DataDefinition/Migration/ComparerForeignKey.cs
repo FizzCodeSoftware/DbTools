@@ -47,7 +47,7 @@
                     if (fkOriginal.ReferredTable.SchemaAndTableName != fkNew.ReferredTable.SchemaAndTableName)
                         fkChanged = true;
 
-                    if (CompareForeignKeyColumns(fkOriginal, fkNew))
+                    if (!CompareForeignKeyColumns(fkOriginal, fkNew))
                     {
                         fkChanged = true;
                         foreignKeyChange.ForeignKeyInternalColumnChanges = new ForeignKeyInternalColumnChanges();

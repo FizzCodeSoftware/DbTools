@@ -3,9 +3,9 @@
     using System.Linq;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.DataDefinition.Migration;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
+    using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -134,38 +134,5 @@
             // TODO change FK
             // databaseMigrator.
         }
-    }
-
-    public class TestDatabaseFk : TestDatabaseDeclaration
-    {
-        public SqlTable Primary { get; } = AddTable(table =>
-        {
-            table.AddInt32("Id").SetPK();
-        });
-
-        public SqlTable Foreign { get; } = AddTable(table =>
-        {
-            table.AddInt32("Id").SetPK().SetIdentity();
-            table.AddInt32("PrimaryId").SetForeignKeyTo(nameof(Primary), new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true"));
-        });
-    }
-
-    public class TestDatabaseFkChange : TestDatabaseDeclaration
-    {
-        public SqlTable Primary1 { get; } = AddTable(table =>
-        {
-            table.AddInt32("Id").SetPK();
-        });
-
-        public SqlTable Primary2 { get; } = AddTable(table =>
-        {
-            table.AddInt32("Id").SetPK();
-        });
-
-        public SqlTable Foreign { get; } = AddTable(table =>
-        {
-            table.AddInt32("Id").SetPK().SetIdentity();
-            table.AddInt32("PrimaryId").SetForeignKeyTo(nameof(Primary1), "FkChange");
-        });
     }
 }
