@@ -18,13 +18,26 @@
         public static SqlColumn SetForeignKeyTo(this SqlColumn singleFkColumn, string referredTableName, string fkName = null)
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
-
             var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, fkName);
-
             singleFkColumn.Table.Properties.Add(fk);
-
             Prepare(singleFkColumn.Table);
+            return singleFkColumn;
+        }
 
+        public static SqlColumn SetForeignKeyTo(this SqlColumn singleFkColumn, SchemaAndTableName referredTableName, string fkName = null)
+        {
+            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableName, fkName);
+            singleFkColumn.Table.Properties.Add(fk);
+            Prepare(singleFkColumn.Table);
+            return singleFkColumn;
+        }
+
+        public static SqlColumn SetForeignKeyTo(this SqlColumn singleFkColumn, SchemaAndTableName referredTableName, IEnumerable<SqlEngineVersionSpecificProperty> properties, string fkName = null)
+        {
+            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableName, fkName);
+            fk.SqlEngineVersionSpecificProperties.Add(properties);
+            singleFkColumn.Table.Properties.Add(fk);
+            Prepare(singleFkColumn.Table);
             return singleFkColumn;
         }
 
@@ -45,13 +58,9 @@
         public static SqlTable SetForeignKeyTo(this SqlTable table, string referredTableName, List<ColumnReference> map, string fkName = null)
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
-
             var fk = new ForeignKeyRegistrationToReferredTableExistingColumns(table, referredTableNameWithSchema, fkName, map);
-
             table.Properties.Add(fk);
-
             Prepare(table);
-
             return table;
         }
 
@@ -120,10 +129,10 @@
 
         public static void Prepare(SqlTable table)
         {
-            if (table.DatabaseDefinition is DatabaseDeclaration && table.DatabaseDefinition != null)
+            if (table.DatabaseDefinition is DatabaseDeclaration dd)
             {
-                ((DatabaseDeclaration)table.DatabaseDefinition).CreateRegisteredForeignKeys(table);
-                ((DatabaseDeclaration)table.DatabaseDefinition).AddAutoNaming(new List<SqlTable>() { table });
+                dd.CreateRegisteredForeignKeys(table);
+                dd.AddAutoNaming(new List<SqlTable>() { table });
             }
         }
     }

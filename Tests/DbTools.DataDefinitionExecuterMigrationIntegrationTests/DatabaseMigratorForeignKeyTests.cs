@@ -35,9 +35,9 @@
             var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
             var changes = comparer.Compare(ddInDatabase, ddWithFK);
 
-            var first = changes[0] as ForeignKeyNew;
+            _ = changes[0] as ForeignKeyNew;
 
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
+            _ = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
 
             // TODO change FK
             // databaseMigrator.
@@ -65,9 +65,9 @@
             var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
             var changes = comparer.Compare(ddInDatabase, ddFKRemoved);
 
-            var first = changes[0] as ForeignKeyDelete;
+            _ = changes[0] as ForeignKeyDelete;
 
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
+            _ = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
 
             // TODO change FK
             // databaseMigrator.
@@ -96,9 +96,9 @@
             var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
             var changes = comparer.Compare(ddInDatabase, ddFkChanged);
 
-            var first = changes[0] as ForeignKeyChange;
+            _ = changes[0] as ForeignKeyChange;
 
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
+            _ = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
 
             // TODO change FK
             // databaseMigrator.
@@ -127,9 +127,9 @@
             var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
             var changes = comparer.Compare(ddInDatabase, dd);
 
-            var first = changes[0] as ForeignKeyChange;
+            _ = changes[0] as ForeignKeyChange;
 
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
+            _ = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
 
             // TODO change FK
             // databaseMigrator.

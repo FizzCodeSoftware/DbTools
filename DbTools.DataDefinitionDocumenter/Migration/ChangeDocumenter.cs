@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
-    using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.IO;
@@ -16,7 +15,7 @@
 
         protected string NewDatabaseName { get; }
 
-        public new ChangeDocumenterContext Context { get;  }
+        public new ChangeDocumenterContext Context { get; }
 
         public ChangeDocumenter(ChangeDocumenterContext context, SqlEngineVersion version, string originalDatabaseName = "", string newDatabaseName = "", string fileName = null)
             : this(new DocumenterWriterExcel(), context, version, originalDatabaseName, newDatabaseName, fileName)
@@ -33,8 +32,8 @@
         private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategoryOrignal = new List<KeyValuePair<string, SqlTable>>();
         private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategoryOriginal = new List<KeyValuePair<string, SqlTable>>();
 
-        private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategoryNew = new List<KeyValuePair<string, SqlTable>>();
-        private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategoryNew = new List<KeyValuePair<string, SqlTable>>();
+        //private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategoryNew = new List<KeyValuePair<string, SqlTable>>();
+        //private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategoryNew = new List<KeyValuePair<string, SqlTable>>();
 
         public void Document(DatabaseDefinition originalDd, DatabaseDefinition newDd)
         {
@@ -82,7 +81,7 @@
 
             foreach (var tableDelete in changes.OfType<TableDelete>())
             {
-                if(!Context.CustomizerOriginal.ShouldSkip(tableDelete.SchemaAndTableName))
+                if (!Context.CustomizerOriginal.ShouldSkip(tableDelete.SchemaAndTableName))
                     WriteLine("Tables", tableDelete.SchemaAndTableName.Schema, tableDelete.SchemaAndTableName.TableName, "Deleted");
             }
 
@@ -218,7 +217,7 @@
 
         private void ProcessTable(List<SchemaAndTableName> processedTables, SqlTable table)
         {
-            if(!processedTables.Contains(table.SchemaAndTableName))
+            if (!processedTables.Contains(table.SchemaAndTableName))
             {
                 processedTables.Add(table.SchemaAndTableName);
                 // TODO category

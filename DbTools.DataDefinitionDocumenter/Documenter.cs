@@ -72,7 +72,7 @@
 
                 WriteLine("Tables", "Category", "Schema", "Table Name", "Link", "Number of columns", "Description");
 
-                if(!Context.DocumenterSettings.NoInternalDataTypes)
+                if (!Context.DocumenterSettings.NoInternalDataTypes)
                 {
                     WriteLine("All columns", "Category", "Schema", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Scale", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
                 }
@@ -84,7 +84,7 @@
             else
             {
                 WriteLine("Tables", "Schema", "Table Name", "Link", "Number of columns", "Description");
-                if(!Context.DocumenterSettings.NoInternalDataTypes)
+                if (!Context.DocumenterSettings.NoInternalDataTypes)
                 {
                     WriteLine("All columns", "Schema", "Table Name", "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Scale", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description");
                 }

@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
@@ -12,8 +13,13 @@
     public class CSharpGenerator : DocumenterBase
     {
         private readonly string _namespace;
-
         private readonly AbstractCSharpWriter _writer;
+
+        public string[] AdditionalNamespaces { get; set; }
+        public Func<SqlTable, string> OnTableComment { get; set; }
+        public Func<SqlTable, string> OnTableAnnotation { get; set; }
+        public Func<SqlColumn, string> OnColumnAnnotation { get; set; }
+        public Func<SqlColumn, string> OnColumnComment { get; set; }
 
         public CSharpGenerator(AbstractCSharpWriter writer, SqlEngineVersion version, string databaseName, string @namespace)
             : base(writer.Context, version, databaseName)
@@ -109,8 +115,17 @@
             .AppendLine(_namespace)
             .AppendLine("{")
             .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
-            .AppendLine(1, "using " + _writer.GetSqlTypeNamespace() + ";")
-            .AppendLine()
+            .AppendLine(1, "using " + _writer.GetSqlTypeNamespace() + ";");
+
+            if (AdditionalNamespaces != null)
+            {
+                foreach (var line in AdditionalNamespaces)
+                {
+                    sb.Append(1, "using ").Append(line).AppendLine(";");
+                }
+            }
+
+            sb.AppendLine()
             .Append(1, "public partial class ")
             .Append(DatabaseName)
             .AppendLine(" : DatabaseDeclaration")
@@ -125,8 +140,17 @@
             .AppendLine("{")
             //.AppendLine(1, "using FizzCode.DbTools.Configuration;")
             .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
-            .AppendLine(1, "using " + _writer.GetSqlTypeNamespace() + ";")
-            .AppendLine()
+            .AppendLine(1, "using " + _writer.GetSqlTypeNamespace() + ";");
+
+            if (AdditionalNamespaces != null)
+            {
+                foreach (var line in AdditionalNamespaces)
+                {
+                    sb.Append(1, "using ").Append(line).AppendLine(";");
+                }
+            }
+
+            sb.AppendLine()
             .Append(1, "public class ")
             .Append(DatabaseName)
             .AppendLine(" : DatabaseDeclaration")
@@ -134,7 +158,7 @@
             .AppendLine(2, "public " + DatabaseName + "(string defaultSchema = null, NamingStrategies namingStrategies = null)")
             .Append(3, ": base(")
             .Append("new ")
-            .Append(string.Equals(_writer.TypeMapperType.Namespace, _writer.GetSqlTypeNamespace(), System.StringComparison.InvariantCultureIgnoreCase)
+            .Append(string.Equals(_writer.TypeMapperType.Namespace, _writer.GetSqlTypeNamespace(), StringComparison.InvariantCultureIgnoreCase)
                 ? _writer.TypeMapperType.Name
                 : _writer.TypeMapperType.AssemblyQualifiedName)
             .AppendLine("(), null, defaultSchema, namingStrategies)")
@@ -153,8 +177,17 @@
             sb.Append("namespace ")
                 .AppendLine(_namespace)
                 .AppendLine("{")
-                .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
-                .AppendLine()
+                .AppendLine(1, "using FizzCode.DbTools.DataDefinition;");
+
+            if (AdditionalNamespaces != null)
+            {
+                foreach (var line in AdditionalNamespaces)
+                {
+                    sb.Append(1, "using ").Append(line).AppendLine(";");
+                }
+            }
+
+            sb.AppendLine()
                 .Append(1, "public partial class ").AppendLine(DatabaseName)
                 .AppendLine(1, "{");
         }
@@ -173,14 +206,23 @@
                 sb.AppendLine(2, "// no primary key");
             }
 
-            // TODO
-            // - format schema and table name
-            // - configure use of default schema
+            var tableComment = OnTableComment?.Invoke(table);
+            if (!string.IsNullOrEmpty(tableComment))
+            {
+                sb.Append(2, "// ").AppendLine(tableComment);
+            }
+
             sb
                 .Append(2, "public SqlTable ")
                 .Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
-                .AppendLine(" { get; } = AddTable((table) =>")
+                .AppendLine(" { get; } = AddTable(table =>")
                 .AppendLine(2, "{");
+
+            var tableAnnotation = OnTableAnnotation?.Invoke(table);
+            if (!string.IsNullOrEmpty(tableAnnotation))
+            {
+                sb.Append(3, "table").Append(tableAnnotation).AppendLine(";");
+            }
 
             var pkColumns = table.Columns
                 .Where(column => column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
@@ -188,7 +230,10 @@
 
             foreach (var column in pkColumns)
             {
-                var columnCreation = _writer.GetColumnCreation(column);
+                var columnAnnotation = OnColumnAnnotation?.Invoke(column);
+                var columnComment = OnColumnComment?.Invoke(column);
+
+                var columnCreation = _writer.GetColumnCreation(column, Helper, columnAnnotation, columnComment);
                 sb.AppendLine(columnCreation);
             }
 
@@ -198,7 +243,10 @@
 
             foreach (var column in regularColumns)
             {
-                var columnCreation = _writer.GetColumnCreation(column);
+                var columnAnnotation = OnColumnAnnotation?.Invoke(column);
+                var columnComment = OnColumnComment?.Invoke(column);
+
+                var columnCreation = _writer.GetColumnCreation(column, Helper, columnAnnotation, columnComment);
                 sb.AppendLine(columnCreation);
             }
 
@@ -210,7 +258,7 @@
         {
             if (!Context.DocumenterSettings.NoIndexes)
             {
-                var indexes = table.Properties.OfType<Index>().ToList();
+                var indexes = table.Properties.OfType<DataDefinition.Index>().ToList();
                 foreach (var index in indexes)
                     GenerateIndex(sb, index);
             }
@@ -224,7 +272,7 @@
         }
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
-        private static void GenerateIndex(StringBuilder sb, Index index)
+        private static void GenerateIndex(StringBuilder sb, DataDefinition.Index index)
         {
             // TODO clustered
 
