@@ -24,7 +24,7 @@
         }
 
         [TestMethod]
-        [LatestSqlVersions]
+        [LatestSqlVersions(true)]
         public void AddTableTest(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
@@ -57,7 +57,7 @@
         }
 
         [TestMethod]
-        [LatestSqlVersions]
+        [LatestSqlVersions(true)]
         public void RemoveTableTest(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
@@ -79,7 +79,7 @@
         }
 
         [TestMethod]
-        [LatestSqlVersions]
+        [LatestSqlVersions(true)]
         public void RemoveColumnTest(SqlEngineVersion version)
         {
             var originalDd = new TestDatabaseSimple();
@@ -98,7 +98,7 @@
         }
 
         [TestMethod]
-        [LatestSqlVersions]
+        [LatestSqlVersions(true)]
         public void AddColumnTest(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
@@ -117,7 +117,7 @@
         }
 
         [TestMethod]
-        [LatestSqlVersions]
+        [LatestSqlVersions(true)]
         public void Add2ColumnTest(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
@@ -140,7 +140,7 @@
         }
 
         [TestMethod]
-        [LatestSqlVersions]
+        [LatestSqlVersions(true)]
         public void ChangeColumnLengthTest(SqlEngineVersion version)
         {
             TestHelper.CheckFeature(version, "ColumnLength");
@@ -164,7 +164,7 @@
         }
 
         [TestMethod]
-        [LatestSqlVersions]
+        [LatestSqlVersions(true)]
         public void Remove2ColumnsTest(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
@@ -184,6 +184,24 @@
             Assert.AreEqual("Name", first.Name);
             var second = changes[1] as ColumnDelete;
             Assert.AreEqual("Name2", second.Name);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions(true)]
+        public void UniqueConstraintChange(SqlEngineVersion version)
+        {
+            var ddOriginal = new TestDatabaseUniqueConstraint();
+            ddOriginal.SetVersions(version.GetTypeMapper());
+
+            ddOriginal.GetTable("Company").AddNVarChar("Name2", 100);
+
+            var ddNew = new TestDatabaseUniqueConstraint2();
+            ddNew.SetVersions(version.GetTypeMapper());
+
+            var comparer = new Comparer(GetContext(version));
+            var changes = comparer.Compare(ddOriginal, ddNew);
+
+            var first = changes[0];
         }
     }
 }

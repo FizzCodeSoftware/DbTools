@@ -60,7 +60,6 @@
             documenter.Document(db);
         }
 
-        // 
         [TestMethod]
         [LatestSqlVersions]
         public void DocumentTestUniqueConstraint(SqlEngineVersion version)

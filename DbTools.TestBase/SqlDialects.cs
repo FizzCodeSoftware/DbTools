@@ -23,7 +23,7 @@
             }
         }
 
-        public IEnumerable<object[]> GetData(MethodInfo methodInfo)
+        public virtual IEnumerable<object[]> GetData(MethodInfo methodInfo)
         {
             foreach (var item in Versions)
             {
@@ -42,11 +42,23 @@
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
     public sealed class LatestSqlVersionsAttribute : SqlVersionsBasAttribute
     {
-        public LatestSqlVersionsAttribute()
+        public LatestSqlVersionsAttribute(bool forceIntegrationTests = false)
         {
+            _forceIntegrationTests = forceIntegrationTests;
             Versions = SqlEngineVersions.GetLatestExecutableVersions()
                 .Where(x => x is MsSqlVersion || x is OracleVersion || x is SqLiteVersion)
                 .ToList();
+        }
+
+        private readonly bool _forceIntegrationTests;
+
+        public override IEnumerable<object[]> GetData(MethodInfo methodInfo)
+        {
+            foreach (var item in Versions)
+            {
+                if (_forceIntegrationTests || TestHelper.ShouldRunIntegrationTest(item))
+                    yield return new[] { (object)item };
+            }
         }
     }
 

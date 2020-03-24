@@ -272,8 +272,10 @@
                 var fks = table.Properties.OfType<ForeignKey>().ToList();
 
                 if (fks.Count > 0)
+                {
                     // TODO allow nulls. Check / other properties?
                     WriteLine(table.SchemaAndTableName, "Foreign key name", "Column", "Referenced Table", "link", "Referenced Column");
+                }
 
                 foreach (var fk in fks)
                 {

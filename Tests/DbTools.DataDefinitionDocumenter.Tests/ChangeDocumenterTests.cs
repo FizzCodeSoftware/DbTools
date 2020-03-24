@@ -30,7 +30,7 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void TempChangeFkTest(SqlEngineVersion version)
+            public void TempChangeFkTest(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseFkChange();
             ddOriginal.SetVersions(version.GetTypeMapper());
@@ -124,6 +124,21 @@
             ddFkChanged.SetVersions(version.GetTypeMapper());
 
             var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "ForeignKeyComposite", "ForeignKeyComposite2_NoFkNameChange");
+
+            changeDocumenter.Document(ddOriginal, ddFkChanged);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void UniqueConstraintChange(SqlEngineVersion version)
+        {
+            var ddOriginal = new TestDatabaseUniqueConstraint();
+            ddOriginal.SetVersions(version.GetTypeMapper());
+
+            var ddFkChanged = new TestDatabaseUniqueConstraint2();
+            ddFkChanged.SetVersions(version.GetTypeMapper());
+
+            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseUniqueConstraint", "TestDatabaseUniqueConstraint2");
 
             changeDocumenter.Document(ddOriginal, ddFkChanged);
         }
