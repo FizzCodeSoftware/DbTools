@@ -133,6 +133,7 @@
             {
                 dd.CreateRegisteredForeignKeys(table);
                 dd.AddAutoNaming(new List<SqlTable>() { table });
+                CircularFKDetector.DectectCircularFKs(new List<SqlTable>() { table });
             }
         }
     }

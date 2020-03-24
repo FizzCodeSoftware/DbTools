@@ -20,6 +20,7 @@
             AddDeclaredTables();
             CreateRegisteredForeignKeys();
             AddAutoNaming(GetTables());
+            CircularFKDetector.DectectCircularFKs(GetTables());
         }
 
         private IEnumerable<T> GetProperties<T>(SqlTable sqlTable)
@@ -102,8 +103,6 @@
                     NamingStrategies.ForeignKey.SetFKName(fk);
                 }
             }
-
-            //CircularFKDetector.DectectCircularFKs(Tables.ToList());
         }
 
         private void AddDeclaredTables()

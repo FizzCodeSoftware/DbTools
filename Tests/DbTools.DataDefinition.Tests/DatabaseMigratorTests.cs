@@ -201,7 +201,7 @@
             var comparer = new Comparer(GetContext(version));
             var changes = comparer.Compare(ddOriginal, ddNew);
 
-            var first = changes[0];
+            // var first = changes[0];
         }
     }
 }
