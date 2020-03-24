@@ -103,7 +103,7 @@
                 }
             }
 
-            CircularFKDetector.DectectCircularFKs(Tables.ToList());
+            //CircularFKDetector.DectectCircularFKs(Tables.ToList());
         }
 
         private void AddDeclaredTables()
