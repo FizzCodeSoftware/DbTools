@@ -2,7 +2,7 @@
 {
     using System.Linq;
 
-    public class UniqueConstraintNamingMsSqlDefaultStrategy : IUniqueConstraintNamingStrategy
+    public class UniqueConstraintNamingDefaultStrategy : IUniqueConstraintNamingStrategy
     {
         public void SetUniqueConstraintName(UniqueConstraint uniqueConstraint)
         {

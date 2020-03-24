@@ -1,4 +1,4 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition.MsSql2016
 {
     using System;
     using System.Globalization;
@@ -12,6 +12,10 @@
                 return;
 
             var fkName = fk.SqlTable.SchemaAndTableName.TableName + "__" + fk.ReferredTable.SchemaAndTableName.TableName;
+            if (fkName.Length > 120)
+            {
+                fkName = fkName.Substring(0, 120);
+            }
 
             var sameNameFks = fk.SqlTable.Properties
                 .OfType<ForeignKey>()
