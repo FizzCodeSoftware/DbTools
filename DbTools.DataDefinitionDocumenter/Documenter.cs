@@ -274,7 +274,7 @@
                 if (fks.Count > 0)
                 {
                     // TODO allow nulls. Check / other properties?
-                    WriteLine(table.SchemaAndTableName, "Foreign key name", "Column", "Referenced Table", "link", "Referenced Column");
+                    WriteLine(table.SchemaAndTableName, "Foreign key name", "Column", "Referenced Table", "link", "Referenced Column", "Properties");
                 }
 
                 foreach (var fk in fks)

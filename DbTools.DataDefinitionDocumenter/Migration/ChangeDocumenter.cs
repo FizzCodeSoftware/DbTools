@@ -74,9 +74,6 @@
             var comparer = new Comparer(Context);
             var changes = comparer.Compare(originalDd, newDd);
 
-            // deleted tables
-            // new tables
-            // changes
             WriteLine("Tables", "Schema", "Table Name", "Event");
 
             foreach (var tableDelete in changes.OfType<TableDelete>())
@@ -201,7 +198,7 @@
                 WriteLine(fk.SqlTable.SchemaAndTableName);
 
                 // TODO allow nulls. Check / other properties?
-                WriteLine(fk.SqlTable.SchemaAndTableName, "Event", "Foreign key name", "Column", "Referenced Table", "link", "Referenced Column");
+                WriteLine(fk.SqlTable.SchemaAndTableName, "Event", "Foreign key name", "Column", "Referenced Table", "link", "Referenced Column", "Properties");
             }
 
             AddForeignKey(fk, firstColumn);
