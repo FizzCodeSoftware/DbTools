@@ -129,7 +129,7 @@
             var db = new TestDatabaseFks();
             db.SetVersions(GenericVersion.Generic1.GetTypeMapper());
             var patternMatching = PatternMatchingTableCustomizerFromPatterns.FromCsv("TestDatabaseFks", null);
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(GenericVersion.Generic1, patternMatching), Configuration.GenericVersion.Generic1, "TestDatabaseFks");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(GenericVersion.Generic1, patternMatching), GenericVersion.Generic1, "TestDatabaseFks");
             documenter.Document(db);
         }
 

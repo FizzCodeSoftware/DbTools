@@ -8,7 +8,7 @@
 
     public class MsSql2016CSharpWriter : AbstractCSharpWriter
     {
-        public MsSql2016CSharpWriter(DocumenterContext context, Type typeMapperType)
+        public MsSql2016CSharpWriter(GeneratorContext context, Type typeMapperType)
             : base(context, MsSqlVersion.MsSql2016, typeMapperType)
         {
         }

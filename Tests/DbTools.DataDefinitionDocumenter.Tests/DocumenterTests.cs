@@ -15,7 +15,7 @@
         {
             var db = new TestDatabaseFks();
             db.SetVersions(version.GetTypeMapper());
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(version), version, "TestDatabaseFks");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "TestDatabaseFks");
 
             documenter.Document(db);
         }
@@ -26,7 +26,7 @@
         {
             var db = new TestDatabaseFks();
             db.SetVersions(version.GetTypeMapper());
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(version, new TableCustomizer()), version, "TestDatabaseFks");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version, new TableCustomizer()), version, "TestDatabaseFks");
             documenter.Document(db);
         }
 
@@ -36,7 +36,7 @@
         {
             var db = new ForeignKeyComposite();
             db.SetVersions(version.GetTypeMapper());
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(version), version, "ForeignKeyComposite");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "ForeignKeyComposite");
             documenter.Document(db);
         }
 
@@ -46,7 +46,7 @@
         {
             var db = new TestDatabaseIndexMultiColumn();
             db.SetVersions(version.GetTypeMapper());
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(version), version, "TestDatabaseIndexMultiColumn");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "TestDatabaseIndexMultiColumn");
             documenter.Document(db);
         }
 
@@ -56,7 +56,7 @@
         {
             var db = new TestDatabaseIndexMultiColumnAndInclude();
             db.SetVersions(version.GetTypeMapper());
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(version), version, "TestDatabaseIndexMultiColumnAndInclude");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "TestDatabaseIndexMultiColumnAndInclude");
             documenter.Document(db);
         }
 
@@ -66,7 +66,7 @@
         {
             var db = new TestDatabaseUniqueConstraint();
             db.SetVersions(version.GetTypeMapper());
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(version), version, "TestDatabaseUniqueConstraint");
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "TestDatabaseUniqueConstraint");
             documenter.Document(db);
         }
 

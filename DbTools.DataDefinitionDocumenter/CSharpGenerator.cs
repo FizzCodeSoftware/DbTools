@@ -12,6 +12,14 @@
 
     public class CSharpGenerator : DocumenterBase
     {
+        protected new GeneratorContext Context
+        {
+            get
+            {
+                return (GeneratorContext)base.Context;
+            }
+        }
+
         private readonly string _namespace;
         private readonly AbstractCSharpWriter _writer;
 
@@ -22,7 +30,7 @@
         public Func<SqlColumn, string> OnColumnComment { get; set; }
 
         public CSharpGenerator(AbstractCSharpWriter writer, SqlEngineVersion version, string databaseName, string @namespace)
-            : base(writer.Context, version, databaseName)
+            : base(writer.GeneratorContext, version, databaseName)
         {
             _namespace = @namespace;
             _writer = writer;
@@ -36,7 +44,7 @@
             WritePartialMainClassHeader(sb);
             sb.AppendLine("}");
 
-            var folder = Path.Combine(Context.DocumenterSettings.WorkingDirectory ?? @".\", DatabaseName);
+            var folder = Path.Combine(Context.GeneratorSettings.WorkingDirectory ?? @".\", DatabaseName);
             Directory.CreateDirectory(folder);
             File.WriteAllText(Path.Combine(folder, DatabaseName + ".cs"), sb.ToString(), Encoding.UTF8);
 
@@ -70,7 +78,7 @@
 
                 categoryInPath = categoryInPath.Replace('?', '？');
 
-                folder = Path.Combine(Context.DocumenterSettings.WorkingDirectory ?? @".\", DatabaseName, categoryInPath);
+                folder = Path.Combine(Context.GeneratorSettings.WorkingDirectory ?? @".\", DatabaseName, categoryInPath);
 
                 var fileName = Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, ".") + ".cs";
 
@@ -256,14 +264,14 @@
 
         protected void GenerateTableProperties(StringBuilder sb, SqlTable table)
         {
-            if (!Context.DocumenterSettings.NoIndexes)
+            if (!Context.GeneratorSettings.NoIndexes)
             {
                 var indexes = table.Properties.OfType<DataDefinition.Index>().ToList();
                 foreach (var index in indexes)
                     GenerateIndex(sb, index);
             }
 
-            if (!Context.DocumenterSettings.NoUniqueConstraints)
+            if (!Context.GeneratorSettings.NoUniqueConstraints)
             {
                 var uniqueConstraints = table.Properties.OfType<UniqueConstraint>().ToList();
                 foreach (var uniqueConstraint in uniqueConstraints)

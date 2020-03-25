@@ -2,9 +2,10 @@
 {
     using FizzCode.DbTools.Common;
 
-    public class DocumenterContext : Context
+    public abstract class DocumenterContextBase : Context
     {
-        public DocumenterSettings DocumenterSettings { get; set; }
         public ITableCustomizer Customizer { get; set; }
+
+        public abstract T GetDocumenterSettings<T>() where T : DocumenterSettingsBase;
     }
 }

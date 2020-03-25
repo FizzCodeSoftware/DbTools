@@ -35,7 +35,7 @@
             var ddOriginal = new TestDatabaseFkChange();
             ddOriginal.SetVersions(version.GetTypeMapper());
 
-            var documnter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestContext(version), version, "TestDatabaseFkChange");
+            var documnter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "TestDatabaseFkChange");
             documnter.Document(ddOriginal);
         }
 

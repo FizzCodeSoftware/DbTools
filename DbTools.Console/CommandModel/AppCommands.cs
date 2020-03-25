@@ -89,11 +89,11 @@
 
             var dd = ddlReader.GetDatabaseDefinition();
 
-            var documenterContext = CreateDocumenterContext(context, patternFileName);
+            var generatorContext = CreateGeneratorContext(context, patternFileName);
             if(flags != null)
-                SetSettingsFromFlags(flags, documenterContext.DocumenterSettings);
+                SetSettingsFromFlags(flags, generatorContext.GeneratorSettings);
 
-            var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
+            var writer = CSharpWriterFactory.GetCSharpWriter(version, generatorContext);
             var generator = new CSharpGenerator(writer, version, newDatabaseName, @namespace);
 
             if (singleOrMulti == "s" || singleOrMulti == "single")
@@ -119,6 +119,29 @@
 
                 if (flag == DocumenterSettingFlag.NoInternalDataTypes)
                     settings.NoInternalDataTypes = true;
+            }
+        }
+
+        private static void SetSettingsFromFlags(List<string> flagsAsStrings, GeneratorSettings settings)
+        {
+            foreach (var flagAsString in flagsAsStrings)
+            {
+                var flag = (GeneratorSettingFlag)System.Enum.Parse(typeof(GeneratorSettingFlag), flagAsString, true);
+
+                if (flag == GeneratorSettingFlag.NoIndexes)
+                    settings.NoIndexes = true;
+
+                if (flag == GeneratorSettingFlag.NoUniqueConstraints)
+                    settings.NoUniqueConstraints = true;
+
+                if (flag == GeneratorSettingFlag.NoForeignKeys)
+                    settings.NoForeignKeys = true;
+
+                if (flag == GeneratorSettingFlag.ShouldCommentOutColumnsWithFkReferencedTables)
+                    settings.ShouldCommentOutColumnsWithFkReferencedTables = true;
+
+                if (flag == GeneratorSettingFlag.SholdCommentOutFkReferences)
+                    settings.SholdCommentOutFkReferences = true;
             }
         }
 
@@ -201,6 +224,29 @@
                 Customizer = customizer
             };
             return documenterContext;
+        }
+
+        private static GeneratorContext CreateGeneratorContext(Context context, string patternFileName)
+        {
+            var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
+
+            var generatorSetting = new GeneratorSettings { WorkingDirectory = documenterSettings.WorkingDirectory };
+
+            ITableCustomizer customizer = null;
+
+            if (patternFileName != null)
+                customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
+
+            customizer ??= new EmptyTableCustomizer();
+
+            var generatorContext = new GeneratorContext
+            {
+                GeneratorSettings = generatorSetting,
+                Settings = context.Settings,
+                Logger = context.Logger,
+                Customizer = customizer
+            };
+            return generatorContext;
         }
 
         private static ChangeDocumenterContext CreateChangeDocumenterContext(Context context, string patternFileNameOriginal, string patternFileNameNew)

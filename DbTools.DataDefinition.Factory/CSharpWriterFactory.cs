@@ -9,7 +9,7 @@
 
     public static class CSharpWriterFactory
     {
-        public static AbstractCSharpWriter GetCSharpWriter(SqlEngineVersion version, DocumenterContext context)
+        public static AbstractCSharpWriter GetCSharpWriter(SqlEngineVersion version, GeneratorContext context)
         {
             // TODO handle versions
 

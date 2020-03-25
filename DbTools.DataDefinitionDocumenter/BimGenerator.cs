@@ -17,7 +17,15 @@
 
     public class BimGenerator : DocumenterBase
     {
-        public BimGenerator(DocumenterContext context, SqlEngineVersion version, string databaseName)
+        protected new GeneratorContext Context
+        {
+            get
+            {
+                return (GeneratorContext)base.Context;
+            }
+        }
+
+        public BimGenerator(DocumenterContextBase context, SqlEngineVersion version, string databaseName)
             : base(context, version, databaseName)
         {
         }
@@ -217,7 +225,7 @@
 
         private void WriteJson(string json)
         {
-            var folder = Path.Combine(Context.DocumenterSettings.WorkingDirectory ?? @".\", DatabaseName);
+            var folder = Path.Combine(Context.GetDocumenterSettings<DocumenterSettingsBase>().WorkingDirectory ?? @".\", DatabaseName);
 
             Context.Logger.Log(LogSeverity.Information, "Writing Json file {FileName} to folder {Folder}", "BimGenerator", "Model.bim", folder);
 

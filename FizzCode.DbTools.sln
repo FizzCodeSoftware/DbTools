@@ -11,6 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{0445F7
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{FC2D850B-2168-44E5-9A58-A3EE132A3F8D}"
+	ProjectSection(SolutionItems) = preProject
+		Tests\test.runsettings = Tests\test.runsettings
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.Common", "DbTools.Common\DbTools.Common.csproj", "{0924C64A-B0D0-48EC-8009-54DBE5EAF7C2}"
 EndProject

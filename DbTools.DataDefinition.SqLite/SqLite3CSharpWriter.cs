@@ -7,7 +7,7 @@
 
     public class SqLite3CSharpWriter : AbstractCSharpWriter
     {
-        public SqLite3CSharpWriter(DocumenterContext context, Type typeMapperType)
+        public SqLite3CSharpWriter(GeneratorContext context, Type typeMapperType)
             : base(context, SqLiteVersion.SqLite3, typeMapperType)
         {
         }

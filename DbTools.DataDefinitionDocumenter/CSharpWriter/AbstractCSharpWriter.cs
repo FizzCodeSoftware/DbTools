@@ -9,13 +9,13 @@
 
     public abstract class AbstractCSharpWriter
     {
-        public DocumenterContext Context { get; }
+        public GeneratorContext GeneratorContext { get; }
         public SqlEngineVersion Version { get; }
         public Type TypeMapperType { get; }
 
-        protected AbstractCSharpWriter(DocumenterContext context, SqlEngineVersion version, Type typeMapperType)
+        protected AbstractCSharpWriter(GeneratorContext context, SqlEngineVersion version, Type typeMapperType)
         {
-            Context = context;
+            GeneratorContext = context;
             Version = version;
             TypeMapperType = typeMapperType;
         }
@@ -23,6 +23,12 @@
         public string GetColumnCreation(SqlColumn column, DocumenterHelper helper, string extraAnnotation, string comment)
         {
             var sb = new StringBuilder();
+
+            if (GeneratorContext.GeneratorSettings.ShouldCommentOutColumnsWithFkReferencedTables
+                && IsForeignKeyReferencedTableSkipped(column))
+            {
+                sb.Append("// ");
+            }
 
             sb.Append(3, "table.")
                 .Append(GetColumnCreationMethod(column));
@@ -41,7 +47,7 @@
                 sb.Append(".SetIdentity()");
             }
 
-            if (!Context.DocumenterSettings.NoForeignKeys)
+            if (!GeneratorContext.GeneratorSettings.NoForeignKeys)
                 AddForeignKeySettings(column, sb, helper);
 
             // TODO Default Value + config
@@ -81,7 +87,8 @@
             var fkOnColumn = column.Table.Properties.OfType<ForeignKey>().FirstOrDefault(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn == column));
             if (fkOnColumn != null)
             {
-                if (Context.Customizer.ShouldSkip(fkOnColumn.ReferredTable.SchemaAndTableName))
+                if (GeneratorContext.GeneratorSettings.SholdCommentOutFkReferences
+                    && GeneratorContext.Customizer.ShouldSkip(fkOnColumn.ReferredTable.SchemaAndTableName))
                 {
                     sb.Append("; //");
                 }
@@ -114,6 +121,16 @@
                     }
                 }
             }
+        }
+
+        protected bool IsForeignKeyReferencedTableSkipped(SqlColumn column)
+        {
+            var fkOnColumn = column.Table.Properties.OfType<ForeignKey>().FirstOrDefault(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn == column));
+
+            if (fkOnColumn == null)
+                return false;
+
+            return GeneratorContext.Customizer.ShouldSkip(fkOnColumn.ReferredTable.SchemaAndTableName);
         }
 
         protected abstract string GetColumnCreationMethod(SqlColumn column);

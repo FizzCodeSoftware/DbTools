@@ -22,7 +22,7 @@
         {
             var db = new TestDatabaseFks();
 
-            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestContext(version, new DocumenterTests.TableCustomizer());
+            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
             var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
             var generator = new CSharpGenerator(writer, version, "TestDatabaseFks", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
@@ -34,7 +34,7 @@
         {
             var db = new ForeignKeyComposite();
 
-            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestContext(version);
+            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version);
             var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
             var generator = new CSharpGenerator(writer, version, "TestDatabaseFks", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
@@ -46,7 +46,7 @@
         {
             var db = new ForeignKeyComposite();
 
-            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestContext(version);
+            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version);
             var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
             var generator = new CSharpGenerator(writer, version, "ForeignKeyComposite", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
@@ -57,7 +57,7 @@
         public void GeneratorForeignKeyComposite2(SqlEngineVersion version)
         {
             var db = new ForeignKeyCompositeSetForeignKeyTo();
-            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestContext(version, new DocumenterTests.TableCustomizer());
+            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
             var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
             var generator = new CSharpGenerator(writer, version, "ForeignKeyCompositeSetForeignKeyTo", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
@@ -68,7 +68,7 @@
         public void GeneratorIndex(SqlEngineVersion version)
         {
             var db = new TestDatabaseIndex();
-            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestContext(version, new DocumenterTests.TableCustomizer());
+            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
             var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
             var generator = new CSharpGenerator(writer, version, "TestDatabaseIndex", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
@@ -79,7 +79,7 @@
         public void GeneratorUniqueIndex(SqlEngineVersion version)
         {
             var db = new TestDatabaseUniqueIndex();
-            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestContext(version, new DocumenterTests.TableCustomizer());
+            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
             var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
             var generator = new CSharpGenerator(writer, version, "TestDatabaseUniqueIndex", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
@@ -90,7 +90,7 @@
         public void GeneratorUniqueConstraint(SqlEngineVersion version)
         {
             var db = new TestDatabaseUniqueConstraint();
-            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestContext(version, new DocumenterTests.TableCustomizer());
+            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
             var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
             var generator = new CSharpGenerator(writer, version, "TestDatabaseUniqueConstraint", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);

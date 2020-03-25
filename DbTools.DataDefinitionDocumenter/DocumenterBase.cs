@@ -5,7 +5,7 @@
 
     public abstract class DocumenterBase
     {
-        protected DocumenterContext Context { get; }
+        protected DocumenterContextBase Context { get; }
 
         protected DocumenterHelper Helper { get; set; }
 
@@ -13,7 +13,7 @@
 
         protected string DatabaseName { get; }
 
-        protected DocumenterBase(DocumenterContext context, SqlEngineVersion version, string databaseName = "")
+        protected DocumenterBase(DocumenterContextBase context, SqlEngineVersion version, string databaseName = "")
         {
             Context = context;
             Version = version;

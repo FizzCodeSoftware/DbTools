@@ -10,6 +10,14 @@
 
     public abstract class DocumenterWriterBase : DocumenterBase
     {
+        protected new DocumenterContext Context
+        {
+            get
+            {
+                return (DocumenterContext)base.Context;
+            }
+        }
+
         protected DocumenterWriterBase(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
             : base(context, version, databaseName)
         {
@@ -208,10 +216,13 @@
                             .Append(" = ")
                             .AppendLine(sqlEngineVersionSpecificProperty.Value);
                     }
+
                     WriteLine(table.SchemaAndTableName, propertySb.ToString());
                 }
                 else
+                {
                     WriteLine(table.SchemaAndTableName);
+                }
 
                 countToMerge++;
             }

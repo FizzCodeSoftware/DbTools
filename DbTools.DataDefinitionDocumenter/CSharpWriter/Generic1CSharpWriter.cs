@@ -8,7 +8,7 @@
 
     public class Generic1CSharpWriter : AbstractCSharpWriter
     {
-        public Generic1CSharpWriter(DocumenterContext context, Type typeMapperType)
+        public Generic1CSharpWriter(GeneratorContext context, Type typeMapperType)
             : base(context, GenericVersion.Generic1, typeMapperType)
         {
         }
