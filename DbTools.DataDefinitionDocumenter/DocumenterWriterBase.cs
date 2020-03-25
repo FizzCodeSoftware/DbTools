@@ -108,7 +108,7 @@
             }
 
             WriteLine(table.SchemaAndTableName);
-            if(firstColumn != null)
+            if (firstColumn != null)
                 Write(table.SchemaAndTableName, firstColumn);
 
             if (!Context.DocumenterSettings.NoInternalDataTypes)
@@ -122,7 +122,7 @@
             var table = column.Table;
             var sqlType = column.Type;
 
-            if(firstColumn != null)
+            if (firstColumn != null)
                 Write(table.SchemaAndTableName, firstColumn);
 
             if (!Context.DocumenterSettings.NoInternalDataTypes)
@@ -222,9 +222,9 @@
             }
         }
 
-        protected void AddUniqueConstraint(UniqueConstraint uc, string firstColumn = null)
+        /*protected void AddUniqueConstraint(UniqueConstraint uc, string firstColumn = null)
         {
-        }
+        }*/
 
         protected class ColumnDocumentInfo
         {
