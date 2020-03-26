@@ -3,24 +3,6 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public abstract class IndexMigration : IMigration
-    {
-        public Index Index { get; set; }
-    }
-
-    public class IndexNew : IndexMigration
-    {
-    }
-
-    public class IndexDelete : IndexMigration
-    {
-    }
-
-    public class IndexChange : IndexMigration
-    {
-        public Index NewIndex { get; set; }
-    }
-
     public static class ComparerIndex
     {
         public static List<IndexMigration> CompareIndexes(SqlTable tableOriginal, SqlTable tableNew)
@@ -82,9 +64,24 @@
             if (indexOriginal.SqlColumns.Count != indexNew.SqlColumns.Count)
                 return false;
 
+            if (indexOriginal.Includes.Count != indexNew.Includes.Count)
+                return false;
+
             for (var i = 0; i < indexOriginal.SqlColumns.Count; i++)
             {
                 if (indexOriginal.SqlColumns[i].Order != indexNew.SqlColumns[i].Order)
+                    return false;
+
+                if (Comparer.ColumnChanged(indexOriginal.SqlColumns[i].SqlColumn, indexNew.SqlColumns[i].SqlColumn))
+                    return false;
+            }
+
+            for (var i = 0; i < indexOriginal.Includes.Count; i++)
+            {
+                if (indexOriginal.SqlColumns[i].Order != indexNew.SqlColumns[i].Order)
+                    return false;
+
+                if (indexOriginal.SqlColumns[i].SqlColumn.Name != indexNew.SqlColumns[i].SqlColumn.Name)
                     return false;
 
                 if (Comparer.ColumnChanged(indexOriginal.SqlColumns[i].SqlColumn, indexNew.SqlColumns[i].SqlColumn))
