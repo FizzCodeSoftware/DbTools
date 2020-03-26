@@ -196,7 +196,7 @@
             var comparer = new Comparer(GetContext(version));
             var changes = comparer.Compare(ddOriginal, ddNew);
 
-            var first = changes[0] as IndexNew;
+            var _ = changes[0] as IndexNew;
         }
 
         [TestMethod]
@@ -212,7 +212,7 @@
             var comparer = new Comparer(GetContext(version));
             var changes = comparer.Compare(ddOriginal, ddNew);
 
-            var first = changes[0] as IndexChange;
+            var _ = changes[0] as IndexChange;
         }
 
         [TestMethod]
@@ -230,7 +230,7 @@
             var comparer = new Comparer(GetContext(version));
             var changes = comparer.Compare(ddOriginal, ddNew);
 
-            // var first = changes[0];
+            var _ = changes[0] as UniqueConstraintChange;
         }
     }
 }

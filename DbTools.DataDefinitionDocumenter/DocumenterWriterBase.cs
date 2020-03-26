@@ -264,9 +264,27 @@
             }
         }
 
-        /*protected void AddUniqueConstraint(UniqueConstraint uc, string firstColumn = null)
+        protected void AddUniqueConstraint(UniqueConstraint uniqueConstraint, string firstColumn = null)
         {
-        }*/
+            var countToMerge = 0;
+            var table = uniqueConstraint.SqlTable;
+
+            foreach (var indexColumn in uniqueConstraint.SqlColumns)
+            {
+                if (firstColumn != null)
+                    Write(table.SchemaAndTableName, firstColumn);
+
+                Write(table.SchemaAndTableName, uniqueConstraint.Name);
+                WriteLine(table.SchemaAndTableName, indexColumn.SqlColumn.Name);
+
+                countToMerge++;
+            }
+
+            if (countToMerge > 1)
+            {
+                MergeUpFromPreviousRow(table.SchemaAndTableName, countToMerge - 1);
+            }
+        }
 
         protected class ColumnDocumentInfo
         {

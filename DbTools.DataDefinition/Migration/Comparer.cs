@@ -52,6 +52,7 @@
                     changes.AddRange(CompareColumns(tableOriginal, tableNew));
                     changes.AddRange(ComparerForeignKey.CompareForeignKeys(tableOriginal, tableNew));
                     changes.AddRange(ComparerIndex.CompareIndexes(tableOriginal, tableNew));
+                    changes.AddRange(ComparerUniqueConstraint.CompareUniqueConstraints(tableOriginal, tableNew));
                 }
             }
 

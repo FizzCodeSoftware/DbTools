@@ -206,6 +206,47 @@
                 }
             }
 
+            if (!Context.DocumenterSettings.NoUniqueConstraints)
+            {
+                var processedUniqueConsreaints = new List<SchemaAndTableName>();
+
+                foreach (var change in changes.OfType<UniqueConstraintMigration>())
+                {
+                    ProcessTable(processedTables, change.UniqueConstraint.SqlTable); // Ensure table header
+
+                    switch (change)
+                    {
+                        case UniqueConstraintNew ucNew:
+                            {
+                                if (Context.CustomizerNew.ShouldSkip(ucNew.UniqueConstraint.SqlTable.SchemaAndTableName))
+                                    continue;
+
+                                ProcessUniqueConstraint(processedUniqueConsreaints, ucNew.UniqueConstraint, "New");
+                                break;
+                            }
+                        case UniqueConstraintDelete ucDelete:
+                            {
+                                if (Context.CustomizerOriginal.ShouldSkip(ucDelete.UniqueConstraint.SqlTable.SchemaAndTableName))
+                                    continue;
+
+                                ProcessUniqueConstraint(processedUniqueConsreaints, ucDelete.UniqueConstraint, "Delete");
+
+                                break;
+                            }
+                        case UniqueConstraintChange ucChange:
+                            {
+                                if (Context.CustomizerNew.ShouldSkip(ucChange.NewUniqueConstraint.SqlTable.SchemaAndTableName))
+                                    continue;
+
+                                ProcessUniqueConstraint(processedUniqueConsreaints, ucChange.UniqueConstraint, "Original");
+                                ProcessUniqueConstraint(processedUniqueConsreaints, ucChange.NewUniqueConstraint, "Change to");
+
+                                break;
+                            }
+                    }
+                }
+            }
+
             Log(LogSeverity.Information, "Generating Document content.", "ChangeDocumenter");
             var content = DocumenterWriter.GetContent();
 
@@ -262,6 +303,25 @@
             }
 
             AddIndex(index, firstColumn);
+        }
+
+        private void ProcessUniqueConstraint(List<SchemaAndTableName> procssedUniqueConstraints, UniqueConstraint uniqueConstraint, string firstColumn)
+        {
+            if (!procssedUniqueConstraints.Contains(uniqueConstraint.SqlTable.SchemaAndTableName))
+            {
+                procssedUniqueConstraints.Add(uniqueConstraint.SqlTable.SchemaAndTableName);
+
+                var mergeAmount = 1 + (!Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11);
+
+                WriteLine(uniqueConstraint.SqlTable.SchemaAndTableName);
+
+                WriteAndMerge(uniqueConstraint.SqlTable.SchemaAndTableName, mergeAmount, "Unique constraints");
+                WriteLine(uniqueConstraint.SqlTable.SchemaAndTableName);
+
+                WriteLine(uniqueConstraint.SqlTable.SchemaAndTableName, "Unique constraint name", "Column");
+            }
+
+            AddUniqueConstraint(uniqueConstraint, firstColumn);
         }
 
         private void ProcessColumnMigration(List<SchemaAndTableName> processedTables, SqlColumn column, string firstColumn)

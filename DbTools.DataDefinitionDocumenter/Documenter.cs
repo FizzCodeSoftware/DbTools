@@ -204,6 +204,11 @@
 
             AdIndexesToTableSheet(table);
 
+            AddUniqueConstraintsToTableSheet(table);
+        }
+
+        private void AddUniqueConstraintsToTableSheet(SqlTable table)
+        {
             if (!Context.DocumenterSettings.NoUniqueConstraints)
             {
                 WriteLine(table.SchemaAndTableName);
@@ -220,11 +225,7 @@
 
                 foreach (var uniqueConstraint in uniqueConstraints)
                 {
-                    foreach (var indexColumn in uniqueConstraint.SqlColumns)
-                    {
-                        Write(table.SchemaAndTableName, uniqueConstraint.Name);
-                        WriteLine(table.SchemaAndTableName, indexColumn.SqlColumn.Name);
-                    }
+                    AddUniqueConstraint(uniqueConstraint);
                 }
             }
         }

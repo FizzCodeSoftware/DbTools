@@ -133,7 +133,7 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void UniqueConstraintChange(SqlEngineVersion version)
+        public void ReplaceUniqueConstraintTest(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseUniqueConstraint();
             ddOriginal.SetVersions(version.GetTypeMapper());
@@ -141,7 +141,23 @@
             var ddFkChanged = new TestDatabaseUniqueConstraint2();
             ddFkChanged.SetVersions(version.GetTypeMapper());
 
-            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseUniqueConstraint", "TestDatabaseUniqueConstraint2");
+            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseUniqueConstraint", "TestDatabaseUniqueConstraint2_Replace");
+            changeDocumenter.Document(ddOriginal, ddFkChanged);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void ChangeUniqueConstraintTest(SqlEngineVersion version)
+        {
+            var ddOriginal = new TestDatabaseUniqueConstraint();
+            ddOriginal.SetVersions(version.GetTypeMapper());
+            ddOriginal.GetTable("Company").Properties.OfType<UniqueConstraint>().First().Name = "UC_1";
+
+            var ddFkChanged = new TestDatabaseUniqueConstraint2();
+            ddFkChanged.SetVersions(version.GetTypeMapper());
+            ddFkChanged.GetTable("Company").Properties.OfType<UniqueConstraint>().First().Name = "UC_1";
+
+            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseUniqueConstraint", "TestDatabaseUniqueConstraint2_Change");
             changeDocumenter.Document(ddOriginal, ddFkChanged);
         }
 
