@@ -142,8 +142,22 @@
             ddFkChanged.SetVersions(version.GetTypeMapper());
 
             var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseUniqueConstraint", "TestDatabaseUniqueConstraint2");
-
             changeDocumenter.Document(ddOriginal, ddFkChanged);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void RemoveTableTest(SqlEngineVersion version)
+        {
+            var ddOriginal = new TestDatabaseSimple();
+            ddOriginal.SetVersions(version.GetTypeMapper());
+            DatabaseMigratorTests.AddTable(ddOriginal);
+
+            var dd = new TestDatabaseSimple();
+            dd.SetVersions(version.GetTypeMapper());
+
+            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseSimple", "TestDatabaseSimpleRemoveTableTest");
+            changeDocumenter.Document(ddOriginal, dd);
         }
     }
 }

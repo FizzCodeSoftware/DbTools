@@ -41,7 +41,7 @@
             Assert.AreEqual((SchemaAndTableName)"NewTableToMigrate", first.SchemaAndTableName);
         }
 
-        private static void AddTable(TestDatabaseSimple dd)
+        public static void AddTable(TestDatabaseSimple dd)
         {
             var newTable = new SqlTable
             {
@@ -69,10 +69,7 @@
 
             var comparer = new Comparer(GetContext(version));
 
-            var ddOrigin = new TestDatabaseSimple();
-            ddOrigin.SetVersions(version.GetTypeMapper());
-
-            var changes = comparer.Compare(ddOriginal, ddOrigin);
+            var changes = comparer.Compare(ddOriginal, dd);
 
             var first = changes[0] as TableDelete;
             Assert.AreEqual((SchemaAndTableName)"NewTableToMigrate", first.SchemaAndTableName);
