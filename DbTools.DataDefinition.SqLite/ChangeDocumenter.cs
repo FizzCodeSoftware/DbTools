@@ -188,7 +188,7 @@
                                 if (Context.CustomizerOriginal.ShouldSkip(indexDelete.Index.SqlTable.SchemaAndTableName))
                                     continue;
 
-                                ProcessIndex(processedTables, indexDelete.Index, "Delete");
+                                ProcessIndex(processedIndexes, indexDelete.Index, "Delete");
 
                                 break;
                             }

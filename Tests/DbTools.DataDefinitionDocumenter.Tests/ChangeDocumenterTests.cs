@@ -180,12 +180,14 @@
         {
             var ddOriginal = new TestDatabaseIndex();
             ddOriginal.SetVersions(version.GetTypeMapper());
+            ddOriginal.GetTable("Company").Properties.OfType<Index>().First().Name = "IX_Company_Name";
 
-            var dd = new TestDatabaseIndexMultiColumn();
-            dd.SetVersions(version.GetTypeMapper());
+            var ddNew = new TestDatabaseIndexMultiColumn();
+            ddNew.SetVersions(version.GetTypeMapper());
+            ddNew.GetTable("Company").Properties.OfType<Index>().First().Name = "IX_Company_Name";
 
             var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseIndex", "TestDatabaseIndexMultiColumnChangeIndexTest");
-            changeDocumenter.Document(ddOriginal, dd);
+            changeDocumenter.Document(ddOriginal, ddNew);
         }
     }
 }
