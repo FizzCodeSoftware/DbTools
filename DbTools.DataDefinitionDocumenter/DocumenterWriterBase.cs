@@ -233,6 +233,27 @@
             }
         }
 
+        protected void AddIndex(Index index, string firstColumn = null)
+        {
+            var table = index.SqlTable;
+
+            foreach (var indexColumn in index.SqlColumns)
+            {
+                if (firstColumn != null)
+                    Write(table.SchemaAndTableName, firstColumn);
+
+                Write(table.SchemaAndTableName, index.Name);
+                Write(table.SchemaAndTableName, indexColumn.SqlColumn.Name);
+                WriteLine(table.SchemaAndTableName, indexColumn.OrderAsKeyword);
+            }
+
+            foreach (var includeColumn in index.Includes)
+            {
+                Write(table.SchemaAndTableName, index.Name, includeColumn.Name, "");
+                WriteLine(table.SchemaAndTableName, "YES");
+            }
+        }
+
         /*protected void AddUniqueConstraint(UniqueConstraint uc, string firstColumn = null)
         {
         }*/

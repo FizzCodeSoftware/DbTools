@@ -51,6 +51,7 @@
                     var tableNew = newDd.Tables[tableOriginal.SchemaAndTableName];
                     changes.AddRange(CompareColumns(tableOriginal, tableNew));
                     changes.AddRange(ComparerForeignKey.CompareForeignKeys(tableOriginal, tableNew));
+                    changes.AddRange(ComparerIndex.CompareIndexes(tableOriginal, tableNew));
                 }
             }
 

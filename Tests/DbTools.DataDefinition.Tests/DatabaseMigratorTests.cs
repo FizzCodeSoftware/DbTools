@@ -184,6 +184,38 @@
         }
 
         [TestMethod]
+        [LatestSqlVersions]
+        public void AddIndexTest(SqlEngineVersion version)
+        {
+            var ddOriginal = new TestDatabaseSimple();
+            ddOriginal.SetVersions(version.GetTypeMapper());
+
+            var ddNew = new TestDatabaseIndex();
+            ddNew.SetVersions(version.GetTypeMapper());
+
+            var comparer = new Comparer(GetContext(version));
+            var changes = comparer.Compare(ddOriginal, ddNew);
+
+            var first = changes[0] as IndexNew;
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void ChangeIndexTest(SqlEngineVersion version)
+        {
+            var ddOriginal = new TestDatabaseIndex();
+            ddOriginal.SetVersions(version.GetTypeMapper());
+
+            var ddNew = new TestDatabaseIndexMultiColumn();
+            ddNew.SetVersions(version.GetTypeMapper());
+
+            var comparer = new Comparer(GetContext(version));
+            var changes = comparer.Compare(ddOriginal, ddNew);
+
+            var first = changes[0] as IndexChange;
+        }
+
+        [TestMethod]
         [LatestSqlVersions(true)]
         public void UniqueConstraintChange(SqlEngineVersion version)
         {

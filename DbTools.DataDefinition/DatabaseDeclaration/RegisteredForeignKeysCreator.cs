@@ -11,6 +11,8 @@
             var referredTable = definition.GetTable(fkRegistration.ReferredTableName);
             var referredUniqueKey = GetReferredUniqueIndex(referredTable);
 
+            // TODO check if Unique index is multi column
+
             var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
             var pkColumn = referredUniqueKey.SqlColumns[0].SqlColumn;

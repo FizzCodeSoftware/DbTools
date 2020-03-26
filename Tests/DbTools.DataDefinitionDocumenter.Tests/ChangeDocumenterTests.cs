@@ -30,7 +30,7 @@
 
         [TestMethod]
         [LatestSqlVersions]
-            public void TempChangeFkTest(SqlEngineVersion version)
+        public void TempChangeFkTest(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseFkChange();
             ddOriginal.SetVersions(version.GetTypeMapper());
@@ -157,6 +157,34 @@
             dd.SetVersions(version.GetTypeMapper());
 
             var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseSimple", "TestDatabaseSimpleRemoveTableTest");
+            changeDocumenter.Document(ddOriginal, dd);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void AddIndexTest(SqlEngineVersion version)
+        {
+            var ddOriginal = new TestDatabaseSimple();
+            ddOriginal.SetVersions(version.GetTypeMapper());
+
+            var dd = new TestDatabaseIndex();
+            dd.SetVersions(version.GetTypeMapper());
+
+            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseSimple", "TestDatabaseIndexAddIndexTest");
+            changeDocumenter.Document(ddOriginal, dd);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void ChangeIndexTest(SqlEngineVersion version)
+        {
+            var ddOriginal = new TestDatabaseIndex();
+            ddOriginal.SetVersions(version.GetTypeMapper());
+
+            var dd = new TestDatabaseIndexMultiColumn();
+            dd.SetVersions(version.GetTypeMapper());
+
+            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseIndex", "TestDatabaseIndexMultiColumnChangeIndexTest");
             changeDocumenter.Document(ddOriginal, dd);
         }
     }

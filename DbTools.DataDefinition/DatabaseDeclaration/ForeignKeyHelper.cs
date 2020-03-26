@@ -6,8 +6,6 @@
 
     public static class ForeignKeyHelper
     {
-        // TODO should throw if PK is multi column
-
         /// <summary>
         /// Sets an existing column as an FK, pointing to the PK of <paramref name="referredTableName"/>.
         /// </summary>

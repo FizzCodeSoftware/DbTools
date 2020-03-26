@@ -202,36 +202,7 @@
 
             AddForeignKeysToTableSheet(table);
 
-            if (!Context.DocumenterSettings.NoIndexes)
-            {
-                WriteLine(table.SchemaAndTableName);
-
-                var mergeAmount = 1 + (!Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11);
-
-                WriteAndMerge(table.SchemaAndTableName, mergeAmount, "Indexes");
-                WriteLine(table.SchemaAndTableName);
-
-                var indexes = table.Properties.OfType<Index>().ToList();
-
-                if (indexes.Count > 0)
-                    WriteLine(table.SchemaAndTableName, "Index name", "Column", "Order", "Include");
-
-                foreach (var index in indexes)
-                {
-                    foreach (var indexColumn in index.SqlColumns)
-                    {
-                        Write(table.SchemaAndTableName, index.Name);
-                        Write(table.SchemaAndTableName, indexColumn.SqlColumn.Name);
-                        WriteLine(table.SchemaAndTableName, indexColumn.OrderAsKeyword);
-                    }
-
-                    foreach (var includeColumn in index.Includes)
-                    {
-                        Write(table.SchemaAndTableName, index.Name, includeColumn.Name, "");
-                        WriteLine(table.SchemaAndTableName, "YES");
-                    }
-                }
-            }
+            AdIndexesToTableSheet(table);
 
             if (!Context.DocumenterSettings.NoUniqueConstraints)
             {
@@ -254,6 +225,29 @@
                         Write(table.SchemaAndTableName, uniqueConstraint.Name);
                         WriteLine(table.SchemaAndTableName, indexColumn.SqlColumn.Name);
                     }
+                }
+            }
+        }
+
+        private void AdIndexesToTableSheet(SqlTable table)
+        {
+            if (!Context.DocumenterSettings.NoIndexes)
+            {
+                WriteLine(table.SchemaAndTableName);
+
+                var mergeAmount = 1 + (!Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11);
+
+                WriteAndMerge(table.SchemaAndTableName, mergeAmount, "Indexes");
+                WriteLine(table.SchemaAndTableName);
+
+                var indexes = table.Properties.OfType<Index>().ToList();
+
+                if (indexes.Count > 0)
+                    WriteLine(table.SchemaAndTableName, "Index name", "Column", "Order", "Include");
+
+                foreach (var index in indexes)
+                {
+                    AddIndex(index);
                 }
             }
         }

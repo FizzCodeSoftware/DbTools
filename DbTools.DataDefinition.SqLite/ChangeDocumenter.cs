@@ -165,6 +165,47 @@
                 }
             }
 
+            if (!Context.DocumenterSettings.NoIndexes)
+            {
+                var processedIndexes = new List<SchemaAndTableName>();
+
+                foreach (var change in changes.OfType<IndexMigration>())
+                {
+                    ProcessTable(processedTables, change.Index.SqlTable); // Ensure table header
+
+                    switch (change)
+                    {
+                        case IndexNew indexNew:
+                            {
+                                if (Context.CustomizerNew.ShouldSkip(indexNew.Index.SqlTable.SchemaAndTableName))
+                                    continue;
+
+                                ProcessIndex(processedIndexes, indexNew.Index, "New");
+                                break;
+                            }
+                        case IndexDelete indexDelete:
+                            {
+                                if (Context.CustomizerOriginal.ShouldSkip(indexDelete.Index.SqlTable.SchemaAndTableName))
+                                    continue;
+
+                                ProcessIndex(processedTables, indexDelete.Index, "Delete");
+
+                                break;
+                            }
+                        case IndexChange indexChange:
+                            {
+                                if (Context.CustomizerNew.ShouldSkip(indexChange.NewIndex.SqlTable.SchemaAndTableName))
+                                    continue;
+
+                                ProcessIndex(processedIndexes, indexChange.Index, "Original");
+                                ProcessIndex(processedIndexes, indexChange.NewIndex, "Change to");
+
+                                break;
+                            }
+                    }
+                }
+            }
+
             Log(LogSeverity.Information, "Generating Document content.", "ChangeDocumenter");
             var content = DocumenterWriter.GetContent();
 
@@ -202,6 +243,25 @@
             }
 
             AddForeignKey(fk, firstColumn);
+        }
+
+        private void ProcessIndex(List<SchemaAndTableName> procssedIndexes, Index index, string firstColumn)
+        {
+            if (!procssedIndexes.Contains(index.SqlTable.SchemaAndTableName))
+            {
+                procssedIndexes.Add(index.SqlTable.SchemaAndTableName);
+
+                var mergeAmount = 1 + (!Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11);
+
+                WriteLine(index.SqlTable.SchemaAndTableName);
+
+                WriteAndMerge(index.SqlTable.SchemaAndTableName, mergeAmount, "Indexes");
+                WriteLine(index.SqlTable.SchemaAndTableName);
+
+                WriteLine(index.SqlTable.SchemaAndTableName, "Event", "Index name", "Column", "Order", "Include");
+            }
+
+            AddIndex(index, firstColumn);
         }
 
         private void ProcessColumnMigration(List<SchemaAndTableName> processedTables, SqlColumn column, string firstColumn)

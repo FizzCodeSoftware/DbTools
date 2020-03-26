@@ -11,8 +11,6 @@
     {
         public static AbstractCSharpWriter GetCSharpWriter(SqlEngineVersion version, GeneratorContext context)
         {
-            // TODO handle versions
-
             if (version is GenericVersion)
                 return new Generic1CSharpWriter(context, typeof(Generic1TypeMapper));
 
