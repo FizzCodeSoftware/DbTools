@@ -7,7 +7,7 @@
 
     public class PatternMatchingTableCustomizer : ITableCustomizer
     {
-        protected List<PatternMatchingTableCustomizerItem> Patterns { get; } = new List<PatternMatchingTableCustomizerItem>();
+        public List<PatternMatchingTableCustomizerItem> Patterns { get; } = new List<PatternMatchingTableCustomizerItem>();
 
         public void AddPattern(string patternSchema, string patternTableName, string patternExceptSchema, string patternExceptTableName, bool shouldSkip, string category, string backGroundColor)
         {
@@ -32,7 +32,7 @@
             return item?.ShouldSkipIfMatch == true;
         }
 
-        private PatternMatchingTableCustomizerItem GetPatternMatching(SchemaAndTableName schemaAndTableName)
+        public PatternMatchingTableCustomizerItem GetPatternMatching(SchemaAndTableName schemaAndTableName)
         {
             PatternMatchingTableCustomizerItem matchingItem = null;
             foreach (var item in Patterns)
@@ -40,7 +40,40 @@
                 var isPatternMatch = CheckMatch(schemaAndTableName, item.Pattern);
                 var isPatternExceptMatch = CheckMatch(schemaAndTableName, item.PatternExcept);
 
-                if (isPatternMatch)
+                if (isPatternMatch && !isPatternExceptMatch)
+                {
+                    if (IsRegex(item.Pattern.Schema) || IsRegex(item.Pattern.TableName))
+                    {
+                        if (matchingItem == null)
+                            matchingItem = item;
+                        else
+                            throw new ApplicationException($"Multiple patterns are matching for {schemaAndTableName.SchemaAndName}.");
+                    }
+                    else
+                    {
+                        matchingItem = item;
+                        break;
+                    }
+                }
+            }
+
+            return matchingItem;
+        }
+
+        public PatternMatchingTableCustomizerItem GetPatternMatching(SchemaAndTableName schemaAndTableName, out bool isMatchWithException)
+        {
+            isMatchWithException = false;
+
+            PatternMatchingTableCustomizerItem matchingItem = null;
+            foreach (var item in Patterns)
+            {
+                var isPatternMatch = CheckMatch(schemaAndTableName, item.Pattern);
+                var isPatternExceptMatch = CheckMatch(schemaAndTableName, item.PatternExcept);
+
+                if (isPatternMatch && isPatternExceptMatch)
+                    isMatchWithException = true;
+
+                if (isPatternMatch && !isPatternExceptMatch)
                 {
                     if (IsRegex(item.Pattern.Schema) || IsRegex(item.Pattern.TableName))
                     {

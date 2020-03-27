@@ -18,11 +18,13 @@
         public Documenter(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
             : base(documenterWriter, context, version, databaseName, fileName)
         {
+            Customizer = new PatternMatchingTableCustomizerWithTablesAndItems((PatternMatchingTableCustomizer)context.Customizer);
         }
 
         private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
         private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
 
+        private PatternMatchingTableCustomizerWithTablesAndItems Customizer { get; }
         public void Document(DatabaseDefinition databaseDefinition)
         {
             Log(LogSeverity.Information, "Starting on {DatabaseName}.", "Documenter", DatabaseName);
@@ -31,16 +33,16 @@
 
             foreach (var table in tables)
             {
-                if (!Context.Customizer.ShouldSkip(table.SchemaAndTableName))
-                    _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(Context.Customizer.Category(table.SchemaAndTableName), table));
+                if (!Customizer.ShouldSkip(table.SchemaAndTableName))
+                    _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(Customizer.Category(table.SchemaAndTableName), table));
                 else
-                    _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(Context.Customizer.Category(table.SchemaAndTableName), table));
+                    _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(Customizer.Category(table.SchemaAndTableName), table));
             }
 
             var hasCategories = _sqlTablesByCategory.Any(x => !string.IsNullOrEmpty(x.Key));
 
             var noOfTables = databaseDefinition.GetTables().Count;
-            var noOfNotSkippedTables = databaseDefinition.GetTables().Count(t => !Context.Customizer.ShouldSkip(t.SchemaAndTableName));
+            var noOfNotSkippedTables = databaseDefinition.GetTables().Count(t => !Customizer.ShouldSkip(t.SchemaAndTableName));
 
             WriteLine("Database", "Database name", DatabaseName);
             WriteLine("Database", "Number of documented tables", noOfNotSkippedTables);
@@ -94,6 +96,12 @@
                 }
             }
 
+            // Ensure sheet order
+            Write("Patt.ma.-tables");
+            Write("Patt.ma.-patterns");
+            Write("Patt.ma.-ma.s w exceptions");
+            Write("Patt.ma.-no matches (unused)");
+
             foreach (var tableKvp in _sqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName.Schema).ThenBy(t => t.Value.SchemaAndTableName.TableName))
             {
                 Context.Logger.Log(LogSeverity.Verbose, "Generating {TableName}.", "Documenter", tableKvp.Value.SchemaAndTableName);
@@ -119,6 +127,9 @@
                 AddTableToTableList(category, table, hasCategories);
             }
 
+            AddPatternMatching();
+            AddPatternMatchingNoMatch();
+
             Log(LogSeverity.Information, "Generating Document content.", "Documenter");
             var content = DocumenterWriter.GetContent();
 
@@ -134,6 +145,61 @@
             }
 
             File.WriteAllBytes(fileName, content);
+        }
+
+        private void AddPatternMatching()
+        {
+            WriteLine("Patt.ma.-tables", "Table schema", "Table name", "Pattern", "Pattern except", "Should skip if match", "Category if match", "Background color if match");
+            foreach (var tableAndPattern in Customizer.TableMatches)
+            {
+                var schemaAndTableName = tableAndPattern.Key;
+                var items = tableAndPattern.Value;
+
+                foreach (var item in items)
+                {
+                    WriteLine("Patt.ma.-tables", schemaAndTableName.Schema, schemaAndTableName.TableName, item.Pattern.ToString(), item.PatternExcept.ToString(), item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);
+                }
+            }
+
+            WriteLine("Patt.ma.-patterns", "Pattern", "Pattern except", "Table schema", "Table name", "Should skip if match", "Category if match", "Background color if match");
+            foreach (var patternAndTable in Customizer.MatchTables)
+            {
+                var item = patternAndTable.Key;
+                var schemaAndTableNames = patternAndTable.Value;
+
+                foreach (var schemaAndTableName in schemaAndTableNames)
+                {
+                    WriteLine("Patt.ma.-patterns", item.Pattern.ToString(), item.PatternExcept.ToString(), schemaAndTableName.Schema, schemaAndTableName.TableName, item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);
+                }
+            }
+
+            WriteLine("Patt.ma.-ma.s w exceptions", "Pattern", "Pattern except", "Table schema", "Table name", "Should skip if match", "Category if match", "Background color if match");
+            foreach (var patternAndTable in Customizer.MatchTablesWithException)
+            {
+                var item = patternAndTable.Key;
+                var schemaAndTableNames = patternAndTable.Value;
+
+                foreach (var schemaAndTableName in schemaAndTableNames)
+                {
+                    WriteLine("Patt.ma.-ma.s w exceptions", item.Pattern.ToString(), item.PatternExcept.ToString(), schemaAndTableName.Schema, schemaAndTableName.TableName, item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);
+                }
+            }
+        }
+
+        private void AddPatternMatchingNoMatch()
+        {
+            WriteLine("Patt.ma.-no matches (unused)", "Pattern", "Pattern except", "Should skip if match", "Category if match", "Background color if match");
+
+            foreach (var item in Customizer.PatternMatchingTableCustomizer.Patterns)
+            {
+                if (Customizer.MatchTables.ContainsKey(item))
+                    continue;
+
+                if (Customizer.MatchTablesWithException.ContainsKey(item))
+                    continue;
+
+                WriteLine("Patt.ma.-no matches (unused)", item.Pattern.ToString(), item.PatternExcept.ToString(), item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);
+            }
         }
 
         protected void AddTableToTableList(string category, SqlTable table, bool hasCategories)

@@ -11,7 +11,7 @@
     public class PatternMatchingTableCustomizerTests
     {
         [TestMethod]
-        public void GetPatternMatching_StartsWith_Test()
+        public void StartsWith()
         {
             var pm = new PatternMatchingTableCustomizer();
             pm.AddPattern(null, "A*", null, null, true, null, null);
@@ -25,7 +25,7 @@
         }
 
         [TestMethod]
-        public void GetPatternMatching_Contains_Test()
+        public void Contains()
         {
             var pm = new PatternMatchingTableCustomizer();
             pm.AddPattern(null, "*apple*", null, null, true, null, null);
@@ -42,7 +42,7 @@
         }
 
         [TestMethod]
-        public void GetPatternMatching_Dot_Test()
+        public void Dot_and_Star()
         {
             var pm = new PatternMatchingTableCustomizer();
             pm.AddPattern(null, "ap?le*", null, null, true, null, null);
@@ -60,7 +60,7 @@
         }
 
         [TestMethod]
-        public void PatternMatching_Schema()
+        public void Schema()
         {
             var pm = new PatternMatchingTableCustomizer();
             pm.AddPattern("apple", null, null, null, true, null, null);
@@ -70,7 +70,7 @@
         }
 
         [TestMethod]
-        public void PatternMatching_Schema_And_Table()
+        public void Schema_and_Table()
         {
             var pm = new PatternMatchingTableCustomizer();
             pm.AddPattern("horus", "apple", null, null, true, null, null);
@@ -81,7 +81,7 @@
         }
 
         [TestMethod]
-        public void PatternMatching_Schema_And_Table_Except_WildCard()
+        public void Schema_and_Table_Except_WildCard()
         {
             var pm = new PatternMatchingTableCustomizer();
             pm.AddPattern("horus*", "apple*", "horusExcept*", "appleExcept*", true, null, null);
@@ -92,13 +92,48 @@
 
             Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("horusExcept1", "nothing")));
 
-            Assert.IsTrue(pm.ShouldSkip(new SchemaAndTableName("horusExcept", "appleExcept")));
-            Assert.IsTrue(pm.ShouldSkip(new SchemaAndTableName("horusExcept1", "appleExcept1")));
-            Assert.IsTrue(pm.ShouldSkip(new SchemaAndTableName("horusExcept2", "appleExcept2")));
+            Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("horusExcept", "appleExcept")));
+            Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("horusExcept1", "appleExcept1")));
+            Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("horusExcept2", "appleExcept2")));
         }
 
         [TestMethod]
-        public void PatternMatching_Schema_And_Table_Except()
+        public void Schema_and_Table_WildCard()
+        {
+            var pm = new PatternMatchingTableCustomizer();
+            pm.AddPattern("horus*", "apple*", "horusExcept*", "appleExcept*", false, null, null);
+
+            Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("apple", "anything")));
+            Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("horus", "apple")));
+            Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("horus", "horus")));
+
+            Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("horusExcept1", "nothing")));
+
+            Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("horusExcept", "appleExcept")));
+            Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("horusExcept1", "appleExcept1")));
+            Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("horusExcept2", "appleExcept2")));
+        }
+
+        [TestMethod]
+        public void Schema_and_Table_WildCard_Category()
+        {
+            var pm = new PatternMatchingTableCustomizer();
+            pm.AddPattern("horus*", "apple*", "horusExcept*", "appleExcept*", false, "category", null);
+
+            Assert.AreEqual(null, pm.Category(new SchemaAndTableName("apple", "anything")));
+
+            Assert.AreEqual("category", pm.Category(new SchemaAndTableName("horus", "apple")));
+            Assert.AreEqual(null, pm.Category(new SchemaAndTableName("horus", "horus")));
+
+            Assert.AreEqual(null, pm.Category(new SchemaAndTableName("horusExcept1", "nothing")));
+
+            Assert.AreEqual(null, pm.Category(new SchemaAndTableName("horusExcept", "appleExcept")));
+            Assert.AreEqual(null, pm.Category(new SchemaAndTableName("horusExcept1", "appleExcept1")));
+            Assert.AreEqual(null, pm.Category(new SchemaAndTableName("horusExcept2", "appleExcept2")));
+        }
+
+        [TestMethod]
+        public void Schema_and_Table_Except()
         {
             var pm = new PatternMatchingTableCustomizer();
             pm.AddPattern("horus*", "apple*", "horusExcept", "appleExcept", true, null, null);
@@ -109,13 +144,13 @@
 
             Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("horusExcept1", "nothing")));
 
-            Assert.IsTrue(pm.ShouldSkip(new SchemaAndTableName("horusExcept", "appleExcept")));
+            Assert.IsFalse(pm.ShouldSkip(new SchemaAndTableName("horusExcept", "appleExcept")));
             Assert.IsTrue(pm.ShouldSkip(new SchemaAndTableName("horusExcept1", "appleExcept1")));
             Assert.IsTrue(pm.ShouldSkip(new SchemaAndTableName("horusExcept2", "appleExcept2")));
         }
 
         [TestMethod]
-        public void PatternMatchingTableCustomizerFromCsvTest()
+        public void TableCustomizerFromCsv()
         {
             using (var file =
             new StreamWriter("TestDatabaseFks.DbTools.Patterns.csv"))
@@ -133,8 +168,8 @@
             documenter.Document(db);
         }
 
-        [TestMethod()]
-        public void ShouldSkipTest()
+        [TestMethod]
+        public void ShouldSkip()
         {
             // Pattern; PatternExcept; ShouldSkipIfMatch; CategoryIfMatch; BackGroundColorIfMatch
 
@@ -152,8 +187,8 @@
             Assert.IsFalse(shouldSkip2);
         }
 
-        [TestMethod()]
-        public void ShouldSkipTest2()
+        [TestMethod]
+        public void ShouldSkip2()
         {
             const string patternContent = "staging;;;;1";
 

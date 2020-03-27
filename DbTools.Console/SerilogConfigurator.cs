@@ -78,9 +78,11 @@
                     encoding: Encoding.UTF8);
             }
 
-            config.WriteTo.Sink(new ConsoleSink.ConsoleSink("{Timestamp:HH:mm:ss.fff} [{Level}] {Message} {Properties}{NewLine}{Exception}"), configuration?.MinimumLogLevelOnConsole ?? LogEventLevel.Debug);
+            var minimumLogLevelOnConsole = configuration?.MinimumLogLevelOnConsole ?? LogEventLevel.Debug;
 
-            config = config.MinimumLevel.Is(System.Diagnostics.Debugger.IsAttached ? LogEventLevel.Verbose : LogEventLevel.Debug);
+            config.WriteTo.Sink(new ConsoleSink.ConsoleSink("{Timestamp:HH:mm:ss.fff} [{Level}] {Message} {Properties}{NewLine}{Exception}"), minimumLogLevelOnConsole);
+
+            config = config.MinimumLevel.Is(System.Diagnostics.Debugger.IsAttached ? LogEventLevel.Verbose : minimumLogLevelOnConsole);
 
             if (System.Diagnostics.Debugger.IsAttached)
             {

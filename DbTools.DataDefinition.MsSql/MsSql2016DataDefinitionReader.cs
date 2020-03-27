@@ -33,7 +33,7 @@
             new MsSqlIdentityReader2016(Executer, SchemaNames).GetIdentity(dd);
             Log(LogSeverity.Debug, "Reading table primary keys from database.");
             new MsSqlIndexReader2016(Executer, SchemaNames).GetIndexes(dd);
-            Logger.Log(LogSeverity.Debug, "Reading table foreign keys from database.", "Reader");
+            Log(LogSeverity.Debug, "Reading table foreign keys from database.", "Reader");
             new MsSqlForeignKeyReader2016(Executer, SchemaNames).GetForeignKeys(dd);
 
             return dd;

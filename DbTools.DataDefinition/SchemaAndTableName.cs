@@ -99,7 +99,7 @@
             {
                 var hash = 17;
                 hash = (hash * 23) + Schema?.GetHashCode(StringComparison.InvariantCultureIgnoreCase) ?? 0;
-                hash = (hash * 23) + TableName.GetHashCode(StringComparison.InvariantCultureIgnoreCase);
+                hash = (hash * 23) + TableName?.GetHashCode(StringComparison.InvariantCultureIgnoreCase) ?? 0;
                 return hash;
             }
         }
