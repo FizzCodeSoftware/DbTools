@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using FizzCode.DbTools.DataDefinition;
 
-    public class PatternMatchingTableCustomizerWithTablesAndItems
+    public class PatternMatchingTableCustomizerWithTablesAndItems : ITableCustomizer
     {
         public PatternMatchingTableCustomizerWithTablesAndItems(PatternMatchingTableCustomizer patternMatchingTableCustomizer)
         {

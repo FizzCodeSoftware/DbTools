@@ -18,13 +18,15 @@
         public Documenter(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
             : base(documenterWriter, context, version, databaseName, fileName)
         {
-            Customizer = new PatternMatchingTableCustomizerWithTablesAndItems((PatternMatchingTableCustomizer)context.Customizer);
+            Customizer = context.Customizer is PatternMatchingTableCustomizer
+                ? new PatternMatchingTableCustomizerWithTablesAndItems((PatternMatchingTableCustomizer)context.Customizer)
+                : context.Customizer;
         }
 
         private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
         private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
 
-        private PatternMatchingTableCustomizerWithTablesAndItems Customizer { get; }
+        private ITableCustomizer Customizer { get; }
         public void Document(DatabaseDefinition databaseDefinition)
         {
             Log(LogSeverity.Information, "Starting on {DatabaseName}.", "Documenter", DatabaseName);
@@ -97,10 +99,13 @@
             }
 
             // Ensure sheet order
-            Write("Patt.ma.-tables");
-            Write("Patt.ma.-patterns");
-            Write("Patt.ma.-ma.s w exceptions");
-            Write("Patt.ma.-no matches (unused)");
+            if (Customizer is PatternMatchingTableCustomizer)
+            {
+                Write("Patt.ma.-tables");
+                Write("Patt.ma.-patterns");
+                Write("Patt.ma.-ma.s w exceptions");
+                Write("Patt.ma.-no matches (unused)");
+            }
 
             foreach (var tableKvp in _sqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName.Schema).ThenBy(t => t.Value.SchemaAndTableName.TableName))
             {
@@ -127,6 +132,7 @@
                 AddTableToTableList(category, table, hasCategories);
             }
 
+            Context.Logger.Log(LogSeverity.Verbose, "Generating pattenr matching info.", "Documenter");
             AddPatternMatching();
             AddPatternMatchingNoMatch();
 
@@ -149,8 +155,13 @@
 
         private void AddPatternMatching()
         {
+            if (!(Customizer is PatternMatchingTableCustomizerWithTablesAndItems))
+                return;
+
+            var customizer = (PatternMatchingTableCustomizerWithTablesAndItems)Customizer;
+
             WriteLine("Patt.ma.-tables", "Table schema", "Table name", "Pattern", "Pattern except", "Should skip if match", "Category if match", "Background color if match");
-            foreach (var tableAndPattern in Customizer.TableMatches)
+            foreach (var tableAndPattern in customizer.TableMatches)
             {
                 var schemaAndTableName = tableAndPattern.Key;
                 var items = tableAndPattern.Value;
@@ -162,7 +173,7 @@
             }
 
             WriteLine("Patt.ma.-patterns", "Pattern", "Pattern except", "Table schema", "Table name", "Should skip if match", "Category if match", "Background color if match");
-            foreach (var patternAndTable in Customizer.MatchTables)
+            foreach (var patternAndTable in customizer.MatchTables)
             {
                 var item = patternAndTable.Key;
                 var schemaAndTableNames = patternAndTable.Value;
@@ -174,7 +185,7 @@
             }
 
             WriteLine("Patt.ma.-ma.s w exceptions", "Pattern", "Pattern except", "Table schema", "Table name", "Should skip if match", "Category if match", "Background color if match");
-            foreach (var patternAndTable in Customizer.MatchTablesWithException)
+            foreach (var patternAndTable in customizer.MatchTablesWithException)
             {
                 var item = patternAndTable.Key;
                 var schemaAndTableNames = patternAndTable.Value;
@@ -188,14 +199,19 @@
 
         private void AddPatternMatchingNoMatch()
         {
+            if (!(Customizer is PatternMatchingTableCustomizerWithTablesAndItems))
+                return;
+
+            var customizer = (PatternMatchingTableCustomizerWithTablesAndItems)Customizer;
+
             WriteLine("Patt.ma.-no matches (unused)", "Pattern", "Pattern except", "Should skip if match", "Category if match", "Background color if match");
 
-            foreach (var item in Customizer.PatternMatchingTableCustomizer.Patterns)
+            foreach (var item in customizer.PatternMatchingTableCustomizer.Patterns)
             {
-                if (Customizer.MatchTables.ContainsKey(item))
+                if (customizer.MatchTables.ContainsKey(item))
                     continue;
 
-                if (Customizer.MatchTablesWithException.ContainsKey(item))
+                if (customizer.MatchTablesWithException.ContainsKey(item))
                     continue;
 
                 WriteLine("Patt.ma.-no matches (unused)", item.Pattern.ToString(), item.PatternExcept.ToString(), item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);

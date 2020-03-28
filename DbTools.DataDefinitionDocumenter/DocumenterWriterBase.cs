@@ -286,7 +286,7 @@
             }
         }
 
-        private object[] FormatBoolContent(params object[] content)
+        private static object[] FormatBoolContent(params object[] content)
         {
             var result = new List<object>();
             foreach (var obj in content)
