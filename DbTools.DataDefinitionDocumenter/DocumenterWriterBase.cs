@@ -41,17 +41,17 @@
 
         protected void Write(string sheetName, params object[] content)
         {
-            DocumenterWriter.Write(sheetName, content);
+            DocumenterWriter.Write(sheetName, FormatBoolContent(content));
         }
 
         protected void WriteLine(string sheetName, params object[] content)
         {
-            DocumenterWriter.WriteLine(sheetName, content);
+            DocumenterWriter.WriteLine(sheetName, FormatBoolContent(content));
         }
 
         protected void Write(SchemaAndTableName schemaAndTableName, params object[] content)
         {
-            DocumenterWriter.Write(Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), content);
+            DocumenterWriter.Write(Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), FormatBoolContent(content));
         }
 
         protected void WriteColor(SchemaAndTableName schemaAndTableName, params object[] content)
@@ -61,7 +61,7 @@
 
         protected void WriteLine(SchemaAndTableName schemaAndTableName, params object[] content)
         {
-            DocumenterWriter.WriteLine(Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), content);
+            DocumenterWriter.WriteLine(Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), FormatBoolContent(content));
         }
 
         protected void WriteLink(SchemaAndTableName schemaAndTableName, string text, SchemaAndTableName targetSchemaAndTableName, Color? backgroundColor = null)
@@ -71,7 +71,7 @@
 
         protected void WriteAndMerge(SchemaAndTableName schemaAndTableName, int mergeAmount, params object[] content)
         {
-            DocumenterWriter.WriteAndMerge(GetColor(schemaAndTableName), Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), mergeAmount, content);
+            DocumenterWriter.WriteAndMerge(GetColor(schemaAndTableName), Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), mergeAmount, FormatBoolContent(content));
         }
 
         protected void MergeUpFromPreviousRow(SchemaAndTableName schemaAndTableName, int mergeAmount)
@@ -284,6 +284,20 @@
             {
                 MergeUpFromPreviousRow(table.SchemaAndTableName, countToMerge - 1);
             }
+        }
+
+        private object[] FormatBoolContent(params object[] content)
+        {
+            var result = new List<object>();
+            foreach (var obj in content)
+            {
+                if (obj is bool objAsBool)
+                    result.Add(objAsBool ? "TRUE" : "FALSE");
+                else
+                    result.Add(obj);
+            }
+
+            return result.ToArray();
         }
 
         protected class ColumnDocumentInfo
