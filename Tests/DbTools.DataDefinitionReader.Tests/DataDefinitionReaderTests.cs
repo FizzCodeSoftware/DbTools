@@ -13,7 +13,11 @@
         protected static void Init(SqlEngineVersion version, DatabaseDefinition dd)
         {
             _sqlExecuterTestAdapter.Check(version);
-            _sqlExecuterTestAdapter.Initialize(version.UniqueName, dd);
+            if (dd == null)
+                _sqlExecuterTestAdapter.Initialize(version.UniqueName);
+            else
+                _sqlExecuterTestAdapter.Initialize(version.UniqueName, dd);
+
             TestHelper.CheckFeature(version, "ReadDdl");
 
             _sqlExecuterTestAdapter.GetContext(version).Settings.Options.ShouldUseDefaultSchema = true;

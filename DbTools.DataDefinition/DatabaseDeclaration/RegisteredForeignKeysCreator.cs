@@ -69,7 +69,7 @@
         public static void PrimaryKeyExistingColumn(DatabaseDefinition definiton, SqlTable sqlTable, ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn fkRegistration)
         {
             var referredTable = definiton.GetTable(fkRegistration.ReferredTableName);
-            var referredUniqueIndex = GetReferredUniqueIndex(referredTable);
+            var referredUniqueIndex = GetReferredUniqueIndex(referredTable, fkRegistration.SingleReferredColumnName);
 
             CheckValidity(fkRegistration, referredUniqueIndex);
 
@@ -138,14 +138,45 @@
             }
         }
 
+        private static IndexBase GetReferredUniqueIndex(SqlTable referredTable, string referredColumnName)
+        {
+            if (referredColumnName == null)
+                return GetReferredUniqueIndex(referredTable);
+
+            var pkCandidate = referredTable.Properties.OfType<PrimaryKey>().FirstOrDefault(pk => pk.SqlColumns.Any(c => c.SqlColumn.Name == referredColumnName));
+            var uiCandidates = referredTable.Properties.OfType<Index>().Where(i => i.Unique && i.SqlColumns.Any(c => c.SqlColumn.Name == referredColumnName));
+            var ucCandidates = referredTable.Properties.OfType<UniqueConstraint>().Where(uc => uc.SqlColumns.Any(c => c.SqlColumn.Name == referredColumnName));
+
+            var count = (pkCandidate != null ? 1 : 0) + uiCandidates.Count() + ucCandidates.Count();
+
+            if (count == 0)
+                throw new InvalidForeignKeyRegistrationException("Can't define Foreign Key without finding the target column in primary key, unique index or unique constraint.");
+
+            if (count > 1)
+                throw new InvalidForeignKeyRegistrationException("Can't define Foreign Key without finding the target column in only one primary key, unique index or unique constraint.");
+
+            var uniqueIndex = pkCandidate as IndexBase ?? uiCandidates.FirstOrDefault() as IndexBase ?? ucCandidates.First() as IndexBase;
+
+            return uniqueIndex;
+        }
+
         private static IndexBase GetReferredUniqueIndex(SqlTable referredTable)
         {
-            var uniqueIndex = referredTable.Properties.OfType<IndexBase>().FirstOrDefault()
+            var pkCandidate = referredTable.Properties.OfType<PrimaryKey>().FirstOrDefault();
+            var uiCandidates = referredTable.Properties.OfType<Index>().Where(i => i.Unique);
+            var ucCandidates = referredTable.Properties.OfType<UniqueConstraint>();
+
+            var count = (pkCandidate != null ? 1 : 0) + uiCandidates.Count() + ucCandidates.Count();
+
+            if(count > 1)
+                throw new InvalidForeignKeyRegistrationException("Can't define Foreign Key registration without target column in primary key, unique index or unique constraint.");
+
+            var uniqueIndex = referredTable.Properties.OfType<PrimaryKey>().FirstOrDefault()
                 ?? referredTable.Properties.OfType<Index>().FirstOrDefault(i => i.Unique) as IndexBase
                 ?? referredTable.Properties.OfType<UniqueConstraint>().FirstOrDefault();
 
             if (uniqueIndex == null)
-                throw new Exception("Can't define ForeignKeyRegistrationToTableWithPrimaryKey against a table without primary key, unique index or unique constraint.");
+                throw new InvalidForeignKeyRegistrationException("Can't define Foreign Key registration against a table without primary key, unique index or unique constraint.");
 
             return uniqueIndex;
         }
