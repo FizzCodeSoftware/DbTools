@@ -14,7 +14,7 @@
 
         public SqlTable Order { get; } = AddTable(table =>
         {
-            table.AddInt32("OrderHeaderId").SetForeignKeyTo(nameof(OrderHeader)).SetPK();
+            table.AddInt32("OrderHeaderId").SetForeignKeyToTable(nameof(OrderHeader)).SetPK();
             table.AddInt32("LineNumber").SetPK();
             table.AddForeignKey(nameof(Company));
             table.AddNVarChar("OrderDescription", 100);

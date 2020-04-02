@@ -7,43 +7,76 @@
     public static class ForeignKeyHelper
     {
         /// <summary>
-        /// Sets an existing column as an FK, pointing to the PK of <paramref name="referredTableName"/>.
+        /// Sets an existing column as an FK, pointing to the unique key of <paramref name="referredTableName"/>.
         /// </summary>
-        /// <param name="singleFkColumn"></param>
-        /// <param name="referredTableName"></param>
-        /// <param name="fkName"></param>
+        /// <param name="singleFkColumn">The existing column to set as FK.</param>
+        /// <param name="referredTableName">The name of the referred table.</param>
+        /// <param name="fkName">The name of the FK. Auto naming will set name if not provided.</param>
         /// <returns>The original <paramref name="singleFkColumn"/>.</returns>
-        public static SqlColumn SetForeignKeyTo(this SqlColumn singleFkColumn, string referredTableName, string fkName = null)
+        public static SqlColumn SetForeignKeyToTable(this SqlColumn singleFkColumn, string referredTableName, string fkName = null)
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
-            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, fkName);
+            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, null, fkName);
             singleFkColumn.Table.Properties.Add(fk);
             Prepare(singleFkColumn.Table);
             return singleFkColumn;
         }
 
-        public static SqlColumn SetForeignKeyTo(this SqlColumn singleFkColumn, SchemaAndTableName referredTableName, string fkName = null)
+        public static SqlColumn SetForeignKeyToColumn(this SqlColumn singleFkColumn, string referredTableName, string referredColumnName, string fkName = null)
         {
-            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableName, fkName);
+            var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
+            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, referredColumnName, fkName);
             singleFkColumn.Table.Properties.Add(fk);
             Prepare(singleFkColumn.Table);
             return singleFkColumn;
         }
 
-        public static SqlColumn SetForeignKeyTo(this SqlColumn singleFkColumn, SchemaAndTableName referredTableName, IEnumerable<SqlEngineVersionSpecificProperty> properties, string fkName = null)
+        /// <summary>
+        /// Sets an existing column as an FK, pointing to the unique key of <paramref name="referredSchemaAndTableName"/>.
+        /// </summary>
+        /// <param name="singleFkColumn">The existing column to set as FK.</param>
+        /// <param name="referredSchemaAndTableName">The referred table as <see cref="SchemaAndTableName"/>.</param>
+        /// <param name="fkName">The name of the FK. Auto naming will set name if not provided.</param>
+        /// <returns>The original <paramref name="singleFkColumn"/>.</returns>
+        public static SqlColumn SetForeignKeyToTable(this SqlColumn singleFkColumn, SchemaAndTableName referredSchemaAndTableName, string fkName = null)
         {
-            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableName, fkName);
+            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredSchemaAndTableName, null, fkName);
+            singleFkColumn.Table.Properties.Add(fk);
+            Prepare(singleFkColumn.Table);
+            return singleFkColumn;
+        }
+
+        /// <summary>
+        /// Sets an existing column as an FK, pointing to the unique key of <paramref name="referredSchemaAndTableName"/>, providing <paramref name="properties"/>.
+        /// </summary>
+        /// <param name="singleFkColumn">The existing column to set as FK.</param>
+        /// <param name="referredSchemaAndTableName">The referred table as <see cref="SchemaAndTableName"/>.</param>
+        /// <param name="properties"></param>
+        /// <param name="fkName">The name of the FK. Auto naming will set name if not provided.</param>
+        /// <returns>The original <paramref name="singleFkColumn"/>.</returns>
+        public static SqlColumn SetForeignKeyToTable(this SqlColumn singleFkColumn, SchemaAndTableName referredSchemaAndTableName, IEnumerable<SqlEngineVersionSpecificProperty> properties, string fkName = null)
+        {
+            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredSchemaAndTableName, null, fkName);
             fk.SqlEngineVersionSpecificProperties.Add(properties);
             singleFkColumn.Table.Properties.Add(fk);
             Prepare(singleFkColumn.Table);
             return singleFkColumn;
         }
 
-        public static SqlColumn SetForeignKeyTo(this SqlColumn singleFkColumn, string referredTableName, IEnumerable<SqlEngineVersionSpecificProperty> properties, string fkName = null)
+        /// <summary>
+        /// Sets an existing column as an FK, pointing to the unique key of <paramref name="referredTableName"/>, providing <paramref name="properties"/>.
+        /// </summary>
+        /// <param name="singleFkColumn">The existing column to set as FK.</param>
+        /// <param name="referredTableName">The name of the referred table.</param>
+        /// <param name="referredColumnName">The name of the referred column.</param>
+        /// <param name="properties"></param>
+        /// <param name="fkName"></param>
+        /// <returns></returns>
+        public static SqlColumn SetForeignKeyToColumn(this SqlColumn singleFkColumn, string referredTableName, string referredColumnName, IEnumerable<SqlEngineVersionSpecificProperty> properties, string fkName = null)
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
 
-            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, fkName);
+            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, referredColumnName, fkName);
             fk.SqlEngineVersionSpecificProperties.Add(properties);
 
             singleFkColumn.Table.Properties.Add(fk);
@@ -53,26 +86,45 @@
             return singleFkColumn;
         }
 
-        public static SqlTable SetForeignKeyTo(this SqlTable table, string referredTableName, List<ColumnReference> map, string fkName = null)
+        public static SqlColumn SetForeignKeyToTable(this SqlColumn singleFkColumn, string referredTableName, IEnumerable<SqlEngineVersionSpecificProperty> properties, string fkName = null)
         {
+            var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
+
+            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, null, fkName);
+            fk.SqlEngineVersionSpecificProperties.Add(properties);
+
+            singleFkColumn.Table.Properties.Add(fk);
+
+            Prepare(singleFkColumn.Table);
+
+            return singleFkColumn;
+        }
+
+        public static SqlTable SetForeignKeyTo(this SqlTable table, string referredTableName, ColumnReference[] columnReferences)
+        {
+            return SetForeignKeyTo(table, referredTableName, (string)null, columnReferences);
+        }
+
+        public static SqlTable SetForeignKeyTo(this SqlTable table, string referredTableName, string fkName, ColumnReference[] columnReferences)
+        {
+            return SetForeignKeyTo(table, referredTableName, fkName, null, columnReferences);
+        }
+
+        public static SqlTable SetForeignKeyTo(this SqlTable table, string referredTableName, IEnumerable<SqlEngineVersionSpecificProperty> properties, ColumnReference[] columnReferences)
+        {
+            return SetForeignKeyTo(table, referredTableName, null, properties, columnReferences);
+        }
+
+        public static SqlTable SetForeignKeyTo(this SqlTable table, string referredTableName, string fkName, IEnumerable<SqlEngineVersionSpecificProperty> properties, ColumnReference[] columnReferences)
+        {
+            var map = new List<ColumnReference>(columnReferences);
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
             var fk = new ForeignKeyRegistrationToReferredTableExistingColumns(table, referredTableNameWithSchema, fkName, map);
-            table.Properties.Add(fk);
-            Prepare(table);
-            return table;
-        }
-
-        public static SqlTable SetForeignKeyTo(this SqlTable table, string referredTableName, List<ColumnReference> map, IEnumerable<SqlEngineVersionSpecificProperty> properties, string fkName = null)
-        {
-            var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
-
-            var fk = new ForeignKeyRegistrationToReferredTableExistingColumns(table, referredTableNameWithSchema, fkName, map);
-            fk.SqlEngineVersionSpecificProperties.Add(properties);
+            if (properties != null)
+                fk.SqlEngineVersionSpecificProperties.Add(properties);
 
             table.Properties.Add(fk);
-
             Prepare(table);
-
             return table;
         }
 
@@ -109,9 +161,9 @@
             return table;
         }
 
-        public static SqlTable AddForeignKey(this SqlTable table, string nameOfReferredTableWithUniqueKey, bool isNullable = false, string prefix = null, string fkName = null)
+        public static SqlTable AddForeignKey(this SqlTable table, string referredTableName, bool isNullable = false, string prefix = null, string fkName = null)
         {
-            var referredTableNameWithSchema = new SchemaAndTableName(nameOfReferredTableWithUniqueKey);
+            var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
 
             var fk = new ForeignKeyRegistrationToTableWithUniqueKey(table, referredTableNameWithSchema, isNullable, prefix, fkName);
 

@@ -14,7 +14,7 @@
         public SqlTable Foreign { get; } = AddTable(table =>
         {
             table.AddInt32("Id").SetPK().SetIdentity();
-            table.AddInt32("PrimaryId").SetForeignKeyTo(nameof(Primary), new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true"));
+            table.AddInt32("PrimaryId").SetForeignKeyToTable(nameof(Primary), new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true"));
         });
     }
 }

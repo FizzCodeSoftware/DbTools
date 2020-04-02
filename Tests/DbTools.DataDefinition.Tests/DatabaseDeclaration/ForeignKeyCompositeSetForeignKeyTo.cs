@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Tests
 {
-    using System.Collections.Generic;
     using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.TestBase;
 
@@ -14,7 +13,7 @@
 
         public SqlTable Order { get; } = AddTable(table =>
         {
-            table.AddInt32("OrderHeaderId").SetForeignKeyTo(nameof(OrderHeader)).SetPK();
+            table.AddInt32("OrderHeaderId").SetForeignKeyToTable(nameof(OrderHeader)).SetPK();
             table.AddInt32("LineNumber").SetPK();
             table.AddForeignKey(nameof(Company));
             table.AddNVarChar("OrderDescription", 100);
@@ -33,13 +32,13 @@
             table.AddInt32("Top2A");
             table.AddInt32("Top2B");
 
-            table.SetForeignKeyTo(nameof(Order), new List<ColumnReference>()
+            table.SetForeignKeyTo(nameof(Order), new []
             {
                 new ColumnReference("Top1A", "OrderHeaderId"),
                 new ColumnReference("Top1B", "LineNumber"),
             });
 
-            table.SetForeignKeyTo(nameof(Order), new List<ColumnReference>()
+            table.SetForeignKeyTo(nameof(Order), new []
             {
                 new ColumnReference("Top2A", "OrderHeaderId"),
                 new ColumnReference("Top2B", "LineNumber"),

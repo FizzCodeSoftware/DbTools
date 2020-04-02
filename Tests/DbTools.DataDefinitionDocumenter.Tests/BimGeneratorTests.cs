@@ -117,15 +117,15 @@
         public SqlTable ReferringTableA { get; } = AddTable(table =>
         {
             table.AddInt32("Id").SetPK().SetIdentity();
-            table.AddInt32("KeyTableId1").SetForeignKeyTo("KeyTable").AddTabularRelation("dbo", "KeyTable", "Id", "Relation1");
-            table.AddInt32("KeyTableId2").SetForeignKeyTo("KeyTable").AddTabularRelation("dbo", "KeyTable", "Id", "Relation2");
+            table.AddInt32("KeyTableId1").SetForeignKeyToTable("KeyTable").AddTabularRelation("dbo", "KeyTable", "Id", "Relation1");
+            table.AddInt32("KeyTableId2").SetForeignKeyToTable("KeyTable").AddTabularRelation("dbo", "KeyTable", "Id", "Relation2");
         });
 
         public SqlTable ReferringTableB { get; } = AddTable(table =>
         {
             table.AddInt32("Id").SetPK().SetIdentity();
-            table.AddInt32("KeyTableId1").SetForeignKeyTo("KeyTable").AddTabularRelation("dbo", "KeyTable", "Id", "Relation1");
-            table.AddInt32("KeyTableId2").SetForeignKeyTo("KeyTable").AddTabularRelation("dbo", "KeyTable", "Id", "Relation2");
+            table.AddInt32("KeyTableId1").SetForeignKeyToTable("KeyTable").AddTabularRelation("dbo", "KeyTable", "Id", "Relation1");
+            table.AddInt32("KeyTableId2").SetForeignKeyToTable("KeyTable").AddTabularRelation("dbo", "KeyTable", "Id", "Relation2");
         });
     }
 }

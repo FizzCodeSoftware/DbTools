@@ -15,7 +15,7 @@
         public SqlTable Foreign { get; } = AddTable(table =>
           {
               table.AddInt32("Id").SetPK().SetIdentity();
-              table.AddInt32("PrimaryId").SetForeignKeyTo(nameof(Primary));
+              table.AddInt32("PrimaryId").SetForeignKeyToTable(nameof(Primary));
           });
     }
 

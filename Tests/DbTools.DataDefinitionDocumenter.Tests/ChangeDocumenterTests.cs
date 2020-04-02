@@ -50,7 +50,7 @@
             ddFkChanged.GetTable("Foreign").Properties.Remove(
                 ddFkChanged.GetTable("Foreign").Properties.OfType<ForeignKey>().First()
                 );
-            ddFkChanged.GetTable("Foreign").Columns["PrimaryId"].SetForeignKeyTo("Primary2", "FkChange");
+            ddFkChanged.GetTable("Foreign").Columns["PrimaryId"].SetForeignKeyToTable("Primary2", "FkChange");
             ddFkChanged.SetVersions(version.GetTypeMapper());
 
             var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseFkChange", "TestDatabaseFkChange_ChangeFkTest");

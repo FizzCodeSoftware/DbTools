@@ -134,15 +134,15 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
 
         [TestMethod]
         [LatestSqlVersions]
-        public void UniqueConstratintAsFk(SqlEngineVersion version)
+        public void UniqueConstratintAsFkNoPk(SqlEngineVersion version)
         {
             if (version is SqLiteVersion)
                 return;
             // TODO SqLite - You can't add a constraint to existing table in SQLite - should work at create table time
-            GenerateDatabase(new DbUniqueConstratintAsFk(), version);
+            GenerateDatabase(new DbUniqueConstratintAsFkNoPk(), version);
         }
 
-        public class DbUniqueConstratintAsFk : TestDatabaseDeclaration
+        public class DbUniqueConstratintAsFkNoPk : TestDatabaseDeclaration
         {
             public SqlTable Primary { get; } = AddTable(table =>
             {
@@ -153,9 +153,19 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
 
             public SqlTable Foreign { get; } = AddTable(table =>
             {
-                table.AddInt32("Id").SetPK().SetIdentity();
-                table.AddInt32("PrimaryId").SetForeignKeyTo(nameof(Primary));
+                table.AddInt32("Id");
+                table.AddInt32("PrimaryId").SetForeignKeyToTable(nameof(Primary));
             });
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void UniqueConstratintAsFk(SqlEngineVersion version)
+        {
+            if (version is SqLiteVersion)
+                return;
+            // TODO SqLite - You can't add a constraint to existing table in SQLite - should work at create table time
+            GenerateDatabase(new DbUniqueConstratintAsFk(), version);
         }
 
         [TestMethod]
@@ -181,7 +191,7 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
             public SqlTable Foreign { get; } = AddTable(table =>
             {
                 table.AddInt32("Id").SetPK().SetIdentity();
-                table.AddInt32("PrimaryId").SetForeignKeyTo(nameof(Primary));
+                table.AddInt32("PrimaryId").SetForeignKeyToTable(nameof(Primary));
             });
         }
     }
