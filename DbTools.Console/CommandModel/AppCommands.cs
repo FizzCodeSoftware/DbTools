@@ -140,8 +140,8 @@
                 if (flag == GeneratorSettingFlag.ShouldCommentOutColumnsWithFkReferencedTables)
                     settings.ShouldCommentOutColumnsWithFkReferencedTables = true;
 
-                if (flag == GeneratorSettingFlag.SholdCommentOutFkReferences)
-                    settings.SholdCommentOutFkReferences = true;
+                if (flag == GeneratorSettingFlag.ShouldCommentOutFkReferences)
+                    settings.ShouldCommentOutFkReferences = true;
             }
         }
 

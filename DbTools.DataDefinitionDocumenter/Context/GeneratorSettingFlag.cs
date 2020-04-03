@@ -7,6 +7,6 @@
         NoIndexes,
         NoUniqueConstraints,
         ShouldCommentOutColumnsWithFkReferencedTables,
-        SholdCommentOutFkReferences
+        ShouldCommentOutFkReferences
     }
 }

@@ -87,7 +87,7 @@
             var fkOnColumn = column.Table.Properties.OfType<ForeignKey>().FirstOrDefault(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn == column));
             if (fkOnColumn != null)
             {
-                if (GeneratorContext.GeneratorSettings.SholdCommentOutFkReferences
+                if (GeneratorContext.GeneratorSettings.ShouldCommentOutFkReferences
                     && GeneratorContext.Customizer.ShouldSkip(fkOnColumn.ReferredTable.SchemaAndTableName))
                 {
                     sb.Append("; //");
@@ -96,10 +96,12 @@
                 // TODO gen AddForeignkeys?
                 if (fkOnColumn.ForeignKeyColumns.Count == 1)
                 {
-                    sb.Append(".SetForeignKeyTo(nameof(")
+                    sb.Append(".SetForeignKeyToColumn(nameof(")
                        // TODO spec name
                        .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
-                       .Append("))");
+                       .Append("), \"")
+                       .Append(fkOnColumn.ForeignKeyColumns[0].ReferredColumn.Name)
+                       .Append("\")");
                 }
                 else
                 {

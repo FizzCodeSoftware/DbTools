@@ -3,6 +3,6 @@
     public class GeneratorSettings : DocumenterSettingsBase
     {
         public bool ShouldCommentOutColumnsWithFkReferencedTables { get; set; }
-        public bool SholdCommentOutFkReferences { get; set; }
+        public bool ShouldCommentOutFkReferences { get; set; }
     }
 }
