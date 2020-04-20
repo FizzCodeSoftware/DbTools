@@ -53,7 +53,7 @@
             if (values.Length >= 6)
                 category = values[5];
 
-            if (values.Length >= 7)
+            if (values.Length >= 7 && values[6].Length > 0)
                 backgroundColor = values[6];
 
             customizer.AddPattern(patternSchema, patternTableName, patternExceptSchema, patternExceptTableName, shouldSkip, category, backgroundColor);
