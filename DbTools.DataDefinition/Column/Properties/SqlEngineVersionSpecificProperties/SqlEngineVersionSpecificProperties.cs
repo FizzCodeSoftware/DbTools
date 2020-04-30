@@ -10,10 +10,7 @@
 
         public string this[SqlEngineVersion version, string name]
         {
-            get
-            {
-                return _properties[SqlEngineVersionSpecificProperty.GetKey(version, name)].Value;
-            }
+            get => _properties[SqlEngineVersionSpecificProperty.GetKey(version, name)].Value;
             set
             {
                 var key = SqlEngineVersionSpecificProperty.GetKey(version, name);
@@ -31,7 +28,7 @@
 
         public void AddRange(IEnumerable<SqlEngineVersionSpecificProperty> properties)
         {
-            foreach(var property in properties)
+            foreach (var property in properties)
                 Add(property);
         }
 

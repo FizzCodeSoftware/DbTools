@@ -7,7 +7,7 @@
     {
         public static List<ForeignKeyMigration> CompareForeignKeys(SqlTable tableOriginal, SqlTable tableNew)
         {
-             var changes = new List<ForeignKeyMigration>();
+            var changes = new List<ForeignKeyMigration>();
 
             foreach (var fkOriginal in tableOriginal.Properties.OfType<ForeignKey>())
             {

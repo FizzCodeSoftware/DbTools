@@ -56,7 +56,7 @@
             CheckCompositeFks(tables);
         }
 
-        private void CheckCompositeFks(List<SqlTable> tables)
+        private static void CheckCompositeFks(List<SqlTable> tables)
         {
             Assert.AreEqual(4, tables.Count);
 

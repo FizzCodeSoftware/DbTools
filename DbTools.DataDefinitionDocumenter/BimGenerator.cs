@@ -17,13 +17,7 @@
 
     public class BimGenerator : DocumenterBase
     {
-        protected new GeneratorContext Context
-        {
-            get
-            {
-                return (GeneratorContext)base.Context;
-            }
-        }
+        protected new GeneratorContext Context => (GeneratorContext)base.Context;
 
         public BimGenerator(DocumenterContextBase context, SqlEngineVersion version, string databaseName)
             : base(context, version, databaseName)

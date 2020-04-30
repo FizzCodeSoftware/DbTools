@@ -12,13 +12,7 @@
 
     public class CSharpGenerator : DocumenterBase
     {
-        protected new GeneratorContext Context
-        {
-            get
-            {
-                return (GeneratorContext)base.Context;
-            }
-        }
+        protected new GeneratorContext Context => (GeneratorContext)base.Context;
 
         private readonly string _namespace;
         private readonly AbstractCSharpWriter _writer;

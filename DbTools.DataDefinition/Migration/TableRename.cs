@@ -6,7 +6,9 @@
 
         public override string ToString()
         {
+#pragma warning disable IDE0071 // Simplify interpolation
             return $"(Rename:){NewName} from {base.ToString()}";
+#pragma warning restore IDE0071 // Simplify interpolation
         }
     }
 }

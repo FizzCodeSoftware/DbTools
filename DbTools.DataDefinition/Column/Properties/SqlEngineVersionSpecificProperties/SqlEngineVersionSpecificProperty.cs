@@ -17,13 +17,7 @@
         public string Name { get; set; }
         public string Value { get; set; }
 
-        public string Key
-        {
-            get
-            {
-                return GetKey(this);
-            }
-        }
+        public string Key => GetKey(this);
 
         public static string GetKey(SqlEngineVersionSpecificProperty property)
         {

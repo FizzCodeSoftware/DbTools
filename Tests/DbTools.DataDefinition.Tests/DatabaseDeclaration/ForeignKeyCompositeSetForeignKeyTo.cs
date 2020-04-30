@@ -32,13 +32,13 @@
             table.AddInt32("Top2A");
             table.AddInt32("Top2B");
 
-            table.SetForeignKeyTo(nameof(Order), new []
+            table.SetForeignKeyTo(nameof(Order), new[]
             {
                 new ColumnReference("Top1A", "OrderHeaderId"),
                 new ColumnReference("Top1B", "LineNumber"),
             });
 
-            table.SetForeignKeyTo(nameof(Order), new []
+            table.SetForeignKeyTo(nameof(Order), new[]
             {
                 new ColumnReference("Top2A", "OrderHeaderId"),
                 new ColumnReference("Top2B", "LineNumber"),

@@ -167,7 +167,7 @@
 
             var count = (pkCandidate != null ? 1 : 0) + uiCandidates.Count() + ucCandidates.Count();
 
-            if(count > 1)
+            if (count > 1)
                 throw new InvalidForeignKeyRegistrationException("Can't define Foreign Key registration without target column in primary key, unique index or unique constraint.");
 
             var uniqueIndex = referredTable.Properties.OfType<PrimaryKey>().FirstOrDefault()

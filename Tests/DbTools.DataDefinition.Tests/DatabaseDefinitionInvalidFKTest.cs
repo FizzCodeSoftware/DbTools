@@ -40,7 +40,6 @@
             table.AddInt32("Id1").SetPK();
             table.AddInt32("UniqueId");
             table.AddUniqueConstraint("UniqueId");
-
         });
 
         public SqlTable Foreign { get; } = AddTable(table =>
@@ -74,5 +73,4 @@
             var _ = new InvalidFK_SingleFkToPkAndUc();
         }
     }
-
 }

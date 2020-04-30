@@ -10,13 +10,7 @@
 
     public abstract class DocumenterWriterBase : DocumenterBase
     {
-        protected new DocumenterContext Context
-        {
-            get
-            {
-                return (DocumenterContext)base.Context;
-            }
-        }
+        protected new DocumenterContext Context => (DocumenterContext)base.Context;
 
         protected DocumenterWriterBase(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
             : base(context, version, databaseName)

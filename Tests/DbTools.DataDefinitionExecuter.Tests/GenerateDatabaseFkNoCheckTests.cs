@@ -52,7 +52,8 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
         public void GenerateTestDatabaseFkNoCheckTest(SqlEngineVersion version)
         {
             GenerateDatabase(new TestDatabaseFkNoCheckTest(), version,
-                () => {
+                () =>
+                {
                     if (version == MsSqlVersion.MsSql2016)
                     {
                         _sqlExecuterTestAdapter.ExecuteNonQuery(version.ToString(), "INSERT INTO [Primary] (Name) Values ('First')");
