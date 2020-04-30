@@ -1,4 +1,5 @@
-﻿namespace FizzCode.DbTools.Console
+﻿#pragma warning disable CA1812, CA1822
+namespace FizzCode.DbTools.Console
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -12,7 +13,6 @@
     using Microsoft.Extensions.Configuration;
 
     [Command(Name = ">")]
-#pragma warning disable CA1812
     internal class AppCommands
     {
         [Command(Name = "exit", Description = "Exit from the command-line utility.")]
@@ -50,7 +50,7 @@
             var dd = ddlReader.GetDatabaseDefinition();
 
             var documenterContext = CreateDocumenterContext(context, patternFileName);
-            if(flags != null)
+            if (flags != null)
                 SetSettingsFromFlags(flags, documenterContext.DocumenterSettings);
 
             var documenter = new Documenter(documenterContext, version, databaseName, null);
@@ -90,7 +90,7 @@
             var dd = ddlReader.GetDatabaseDefinition();
 
             var generatorContext = CreateGeneratorContext(context, patternFileName);
-            if(flags != null)
+            if (flags != null)
                 SetSettingsFromFlags(flags, generatorContext.GeneratorSettings);
 
             var writer = CSharpWriterFactory.GetCSharpWriter(version, generatorContext);
@@ -346,7 +346,7 @@
                 patternFileNameNew = patternFileName;
 
             var changeDocumenterContext = CreateChangeDocumenterContext(contextOriginal, patternFileNameOriginal, patternFileNameNew);
-            if(flags != null)
+            if (flags != null)
                 SetSettingsFromFlags(flags, changeDocumenterContext.DocumenterSettings);
 
             var versionNew = SqlEngineVersions.GetVersion(sqlTypeNew);
@@ -376,3 +376,4 @@
         }
     }
 }
+#pragma warning restore CA1812, CA1822

@@ -106,7 +106,7 @@
             ExecuteQuery(sqlStatementWithParameters);
         }
 
-        private List<SqlStatementWithParameters> BreakIfMultipleCommands(SqlStatementWithParameters sqlStatementWithParameters)
+        private static List<SqlStatementWithParameters> BreakIfMultipleCommands(SqlStatementWithParameters sqlStatementWithParameters)
         {
             var sqlStatements = new List<SqlStatementWithParameters>();
 

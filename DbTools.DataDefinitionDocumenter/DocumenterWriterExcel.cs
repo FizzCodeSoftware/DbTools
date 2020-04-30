@@ -86,7 +86,7 @@
             cell.Merge = true;
         }
 
-        private double GetRenderedTextHeight(string text, ExcelFont font, double width)
+        private static double GetRenderedTextHeight(string text, ExcelFont font, double width)
         {
             using (var bm = new Bitmap(1, 1))
             using (var graphics = Graphics.FromImage(bm))

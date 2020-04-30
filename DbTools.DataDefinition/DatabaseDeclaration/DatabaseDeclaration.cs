@@ -23,7 +23,7 @@
             CircularFKDetector.DectectCircularFKs(GetTables());
         }
 
-        private IEnumerable<T> GetProperties<T>(SqlTable sqlTable)
+        private static IEnumerable<T> GetProperties<T>(SqlTable sqlTable)
         {
             return sqlTable.Properties.OfType<T>().ToList();
         }
