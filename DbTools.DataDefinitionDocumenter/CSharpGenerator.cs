@@ -83,16 +83,16 @@
             }
         }
 
-        public void GenerateSingleFile(DatabaseDefinition databaseDefinition, string fileName)
+        public void GenerateSingleFile(DatabaseDefinition databaseDefinition, string fileName, bool partialClass = false)
         {
             Log(LogSeverity.Information, "Starting on {DatabaseName}.", "CsGenerator", DatabaseName);
 
             var sb = new StringBuilder();
-            WriteSingleFileHeader(sb);
+            WriteSingleFileHeader(sb, partialClass);
 
             var tables = databaseDefinition
                 .GetTables()
-                .Where(x => !Context.Customizer.ShouldSkip(x.SchemaAndTableName))
+                .Where(x => Context.Customizer?.ShouldSkip(x.SchemaAndTableName) != true)
                 .OrderBy(x => x.SchemaAndTableName.Schema)
                 .ThenBy(x => x.SchemaAndTableName.TableName);
 
@@ -135,12 +135,11 @@
             .AppendLine(1, "}");
         }
 
-        private void WriteSingleFileHeader(StringBuilder sb)
+        private void WriteSingleFileHeader(StringBuilder sb, bool partialClass = false)
         {
             sb.Append("namespace ")
             .AppendLine(_namespace)
             .AppendLine("{")
-            //.AppendLine(1, "using FizzCode.DbTools.Configuration;")
             .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
             .AppendLine(1, "using " + _writer.GetSqlTypeNamespace() + ";");
 
@@ -153,7 +152,9 @@
             }
 
             sb.AppendLine()
-            .Append(1, "public class ")
+            .Append(1, "public ")
+            .Append(partialClass ? "partial " : "")
+            .Append("class ")
             .Append(DatabaseName)
             .AppendLine(" : DatabaseDeclaration")
             .AppendLine(1, "{")

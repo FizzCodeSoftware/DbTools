@@ -1,36 +1,45 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.MsSql2016
 {
-    using System;
+    using System.Collections.Generic;
     using System.Globalization;
-    using System.Linq;
 
     public class ForeignKeyNamingMsSqlDefaultStrategy : ForeignKeyNamingDefaultStrategy
     {
+        private readonly Dictionary<string, ForeignKey> _generatedNames = new Dictionary<string, ForeignKey>();
+        private readonly Dictionary<string, List<ForeignKey>> _renames = new Dictionary<string, List<ForeignKey>>();
+
         public override void SetFKName(ForeignKey fk)
         {
             if (fk.SqlTable.SchemaAndTableName == null || fk.ReferredTable.SchemaAndTableName == null)
                 return;
 
             var fkName = fk.SqlTable.SchemaAndTableName.TableName + "__" + fk.ReferredTable.SchemaAndTableName.TableName;
-            if (fkName.Length > 120)
+            if (fkName.Length > 110)
             {
-                fkName = fkName.Substring(0, 120);
+                fkName = fkName.Substring(0, 110);
             }
 
-            var sameNameFks = fk.SqlTable.Properties
-                .OfType<ForeignKey>()
-                .Where(x => x != fk && x.Name?.StartsWith(fkName, StringComparison.InvariantCultureIgnoreCase) == true)
-                .ToList();
-
-            foreach (var sameFk in sameNameFks)
+            if (_generatedNames.TryGetValue(fkName, out var firstFk))
             {
-                if (sameFk.Name == fkName)
-                    sameFk.Name += "_1";
-            }
+                if (!_renames.TryGetValue(fkName, out var renameList))
+                {
+                    renameList = new List<ForeignKey>
+                    {
+                        firstFk,
+                    };
 
-            fk.Name = sameNameFks.Count > 0
-                ? $"{fkName}_{(sameNameFks.Count + 1).ToString("D", CultureInfo.InvariantCulture)}"
-                : fkName;
+                    _renames.Add(fkName, renameList);
+                    firstFk.Name += "_1";
+                }
+
+                renameList.Add(fk);
+                fk.Name = fkName + "_" + renameList.Count.ToString("D", CultureInfo.InvariantCulture);
+            }
+            else
+            {
+                _generatedNames.Add(fkName, fk);
+                fk.Name = fkName;
+            }
         }
     }
 }

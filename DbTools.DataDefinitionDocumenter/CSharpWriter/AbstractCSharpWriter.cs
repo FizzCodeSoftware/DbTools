@@ -88,7 +88,7 @@
             if (fkOnColumn != null)
             {
                 if (GeneratorContext.GeneratorSettings.ShouldCommentOutFkReferences
-                    && GeneratorContext.Customizer.ShouldSkip(fkOnColumn.ReferredTable.SchemaAndTableName))
+                    && GeneratorContext.Customizer?.ShouldSkip(fkOnColumn.ReferredTable.SchemaAndTableName) == true)
                 {
                     sb.Append("; //");
                 }
