@@ -48,7 +48,7 @@
         {
             get
             {
-                if (Table.DatabaseDefinition.MainVersion != null)
+                if (Table.DatabaseDefinition?.MainVersion != null)
                     return Types[Table.DatabaseDefinition.MainVersion];
 
                 if (Types.Count == 1)
