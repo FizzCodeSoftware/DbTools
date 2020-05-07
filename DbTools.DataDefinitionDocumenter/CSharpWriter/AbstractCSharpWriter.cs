@@ -104,36 +104,7 @@
                        .Append("\"");
 
                     // table.AddInt("PrimaryId").SetForeignKeyToTable(nameof(Primary), new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true")
-                    if (fkOnColumn.SqlEngineVersionSpecificProperties.Any())
-                    {
-                        sb.Append(", ");
-                        if (fkOnColumn.SqlEngineVersionSpecificProperties.Count() == 1)
-                        {
-                            var sqlEngineVersionSpecificProperty = fkOnColumn.SqlEngineVersionSpecificProperties.First();
-                            sb.Append("new SqlEngineVersionSpecificProperty(")
-                                .Append(sqlEngineVersionSpecificProperty.Version.GetType().Name)
-                                .Append(".")
-                                .Append(sqlEngineVersionSpecificProperty.Version)
-                                .Append(", \"")
-                                .Append(sqlEngineVersionSpecificProperty.Name)
-                                .Append("\", \"")
-                                .Append(sqlEngineVersionSpecificProperty.Value)
-                                .Append("\")");
-                        }
-                        else
-                        {
-                            sb.Append("new[] {");
-                            // new[] {
-                            //    new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true"),
-                            //    new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true")
-                            // }
-                            foreach (var sqlEngineVersionSpecificProperty in fkOnColumn.SqlEngineVersionSpecificProperties)
-                            {
-                            }
-
-                            sb.Append("}");
-                        }
-                    }
+                    sb.Append(AddSqlEngineVersionSpecificProperties(fkOnColumn.SqlEngineVersionSpecificProperties));
 
                     sb.Append(")");
                 }
@@ -145,7 +116,9 @@
                         sb.AppendLine(";")
                             .Append(3, "table.SetForeignKeyTo(nameof(")
                             .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
-                            .AppendLine("), new List<ColumnReference>()")
+                            .AppendLine("), ");
+
+                        sb.Append("new List<ColumnReference>()")
                             .AppendLine(3, "{");
 
                         foreach (var fkColumnMap in fkOnColumn.ForeignKeyColumns)
@@ -157,6 +130,56 @@
                     }
                 }
             }
+        }
+
+        private string AddSqlEngineVersionSpecificProperties(SqlEngineVersionSpecificProperties sqlEngineVersionSpecificProperties)
+        {
+            // new[] {
+            //    new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true"),
+            //    new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true")
+            // }
+
+            var sb = new StringBuilder();
+
+            if (sqlEngineVersionSpecificProperties.Any())
+            {
+                sb.Append(", ");
+                if (sqlEngineVersionSpecificProperties.Count() == 1)
+                {
+                    var sqlEngineVersionSpecificProperty = sqlEngineVersionSpecificProperties.First();
+                    sb.Append(AddSqlEngineVersionSpecificProperty(sqlEngineVersionSpecificProperty));
+                }
+                else
+                {
+                    sb.Append("new[] {");
+                    foreach (var sqlEngineVersionSpecificProperty in sqlEngineVersionSpecificProperties)
+                    {
+                        sb.Append(AddSqlEngineVersionSpecificProperty(sqlEngineVersionSpecificProperty));
+                    }
+
+                    sb.Append("}");
+                }
+            }
+
+
+            return sb.ToString();
+        }
+
+        private string AddSqlEngineVersionSpecificProperty(SqlEngineVersionSpecificProperty sqlEngineVersionSpecificProperty)
+        {
+            var sb = new StringBuilder();
+
+            sb.Append("new SqlEngineVersionSpecificProperty(")
+                                .Append(sqlEngineVersionSpecificProperty.Version.GetType().Name)
+                                .Append(".")
+                                .Append(sqlEngineVersionSpecificProperty.Version)
+                                .Append(", \"")
+                                .Append(sqlEngineVersionSpecificProperty.Name)
+                                .Append("\", \"")
+                                .Append(sqlEngineVersionSpecificProperty.Value)
+                                .Append("\")");
+
+            return sb.ToString();
         }
 
         protected bool IsForeignKeyReferencedTableSkipped(SqlColumn column)
