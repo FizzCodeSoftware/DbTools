@@ -132,7 +132,7 @@
             }
         }
 
-        private string AddSqlEngineVersionSpecificProperties(SqlEngineVersionSpecificProperties sqlEngineVersionSpecificProperties)
+        private static string AddSqlEngineVersionSpecificProperties(SqlEngineVersionSpecificProperties sqlEngineVersionSpecificProperties)
         {
             // new[] {
             //    new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true"),
@@ -161,11 +161,10 @@
                 }
             }
 
-
             return sb.ToString();
         }
 
-        private string AddSqlEngineVersionSpecificProperty(SqlEngineVersionSpecificProperty sqlEngineVersionSpecificProperty)
+        private static string AddSqlEngineVersionSpecificProperty(SqlEngineVersionSpecificProperty sqlEngineVersionSpecificProperty)
         {
             var sb = new StringBuilder();
 
