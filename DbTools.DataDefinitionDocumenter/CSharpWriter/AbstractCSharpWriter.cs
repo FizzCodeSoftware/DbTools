@@ -101,7 +101,41 @@
                        .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
                        .Append("), \"")
                        .Append(fkOnColumn.ForeignKeyColumns[0].ReferredColumn.Name)
-                       .Append("\")");
+                       .Append("\"");
+
+                    // table.AddInt("PrimaryId").SetForeignKeyToTable(nameof(Primary), new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true")
+                    if (fkOnColumn.SqlEngineVersionSpecificProperties.Any())
+                    {
+                        sb.Append(", ");
+                        if (fkOnColumn.SqlEngineVersionSpecificProperties.Count() == 1)
+                        {
+                            var sqlEngineVersionSpecificProperty = fkOnColumn.SqlEngineVersionSpecificProperties.First();
+                            sb.Append("new SqlEngineVersionSpecificProperty(")
+                                .Append(sqlEngineVersionSpecificProperty.Version.GetType().Name)
+                                .Append(".")
+                                .Append(sqlEngineVersionSpecificProperty.Version)
+                                .Append(", \"")
+                                .Append(sqlEngineVersionSpecificProperty.Name)
+                                .Append("\", \"")
+                                .Append(sqlEngineVersionSpecificProperty.Value)
+                                .Append("\")");
+                        }
+                        else
+                        {
+                            sb.Append("new[] {");
+                            // new[] {
+                            //    new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true"),
+                            //    new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true")
+                            // }
+                            foreach (var sqlEngineVersionSpecificProperty in fkOnColumn.SqlEngineVersionSpecificProperties)
+                            {
+                            }
+
+                            sb.Append("}");
+                        }
+                    }
+
+                    sb.Append(")");
                 }
                 else
                 {

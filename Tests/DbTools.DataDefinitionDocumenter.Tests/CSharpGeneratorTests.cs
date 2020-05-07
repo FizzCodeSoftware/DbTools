@@ -106,5 +106,17 @@
             var generator = new CSharpGenerator(writer, version, "DbUniqueConstratintAsFk", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
         }
+
+        [TestMethod]
+        public void FkNoCheckTest()
+        {
+            var version = MsSqlVersion.MsSql2016;
+
+            var dd = new TestDatabaseFkNoCheckTest();
+            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
+            var writer = CSharpWriterFactory.GetCSharpWriter(version, documenterContext);
+            var generator = new CSharpGenerator(writer, version, "TestDatabaseFkNoCheckTest", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
+            generator.GenerateSingleFile(dd, "TestDatabaseFkNoCheckTest.cs");
+        }
     }
 }

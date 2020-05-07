@@ -117,6 +117,7 @@
             .AppendLine(_namespace)
             .AppendLine("{")
             .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
+            .AppendLine(1, "using FizzCode.DbTools.Configuration;")
             .AppendLine(1, "using " + _writer.GetSqlTypeNamespace() + ";");
 
             if (AdditionalNamespaces != null)
@@ -141,6 +142,7 @@
             .AppendLine(_namespace)
             .AppendLine("{")
             .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
+            .AppendLine(1, "using FizzCode.DbTools.Configuration;")
             .AppendLine(1, "using " + _writer.GetSqlTypeNamespace() + ";");
 
             if (AdditionalNamespaces != null)
