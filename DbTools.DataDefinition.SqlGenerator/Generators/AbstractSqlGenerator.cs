@@ -144,7 +144,24 @@
                 .Append(")");
         }
 
-        public abstract string CreateForeignKeys(SqlTable table);
+        public virtual string CreateForeignKeys(SqlTable table)
+        {
+            var allFks = table.Properties.OfType<ForeignKey>().ToList();
+
+            if (allFks.Count == 0)
+                return null;
+
+            var sb = new StringBuilder();
+
+            foreach (var fk in allFks)
+            {
+                sb.Append(CreateForeignKey(fk));
+            }
+
+            return sb.ToString();
+        }
+
+        public abstract string CreateForeignKey(ForeignKey fk);
 
         protected string FKConstraint(ForeignKey fk)
         {

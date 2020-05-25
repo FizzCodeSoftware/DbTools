@@ -42,5 +42,17 @@
             var sql = MigrationGenerator.ChangeColumns(columnChanges);
             Executer.ExecuteNonQuery(sql);
         }
+
+        public void NewPrimaryKey(PrimaryKeyNew primaryKeyNew)
+        {
+            var sql = MigrationGenerator.CreatePrimaryKey(primaryKeyNew);
+            Executer.ExecuteNonQuery(sql);
+        }
+
+        public void NewForeignKey(ForeignKeyNew foreignKeyNew)
+        {
+            var sql = MigrationGenerator.Generator.CreateForeignKey(foreignKeyNew.ForeignKey);
+            Executer.ExecuteNonQuery(sql);
+        }
     }
 }

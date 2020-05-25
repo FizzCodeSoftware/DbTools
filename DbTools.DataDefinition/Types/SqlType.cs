@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System.Globalization;
+    using System.Text;
 
     public class SqlType
     {
@@ -37,8 +38,25 @@
 
         public override string ToString()
         {
-            var nullable = IsNullable ? " NULL" : " NOT NULL";
-            return $"{SqlTypeInfo} ({Length?.ToString("D", CultureInfo.InvariantCulture)}, {Scale?.ToString("D", CultureInfo.InvariantCulture)}){nullable}";
+            var sb = new StringBuilder();
+
+            sb.Append(SqlTypeInfo.ToString());
+            if (Length != null || Scale != null)
+            {
+                sb.Append(" (")
+                    .Append(Length?.ToString("D", CultureInfo.InvariantCulture));
+                if (Scale != null)
+                    sb.Append(Scale?.ToString("D", CultureInfo.InvariantCulture));
+
+                sb.Append(")");
+            }
+
+            if (!IsNullable)
+                sb.Append(" NOT");
+
+            sb.Append(" NULL");
+
+            return sb.ToString();
         }
     }
 }

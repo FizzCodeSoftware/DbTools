@@ -7,9 +7,6 @@
 
     // Other / all cases
     // New PK, Deleted PK, Renamed PK - changed PK?
-    // New FK, Deleted FK, Renamed FK
-    // FK NoCheck change - SqlEngineVersionSpecificProperty change
-    // New Index, Deleted Index, Renamed Index - changed index?
 
     // New TableDescription, Deleted TableDescription
     // New ColumnDescription, Deleted ColumnDescription

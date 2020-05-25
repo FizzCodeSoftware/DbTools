@@ -23,18 +23,22 @@
 
             Log(LogSeverity.Debug, "Reading table definitions from database.");
 
+            var module = "Reader/" + Executer.Generator.Version.UniqueName;
+            var logTimer = new LogTimer(Logger, LogSeverity.Debug, "Reading table definitions from database.", module);
+
             foreach (var schemaAndTableName in GetSchemaAndTableNames())
                 dd.AddTable(GetTableDefinition(schemaAndTableName, false));
 
-            Log(LogSeverity.Debug, "Reading table documentetion from database.");
+            Log(LogSeverity.Debug, "Reading table documentation from database.");
             AddTableDocumentation(dd);
-
             Log(LogSeverity.Debug, "Reading table identities from database.");
             new MsSqlIdentityReader2016(Executer, SchemaNames).GetIdentity(dd);
-            Log(LogSeverity.Debug, "Reading table primary keys from database.");
+            Log(LogSeverity.Debug, "Reading table indexes including primary keys and unique constraints from database.");
             new MsSqlIndexReader2016(Executer, SchemaNames).GetIndexes(dd);
             Log(LogSeverity.Debug, "Reading table foreign keys from database.", "Reader");
             new MsSqlForeignKeyReader2016(Executer, SchemaNames).GetForeignKeys(dd);
+
+            logTimer.Done();
 
             return dd;
         }

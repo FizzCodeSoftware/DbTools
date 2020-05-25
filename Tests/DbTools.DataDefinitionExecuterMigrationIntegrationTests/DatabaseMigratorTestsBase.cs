@@ -2,11 +2,12 @@
 {
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
+    using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public abstract class DataDefinitionExecuterMigrationIntegrationTests
+    public abstract class DatabaseMigratorTestsBase : ComparerTestsBase
     {
         protected static SqlExecuterTestAdapter SqlExecuterTestAdapter { get; } = new SqlExecuterTestAdapter();
 

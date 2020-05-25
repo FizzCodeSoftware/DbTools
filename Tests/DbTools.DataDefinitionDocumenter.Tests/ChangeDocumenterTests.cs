@@ -8,71 +8,153 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class ChangeDocumenterTests
+    public class ChangeDocumenterTests : ComparerTestsBase
     {
-        [TestMethod]
-        [LatestSqlVersions]
-        public void AddFkTest(SqlEngineVersion version)
+        private static void Document(SqlEngineVersion version, DatabaseDefinitions dds)
         {
-            var ddOriginal = new TestDatabaseFk();
-            ddOriginal.GetTable("Foreign").Properties.Remove(
-                ddOriginal.GetTable("Foreign").Properties.OfType<ForeignKey>().First()
-                );
-            ddOriginal.SetVersions(version.GetTypeMapper());
+            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, dds.DbNameOriginal, dds.DbNameNew);
 
-            var ddWithFK = new TestDatabaseFk();
-            ddWithFK.SetVersions(version.GetTypeMapper());
-
-            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseFk", "TestDatabaseFk_AddFkTest");
-
-            changeDocumenter.Document(ddOriginal, ddWithFK);
+            changeDocumenter.Document(dds.Original, dds.New);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void TempChangeFkTest(SqlEngineVersion version)
+        public override void Fk_Add(SqlEngineVersion version)
         {
-            var ddOriginal = new TestDatabaseFkChange();
-            ddOriginal.SetVersions(version.GetTypeMapper());
-
-            var documnter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "TestDatabaseFkChange");
-            documnter.Document(ddOriginal);
+            var dds = Fk_Add_Dds(version);
+            Document(version, dds);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void ChangeFkTest(SqlEngineVersion version)
+        public override void Fk_Remove(SqlEngineVersion version)
         {
-            var ddOriginal = new TestDatabaseFkChange();
-            ddOriginal.SetVersions(version.GetTypeMapper());
-
-            var ddFkChanged = new TestDatabaseFkChange();
-            ddFkChanged.GetTable("Foreign").Properties.Remove(
-                ddFkChanged.GetTable("Foreign").Properties.OfType<ForeignKey>().First()
-                );
-            ddFkChanged.GetTable("Foreign").Columns["PrimaryId"].SetForeignKeyToTable("Primary2", "FkChange");
-            ddFkChanged.SetVersions(version.GetTypeMapper());
-
-            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseFkChange", "TestDatabaseFkChange_ChangeFkTest");
-
-            changeDocumenter.Document(ddOriginal, ddFkChanged);
+            var dds = Fk_Remove_Dds(version);
+            Document(version, dds);
         }
 
         [TestMethod]
-        //[LatestSqlVersions]
-        [SqlVersions("MsSql2016")]
-        public void ChangeFkTestNotNullableToNullable(SqlEngineVersion version)
+        [LatestSqlVersions]
+        public override void Column_Add(SqlEngineVersion version)
         {
-            var ddOriginal = new TestDatabaseFk();
-            ddOriginal.SetVersions(version.GetTypeMapper());
+            var dds = Column_Add_Dds(version);
+            Document(version, dds);
+        }
 
-            var ddFkChanged = new TestDatabaseFk();
-            ddFkChanged.SetVersions(version.GetTypeMapper());
-            ddFkChanged.GetTable("Foreign")["PrimaryId"].Type.IsNullable = true;
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Column_Add2(SqlEngineVersion version)
+        {
+            var dds = Column_Add2_Dds(version);
+            Document(version, dds);
+        }
 
-            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseFkChange", "TestDatabaseFkChange_ChangeFkTestNotNullableToNullable");
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Column_Remove(SqlEngineVersion version)
+        {
+            var dds = Column_Remove_Dds(version);
+            Document(version, dds);
+        }
 
-            changeDocumenter.Document(ddOriginal, ddFkChanged);
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Column_Remove2(SqlEngineVersion version)
+        {
+            var dds = Column_Remove2_Dds(version);
+            Document(version, dds);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Table_Add(SqlEngineVersion version)
+        {
+            var dds = Table_Add_Dds(version);
+            Document(version, dds);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Table_Remove(SqlEngineVersion version)
+        {
+            var dds = Table_Remove_Dds(version);
+            Document(version, dds);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Pk_Add(SqlEngineVersion version)
+        {
+            var dds = Pk_Add_Dds(version);
+            Document(version, dds);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Identity_Change(SqlEngineVersion version)
+        {
+            var dds = Identity_Change_Dds(version);
+            Document(version, dds);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Column_Change_Length(SqlEngineVersion version)
+        {
+            TestHelper.CheckFeature(version, "ColumnLength");
+
+            var dds = Column_Change_Length_Dds(version);
+            Document(version, dds);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Column_Change_Nullable(SqlEngineVersion version)
+        {
+            var dds = Column_Change_Nullable_Dds(version);
+            Document(version, dds);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Column_Change2_Length(SqlEngineVersion version)
+        {
+            TestHelper.CheckFeature(version, "ColumnLength");
+
+            var dds = Column_Change2_Length_Dds(version);
+            Document(version, dds);
+        }
+
+        [TestMethod]
+        [SqlVersions("MsSql2016", "Oracle12c")]
+        public override void Column_Change_DbType(SqlEngineVersion version)
+        {
+            var dds = Column_Change_DbType_Dds(version);
+            Document(version, dds);
+        }
+
+        [TestMethod]
+        [SqlVersions("MsSql2016", "Oracle12c")]
+        public override void Column_Change_DbTypeAndLengthAndIsNullable(SqlEngineVersion version)
+        {
+            var dds = Column_Change_DbTypeAndLengthAndIsNullable_Dds(version);
+            Document(version, dds);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Fk_Change(SqlEngineVersion version)
+        {
+            var dds = Fk_Change_Dds(version);
+            Document(version, dds);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Column_Change_NotNullableToNullable_WithFk(SqlEngineVersion version)
+        {
+            var dds = Column_Change_NotNullableToNullable_WithFk_Dds(version);
+            Document(version, dds);
         }
 
         [TestMethod]
@@ -96,114 +178,58 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void FkCompositeChangeFkNameChange(SqlEngineVersion version)
+        public override void Fk_Change_Composite_NameChange(SqlEngineVersion version)
         {
-            var ddOriginal = new ForeignKeyComposite();
-            ddOriginal.SetVersions(version.GetTypeMapper());
-
-            var ddFkChanged = new ForeignKeyComposite2();
-            ddFkChanged.SetVersions(version.GetTypeMapper());
-
-            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "ForeignKeyComposite", "ForeignKeyComposite2_FkNameChange");
-
-            changeDocumenter.Document(ddOriginal, ddFkChanged);
+            var dds = Fk_Change_Composite_NameChange_Dds(version);
+            Document(version, dds);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void FkCompositeChangeNoFkNameChange(SqlEngineVersion version)
+        public override void Fk_Change_Composite_NoNameChange(SqlEngineVersion version)
         {
-            var ddOriginal = new ForeignKeyComposite();
-            ddOriginal.SetVersions(version.GetTypeMapper());
-
-            var fkOriginal = ddOriginal
-                .GetTable("TopOrdersPerCompany").Properties
-                .OfType<ForeignKey>()
-                .First(fk => fk.ForeignKeyColumns.Any(fkcm => fkcm.ForeignKeyColumn.Name == "Top2A"));
-
-            fkOriginal.Name = "FK_TopOrdersPerCompany_2";
-
-            var ddFkChanged = new ForeignKeyComposite2();
-            ddFkChanged.SetVersions(version.GetTypeMapper());
-
-            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "ForeignKeyComposite", "ForeignKeyComposite2_NoFkNameChange");
-
-            changeDocumenter.Document(ddOriginal, ddFkChanged);
+            var dds = Fk_Change_Composite_NoNameChange_Dds(version);
+            Document(version, dds);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void ReplaceUniqueConstraintTest(SqlEngineVersion version)
+        public override void UniqueConstraint_Change(SqlEngineVersion version)
         {
-            var ddOriginal = new TestDatabaseUniqueConstraint();
-            ddOriginal.SetVersions(version.GetTypeMapper());
-
-            var ddFkChanged = new TestDatabaseUniqueConstraint2();
-            ddFkChanged.SetVersions(version.GetTypeMapper());
-
-            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseUniqueConstraint", "TestDatabaseUniqueConstraint2_Replace");
-            changeDocumenter.Document(ddOriginal, ddFkChanged);
+            var dds = UniqueConstraint_Change_Dds(version);
+            Document(version, dds);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void ChangeUniqueConstraintTest(SqlEngineVersion version)
+        public override void UniqueConstraint_Change_NewColumn(SqlEngineVersion version)
         {
-            var ddOriginal = new TestDatabaseUniqueConstraint();
-            ddOriginal.SetVersions(version.GetTypeMapper());
-            ddOriginal.GetTable("Company").Properties.OfType<UniqueConstraint>().First().Name = "UC_1";
-
-            var ddFkChanged = new TestDatabaseUniqueConstraint2();
-            ddFkChanged.SetVersions(version.GetTypeMapper());
-            ddFkChanged.GetTable("Company").Properties.OfType<UniqueConstraint>().First().Name = "UC_1";
-
-            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseUniqueConstraint", "TestDatabaseUniqueConstraint2_Change");
-            changeDocumenter.Document(ddOriginal, ddFkChanged);
+            var dds = UniqueConstraint_Change_NewColumn_Dds(version);
+            Document(version, dds);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void RemoveTableTest(SqlEngineVersion version)
+        public override void UniqueConstraint_Change_NewColumn_UcName(SqlEngineVersion version)
         {
-            var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(version.GetTypeMapper());
-            DatabaseMigratorTests.AddTable(ddOriginal);
-
-            var dd = new TestDatabaseSimple();
-            dd.SetVersions(version.GetTypeMapper());
-
-            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseSimple", "TestDatabaseSimpleRemoveTableTest");
-            changeDocumenter.Document(ddOriginal, dd);
+            var dds = UniqueConstraint_Change_NewColumn_Dds(version);
+            Document(version, dds);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void AddIndexTest(SqlEngineVersion version)
+        public override void Index_Add(SqlEngineVersion version)
         {
-            var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(version.GetTypeMapper());
-
-            var dd = new TestDatabaseIndex();
-            dd.SetVersions(version.GetTypeMapper());
-
-            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseSimple", "TestDatabaseIndexAddIndexTest");
-            changeDocumenter.Document(ddOriginal, dd);
+            var dds = Index_Add_Dds(version);
+            Document(version, dds);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void ChangeIndexTest(SqlEngineVersion version)
+        public override void Index_Change(SqlEngineVersion version)
         {
-            var ddOriginal = new TestDatabaseIndex();
-            ddOriginal.SetVersions(version.GetTypeMapper());
-            ddOriginal.GetTable("Company").Properties.OfType<Index>().First().Name = "IX_Company_Name";
-
-            var ddNew = new TestDatabaseIndexMultiColumn();
-            ddNew.SetVersions(version.GetTypeMapper());
-            ddNew.GetTable("Company").Properties.OfType<Index>().First().Name = "IX_Company_Name";
-
-            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseIndex", "TestDatabaseIndexMultiColumnChangeIndexTest");
-            changeDocumenter.Document(ddOriginal, ddNew);
+            var dds = Index_Change_Dds(version);
+            Document(version, dds);
         }
     }
 }

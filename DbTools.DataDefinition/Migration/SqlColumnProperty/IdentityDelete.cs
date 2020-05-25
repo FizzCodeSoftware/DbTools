@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
-    public class SqlTablePropertyMigration : IMigration
+
+    public class IdentityDelete : IdentityMigration
     {
     }
 }

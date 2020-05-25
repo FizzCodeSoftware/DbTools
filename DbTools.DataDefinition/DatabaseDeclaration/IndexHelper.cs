@@ -13,7 +13,7 @@
             return table;
         }
 
-        public static SqlTable AddIndex(this SqlTable table, bool unique = false, params string[] columnNames)
+        public static SqlTable AddIndex(this SqlTable table, bool unique, params string[] columnNames)
         {
             var index = new Index(table, null, unique);
 
@@ -24,7 +24,7 @@
             return table;
         }
 
-        public static SqlTable AddIndexWithName(this SqlTable table, bool unique = false, string indexName = null, params string[] columnNames)
+        public static SqlTable AddIndexWithName(this SqlTable table, bool unique, string indexName, params string[] columnNames)
         {
             var index = new Index(table, indexName, unique);
 

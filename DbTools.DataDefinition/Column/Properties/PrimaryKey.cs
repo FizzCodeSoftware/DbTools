@@ -6,5 +6,10 @@
             : base(sqlTable, name)
         {
         }
+
+        public override string ToString()
+        {
+            return $"{GetColumnsInString()} on {SqlTable.SchemaAndTableName}";
+        }
     }
 }

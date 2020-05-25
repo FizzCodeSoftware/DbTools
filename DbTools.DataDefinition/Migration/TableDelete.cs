@@ -4,7 +4,7 @@
     {
         public override string ToString()
         {
-            return "(Delete:) " + base.ToString();
+            return "TD: " + base.ToString();
         }
     }
 }

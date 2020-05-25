@@ -19,10 +19,13 @@
             _queryResult = Executer.ExecuteQuery(sqlStatement).Rows.ToList();
         }
 
-        public void GetForeignKeys(DatabaseDefinition dd)
+        public void GetForeignKeysAndUniqueConstrainsts(DatabaseDefinition dd)
         {
             foreach (var table in dd.GetTables())
+            {
                 GetForeignKeys(table);
+                GetUniqueConstraints(table);
+            }
         }
 
         private static string GetStatement()
@@ -34,7 +37,7 @@ SELECT
 		cons.r_constraint_name,
 		cons.table_name,
         cons.R_OWNER,
-		--cons.constraint_type,
+		cons.constraint_type,
 		cols.column_name,
 		cols.POSITION,
 		refcons.constraint_name ref_constraint_name,
@@ -42,26 +45,45 @@ SELECT
 		refcons.constraint_type ref_constraint_type,
 		refcols.column_name ref_column_name
 	FROM all_constraints cons
-	JOIN all_constraints refcons ON refcons.owner = cons.r_owner
+	LEFT JOIN all_constraints refcons ON refcons.owner = cons.r_owner
 		AND refcons.constraint_name = cons.r_constraint_name
 	JOIN dba_users u ON u.username = cons.owner
 	
 	JOIN all_cons_columns cols ON cols.owner = cons.owner
 		AND cols.table_name = cons.table_name
 		AND cols.constraint_name = cons.constraint_name
-	JOIN all_cons_columns refcols ON refcols.owner = refcons.owner
+	LEFT JOIN all_cons_columns refcols ON refcols.owner = refcons.owner
 	    AND refcols.table_name = refcons.table_name
 		AND refcols.constraint_name = refcons.constraint_name
 	
 	WHERE
-		cons.constraint_type = 'R'
-		AND cols.POSITION = refcols.POSITION";
+		(cons.constraint_type = 'R' OR cons.constraint_type = 'U')
+		AND (refcols.POSITION IS NULL OR cols.POSITION = refcols.POSITION)";
+        }
+
+        public void GetUniqueConstraints(SqlTable table)
+        {
+            UniqueConstraint uniqueConstraint = null;
+            var rows = _queryResult
+                .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "OWNER", "TABLE_NAME") && r.GetAs<string>("CONSTRAINT_TYPE") == "U");
+
+            foreach (var row in rows)
+            {
+                if (row.GetAs<decimal>("POSITION") == 1)
+                {
+                    uniqueConstraint = new UniqueConstraint(table, row.GetAs<string>("CONSTRAINT_NAME"));
+                    table.Properties.Add(uniqueConstraint);
+                }
+
+                var column = table.Columns[row.GetAs<string>("COLUMN_NAME")];
+                uniqueConstraint.SqlColumns.Add(new ColumnAndOrder(column, AscDesc.Asc));
+            }
         }
 
         public void GetForeignKeys(SqlTable table)
         {
             var rows = _queryResult
-                .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "OWNER", "TABLE_NAME"));
+                .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "OWNER", "TABLE_NAME") && r.GetAs<string>("CONSTRAINT_TYPE") == "R");
 
             foreach (var row in rows)
             {

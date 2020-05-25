@@ -37,7 +37,7 @@
 
         public void Document(DatabaseDefinition originalDd, DatabaseDefinition newDd)
         {
-            Log(LogSeverity.Information, "Starting on {OriginalDatabaseName} vs. {NewDatabaseName}", "Documenter", OriginalDatabaseName, NewDatabaseName);
+            Log(LogSeverity.Information, "Starting on {OriginalDatabaseName} vs. {NewDatabaseName}", "ChangeDocumenter", OriginalDatabaseName, NewDatabaseName);
 
             var tablesOriginal = RemoveKnownTechnicalTables(originalDd.GetTables());
 
@@ -101,7 +101,7 @@
                             if (Context.CustomizerNew.ShouldSkip(column.Table.SchemaAndTableName))
                                 continue;
 
-                            ProcessColumnMigration(processedTables, column, "New");
+                            ProcessColumnMigration(processedTables, column.SqlColumn, "New");
                             break;
                         }
                     case ColumnDelete column:
@@ -109,7 +109,7 @@
                             if (Context.CustomizerOriginal.ShouldSkip(column.Table.SchemaAndTableName))
                                 continue;
 
-                            ProcessColumnMigration(processedTables, column, "Delete");
+                            ProcessColumnMigration(processedTables, column.SqlColumn, "Delete");
                             break;
                         }
                     case ColumnChange column:
@@ -117,7 +117,7 @@
                             if (Context.CustomizerNew.ShouldSkip(column.NewNameAndType.Table.SchemaAndTableName))
                                 continue;
 
-                            ProcessColumnMigration(processedTables, column, "Original");
+                            ProcessColumnMigration(processedTables, column.SqlColumn, "Original");
                             ProcessColumnMigration(processedTables, column.NewNameAndType, "Changed to");
                             break;
                         }
@@ -256,7 +256,7 @@
 
             var path = Context.DocumenterSettings?.WorkingDirectory;
 
-            Log(LogSeverity.Information, "Writing Document file {FileName} to folder {Folder}", "Documenter", fileName, path);
+            Log(LogSeverity.Information, "Writing Document file {FileName} to folder {Folder}", "ChangeDocumenter", fileName, path);
 
             if (!string.IsNullOrEmpty(path))
             {

@@ -23,10 +23,14 @@
             foreach (var schemaAndTableName in GetSchemaAndTableNames())
                 dd.AddTable(GetTableDefinition(schemaAndTableName, false));
 
+            Log(LogSeverity.Debug, "Reading table identities from database.");
+            new OracleIdentityReader12c(Executer, SchemaNames).GetIdentity(dd);
             Log(LogSeverity.Debug, "Reading table primary keys from database.");
             new OraclePrimaryKeyReader12c(Executer, SchemaNames).GetPrimaryKey(dd);
-            Log(LogSeverity.Debug, "Reading table foreign keys from database.", "Reader");
-            new OracleForeignKeyReader12c(Executer, SchemaNames).GetForeignKeys(dd);
+            Log(LogSeverity.Debug, "Reading table foreign keys including unique constrints from database.", "Reader");
+            new OracleForeignKeyReader12c(Executer, SchemaNames).GetForeignKeysAndUniqueConstrainsts(dd);
+            Log(LogSeverity.Debug, "Reading indexes from database.");
+            new OracleIndexReader12c(Executer, SchemaNames).GetIndexes(dd);
 
             return dd;
         }

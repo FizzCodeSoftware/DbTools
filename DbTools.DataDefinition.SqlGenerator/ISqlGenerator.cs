@@ -17,6 +17,8 @@
 
         string CreateForeignKeys(SqlTable table);
 
+        string CreateForeignKey(ForeignKey fk);
+
         string CreateIndexes(SqlTable table);
 
         string CreateUniqueConstrainsts(SqlTable table);

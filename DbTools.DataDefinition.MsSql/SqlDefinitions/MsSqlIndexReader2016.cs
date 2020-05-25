@@ -72,8 +72,7 @@
                 {
                     uniqueConstraint = new UniqueConstraint(table, row.GetAs<string>("index_name"))
                     {
-                        Unique = true,
-                        Clustered = row.GetAs<byte>("type") == 1,
+                        Clustered = row.GetAs<byte>("type") == 1 // in MsSql, UCs are also Indexes
                     };
 
                     table.Properties.Add(uniqueConstraint);
@@ -94,8 +93,6 @@
             Index index = null;
             var rows = QueryResult
                 .Where(row => !row.GetAs<bool>("is_primary_key") && !row.GetAs<bool>("is_unique_constraint") && DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table)).OrderBy(row => row.GetAs<string>("index_name")).ThenBy(row => row.GetAs<int>("index_column_id"));
-
-            // TODO 
 
             foreach (var row in rows)
             {

@@ -30,11 +30,7 @@
             foreach (var row in rows)
             {
                 var column = table.Columns[row.GetAs<string>("column_name")];
-
-                if (!column.Properties.OfType<Identity>().Any())
-                {
-                    column.Properties.Add(new Identity(column));
-                }
+                column.Properties.Add(new Identity(column));
             }
         }
 

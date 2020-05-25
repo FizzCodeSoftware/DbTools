@@ -3,9 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    internal static class CircularFKDetector
+    public static class CircularFKDetector
     {
-        public static void DectectCircularFKs(IList<SqlTable> tables)
+        public static void DectectCircularFKs(IEnumerable<SqlTable> tables)
         {
             foreach (var table in tables)
             {
@@ -21,6 +21,10 @@
                     {
                         cfk.ForeignKeyChain = visitedFks;
                         cFKs.Add(cfk);
+                    }
+                    else
+                    {
+                        cFKs = new List<CircularFK>();
                     }
                 }
 
@@ -40,14 +44,17 @@
 
             var nextFKs = fk.ReferredTable.Properties.OfType<ForeignKey>().ToList();
 
+            var any = false;
             foreach (var nextFk in nextFKs)
             {
+                /*if (GetCircularFKs(visitedFks, visitedTables, nextFk))
+                    return true;*/
                 if (GetCircularFKs(visitedFks, visitedTables, nextFk))
-                    return true;
+                    any = true;
             }
 
             // End of chain FK without circular reference
-            return false;
+            return any;
         }
     }
 }

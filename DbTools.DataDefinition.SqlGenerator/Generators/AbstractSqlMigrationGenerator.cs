@@ -63,15 +63,23 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
                 if (idx++ > 0)
                     sb.AppendLine(",");
 
-                sb.AppendLine(Generator.GenerateCreateColumn(columnNew));
+                sb.AppendLine(Generator.GenerateCreateColumn(columnNew.SqlColumn));
             }
 
             return sb.ToString();
         }
 
+        public virtual string CreatePrimaryKey(PrimaryKeyNew primaryKeyNew)
+        {
+            // TODO asc desc in MsSql
+            var pkColumnsList = primaryKeyNew.PrimaryKey.SqlColumns.Select(c => "\"" + c.SqlColumn.Name + "\"").ToList();
+            var pkColumns = string.Join(", ", pkColumnsList);
+            return $"ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(primaryKeyNew.PrimaryKey.SqlTable.SchemaAndTableName)} ADD CONSTRAINT {primaryKeyNew.PrimaryKey.Name} PRIMARY KEY ({pkColumns})";
+        }
+
         protected static SchemaAndTableName CheckSameTable(ColumnMigration[] columnNews)
         {
-            var tableNames = columnNews.Select(c => c.Table.SchemaAndTableName).Distinct();
+            var tableNames = columnNews.Select(c => c.SqlColumn.Table.SchemaAndTableName).Distinct();
 
             if (tableNames.Count() != 1)
                 throw new ArgumentOutOfRangeException(nameof(columnNews), "All columns should be on the same table.");

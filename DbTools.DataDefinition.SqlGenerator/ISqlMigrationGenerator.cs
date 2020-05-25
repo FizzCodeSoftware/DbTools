@@ -12,5 +12,7 @@
         string CreateColumns(params ColumnNew[] columnNews);
 
         SqlStatementWithParameters ChangeColumns(params ColumnChange[] columnChanges);
+
+        string CreatePrimaryKey(PrimaryKeyNew primaryKeyNew);
     }
 }

@@ -132,7 +132,7 @@
                 AddTableToTableList(category, table, hasCategories);
             }
 
-            Context.Logger.Log(LogSeverity.Verbose, "Generating pattenr matching info.", "Documenter");
+            Context.Logger.Log(LogSeverity.Verbose, "Generating pattern matching info.", "Documenter");
             AddPatternMatching();
             AddPatternMatchingNoMatch();
 
@@ -227,7 +227,12 @@
 
             DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", table.SchemaAndTableName.Schema);
             DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", table.SchemaAndTableName.TableName);
-            DocumenterWriter.WriteLink("Tables", "link", Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName), GetColor(table.SchemaAndTableName));
+
+            if(!Customizer.ShouldSkip(table.SchemaAndTableName))
+                DocumenterWriter.WriteLink("Tables", "link", Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName), GetColor(table.SchemaAndTableName));
+            else
+                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", "");
+
             DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", table.Columns.Count);
 
             var tableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();

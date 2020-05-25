@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
-    public class ForeignKeyMigration : SqlTablePropertyMigration
+    public abstract class ForeignKeyMigration : IMigration
     {
         public ForeignKey ForeignKey { get; set; }
     }

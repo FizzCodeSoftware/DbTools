@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     public abstract class IndexBase : SqlTableProperty
     {
@@ -16,6 +17,14 @@
         {
             Name = name;
             Unique = unique;
+        }
+
+        protected string GetColumnsInString(bool withOrder = false)
+        {
+            if (withOrder)
+                return string.Join(", ", SqlColumns);
+
+            return string.Join(", ", SqlColumns.Select(cao => cao.SqlColumn.Name));
         }
     }
 }

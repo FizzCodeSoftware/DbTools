@@ -1,5 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.SqlExecuterMigrationIntegration.Tests
 {
+    using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
@@ -11,33 +13,174 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class DatabaseMigratorTests : DataDefinitionExecuterMigrationIntegrationTests
+    public class DatabaseMigratorTests : DatabaseMigratorTestsBase
     {
         [TestMethod]
         [LatestSqlVersions]
-        public void AddTableTest(SqlEngineVersion version)
+        public override void Fk_Add(SqlEngineVersion version)
         {
-            var dd = new TestDatabaseSimple();
+            var dds = Fk_Add_Dds(version);
+
+            var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
+
+            var foreignKeyNew = (ForeignKeyNew)changes[0];
+
+            databaseMigrator.NewForeignKey(foreignKeyNew);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Fk_Remove(SqlEngineVersion version)
+        {
+            var dds = Fk_Remove_Dds(version);
+            /* var databaseMigrator = */ ProcessAndGetMigrator(version, dds, out var changes);
+
+            var _ = changes[0] as ForeignKeyDelete;
+
+            // TODO remove FK
+            // databaseMigrator.
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Fk_Change_Composite_NameChange(SqlEngineVersion version)
+        {
+            var dds = Fk_Change_Composite_NameChange_Dds(version);
+            /* var databaseMigrator = */ ProcessAndGetMigrator(version, dds, out var changes);
+
+            var _ = changes[0] as ForeignKeyChange;
+
+            // TODO change FK
+            // databaseMigrator.
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Fk_Change_Composite_NoNameChange(SqlEngineVersion version)
+        {
+            var dds = Fk_Change_Composite_NoNameChange_Dds(version);
+            /* var databaseMigrator = */
+            ProcessAndGetMigrator(version, dds, out var changes);
+
+            var _ = changes[0] as ForeignKeyChange;
+
+            // TODO change FK
+            // databaseMigrator.
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Fk_Change(SqlEngineVersion version)
+        {
+            var dds = Fk_Change_Dds(version);
+            /* var databaseMigrator = */
+            ProcessAndGetMigrator(version, dds, out var changes);
+
+            var _ = changes[0] as ForeignKeyChange;
+
+            // TODO change FK
+            // databaseMigrator.
+        }
+
+        [TestMethod]
+        public void FkCheckNoCheckTest()
+        {
+            var version = MsSqlVersion.MsSql2016;
+
+            var dd = new TestDatabaseFk();
             dd.SetVersions(version.GetTypeMapper());
             Init(version, dd);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
+                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
+                , SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
             var ddInDatabase = ddlReader.GetDatabaseDefinition();
 
-            AddTable(dd);
+            var fk = dd.GetTable("Foreign").Properties.OfType<ForeignKey>().First();
+
+            Assert.AreEqual("true", fk.SqlEngineVersionSpecificProperties[version, "Nocheck"]);
+
+            fk.SqlEngineVersionSpecificProperties[version, "Nocheck"] = "false";
 
             var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
             var changes = comparer.Compare(ddInDatabase, dd);
 
+            _ = changes[0] as ForeignKeyChange;
+
+            _ = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
+
+            // TODO change FK
+            // databaseMigrator.
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Table_Add(SqlEngineVersion version)
+        {
+            var dds = Table_Add_Dds(version);
+            var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
             var first = changes[0] as TableNew;
-            Assert.AreEqual((SchemaAndTableName)"NewTableToMigrate", first.SchemaAndTableName);
-
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
-
             databaseMigrator.NewTable(first);
         }
 
-        private static void AddTable(TestDatabaseSimple dd)
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Table_Remove(SqlEngineVersion version)
+        {
+            var dds = Table_Remove_Dds(version);
+            var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
+            var first = changes[0] as TableDelete;
+            databaseMigrator.DeleteTable(first);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Pk_Add(SqlEngineVersion version)
+        {
+            var dds = Pk_Add_Dds(version);
+
+            var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
+
+            var primaryKeyNew = changes[0] as PrimaryKeyNew;
+            databaseMigrator.NewPrimaryKey(primaryKeyNew);
+
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], SqlExecuterTestAdapter.GetContext(version), dds.Original.GetSchemaNames().ToList());
+            var ddInDatabase = ddlReader.GetDatabaseDefinition();
+
+            var newPk = ddInDatabase.GetTable("Company").Properties.OfType<PrimaryKey>().First();
+            Assert.AreEqual(1, newPk.SqlColumns.Count);
+            Assert.AreEqual("Id", newPk.SqlColumns[0].SqlColumn.Name);
+            Assert.AreEqual("PK_Company", newPk.Name, true, CultureInfo.InvariantCulture);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Identity_Change(SqlEngineVersion version)
+        {
+            var dds = Identity_Change_Dds(version);
+
+            /* var databaseMigrator = */ ProcessAndGetMigrator(version, dds, out var changes);
+
+            var _ = changes[0] as ColumnChange;
+            // databaseMigrator.;
+        }
+
+        private static DatabaseMigrator ProcessAndGetMigrator(SqlEngineVersion version, DatabaseDefinitions dds, out List<IMigration> changes)
+        {
+            Init(version, dds.Original);
+
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], SqlExecuterTestAdapter.GetContext(version), dds.Original.GetSchemaNames().ToList());
+            var ddInDatabase = ddlReader.GetDatabaseDefinition();
+
+            var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
+            changes = comparer.Compare(ddInDatabase, dds.New);
+
+            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
+
+            return databaseMigrator;
+        }
+
+        private static void AddTable(DatabaseDefinition dd)
         {
             var newTable = new SqlTable
             {
@@ -54,57 +197,22 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void RemoveTableTest(SqlEngineVersion version)
+        public override void Column_Remove(SqlEngineVersion version)
         {
-            var dd = new TestDatabaseSimple();
-            dd.SetVersions(version.GetTypeMapper());
-            AddTable(dd);
-            Init(version, dd);
-
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
-                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
-                , SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
-            var ddInDatabase = ddlReader.GetDatabaseDefinition();
-
-            var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
-
-            var ddOrigin = new TestDatabaseSimple();
-            ddOrigin.SetVersions(version.GetTypeMapper());
-
-            var changes = comparer.Compare(ddInDatabase, ddOrigin);
-
-            var first = changes[0] as TableDelete;
-            Assert.AreEqual((SchemaAndTableName)"NewTableToMigrate", first.SchemaAndTableName);
-
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
-
-            databaseMigrator.DeleteTable(first);
+            var dds = Column_Remove_Dds(version);
+            var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
+            var first = changes[0] as ColumnDelete;
+            databaseMigrator.DeleteColumns(first);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void RemoveColumnTest(SqlEngineVersion version)
+        public override void Column_Remove2(SqlEngineVersion version)
         {
-            var dd = new TestDatabaseSimple();
-            dd.SetVersions(version.GetTypeMapper());
-            Init(version, dd);
-
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
-                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
-                , SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
-            var ddInDatabase = ddlReader.GetDatabaseDefinition();
-
-            dd.GetTable("Company").Columns.Remove("Name");
-
-            var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
-            var changes = comparer.Compare(ddInDatabase, dd);
-
-            var first = changes[0] as ColumnDelete;
-            Assert.AreEqual("Name", first.Name);
-
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
-
-            databaseMigrator.DeleteColumns(first);
+            var dds = Column_Remove2_Dds(version);
+            var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
+            var columnDeleteArray = changes.Cast<ColumnDelete>().ToArray();
+            databaseMigrator.DeleteColumns(columnDeleteArray);
         }
 
         // TODO implement Defaultvalue, generate change order (default before CulumNew) in Comparer
@@ -139,272 +247,151 @@
 
         [TestMethod]
         [LatestSqlVersions]
-        public void AddColumnTest(SqlEngineVersion version)
+        public override void Column_Add(SqlEngineVersion version)
         {
-            var dd = new TestDatabaseSimple();
-            dd.SetVersions(version.GetTypeMapper());
-            Init(version, dd);
-
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
-                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
-                , SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
-            var ddInDatabase = ddlReader.GetDatabaseDefinition();
-
-            dd.GetTable("Company").AddVarChar("Name2", 100);
-
-            var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
-            var changes = comparer.Compare(ddInDatabase, dd);
-
+            var dds = Column_Add_Dds(version);
+            var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
             var first = changes[0] as ColumnNew;
-            Assert.AreEqual("Name2", first.Name);
-
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
-
             databaseMigrator.CreateColumns(first);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void Add2ColumnTest(SqlEngineVersion version)
+        public override void Column_Add2(SqlEngineVersion version)
         {
-            var dd = new TestDatabaseSimple();
-            dd.SetVersions(version.GetTypeMapper());
-            Init(version, dd);
-
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
-                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
-                , SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
-            var ddInDatabase = ddlReader.GetDatabaseDefinition();
-
-            dd.GetTable("Company").AddVarChar("Name2", 100);
-            dd.GetTable("Company").AddVarChar("Name3", 100, true);
-
-            var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
-            var changes = comparer.Compare(ddInDatabase, dd);
-
-            var first = changes[0] as ColumnNew;
-            Assert.AreEqual("Name2", first.Name);
-            var second = changes[1] as ColumnNew;
-            Assert.AreEqual("Name3", second.Name);
-            Assert.AreEqual(true, second.Type.IsNullable);
-
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
-
-            databaseMigrator.CreateColumns(first, second);
+            var dds = Column_Add2_Dds(version);
+            var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
+            var columnNewArray = changes.Cast<ColumnNew>().ToArray();
+            databaseMigrator.CreateColumns(columnNewArray);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void ChangeColumnLengthTest(SqlEngineVersion version)
+        public override void Column_Change_Length(SqlEngineVersion version)
         {
-            var dd = new TestDatabaseSimple();
-            dd.SetVersions(version.GetTypeMapper());
-            Init(version, dd);
+            TestHelper.CheckFeature(version, "ColumnLength");
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
-                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
-                , SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
-            var ddInDatabase = ddlReader.GetDatabaseDefinition();
-
-            dd.GetTable("Company")["Name"].Type.Length += 1;
-
-            var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
-            var changes = comparer.Compare(ddInDatabase, dd);
-
+            var dds = Column_Change_Length_Dds(version);
+            var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
             var first = changes[0] as ColumnChange;
-            Assert.AreEqual(100, ddInDatabase.GetTable("Company")["Name"].Type.Length);
-            Assert.AreEqual(100, first.Type.Length);
-            Assert.AreEqual(101, first.NewNameAndType.Type.Length);
-
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
-
             databaseMigrator.ChangeColumns(first);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void ChangeColumnNullableTest(SqlEngineVersion version)
+        public override void Column_Change_Nullable(SqlEngineVersion version)
         {
-            var dd = new TestDatabaseSimple();
-            dd.SetVersions(version.GetTypeMapper());
-            Init(version, dd);
-
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
-                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
-                , SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
-            var ddInDatabase = ddlReader.GetDatabaseDefinition();
-
-            dd.GetTable("Company")["Name"].Type.IsNullable = !dd.GetTable("Company")["Name"].Type.IsNullable;
-
-            var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
-            var changes = comparer.Compare(ddInDatabase, dd);
-
+            var dds = Column_Change_Nullable_Dds(version);
+            var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
             var first = changes[0] as ColumnChange;
-            Assert.AreEqual(false, ddInDatabase.GetTable("Company")["Name"].Type.IsNullable);
-            Assert.AreEqual(false, first.Type.IsNullable);
-            Assert.AreEqual(true, first.NewNameAndType.Type.IsNullable);
-
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
-
             databaseMigrator.ChangeColumns(first);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void Change2ColumnLengthTest(SqlEngineVersion version)
+        public override void Column_Change_NotNullableToNullable_WithFk(SqlEngineVersion version)
         {
-            var dd = new TestDatabaseSimple();
-            dd.SetVersions(version.GetTypeMapper());
-            dd.GetTable("Company").AddNVarChar("Name2", 100);
-            Init(version, dd);
+            var dds = Column_Change_NotNullableToNullable_WithFk_Dds(version);
+            var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
+            var columnChange = (ColumnChange)changes[0];
+            _ = (ForeignKeyChange)changes[1];
+            databaseMigrator.ChangeColumns(columnChange);
+        }
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
-                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
-                , SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
-            var ddInDatabase = ddlReader.GetDatabaseDefinition();
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Column_Change2_Length(SqlEngineVersion version)
+        {
+            TestHelper.CheckFeature(version, "ColumnLength");
 
-            dd.GetTable("Company")["Name"].Type.Length += 1;
-            dd.GetTable("Company")["Name2"].Type.Length += 1;
+            var dds = Column_Change2_Length_Dds(version);
+            var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
+            var columnChangesArray = changes.Cast<ColumnChange>().ToArray();
+            databaseMigrator.ChangeColumns(columnChangesArray);
+        }
 
-            var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
-            var changes = comparer.Compare(ddInDatabase, dd);
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Index_Add(SqlEngineVersion version)
+        {
+            var dds = Index_Add_Dds(version);
 
-            Assert.AreEqual(100, ddInDatabase.GetTable("Company")["Name"].Type.Length);
-            Assert.AreEqual(100, ddInDatabase.GetTable("Company")["Name2"].Type.Length);
-            var first = changes[0] as ColumnChange;
-            Assert.AreEqual(100, first.Type.Length);
-            Assert.AreEqual(101, first.NewNameAndType.Type.Length);
-            var second = changes[1] as ColumnChange;
-            Assert.AreEqual(100, second.Type.Length);
-            Assert.AreEqual(101, second.NewNameAndType.Type.Length);
+            /* var databaseMigrator = */ ProcessAndGetMigrator(version, dds, out var changes);
 
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
+            _ = (IndexNew)changes[0];
 
-            databaseMigrator.ChangeColumns(first, second);
+            // databaseMigrator.NewIndex(first);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void Index_Change(SqlEngineVersion version)
+        {
+            var dds = Index_Change_Dds(version);
+
+            /* var databaseMigrator = */
+            ProcessAndGetMigrator(version, dds, out var changes);
+
+            _ = (IndexChange)changes[0];
+
+            // databaseMigrator
         }
 
         [TestMethod]
         [SqlVersions(nameof(MsSql2016), nameof(Oracle12c))]
-        public void ChangeColumnDbTypeTest(SqlEngineVersion version)
+        public override void Column_Change_DbType(SqlEngineVersion version)
         {
-            var dd = new TestDatabaseSimple();
-            dd.SetVersions(version.GetTypeMapper());
-            Init(version, dd);
-
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
-                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
-                , SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
-            var ddInDatabase = ddlReader.GetDatabaseDefinition();
-
-            if (version == MsSqlVersion.MsSql2016)
-                dd.GetTable("Company")["Name"].Type.SqlTypeInfo = MsSqlType2016.NChar;
-            else if (version == OracleVersion.Oracle12c)
-                dd.GetTable("Company")["Name"].Type.SqlTypeInfo = OracleType12c.NChar;
-
-            var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
-            var changes = comparer.Compare(ddInDatabase, dd);
-
+            var dds = Column_Change_DbType_Dds(version);
+            var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
             var first = changes[0] as ColumnChange;
-
-            if (version == MsSqlVersion.MsSql2016)
-            {
-                Assert.IsTrue(ddInDatabase.GetTable("Company")["Name"].Type.SqlTypeInfo is MsSql2016.SqlNVarChar);
-                Assert.IsTrue(first.Type.SqlTypeInfo is MsSql2016.SqlNVarChar);
-                Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is MsSql2016.SqlNChar);
-            }
-            else if (version == OracleVersion.Oracle12c)
-            {
-                Assert.IsTrue(ddInDatabase.GetTable("Company")["Name"].Type.SqlTypeInfo is Oracle12c.SqlNVarChar2);
-                Assert.IsTrue(first.Type.SqlTypeInfo is Oracle12c.SqlNVarChar2);
-                Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is Oracle12c.SqlNChar);
-            }
-
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
-
             databaseMigrator.ChangeColumns(first);
         }
 
         [TestMethod]
-        //[SqlVersions(nameof(MsSql2016), nameof(Oracle12c))]
-        [SqlVersions(nameof(Oracle12c))]
-        public void ChangeColumnMultipleTest(SqlEngineVersion version)
+        [SqlVersions(nameof(MsSql2016), nameof(Oracle12c))]
+        public override void Column_Change_DbTypeAndLengthAndIsNullable(SqlEngineVersion version)
         {
-            var dd = new TestDatabaseSimple();
-            // dd.DefaultSchema = _sqlExecuterTestAdapter.GetContext(version).Settings.SqlVersionSpecificSettings["OracleDatabaseName"];
-            dd.SetVersions(version.GetTypeMapper());
-            Init(version, dd);
-
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
-                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
-                , SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
-            var ddInDatabase = ddlReader.GetDatabaseDefinition();
-
-            if (version == MsSqlVersion.MsSql2016)
-                dd.GetTable("Company")["Name"].Type.SqlTypeInfo = MsSqlType2016.NChar;
-            else if (version == OracleVersion.Oracle12c)
-                dd.GetTable("Company")["Name"].Type.SqlTypeInfo = OracleType12c.NChar;
-
-            dd.GetTable("Company")["Name"].Type.Length += 1;
-            dd.GetTable("Company")["Name"].Type.IsNullable = !dd.GetTable("Company")["Name"].Type.IsNullable;
-
-            var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
-            var changes = comparer.Compare(ddInDatabase, dd);
-
+            var dds = Column_Change_DbTypeAndLengthAndIsNullable_Dds(version);
+            var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
             var first = changes[0] as ColumnChange;
-
-            if (version == MsSqlVersion.MsSql2016)
-            {
-                Assert.IsTrue(ddInDatabase.GetTable("Company")["Name"].Type.SqlTypeInfo is MsSql2016.SqlNVarChar);
-                Assert.IsTrue(first.Type.SqlTypeInfo is MsSql2016.SqlNVarChar);
-                Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is MsSql2016.SqlNChar);
-            }
-            else if (version == OracleVersion.Oracle12c)
-            {
-                Assert.IsTrue(ddInDatabase.GetTable("Company")["Name"].Type.SqlTypeInfo is Oracle12c.SqlNVarChar2);
-                Assert.IsTrue(first.Type.SqlTypeInfo is Oracle12c.SqlNVarChar2);
-                Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is Oracle12c.SqlNChar);
-            }
-
-            Assert.AreEqual(100, ddInDatabase.GetTable("Company")["Name"].Type.Length);
-            Assert.AreEqual(100, first.Type.Length);
-            Assert.AreEqual(101, first.NewNameAndType.Type.Length);
-            Assert.AreEqual(false, ddInDatabase.GetTable("Company")["Name"].Type.IsNullable);
-            Assert.AreEqual(false, first.Type.IsNullable);
-            Assert.AreEqual(true, first.NewNameAndType.Type.IsNullable);
-
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
-
             databaseMigrator.ChangeColumns(first);
         }
 
         [TestMethod]
         [LatestSqlVersions]
-        public void Remove2ColumnsTest(SqlEngineVersion version)
+        public override void UniqueConstraint_Change(SqlEngineVersion version)
         {
-            var dd = new TestDatabaseSimple();
-            dd.SetVersions(version.GetTypeMapper());
-            dd.GetTable("Company").AddNVarChar("Name2", 100);
-            Init(version, dd);
+            var dds = UniqueConstraint_Change_Dds(version);
+            /* var databaseMigrator = */ ProcessAndGetMigrator(version, dds, out var changes);
+            _ = (UniqueConstraintDelete)changes[0];
+            _ = (UniqueConstraintNew)changes[1];
+            // databaseMigrator.
+        }
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
-                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
-                , SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
-            var ddInDatabase = ddlReader.GetDatabaseDefinition();
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void UniqueConstraint_Change_NewColumn(SqlEngineVersion version)
+        {
+            var dds = UniqueConstraint_Change_NewColumn_Dds(version);
+            /* var databaseMigrator = */
+            ProcessAndGetMigrator(version, dds, out var changes);
+            _ = (ColumnNew)changes[0];
+            _ = (UniqueConstraintDelete)changes[1];
+            _ = (UniqueConstraintNew)changes[2];
+            // databaseMigrator.
+        }
 
-            dd.GetTable("Company").Columns.Remove("Name");
-            dd.GetTable("Company").Columns.Remove("Name2");
-
-            var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
-            var changes = comparer.Compare(ddInDatabase, dd);
-
-            var first = changes[0] as ColumnDelete;
-            Assert.AreEqual("Name", first.Name);
-            var second = changes[1] as ColumnDelete;
-            Assert.AreEqual("Name2", second.Name);
-
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
-
-            databaseMigrator.DeleteColumns(first, second);
+        [TestMethod]
+        [LatestSqlVersions]
+        public override void UniqueConstraint_Change_NewColumn_UcName(SqlEngineVersion version)
+        {
+            var dds = UniqueConstraint_Change_NewColumn_UcName_Dds(version);
+            /* var databaseMigrator = */
+            ProcessAndGetMigrator(version, dds, out var changes);
+            _ = (ColumnNew)changes[0];
+            _ = (UniqueConstraintChange)changes[1];
+            // var first = changes[0] as ColumnChange;
+            // databaseMigrator.
         }
     }
 }

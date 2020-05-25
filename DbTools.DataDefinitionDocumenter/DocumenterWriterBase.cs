@@ -30,7 +30,8 @@
             // TODO Move
             // TODO Options
             return schemaAndTableName.SchemaAndName == "dbo.__RefactorLog"
-                || schemaAndTableName.SchemaAndName == "dbo.sysdiagrams";
+                || schemaAndTableName.SchemaAndName == "dbo.sysdiagrams"
+                || schemaAndTableName.SchemaAndName == "dbo._sys_blocks";
         }
 
         protected void Write(string sheetName, params object[] content)

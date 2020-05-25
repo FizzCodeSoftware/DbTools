@@ -37,7 +37,7 @@
                 if (idx++ > 0)
                     sb.AppendLine(",");
 
-                sb.AppendLine(Generator.GenerateCreateColumn(columnNew));
+                sb.AppendLine(Generator.GenerateCreateColumn(columnNew.SqlColumn));
             }
 
             sb.Append(")");
@@ -90,7 +90,7 @@
             {
                 return $@"
 ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}
-MODIFY {GenerateColumnChange(columnChanges[0], columnChanges[0].NewNameAndType)}";
+MODIFY {GenerateColumnChange(columnChanges[0].SqlColumn, columnChanges[0].NewNameAndType)}";
             }
 
             var sbStatements = new StringBuilder();
@@ -174,5 +174,15 @@ MODIFY {GenerateColumnChange(columnChanges[0], columnChanges[0].NewNameAndType)}
 
             return sb.ToString();
         }
+        /*
+        public override string CreatePrimaryKey(PrimaryKeyNew primaryKeyNew)
+        {
+            ALTER TABLE buses ADD CONSTRAINT PK_BUSES PRIMARY KEY(Bus_no);
+            var pkColumnsList = primaryKeyNew.PrimaryKey.SqlColumns.Select(c => c.SqlColumn.Name).ToList();
+            var pkColumns = string.Join(", ", pkColumnsList);
+            // TODO Properties (PKs, FKs, Indexes, Defaults, Descriptions)
+            return $"ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(primaryKeyNew.PrimaryKey.SqlTable.SchemaAndTableName)} ADD CONSTRAINT PRIMARY KEY ({pkColumns})";
+
+        }*/
     }
 }

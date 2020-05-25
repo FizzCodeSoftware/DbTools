@@ -6,5 +6,24 @@
             : base(sqlTable, name, true)
         {
         }
+
+        public new bool Unique
+        {
+            get
+            {
+                return true;
+            }
+
+            set
+            {
+                if (!value)
+                    throw new System.ArgumentException("Unique Constraint is always Unique.");
+            }
+        }
+
+        public override string ToString()
+        {
+            return $"{GetColumnsInString()} on {SqlTable.SchemaAndTableName}";
+        }
     }
 }

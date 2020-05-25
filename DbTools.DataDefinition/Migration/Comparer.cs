@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
     using System.Collections.Generic;
+    using System.Linq;
     using FizzCode.DbTools.Common;
 
     public class Comparer
@@ -50,6 +51,7 @@
                 {
                     var tableNew = newDd.Tables[tableOriginal.SchemaAndTableName];
                     changes.AddRange(CompareColumns(tableOriginal, tableNew));
+                    changes.AddRange(ComparerPrimaryKey.ComparePrimaryKeys(tableOriginal, tableNew));
                     changes.AddRange(ComparerForeignKey.CompareForeignKeys(tableOriginal, tableNew));
                     changes.AddRange(ComparerIndex.CompareIndexes(tableOriginal, tableNew));
                     changes.AddRange(ComparerUniqueConstraint.CompareUniqueConstraints(tableOriginal, tableNew));
@@ -59,16 +61,17 @@
             return changes;
         }
 
-        private static List<ColumnMigration> CompareColumns(SqlTable tableOriginal, SqlTable tableNew)
+        private static List<IMigration> CompareColumns(SqlTable tableOriginal, SqlTable tableNew)
         {
-            var changes = new List<ColumnMigration>();
+            var changes = new List<IMigration>();
             foreach (var columnOriginal in tableOriginal.Columns)
             {
                 tableNew.Columns.TryGetValue(columnOriginal.Name, out var columnNew);
                 if (columnNew == null)
                 {
-                    var columnDelete = (ColumnDelete)columnOriginal.CopyTo(new ColumnDelete());
-                    changes.Add(columnDelete);
+                    changes.Add(new ColumnDelete() {
+                        SqlColumn = columnOriginal
+                    });
                 }
             }
 
@@ -77,14 +80,28 @@
                 tableOriginal.Columns.TryGetValue(columnNew.Name, out var columnOriginal);
                 if (columnOriginal == null)
                 {
-                    var column = (ColumnNew)columnNew.CopyTo(new ColumnNew());
-                    changes.Add(column);
+                    changes.Add(new ColumnNew()
+                    {
+                        SqlColumn = columnNew
+                    });
                 }
-                else if (ColumnChanged(columnNew, columnOriginal))
+                else
                 {
-                    var columnChange = (ColumnChange)columnOriginal.CopyTo(new ColumnChange());
-                    columnChange.NewNameAndType = columnNew.CopyTo(new SqlColumn());
-                    changes.Add(columnChange);
+                    var columnChange = new ColumnChange()
+                    {
+                        SqlColumn = columnOriginal,
+                        NewNameAndType = columnNew
+                    };
+
+                    var propertyChanges = ComparerIdentity.CompareIdentity(columnOriginal, columnNew);
+
+                    if (propertyChanges.Any()
+                        || ColumnChanged(columnNew, columnOriginal))
+                    {
+                        columnChange.NewNameAndType = columnNew.CopyTo(new SqlColumn());
+                        columnChange.SqlColumnPropertyMigrations.AddRange(propertyChanges);
+                        changes.Add(columnChange);
+                    }
                 }
             }
 

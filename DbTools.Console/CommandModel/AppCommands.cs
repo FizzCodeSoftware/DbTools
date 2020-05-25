@@ -177,6 +177,43 @@ namespace FizzCode.DbTools.Console
             generator.Generate(dd);
         }
 
+        [Command(Name = "check", Description = "")]
+        public void Check(
+    [Option(LongName = "connectionString", ShortName = "c")]
+            string connectionString,
+    [Option(LongName = "sqlType", ShortName = "t")]
+            string sqlType,
+    [Option(LongName = "patternFileName", ShortName = "p")]
+            string patternFileName,
+    [Option(LongName = "flags", ShortName = "f")]
+            List<string> flags)
+        {
+            var version = SqlEngineVersions.GetVersion(sqlType);
+
+            var connectionStringWithProvider = new ConnectionStringWithProvider(
+                version.GetType().Name,
+                version.ProviderName,
+                connectionString,
+                version.VersionString);
+
+            var context = CreateContext(version);
+
+            var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, context);
+            var databaseName = sqlExecuter.GetDatabase();
+
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, context, null);
+
+            var dd = ddlReader.GetDatabaseDefinition();
+
+            var documenterContext = CreateDocumenterContext(context, patternFileName);
+            if (flags != null)
+                SetSettingsFromFlags(flags, documenterContext.DocumenterSettings);
+
+            var schemaCheckerDocumenter = new SchemaCheckerDocumenter(documenterContext, version, databaseName, null);
+
+            schemaCheckerDocumenter.Document(dd);
+        }
+
         private static Logger CreateLogger()
         {
             var logger = new Logger();

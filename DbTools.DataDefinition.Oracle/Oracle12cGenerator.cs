@@ -71,30 +71,22 @@ FROM {table}
 WHERE {column} = @{column}", value);
         }
 
-        public override string CreateForeignKeys(SqlTable table)
+        public override string CreateForeignKey(ForeignKey fk)
         {
             /* example: ALTER TABLE [dbo].[Dim_Currency] ADD CONSTRAINT [FK_Dim_Currency_Dim_CurrencyGroup] CreateForeignKeysEY([Dim_CurrencyGroupId])
             REFERENCES[dbo].[Dim_CurrencyGroup]([Dim_CurrencyGroupId])
-s            */
+            */
 
             // TODO initially deferred / DEFERRABLE 
 
-            var allFks = table.Properties.OfType<ForeignKey>().ToList();
-
-            if (allFks.Count == 0)
-                return null;
-
             var sb = new StringBuilder();
 
-            foreach (var fk in allFks)
-            {
-                sb.Append(GrantReferenceAcrossSchemas(fk));
-                sb.Append("ALTER TABLE ")
-                    .Append(GetSimplifiedSchemaAndTableName(table.SchemaAndTableName))
-                    .Append(" ADD ")
-                    .Append(FKConstraint(fk))
-                    .AppendLine(";");
-            }
+            sb.Append(GrantReferenceAcrossSchemas(fk));
+            sb.Append("ALTER TABLE ")
+                .Append(GetSimplifiedSchemaAndTableName(fk.SqlTable.SchemaAndTableName))
+                .Append(" ADD ")
+                .Append(FKConstraint(fk))
+                .AppendLine(";");
 
             return sb.ToString();
         }

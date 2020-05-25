@@ -40,7 +40,6 @@
                     if (!CompareIndexColumns(indexOriginal, indexNew))
                     {
                         indexChanged = true;
-                        //IndexChange. = new ForeignKeyInternalColumnChanges();
                     }
 
                     if (indexChanged)
