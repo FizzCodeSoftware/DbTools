@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <PackageId>FizzCode.DbTools.QueryBulder</PackageId>
+    <Authors>FizzCode Ltd.</Authors>
+    <Product>FizzCode DbTools</Product>
+    <Description>Query builder for Fizzcode DbTools project</Description>
+    <Copyright>Copyright © 2019-2020 FizzCode Ltd.</Copyright>
+    <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
+    <Platforms>AnyCPU</Platforms>
+    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>    
+    <AssemblyName>FizzCode.DbTools.QueryBuilder</AssemblyName>
+    <RootNamespace>FizzCode.DbTools.QueryBuilder</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>CS1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Roslynator.Formatting.Analyzers" Version="1.0.0-rc">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
+  </ItemGroup>
+
+
+</Project>

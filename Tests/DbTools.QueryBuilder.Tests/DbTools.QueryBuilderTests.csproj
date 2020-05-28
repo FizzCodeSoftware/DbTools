@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <IsPackable>false</IsPackable>
+    <CodeAnalysisRuleSet>..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
+    <AssemblyName>FizzCode.DbTools.QueryBuilder.Tests</AssemblyName>
+    <RootNamespace>FizzCode.DbTools.QueryBuilder.Tests</RootNamespace>
+    <Description>Tests for FizzCode.DbTools.QueryBuilder</Description>
+    <Authors>FizzCode Ltd.</Authors>
+    <Company>FizzCode Ltd.</Company>
+    <Product>FizzCode DbTools</Product>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.1" />
+    <PackageReference Include="coverlet.collector" Version="1.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DbTools.QueryBuilder\DbTools.QueryBuilder.csproj" />
+    <ProjectReference Include="..\Tests\DbTools.DataDefinition.Tests\DbTools.DataDefinition.Tests.csproj" />
+  </ItemGroup>
+
+</Project>
