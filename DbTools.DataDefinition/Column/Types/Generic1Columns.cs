@@ -50,7 +50,7 @@
             var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, fkName);
 
             singleFkColumn.Table.Properties.Add(fk);
-            
+
             return singleFkColumn;
         }
     }

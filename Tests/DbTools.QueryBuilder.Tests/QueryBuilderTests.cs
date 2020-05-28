@@ -14,12 +14,14 @@
 
             var qb = new QueryBuilder();
 
-            var q = new Query();
-            q.Table = db.Parent;
+            var q = new Query
+            {
+                Table = db.Parent
+            };
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT * FROM Parent", result);
+            Assert.AreEqual("SELECT Id, Name FROM Parent", result);
         }
 
         [TestMethod]
@@ -36,7 +38,12 @@
             var q = new Query();
             q.Table = db.Child;
 
+            // q = q.Join(db.Parent);
+
             var result = qb.Build(q);
+
+            Assert.AreEqual("SELECT Id, Name, ParentId, Name AS 'p_Name' FROM Child c\r\n\t" +
+                "LEFT JOIN Parent p ON p.Id = c.ParentId", result);
         }
     }
 }
