@@ -158,7 +158,7 @@
 
             foreach (var ns in usedNamespaces)
             {
-                sb.AppendLine(1, "using ").Append(ns).Append(";");
+                sb.Append(1, "using ").Append(ns).AppendLine(";");
             }
 
             sb.AppendLine()
