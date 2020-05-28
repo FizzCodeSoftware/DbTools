@@ -2,7 +2,7 @@
 {
     public abstract class SqlTableProperty
     {
-        public SqlTable SqlTable { get; }
+        public SqlTable SqlTable { get; set; }
 
         protected SqlTableProperty(SqlTable sqlTable)
         {

@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -43,5 +44,12 @@
         }
 
         public SqlColumn this[string columnName] => Columns[columnName];
+
+        protected static SqlColumn AddColumn(Action<SqlColumn> configurator)
+        {
+            var sqlColumn = new SqlColumn();
+            configurator.Invoke(sqlColumn);
+            return sqlColumn;
+        }
     }
 }

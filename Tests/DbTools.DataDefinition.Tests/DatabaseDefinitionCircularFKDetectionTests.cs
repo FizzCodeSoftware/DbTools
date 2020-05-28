@@ -143,6 +143,16 @@ namespace FizzCode.DbTools.DataDefinition.Tests
         }
 
         [TestMethod]
+        public void TestDatabaseSimpleTyped()
+        {
+            var tables = new TestDatabaseSimpleTyped().GetTables();
+
+            var cfks = tables[0].Properties.OfType<CircularFK>().Count();
+
+            Assert.AreEqual(0, cfks);
+        }
+
+        [TestMethod]
         public void TestDatabaseFks()
         {
             var dd = new TestDatabaseFks();

@@ -21,6 +21,27 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
 
         [TestMethod]
         [LatestSqlVersions]
+        public void GenerateTestDatabaseSimpleTyped(SqlEngineVersion version)
+        {
+            GenerateDatabase(new TestDatabaseSimpleTyped(), version);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void GenerateTestDatabaseFks(SqlEngineVersion version)
+        {
+            GenerateDatabase(new TestDatabaseFks(), version);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void GenerateTestDatabaseFksTyped(SqlEngineVersion version)
+        {
+            GenerateDatabase(new TestDatabaseFksTyped(), version);
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
         public void GenerateForeignKeyCompositeTestDatabase(SqlEngineVersion version)
         {
             GenerateDatabase(new ForeignKeyComposite(), version);

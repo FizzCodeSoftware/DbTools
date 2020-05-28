@@ -109,7 +109,7 @@
         {
             var properties = GetType()
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(pi => pi.PropertyType == typeof(SqlTable));
+                .Where(pi => typeof(SqlTable).IsAssignableFrom(pi.PropertyType));
 
             foreach (var property in properties)
             {
@@ -126,6 +126,8 @@
                     table.SchemaAndTableName = schemaAndTableName;
                 }
 
+                table.DatabaseDefinition = this;
+                AddDeclaredColumns(table);
                 AddTable(table);
             }
 
@@ -137,6 +139,34 @@
             if (fields.Count > 0)
             {
                 throw new InvalidOperationException(nameof(DatabaseDeclaration) + " is only compatible with tabled defined in public properties. Please review the following fields: " + string.Join(", ", fields.Select(fi => fi.Name)));
+            }
+        }
+
+        private static void AddDeclaredColumns(SqlTable table)
+        {
+            var properties = table.GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(pi => typeof(SqlColumn).IsAssignableFrom(pi.PropertyType) && !pi.GetIndexParameters().Any());
+
+            foreach (var property in properties)
+            {
+                var column = (SqlColumn)property.GetValue(table);
+                column.Name = property.Name;
+
+                var tablePlaceHolderProperties = column.Table.Properties;
+
+                foreach (var tablePlaceHolderProperty in tablePlaceHolderProperties)
+                {
+                    if (tablePlaceHolderProperty is IndexBase)
+                    {
+                        tablePlaceHolderProperty.SqlTable = table;
+                    }
+                }
+
+                table.Properties.AddRange(tablePlaceHolderProperties);
+                column.Table = table;
+
+                table.Columns.Add(column);
             }
         }
 
