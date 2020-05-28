@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    internal class ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn : ForeignKeyRegistrationBase
+    public class ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn : ForeignKeyRegistrationBase
     {
         public SqlColumn SingleFkColumn { get; set; }
         public string SingleReferredColumnName { get; set; }

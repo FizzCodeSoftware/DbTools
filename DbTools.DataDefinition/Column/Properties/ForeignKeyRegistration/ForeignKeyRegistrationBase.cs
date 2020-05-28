@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    internal abstract class ForeignKeyRegistrationBase : SqlTableProperty
+    public abstract class ForeignKeyRegistrationBase : SqlTableProperty
     {
         public string Name { get; set; }
         public SchemaAndTableName ReferredTableName { get; }

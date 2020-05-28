@@ -116,7 +116,6 @@
                 sb.Append(_query.Alias);
                 sb.Append(".");
                 sb.Append(fkm.ForeignKeyColumn.Name);
-                
             }
 
             return sb.ToString();
