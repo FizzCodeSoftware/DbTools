@@ -47,7 +47,7 @@
                 Table = new SqlTable()
             };
 
-            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, fkName);
+            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, null, fkName);
 
             singleFkColumn.Table.Properties.Add(fk);
 

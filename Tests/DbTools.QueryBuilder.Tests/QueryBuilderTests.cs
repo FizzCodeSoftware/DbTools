@@ -11,38 +11,24 @@
         public void SimpleTable()
         {
             var db = new TestDatabaseFksTyped();
-
             var qb = new QueryBuilder();
-
-            var q = new Query
-            {
-                Table = db.Parent
-            };
+            var q = new Query(db.Parent);
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT Id, Name FROM Parent", result);
+            Assert.AreEqual("SELECT Id, Name\r\nFROM Parent p", result);
         }
 
         [TestMethod]
-        public void BuildTest()
+        public void ParentFieldWithChild()
         {
-            /* simple example
-             * pull parent field with child
-             */
-
             var db = new TestDatabaseFksTyped();
-
             var qb = new QueryBuilder();
-
-            var q = new Query();
-            q.Table = db.Child;
-
-            // q = q.Join(db.Parent);
+            var q = new Query(db.Child).Join(db.Parent, db.Parent.Name);
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT Id, Name, ParentId, Name AS 'p_Name' FROM Child c\r\n\t" +
+            Assert.AreEqual("SELECT Id, Name, ParentId, p.Name AS 'p_Name'\r\nFROM Child c\r\n" +
                 "LEFT JOIN Parent p ON p.Id = c.ParentId", result);
         }
     }

@@ -15,7 +15,7 @@
         public SqlColumn Id { get; } = Generic1Columns.AddInt32().SetPK().SetIdentity();
         public SqlColumn Name { get; } = Generic1Columns.AddNVarChar(100);
 
-        public SqlColumn ParentId { get; } = Generic1Columns.SetForeignKeyTo(nameof(TestDatabaseFksTyped.Child));
+        public SqlColumn ParentId { get; } = Generic1Columns.SetForeignKeyTo(nameof(TestDatabaseFksTyped.Parent));
         //table.AddForeignKey(nameof(Parent));
     }
 
