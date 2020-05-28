@@ -139,18 +139,26 @@
         private void WriteSingleFileHeader(StringBuilder sb, bool partialClass = false)
         {
             sb.Append("namespace ")
-            .AppendLine(_namespace)
-            .AppendLine("{")
-            .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
-            .AppendLine(1, "using FizzCode.DbTools.Configuration;")
-            .AppendLine(1, "using " + _writer.GetSqlTypeNamespace() + ";");
+                .AppendLine(_namespace)
+                .AppendLine("{");
+
+            var usedNamespaces = new List<string>()
+            {
+                "FizzCode.DbTools.Configuration",
+                "FizzCode.DbTools.DataDefinition",
+                _writer.GetSqlTypeNamespace(),
+            };
 
             if (AdditionalNamespaces != null)
             {
-                foreach (var line in AdditionalNamespaces)
-                {
-                    sb.Append(1, "using ").Append(line).AppendLine(";");
-                }
+                usedNamespaces.AddRange(AdditionalNamespaces);
+            }
+
+            usedNamespaces.Sort();
+
+            foreach (var ns in usedNamespaces)
+            {
+                sb.AppendLine(1, "using ").Append(ns).Append(";");
             }
 
             sb.AppendLine()
