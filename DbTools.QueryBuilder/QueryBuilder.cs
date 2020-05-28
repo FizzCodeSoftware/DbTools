@@ -21,6 +21,7 @@
 
     public class QueryElement
     {
+
         public SqlTable Table { get; set; }
         public List<SqlColumn> QueryColumns { get; set; }
     }

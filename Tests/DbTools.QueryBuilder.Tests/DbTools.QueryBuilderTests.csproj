@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DbTools.QueryBuilder\DbTools.QueryBuilder.csproj" />
-    <ProjectReference Include="..\Tests\DbTools.DataDefinition.Tests\DbTools.DataDefinition.Tests.csproj" />
+    <ProjectReference Include="..\..\DbTools.QueryBuilder\DbTools.QueryBuilder.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.Tests\DbTools.DataDefinition.Tests.csproj" />
   </ItemGroup>
 
 </Project>
