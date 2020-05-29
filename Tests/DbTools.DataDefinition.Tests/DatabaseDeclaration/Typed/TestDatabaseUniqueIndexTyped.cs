@@ -13,11 +13,8 @@
         public SqlColumn Id { get; } = Generic1Columns.AddInt32().SetPK().SetIdentity();
         public SqlColumn Name { get; } = Generic1Columns.AddNVarChar(100);
 
-        /*public SqlTable Company { get; } = AddTable(table =>
-        {
-            table.AddInt32("Id").SetPK().SetIdentity();
-            table.AddNVarChar("Name", 100);
-            table.AddIndex(true, "Name");
-        });*/
+#pragma warning disable IDE1006 // Naming Styles
+        public Index _i { get; } = Generic1Columns.AddIndex(true, nameof(Name));
+#pragma warning restore IDE1006 // Naming Styles
     }
 }

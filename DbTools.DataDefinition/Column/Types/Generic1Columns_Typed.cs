@@ -6,10 +6,22 @@
 
     public static partial class Generic1Columns
     {
+        // TODO move to sg like IndexHelper
         public static Index AddIndex(params string[] columnNames)
         {
             var table = new SqlTable(); // dummy SqlTable
             var index = new Index(table, null);
+
+            foreach (var columnName in columnNames)
+                index.SqlColumns.Add(new ColumnAndOrderRegistration(columnName, AscDesc.Asc));
+
+            return index;
+        }
+
+        public static Index AddIndex(bool unique, params string[] columnNames)
+        {
+            var table = new SqlTable(); // dummy SqlTable
+            var index = new Index(table, null, unique);
 
             foreach (var columnName in columnNames)
                 index.SqlColumns.Add(new ColumnAndOrderRegistration(columnName, AscDesc.Asc));

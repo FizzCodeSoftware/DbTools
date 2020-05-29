@@ -116,7 +116,7 @@
             var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
             var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext);
             var generator = new CSharpTypedGenerator(writer, version, "TestDatabaseFkNoCheckTest", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
-            generator.GenerateSingleFile(dd, "TestDatabaseFkNoCheckTest.cs");
+            generator.GenerateSingleFile(dd, "TestDatabaseFkNoCheckTest_Typed.cs");
         }
     }
 }
