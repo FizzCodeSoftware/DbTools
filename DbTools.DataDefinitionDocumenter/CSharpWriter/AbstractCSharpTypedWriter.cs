@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using System;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.Configuration;
@@ -40,8 +41,8 @@
                 sb.Append(".SetIdentity()");
             }
 
-            // if (!GeneratorContext.GeneratorSettings.NoForeignKeys)
-            //    AddForeignKeySettings(column, sb, helper);
+            if (!GeneratorContext.GeneratorSettings.NoForeignKeys)
+                AddForeignKeySettings(column, sb, helper);
 
             // TODO Default Value + config
 
@@ -75,6 +76,35 @@
             return sb.ToString();
         }
 
-        protected abstract string GetColumnCreationMethod(SqlColumn column);
+        protected override void AddForeignKeySettingsMultiColumn(StringBuilder sb, DocumenterHelper helper, ForeignKey fkOnColumn)
+        {
+            sb.AppendLine(";")
+                .AppendLine("")
+                .AppendLine("#pragma warning disable IDE1006 // Naming Styles")
+                .Append(2, "public ForeignKey ")
+                .Append(fkOnColumn.Name)
+                .Append(" { get; } = ")
+                .Append("Generic1Columns") // TODO overwrite per engine
+                .Append(".SetForeignKeyTo(nameof(")
+                .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
+                .Append("), ")
+                .AppendLine("new []")
+                .AppendLine("#pragma warning restore IDE1006 // Naming Styles")
+                .AppendLine(3, "{");
+
+            foreach (var fkColumnMap in fkOnColumn.ForeignKeyColumns)
+            {
+                sb.Append(4, "new ColumnReference(")
+                    .Append("nameof(")
+                    .Append(fkColumnMap.ForeignKeyColumn.Name)
+                    .Append("), nameof(")
+                    .Append(fkColumnMap.ReferredColumn.Table.SchemaAndTableName)
+                    .Append(".")
+                    .Append(fkColumnMap.ReferredColumn.Name)
+                    .AppendLine(")),");
+            }
+
+            sb.Append(3, "})");
+        }
     }
 }

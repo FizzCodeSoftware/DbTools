@@ -76,6 +76,18 @@
         }
 
         [TestMethod]
+        public void GeneratorForeignKeyComposite2Typed_SingleFile()
+        {
+            var version = MsSqlVersion.MsSql2016;
+
+            var dd = new ForeignKeyCompositeSetForeignKeyTo();
+            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
+            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext);
+            var generator = new CSharpTypedGenerator(writer, version, "TestDatabaseFkNoCheckTest", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
+            generator.GenerateSingleFile(dd, "GeneratorForeignKeyComposite2Typed_SingleFile.cs");
+        }
+
+        [TestMethod]
         [LatestSqlVersions]
         public void GeneratorIndex(SqlEngineVersion version)
         {
