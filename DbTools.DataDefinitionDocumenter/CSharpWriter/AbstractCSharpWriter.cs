@@ -7,20 +7,43 @@
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
 
-    public abstract class AbstractCSharpWriter
+    public abstract class AbstractCSharpWriterBase
     {
         public GeneratorContext GeneratorContext { get; }
         public SqlEngineVersion Version { get; }
         public Type TypeMapperType { get; }
 
-        protected AbstractCSharpWriter(GeneratorContext context, SqlEngineVersion version, Type typeMapperType)
+        protected AbstractCSharpWriterBase(GeneratorContext context, SqlEngineVersion version, Type typeMapperType)
         {
             GeneratorContext = context;
             Version = version;
             TypeMapperType = typeMapperType;
         }
 
-        public string GetColumnCreation(SqlColumn column, DocumenterHelper helper, string extraAnnotation, string comment)
+        public abstract string GetColumnCreation(SqlColumn column, DocumenterHelper helper, string extraAnnotation, string comment);
+
+        public virtual string GetSqlTypeNamespace()
+        {
+            return $"FizzCode.DbTools.DataDefinition.{Version}";
+        }
+    }
+
+    public abstract class AbstractCSharpTypedWriter : AbstractCSharpWriterBase
+    {
+        protected AbstractCSharpTypedWriter(GeneratorContext context, SqlEngineVersion version, Type typeMapperType)
+            : base(context, version, typeMapperType)
+        {
+        }
+    }
+
+    public abstract class AbstractCSharpWriter : AbstractCSharpWriterBase
+    {
+        protected AbstractCSharpWriter(GeneratorContext context, SqlEngineVersion version, Type typeMapperType)
+            : base(context, version, typeMapperType)
+        {
+        }
+
+        public override string GetColumnCreation(SqlColumn column, DocumenterHelper helper, string extraAnnotation, string comment)
         {
             var sb = new StringBuilder();
 
@@ -199,11 +222,6 @@
                 return ", true";
 
             return "";
-        }
-
-        public virtual string GetSqlTypeNamespace()
-        {
-            return $"FizzCode.DbTools.DataDefinition.{Version}";
         }
     }
 }

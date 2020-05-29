@@ -102,6 +102,50 @@ namespace FizzCode.DbTools.Console
                 generator.GenerateMultiFile(dd);
         }
 
+        [Command(Name = "generatetyped", Description = "Generate database definition into cs files with typed declaration.")]
+        public void GenerateTyped(
+            [Option(LongName = "connectionString", ShortName = "c", Description = "Provide a valid connection string to the database")]
+            string connectionString,
+            [Option(LongName = "singleOrMulti", ShortName = "m", Description = "multi for multi file, single for single file generation")]
+            string singleOrMulti,
+            [Option(LongName = "sqlType", ShortName = "t")]
+            string sqlType,
+            [Option(LongName = "namespace", ShortName = "n")]
+            string @namespace,
+            [Option(LongName = "newDatabaseName", ShortName = "b")]
+            string newDatabaseName,
+            [Option(LongName = "patternFileName", ShortName = "p")]
+            string patternFileName,
+            [Option(LongName = "flags", ShortName = "f")]
+            List<string> flags)
+        {
+            var version = SqlEngineVersions.GetVersion(sqlType);
+
+            var connectionStringWithProvider = new ConnectionStringWithProvider(
+                version.GetType().Name,
+                version.ProviderName,
+                connectionString,
+                version.VersionString);
+
+            var context = CreateContext(version);
+
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, context, null);
+
+            var dd = ddlReader.GetDatabaseDefinition();
+
+            var generatorContext = CreateGeneratorContext(context, patternFileName);
+            if (flags != null)
+                SetSettingsFromFlags(flags, generatorContext.GeneratorSettings);
+
+            var writer = TypedCSharpWriterFactory.GetTypedCSharpWriter(version, generatorContext);
+            var generator = new CSharpTypedGenerator(writer, version, newDatabaseName, @namespace);
+
+            if (singleOrMulti == "s" || singleOrMulti == "single")
+                generator.GenerateSingleFile(dd, newDatabaseName + ".cs");
+            else
+                generator.GenerateMultiFile(dd);
+        }
+
         private static void SetSettingsFromFlags(List<string> flagsAsStrings, DocumenterSettings settings)
         {
             foreach (var flagAsString in flagsAsStrings)

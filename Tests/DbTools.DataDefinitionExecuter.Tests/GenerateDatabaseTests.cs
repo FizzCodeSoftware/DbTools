@@ -55,6 +55,13 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
         }
 
         [TestMethod]
+        [LatestSqlVersions]
+        public void GenerateDatabase_IndexTyped(SqlEngineVersion version)
+        {
+            GenerateDatabase(new IndexTyped(), version);
+        }
+
+        [TestMethod]
         public void GenerateDatabase_TableDescription()
         {
             GenerateDatabase(new TableDescription(), MsSqlVersion.MsSql2016);
@@ -75,6 +82,25 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
                 table.AddIndex("Name");
                 table.AddIndex("Id", "Name");
             });
+        }
+
+        public class IndexTyped : TestDatabaseDeclaration
+        {
+            public Table_ Table { get; } = new Table_();
+
+            /*public SqlTable Table { get; } = AddTable(table =>
+            {
+                table.AddInt32("Id").SetPK().SetIdentity();
+                table.AddNVarChar("Name", 100);
+                table.AddIndex("Name");
+                table.AddIndex("Id", "Name");
+            });*/
+
+            public class Table_ : SqlTable
+            {
+                public SqlColumn Id { get; } = Generic1Columns.AddInt32().SetPK().SetIdentity();
+                public SqlColumn Name { get; } = Generic1Columns.AddNVarChar(100);
+            }
         }
 
         public class TableDescription : TestDatabaseDeclaration

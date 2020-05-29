@@ -24,7 +24,6 @@
         public SqlColumn Name { get; } = Generic1Columns.AddNVarChar(100);
 
         public SqlColumn ChildId { get; } = Generic1Columns.SetForeignKeyTo(nameof(TestDatabaseFksTyped.Child));
-        // table.AddForeignKey(nameof(Child));
     }
 
     public class Parent : SqlTable

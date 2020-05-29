@@ -10,12 +10,157 @@
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
 
-    public class CSharpGenerator : DocumenterBase
+    public class CSharpTypedGenerator : AbstractCSharpGenerator
+    {
+        public CSharpTypedGenerator(AbstractCSharpTypedWriter writer, SqlEngineVersion version, string databaseName, string @namespace)
+            : base(writer, version, databaseName, @namespace)
+        {
+        }
+
+        protected override void GenerateTable(StringBuilder sb, SqlTable table)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class CSharpGenerator : AbstractCSharpGenerator
+    {
+        public CSharpGenerator(AbstractCSharpWriter writer, SqlEngineVersion version, string databaseName, string @namespace)
+            : base(writer, version, databaseName, @namespace)
+        {
+        }
+
+        protected override void GenerateTable(StringBuilder sb, SqlTable table)
+        {
+            var pks = table.Properties.OfType<PrimaryKey>().ToList();
+            if (pks.Count == 0)
+            {
+                sb.AppendLine(2, "// no primary key");
+            }
+
+            var tableComment = OnTableComment?.Invoke(table);
+            if (!string.IsNullOrEmpty(tableComment))
+            {
+                sb.Append(2, "// ").AppendLine(tableComment);
+            }
+
+            sb
+                .Append(2, "public SqlTable ")
+                .Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
+                .AppendLine(" { get; } = AddTable(table =>")
+                .AppendLine(2, "{");
+
+            var tableAnnotation = OnTableAnnotation?.Invoke(table);
+            if (!string.IsNullOrEmpty(tableAnnotation))
+            {
+                sb.Append(3, "table").Append(tableAnnotation).AppendLine(";");
+            }
+
+            var pkColumns = table.Columns
+                .Where(column => column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
+                .ToList();
+
+            foreach (var column in pkColumns)
+            {
+                var columnAnnotation = OnColumnAnnotation?.Invoke(column);
+                var columnComment = OnColumnComment?.Invoke(column);
+
+                var columnCreation = Writer.GetColumnCreation(column, Helper, columnAnnotation, columnComment);
+                sb.AppendLine(columnCreation);
+            }
+
+            var regularColumns = table.Columns
+                .Where(x => !pkColumns.Contains(x))
+                .ToList();
+
+            foreach (var column in regularColumns)
+            {
+                var columnAnnotation = OnColumnAnnotation?.Invoke(column);
+                var columnComment = OnColumnComment?.Invoke(column);
+
+                var columnCreation = Writer.GetColumnCreation(column, Helper, columnAnnotation, columnComment);
+                sb.AppendLine(columnCreation);
+            }
+
+            GenerateTableProperties(sb, table);
+            sb.AppendLine(2, "});");
+        }
+
+        protected void GenerateTableProperties(StringBuilder sb, SqlTable table)
+        {
+            if (!Context.GeneratorSettings.NoIndexes)
+            {
+                var indexes = table.Properties.OfType<DataDefinition.Index>().ToList();
+                foreach (var index in indexes)
+                    GenerateIndex(sb, index);
+            }
+
+            if (!Context.GeneratorSettings.NoUniqueConstraints)
+            {
+                var uniqueConstraints = table.Properties.OfType<UniqueConstraint>().ToList();
+                foreach (var uniqueConstraint in uniqueConstraints)
+                    GenerateUniqueConstraint(sb, uniqueConstraint);
+            }
+        }
+
+#pragma warning disable CA1308 // Normalize strings to uppercase
+        private static void GenerateIndex(StringBuilder sb, DataDefinition.Index index)
+        {
+            // TODO clustered
+
+            sb.Append(3, "table.AddIndexWithName(");
+            if (index.Includes.Count == 0)
+            {
+                sb.Append(index.Clustered.ToString().ToLowerInvariant())
+                    .Append(", ");
+
+                sb.Append("\"")
+                    .Append(index.Name)
+                    .Append("\", ");
+
+                sb.Append(string.Join(", ", index.SqlColumns.Select(i => "\"" + i.SqlColumn.Name + "\"").ToList()));
+            }
+            else
+            {
+                sb.Append(index.Clustered.ToString().ToLowerInvariant())
+                    .Append(", ");
+
+                sb.Append("\"")
+                    .Append(index.Name)
+                    .Append("\", ");
+
+                sb.Append("new [] {")
+                    .Append(string.Join(", ", index.SqlColumns.Select(i => "\"" + i.SqlColumn.Name + "\"").ToList()))
+                    .Append("}, ")
+                    .Append("new [] {")
+                    .Append(string.Join(", ", index.Includes.Select(i => "\"" + i.Name + "\"").ToList()))
+                    .Append("}");
+            }
+
+            sb.AppendLine(");");
+        }
+#pragma warning restore CA1308 // Normalize strings to uppercase
+
+        private static void GenerateUniqueConstraint(StringBuilder sb, UniqueConstraint uniqueConstraint)
+        {
+            sb.Append(3, "table.AddUniqueConstraintWithName(");
+
+            sb.Append("\"");
+            sb.Append(uniqueConstraint.Name);
+            sb.Append("\", ");
+
+            sb.Append(string.Join(", ", uniqueConstraint.SqlColumns.Select(c => "\"" + c.SqlColumn.Name + "\"").ToList()));
+
+            sb.AppendLine(");");
+        }
+    }
+
+    public abstract class AbstractCSharpGenerator : DocumenterBase
     {
         protected new GeneratorContext Context => (GeneratorContext)base.Context;
 
         private readonly string _namespace;
-        private readonly AbstractCSharpWriter _writer;
+        protected AbstractCSharpWriterBase Writer { get; }
 
         public string[] AdditionalNamespaces { get; set; }
         public Func<SqlTable, string> OnTableComment { get; set; }
@@ -23,11 +168,11 @@
         public Func<SqlColumn, string> OnColumnAnnotation { get; set; }
         public Func<SqlColumn, string> OnColumnComment { get; set; }
 
-        public CSharpGenerator(AbstractCSharpWriter writer, SqlEngineVersion version, string databaseName, string @namespace)
+        protected AbstractCSharpGenerator(AbstractCSharpWriterBase writer, SqlEngineVersion version, string databaseName, string @namespace)
             : base(writer.GeneratorContext, version, databaseName)
         {
             _namespace = @namespace;
-            _writer = writer;
+            Writer = writer;
         }
 
         public void GenerateMultiFile(DatabaseDefinition databaseDefinition)
@@ -111,6 +256,8 @@
             File.WriteAllText(fileName, sb.ToString(), Encoding.UTF8);
         }
 
+        protected abstract void GenerateTable(StringBuilder sb, SqlTable table);
+
         private void WritePartialMainClassHeader(StringBuilder sb)
         {
             sb.Append("namespace ")
@@ -118,7 +265,7 @@
             .AppendLine("{")
             .AppendLine(1, "using FizzCode.DbTools.DataDefinition;")
             .AppendLine(1, "using FizzCode.DbTools.Configuration;")
-            .AppendLine(1, "using " + _writer.GetSqlTypeNamespace() + ";");
+            .AppendLine(1, "using " + Writer.GetSqlTypeNamespace() + ";");
 
             if (AdditionalNamespaces != null)
             {
@@ -146,7 +293,7 @@
             {
                 "FizzCode.DbTools.Configuration",
                 "FizzCode.DbTools.DataDefinition",
-                _writer.GetSqlTypeNamespace(),
+                Writer.GetSqlTypeNamespace(),
             };
 
             if (AdditionalNamespaces != null)
@@ -171,9 +318,9 @@
             .AppendLine(2, "public " + DatabaseName + "(string defaultSchema = null, NamingStrategies namingStrategies = null)")
             .Append(3, ": base(")
             .Append("new ")
-            .Append(string.Equals(_writer.TypeMapperType.Namespace, _writer.GetSqlTypeNamespace(), StringComparison.InvariantCultureIgnoreCase)
-                ? _writer.TypeMapperType.Name
-                : _writer.TypeMapperType.AssemblyQualifiedName)
+            .Append(string.Equals(Writer.TypeMapperType.Namespace, Writer.GetSqlTypeNamespace(), StringComparison.InvariantCultureIgnoreCase)
+                ? Writer.TypeMapperType.Name
+                : Writer.TypeMapperType.AssemblyQualifiedName)
             .AppendLine("(), null, defaultSchema, namingStrategies)")
             .AppendLine(2, "{")
             .AppendLine(2, "}");
@@ -209,130 +356,6 @@
         {
             sb.AppendLine(1, "}")
                 .AppendLine("}");
-        }
-
-        protected void GenerateTable(StringBuilder sb, SqlTable table)
-        {
-            var pks = table.Properties.OfType<PrimaryKey>().ToList();
-            if (pks.Count == 0)
-            {
-                sb.AppendLine(2, "// no primary key");
-            }
-
-            var tableComment = OnTableComment?.Invoke(table);
-            if (!string.IsNullOrEmpty(tableComment))
-            {
-                sb.Append(2, "// ").AppendLine(tableComment);
-            }
-
-            sb
-                .Append(2, "public SqlTable ")
-                .Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
-                .AppendLine(" { get; } = AddTable(table =>")
-                .AppendLine(2, "{");
-
-            var tableAnnotation = OnTableAnnotation?.Invoke(table);
-            if (!string.IsNullOrEmpty(tableAnnotation))
-            {
-                sb.Append(3, "table").Append(tableAnnotation).AppendLine(";");
-            }
-
-            var pkColumns = table.Columns
-                .Where(column => column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
-                .ToList();
-
-            foreach (var column in pkColumns)
-            {
-                var columnAnnotation = OnColumnAnnotation?.Invoke(column);
-                var columnComment = OnColumnComment?.Invoke(column);
-
-                var columnCreation = _writer.GetColumnCreation(column, Helper, columnAnnotation, columnComment);
-                sb.AppendLine(columnCreation);
-            }
-
-            var regularColumns = table.Columns
-                .Where(x => !pkColumns.Contains(x))
-                .ToList();
-
-            foreach (var column in regularColumns)
-            {
-                var columnAnnotation = OnColumnAnnotation?.Invoke(column);
-                var columnComment = OnColumnComment?.Invoke(column);
-
-                var columnCreation = _writer.GetColumnCreation(column, Helper, columnAnnotation, columnComment);
-                sb.AppendLine(columnCreation);
-            }
-
-            GenerateTableProperties(sb, table);
-            sb.AppendLine(2, "});");
-        }
-
-        protected void GenerateTableProperties(StringBuilder sb, SqlTable table)
-        {
-            if (!Context.GeneratorSettings.NoIndexes)
-            {
-                var indexes = table.Properties.OfType<DataDefinition.Index>().ToList();
-                foreach (var index in indexes)
-                    GenerateIndex(sb, index);
-            }
-
-            if (!Context.GeneratorSettings.NoUniqueConstraints)
-            {
-                var uniqueConstraints = table.Properties.OfType<UniqueConstraint>().ToList();
-                foreach (var uniqueConstraint in uniqueConstraints)
-                    GenerateUniqueConstraint(sb, uniqueConstraint);
-            }
-        }
-
-#pragma warning disable CA1308 // Normalize strings to uppercase
-        private static void GenerateIndex(StringBuilder sb, DataDefinition.Index index)
-        {
-            // TODO clustered
-
-            sb.Append(3, "table.AddIndexWithName(");
-            if (index.Includes.Count == 0)
-            {
-                sb.Append(index.Clustered.ToString().ToLowerInvariant())
-                    .Append(", ");
-
-                sb.Append("\"")
-                    .Append(index.Name)
-                    .Append("\", ");
-
-                sb.Append(string.Join(", ", index.SqlColumns.Select(i => "\"" + i.SqlColumn.Name + "\"").ToList()));
-            }
-            else
-            {
-                sb.Append(index.Clustered.ToString().ToLowerInvariant())
-                    .Append(", ");
-
-                sb.Append("\"")
-                    .Append(index.Name)
-                    .Append("\", ");
-
-                sb.Append("new [] {")
-                    .Append(string.Join(", ", index.SqlColumns.Select(i => "\"" + i.SqlColumn.Name + "\"").ToList()))
-                    .Append("}, ")
-                    .Append("new [] {")
-                    .Append(string.Join(", ", index.Includes.Select(i => "\"" + i.Name + "\"").ToList()))
-                    .Append("}");
-            }
-
-            sb.AppendLine(");");
-        }
-#pragma warning restore CA1308 // Normalize strings to uppercase
-
-        private static void GenerateUniqueConstraint(StringBuilder sb, UniqueConstraint uniqueConstraint)
-        {
-            sb.Append(3, "table.AddUniqueConstraintWithName(");
-
-            sb.Append("\"");
-            sb.Append(uniqueConstraint.Name);
-            sb.Append("\", ");
-
-            sb.Append(string.Join(", ", uniqueConstraint.SqlColumns.Select(c => "\"" + c.SqlColumn.Name + "\"").ToList()));
-
-            sb.AppendLine(");");
         }
     }
 }

@@ -26,4 +26,25 @@
             throw new NotImplementedException($"Not implemented {version}.");
         }
     }
+
+    public static class TypedCSharpWriterFactory
+    {
+        public static AbstractTypedCSharpWriter GetTypedCSharpWriter(SqlEngineVersion version, GeneratorContext context)
+        {
+            /*if (version is GenericVersion)
+                return new Generic1TypedCSharpWriter(context, typeof(Generic1TypeMapper));
+
+            if (version is SqLiteVersion)
+                return new SqLite3TypedCSharpWriter(context, typeof(SqLite3TypeMapper));
+            */
+            if (version is MsSqlVersion)
+                return new MsSql2016TypedCSharpWriter(context, typeof(MsSql2016TypeMapper));
+
+            /*if (version is OracleVersion)
+                return new Oracle12cTypedCSharpWriter(context, typeof(Oracle12cTypeMapper));
+            */
+
+            throw new NotImplementedException($"Not implemented {version}.");
+        }
+    }
 }
