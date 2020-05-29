@@ -64,14 +64,15 @@
         }
 
         /// <summary>
-        /// Sets an existing column as an FK, pointing to the unique key of <paramref name="referredTableName"/>, providing <paramref name="properties"/>.
+        /// Sets an existing column as an FK, pointing to the <paramref name="referredColumnName"/> of <paramref name="referredTableName"/>, providing <paramref name="properties"/>.
+        /// Note <paramref name="referredColumnName"/> has to be a unique key.
         /// </summary>
         /// <param name="singleFkColumn">The existing column to set as FK.</param>
         /// <param name="referredTableName">The name of the referred table.</param>
         /// <param name="referredColumnName">The name of the referred column.</param>
         /// <param name="properties"></param>
         /// <param name="fkName"></param>
-        /// <returns></returns>
+        /// <returns>The original <paramref name="singleFkColumn"/>.</returns>
         public static SqlColumn SetForeignKeyToColumn(this SqlColumn singleFkColumn, string referredTableName, string referredColumnName, IEnumerable<SqlEngineVersionSpecificProperty> properties, string fkName = null)
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
