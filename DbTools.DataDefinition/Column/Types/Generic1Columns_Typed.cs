@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Generic1
 {
+    using System.Collections.Generic;
     using FizzCode.DbTools.Configuration;
 
     //public class IndexRegistration
@@ -80,7 +81,7 @@
 
             var singleFkColumn = new SqlColumn
             {
-                Table = new SqlTable()
+                Table = new SqlTable() // dummy SqlTable
             };
 
             var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, null, fkName);
@@ -88,6 +89,24 @@
             singleFkColumn.Table.Properties.Add(fk);
 
             return singleFkColumn;
+        }
+
+        //public static ForeignKey SetForeignKeyTo(string referredTableName, IEnumerable<SqlEngineVersionSpecificProperty> properties, ColumnReference[] columnReferences)
+
+        public static ForeignKey SetForeignKeyTo(string referredTableName, ColumnReference[] columnReferences)
+        {
+            var table = new SqlTable(); // dummy SqlTable
+
+            var map = new List<ColumnReference>(columnReferences);
+            var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
+            var fk = new ForeignKeyRegistrationToReferredTableExistingColumns(table, referredTableNameWithSchema, null, map);
+
+            /*if (properties != null)
+                fk.SqlEngineVersionSpecificProperties.Add(properties);*/
+
+            table.Properties.Add(fk);
+
+            return null; // dummy for now
         }
     }
 }

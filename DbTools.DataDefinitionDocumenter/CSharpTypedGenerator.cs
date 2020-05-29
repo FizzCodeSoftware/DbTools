@@ -76,7 +76,7 @@
                 .Append(tableName)
                 .Append(" ")
                 .Append(tableName)
-                .Append(" { get } = new ")
+                .Append(" { get; } = new ")
                 .Append(tableName)
                 .AppendLine("();");
 
@@ -89,7 +89,7 @@
             sb
                 .Append(2, "public Index ")
                 .Append(index.Name)
-                .Append(" { get } = Generic1Columns.AddIndex(")
+                .Append(" { get; } = Generic1Columns.AddIndex(")
                 .Append(index.Unique ? "true" : "")
                 .Append(index.SqlColumns.Select(c => "nameof(" + c.SqlColumn.Name + ")"))
                 .AppendLine(");");
@@ -101,7 +101,7 @@
             sb
                 .Append(2, "public UniqueConstraint ")
                 .Append(uniqueConstraint.Name)
-                .Append(" { get } = Generic1Columns.AddUniqueConstraint(")
+                .Append(" { get; } = Generic1Columns.AddUniqueConstraint(")
                 .Append(uniqueConstraint.SqlColumns.Select(c => "nameof(" + c.SqlColumn.Name + ")"))
                 .AppendLine(");");
         }
@@ -121,7 +121,6 @@
                 GenerateTableInDbClass(sb, table);
 
             sb.AppendLine(1, "}");
-            sb.AppendLine("");
         }
     }
 }

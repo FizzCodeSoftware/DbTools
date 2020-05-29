@@ -56,6 +56,13 @@
             CheckCompositeFks(tables);
         }
 
+        [TestMethod]
+        public void CheckCompositeFks2Typed()
+        {
+            var tables = new ForeignKeyCompositeSetForeignKeyToTyped().GetTables();
+            CheckCompositeFks(tables);
+        }
+
         private static void CheckCompositeFks(List<SqlTable> tables)
         {
             Assert.AreEqual(4, tables.Count);
