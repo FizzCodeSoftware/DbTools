@@ -17,6 +17,17 @@
             return index;
         }
 
+        public static UniqueConstraint AddUniqueConstraint(params string[] columnNames)
+        {
+            var table = new SqlTable(); // dummy SqlTable
+            var uc = new UniqueConstraint(table, null);
+
+            foreach (var columnName in columnNames)
+                uc.SqlColumns.Add(new ColumnAndOrderRegistration(columnName, AscDesc.Asc));
+
+            return uc;
+        }
+
         public static SqlColumn AddNVarChar(int length, bool isNullable = false)
         {
             var sqlType = new SqlType

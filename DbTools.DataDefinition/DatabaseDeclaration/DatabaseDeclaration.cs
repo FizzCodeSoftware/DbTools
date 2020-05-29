@@ -176,11 +176,14 @@
         {
             var properties = table.GetType()
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(pi => typeof(Index).IsAssignableFrom(pi.PropertyType) && !pi.GetIndexParameters().Any());
+                .Where(pi =>
+                    (typeof(Index).IsAssignableFrom(pi.PropertyType)
+                    || typeof(UniqueConstraint).IsAssignableFrom(pi.PropertyType))
+                    && !pi.GetIndexParameters().Any());
 
             foreach (var property in properties)
             {
-                var index = (Index)property.GetValue(table);
+                var index = (IndexBase)property.GetValue(table);
 
                 if (!property.Name.StartsWith('_'))
                     index.Name = property.Name;

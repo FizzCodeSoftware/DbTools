@@ -89,14 +89,6 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
         {
             public Table_ Table { get; } = new Table_();
 
-            /*public SqlTable Table { get; } = AddTable(table =>
-            {
-                table.AddInt32("Id").SetPK().SetIdentity();
-                table.AddNVarChar("Name", 100);
-                table.AddIndex("Name");
-                table.AddIndex("Id", "Name");
-            });*/
-
             public class Table_ : SqlTable
             {
                 public SqlColumn Id { get; } = Generic1Columns.AddInt32().SetPK().SetIdentity();
@@ -194,6 +186,16 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
             GenerateDatabase(new DbUniqueConstratintAsFkNoPk(), version);
         }
 
+        [TestMethod]
+        [LatestSqlVersions]
+        public void UniqueConstratintAsFkNoPkTyped(SqlEngineVersion version)
+        {
+            if (version is SqLiteVersion)
+                return;
+            // TODO SqLite - You can't add a constraint to existing table in SQLite - should work at create table time
+            GenerateDatabase(new DbUniqueConstratintAsFkNoPkTyped(), version);
+        }
+
         public class DbUniqueConstratintAsFkNoPk : TestDatabaseDeclaration
         {
             public SqlTable Primary { get; } = AddTable(table =>
@@ -208,6 +210,28 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
                 table.AddInt32("Id");
                 table.AddInt32("PrimaryId").SetForeignKeyToTable(nameof(Primary));
             });
+        }
+
+        public class DbUniqueConstratintAsFkNoPkTyped : TestDatabaseDeclaration
+        {
+            public Primary_ Primary { get; } = new Primary_();
+            public Foreign_ Foreign { get; } = new Foreign_();
+
+            public class Primary_ : SqlTable
+            {
+                public SqlColumn Id { get; } = Generic1Columns.AddInt32();
+                public SqlColumn Name { get; } = Generic1Columns.AddNVarChar(100);
+
+#pragma warning disable IDE1006 // Naming Styles
+                public UniqueConstraint _uc1 { get; } = Generic1Columns.AddUniqueConstraint(nameof(Id));
+#pragma warning restore IDE1006 // Naming Styles
+            }
+
+            public class Foreign_ : SqlTable
+            {
+                public SqlColumn Id { get; } = Generic1Columns.AddInt32();
+                public SqlColumn PrimaryId { get; } = Generic1Columns.SetForeignKeyTo(nameof(Primary));
+            }
         }
 
         [TestMethod]
