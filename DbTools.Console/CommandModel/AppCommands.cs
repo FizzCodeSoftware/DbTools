@@ -137,7 +137,7 @@ namespace FizzCode.DbTools.Console
             if (flags != null)
                 SetSettingsFromFlags(flags, generatorContext.GeneratorSettings);
 
-            var writer = TypedCSharpWriterFactory.GetTypedCSharpWriter(version, generatorContext);
+            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, generatorContext);
             var generator = new CSharpTypedGenerator(writer, version, newDatabaseName, @namespace);
 
             if (singleOrMulti == "s" || singleOrMulti == "single")

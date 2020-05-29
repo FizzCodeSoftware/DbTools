@@ -5,6 +5,7 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Generic1;
+    // using FizzCode.DbTools.DataDefinition.MsSql2016;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -51,7 +52,7 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
         [LatestSqlVersions]
         public void GenerateDatabase_Index(SqlEngineVersion version)
         {
-            GenerateDatabase(new Index(), version);
+            GenerateDatabase(new TestDatabaseIndex(), version);
         }
 
         [TestMethod]
@@ -73,7 +74,7 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
             GenerateDatabase(new ColumnDescription(), MsSqlVersion.MsSql2016);
         }
 
-        public class Index : TestDatabaseDeclaration
+        public class TestDatabaseIndex : TestDatabaseDeclaration
         {
             public SqlTable Table { get; } = AddTable(table =>
             {
@@ -100,6 +101,10 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
             {
                 public SqlColumn Id { get; } = Generic1Columns.AddInt32().SetPK().SetIdentity();
                 public SqlColumn Name { get; } = Generic1Columns.AddNVarChar(100);
+#pragma warning disable IDE1006 // Naming Styles
+                public Index _i1 { get; } = Generic1Columns.AddIndex(nameof(Name));
+                public Index _i2 { get; } = Generic1Columns.AddIndex(nameof(Id), nameof(Name));
+#pragma warning restore IDE1006 // Naming Styles
             }
         }
 

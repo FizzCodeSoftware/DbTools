@@ -34,6 +34,70 @@
             : base(context, version, typeMapperType)
         {
         }
+
+        public override string GetColumnCreation(SqlColumn column, DocumenterHelper helper, string extraAnnotation, string comment)
+        {
+            var sb = new StringBuilder();
+
+            /*if (GeneratorContext.GeneratorSettings.ShouldCommentOutColumnsWithFkReferencedTables
+                && IsForeignKeyReferencedTableSkipped(column))
+            {
+                sb.Append("// ");
+            }
+
+            sb.Append(3, "table.")
+                .Append(GetColumnCreationMethod(column));
+
+            sb.Append(IsNullable(column));
+
+            sb.Append(")");
+
+            if (column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
+            {
+                sb.Append(".SetPK()");
+            }
+
+            if (column.Properties.OfType<Identity>().Any())
+            {
+                sb.Append(".SetIdentity()");
+            }
+
+            if (!GeneratorContext.GeneratorSettings.NoForeignKeys)
+                AddForeignKeySettings(column, sb, helper);
+
+            // TODO Default Value + config
+
+            if (!string.IsNullOrEmpty(extraAnnotation))
+            {
+                sb.Append(extraAnnotation);
+            }
+
+            sb.Append(";");
+
+            var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
+            var description = descriptionProperty?.Description
+                ?.Replace("\r", "", StringComparison.OrdinalIgnoreCase)
+                ?.Replace("\n", "", StringComparison.OrdinalIgnoreCase)
+                ?.Trim();
+
+            if (!string.IsNullOrEmpty(description))
+            {
+                sb.Append(" // ").Append(description);
+
+                if (!string.IsNullOrEmpty(comment))
+                {
+                    sb.Append(" ").Append(comment);
+                }
+            }
+            else if (!string.IsNullOrEmpty(comment))
+            {
+                sb.Append(" // ").Append(comment);
+            }
+            */
+            return sb.ToString();
+        }
+
+        protected abstract string GetColumnCreationMethod(SqlColumn column);
     }
 
     public abstract class AbstractCSharpWriter : AbstractCSharpWriterBase

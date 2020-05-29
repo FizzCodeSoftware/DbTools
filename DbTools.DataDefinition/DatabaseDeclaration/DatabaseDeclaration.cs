@@ -119,15 +119,14 @@
                 {
                     var schemaAndTableName = new SchemaAndTableName(property.Name);
                     if (string.IsNullOrEmpty(schemaAndTableName.Schema) && !string.IsNullOrEmpty(DefaultSchema))
-                    {
                         schemaAndTableName.Schema = DefaultSchema;
-                    }
 
                     table.SchemaAndTableName = schemaAndTableName;
                 }
 
                 table.DatabaseDefinition = this;
                 AddDeclaredColumns(table);
+                UpdateDeclaredIndexes(table);
                 AddTable(table);
             }
 
@@ -156,14 +155,10 @@
                 var tablePlaceHolderProperties = column.Table.Properties;
 
                 foreach (var tablePlaceHolderProperty in tablePlaceHolderProperties)
-                {
-                    if (tablePlaceHolderProperty is IndexBase)
-                    {
-                        tablePlaceHolderProperty.SqlTable = table;
-                    }
-                }
+                    tablePlaceHolderProperty.SqlTable = table;
 
                 table.Properties.AddRange(tablePlaceHolderProperties);
+
                 column.Table = table;
 
                 table.Columns.Add(column);
@@ -175,6 +170,33 @@
             var table = new SqlTable();
             configurator.Invoke(table);
             return table;
+        }
+
+        private static void UpdateDeclaredIndexes(SqlTable table)
+        {
+            var properties = table.GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(pi => typeof(Index).IsAssignableFrom(pi.PropertyType) && !pi.GetIndexParameters().Any());
+
+            foreach (var property in properties)
+            {
+                var index = (Index)property.GetValue(table);
+
+                if (!property.Name.StartsWith('_'))
+                    index.Name = property.Name;
+
+                index.SqlTable = table;
+
+                var registeredIdexes = index.SqlColumns.OfType<ColumnAndOrderRegistration>().ToList();
+
+                foreach (var cr in registeredIdexes)
+                {
+                    index.SqlColumns.Remove(cr);
+                    index.SqlColumns.Add(new ColumnAndOrder(table.Columns[cr.ColumnName], cr.Order));
+                }
+
+                table.Properties.Add(index);
+            }
         }
     }
 }

@@ -2,8 +2,21 @@
 {
     using FizzCode.DbTools.Configuration;
 
+    //public class IndexRegistration
+
     public static partial class Generic1Columns
     {
+        public static Index AddIndex(params string[] columnNames)
+        {
+            var table = new SqlTable(); // dummy SqlTable
+            var index = new Index(table, null);
+
+            foreach (var columnName in columnNames)
+                index.SqlColumns.Add(new ColumnAndOrderRegistration(columnName, AscDesc.Asc));
+
+            return index;
+        }
+
         public static SqlColumn AddNVarChar(int length, bool isNullable = false)
         {
             var sqlType = new SqlType
@@ -20,7 +33,7 @@
         {
             var sqlColumn = new SqlColumn
             {
-                Table = new SqlTable() // dummy Sql Table
+                Table = new SqlTable() // dummy SqlTable
             };
             sqlColumn.Types.Add(GenericVersion.Generic1, sqlType);
 
