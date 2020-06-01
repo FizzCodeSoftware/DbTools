@@ -124,8 +124,16 @@
                     table.SchemaAndTableName = schemaAndTableName;
                 }
 
+                var tablePlaceHolderProperties = table.Properties;
+
+                foreach (var tablePlaceHolderProperty in tablePlaceHolderProperties)
+                    tablePlaceHolderProperty.SqlTable = table;
+
+                table.Properties.AddRange(tablePlaceHolderProperties);
+
                 table.DatabaseDefinition = this;
                 AddDeclaredColumns(table);
+                AddDeclaredForeignKeys(table);
                 UpdateDeclaredIndexes(table);
                 AddTable(table);
             }
@@ -199,6 +207,27 @@
                 }
 
                 table.Properties.Add(index);
+            }
+        }
+
+        private static void AddDeclaredForeignKeys(SqlTable table)
+        {
+            var properties = table.GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(pi =>
+                    (typeof(ForeignKey).IsAssignableFrom(pi.PropertyType))
+                    && !pi.GetIndexParameters().Any());
+
+            foreach (var property in properties)
+            {
+                var fk = (ForeignKey)property.GetValue(table);
+
+                if (!property.Name.StartsWith('_'))
+                    fk.Name = property.Name;
+
+                fk.SqlTable = table;
+
+                table.Properties.Add(fk);
             }
         }
     }

@@ -14,35 +14,35 @@
         public class Company_ : SqlTable
 #pragma warning restore CA1034 // Nested types should not be visible
         {
-            public SqlColumn Id { get; } = Generic1Columns.AddInt32().SetPK().SetIdentity();
-            public SqlColumn Name { get; } = Generic1Columns.AddNVarChar(100);
+            public SqlColumn Id { get; } = Generic1.AddInt32().SetPK().SetIdentity();
+            public SqlColumn Name { get; } = Generic1.AddNVarChar(100);
         }
     }
 
     public class OrderHeader : SqlTable
     {
-        public SqlColumn Id { get; } = Generic1Columns.AddInt32().SetPK().SetIdentity();
-        public SqlColumn OrderHeaderDescription { get; } = Generic1Columns.AddNVarChar(100).SetPK().SetIdentity();
+        public SqlColumn Id { get; } = Generic1.AddInt32().SetPK().SetIdentity();
+        public SqlColumn OrderHeaderDescription { get; } = Generic1.AddNVarChar(100).SetPK().SetIdentity();
     }
 
     public class Order : SqlTable
     {
-        public SqlColumn OrderHeaderId { get; } = Generic1Columns.AddInt32().SetForeignKeyToTable(nameof(OrderHeader)).SetPK();
-        public SqlColumn LineNumber { get; } = Generic1Columns.AddInt32().SetPK();
-        public SqlColumn CompanyId { get; } = Generic1Columns.AddInt32().SetForeignKeyToTable(nameof(Company));
-        public SqlColumn OrderDescription { get; } = Generic1Columns.AddNVarChar(100);
+        public SqlColumn OrderHeaderId { get; } = Generic1.AddInt32().SetForeignKeyToTable(nameof(OrderHeader)).SetPK();
+        public SqlColumn LineNumber { get; } = Generic1.AddInt32().SetPK();
+        public SqlColumn CompanyId { get; } = Generic1.AddInt32().SetForeignKeyToTable(nameof(Company));
+        public SqlColumn OrderDescription { get; } = Generic1.AddNVarChar(100);
     }
 
     public class TopOrdersPerCompany : SqlTable
     {
-        public SqlColumn Top1A { get; } = Generic1Columns.AddInt32();
-        public SqlColumn Top1B { get; } = Generic1Columns.AddInt32();
+        public SqlColumn Top1A { get; } = Generic1.AddInt32();
+        public SqlColumn Top1B { get; } = Generic1.AddInt32();
 
-        public SqlColumn Top2A { get; } = Generic1Columns.AddInt32();
-        public SqlColumn Top2B { get; } = Generic1Columns.AddInt32();
+        public SqlColumn Top2A { get; } = Generic1.AddInt32();
+        public SqlColumn Top2B { get; } = Generic1.AddInt32();
 
 #pragma warning disable IDE1006 // Naming Styles
-        public ForeignKey _fk1 { get; } = Generic1Columns.SetForeignKeyTo(nameof(Order), new[]
+        public ForeignKey _fk1 { get; } = Generic1.SetForeignKeyTo(nameof(Order), new[]
 #pragma warning restore IDE1006 // Naming Styles
             {
                 new ColumnReference(nameof(Top1A), nameof(Order.OrderHeaderId)),
@@ -50,7 +50,7 @@
             });
 
 #pragma warning disable IDE1006 // Naming Styles
-        public ForeignKey _fk2 { get; } = Generic1Columns.SetForeignKeyTo(nameof(Order), new[]
+        public ForeignKey _fk2 { get; } = Generic1.SetForeignKeyTo(nameof(Order), new[]
 #pragma warning restore IDE1006 // Naming Styles
             {
                 new ColumnReference(nameof(Top2A), nameof(Order.OrderHeaderId)),

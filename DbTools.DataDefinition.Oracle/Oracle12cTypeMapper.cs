@@ -44,9 +44,9 @@
         {
             return genericType.SqlTypeInfo switch
             {
-                Generic1.SqlChar _ => genericType.Clone(OracleType12c.Char),
-                Generic1.SqlNChar _ => genericType.Clone(OracleType12c.NChar),
-                Generic1.SqlVarChar _ => genericType.Clone(OracleType12c.VarChar),
+                DataDefinition.Generic1.SqlChar _ => genericType.Clone(OracleType12c.Char),
+                DataDefinition.Generic1.SqlNChar _ => genericType.Clone(OracleType12c.NChar),
+                DataDefinition.Generic1.SqlVarChar _ => genericType.Clone(OracleType12c.VarChar),
                 SqlNVarChar _ => genericType.Clone(OracleType12c.NVarChar2),
                 SqlFloatSmall _ => genericType.Clone(OracleType12c.BinaryFloat),
                 SqlFloatLarge _ => genericType.Clone(OracleType12c.BinaryDouble),
@@ -56,7 +56,7 @@
                 SqlInt32 _ => genericType.Clone(OracleType12c.Number),
                 SqlInt64 _ => genericType.Clone(OracleType12c.Number),
                 SqlDateTime _ => genericType.Clone(OracleType12c.Date),
-                Generic1.SqlDate _ => genericType.Clone(OracleType12c.Date),
+                DataDefinition.Generic1.SqlDate _ => genericType.Clone(OracleType12c.Date),
                 _ => throw new NotImplementedException($"Unmapped type {genericType.SqlTypeInfo}"),
             };
         }

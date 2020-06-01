@@ -10,8 +10,8 @@
 
     public class Company : SqlTable
     {
-        public SqlColumn Id { get; } = Generic1Columns.AddInt32().SetPK().SetIdentity();
+        public SqlColumn Id { get; } = Generic1.AddInt32().SetPK().SetIdentity();
 
-        public SqlColumn Name { get; } = Generic1Columns.AddNVarChar(100);
+        public SqlColumn Name { get; } = Generic1.AddNVarChar(100);
     }
 }

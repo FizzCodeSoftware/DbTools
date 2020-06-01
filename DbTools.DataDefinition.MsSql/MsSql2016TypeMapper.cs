@@ -52,19 +52,19 @@
         {
             return genericType.SqlTypeInfo switch
             {
-                Generic1.SqlChar _ => genericType.Clone(MsSqlType2016.Char),
-                Generic1.SqlNChar _ => genericType.Clone(MsSqlType2016.NChar),
-                Generic1.SqlVarChar _ => genericType.Clone(MsSqlType2016.VarChar),
-                Generic1.SqlNVarChar _ => genericType.Clone(MsSqlType2016.NVarChar),
+                DataDefinition.Generic1.SqlChar _ => genericType.Clone(MsSqlType2016.Char),
+                DataDefinition.Generic1.SqlNChar _ => genericType.Clone(MsSqlType2016.NChar),
+                DataDefinition.Generic1.SqlVarChar _ => genericType.Clone(MsSqlType2016.VarChar),
+                DataDefinition.Generic1.SqlNVarChar _ => genericType.Clone(MsSqlType2016.NVarChar),
                 SqlFloatSmall _ => genericType.Clone(MsSqlType2016.Float),
                 SqlFloatLarge _ => genericType.Clone(MsSqlType2016.Real),
-                Generic1.SqlBit _ => genericType.Clone(MsSqlType2016.Bit),
+                DataDefinition.Generic1.SqlBit _ => genericType.Clone(MsSqlType2016.Bit),
                 SqlByte _ => genericType.Clone(MsSqlType2016.TinyInt),
                 SqlInt16 _ => genericType.Clone(MsSqlType2016.SmallInt),
                 SqlInt32 _ => genericType.Clone(MsSqlType2016.Int),
                 SqlInt64 _ => genericType.Clone(MsSqlType2016.BigInt),
-                Generic1.SqlDateTime _ => genericType.Clone(MsSqlType2016.DateTime),
-                Generic1.SqlDate _ => genericType.Clone(MsSqlType2016.Date),
+                DataDefinition.Generic1.SqlDateTime _ => genericType.Clone(MsSqlType2016.DateTime),
+                DataDefinition.Generic1.SqlDate _ => genericType.Clone(MsSqlType2016.Date),
                 _ => throw new NotImplementedException($"Unmapped type {genericType.SqlTypeInfo}"),
             };
         }

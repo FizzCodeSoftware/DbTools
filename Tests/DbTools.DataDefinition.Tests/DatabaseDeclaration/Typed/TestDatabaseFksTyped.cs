@@ -12,23 +12,23 @@
 
     public class Child : SqlTable
     {
-        public SqlColumn Id { get; } = Generic1Columns.AddInt32().SetPK().SetIdentity();
-        public SqlColumn Name { get; } = Generic1Columns.AddNVarChar(100);
+        public SqlColumn Id { get; } = Generic1.AddInt32().SetPK().SetIdentity();
+        public SqlColumn Name { get; } = Generic1.AddNVarChar(100);
 
-        public SqlColumn ParentId { get; } = Generic1Columns.SetForeignKeyTo(nameof(TestDatabaseFksTyped.Parent));
+        public SqlColumn ParentId { get; } = Generic1.SetForeignKeyTo(nameof(TestDatabaseFksTyped.Parent));
     }
 
     public class ChildChild : SqlTable
     {
-        public SqlColumn Id { get; } = Generic1Columns.AddInt32().SetPK().SetIdentity();
-        public SqlColumn Name { get; } = Generic1Columns.AddNVarChar(100);
+        public SqlColumn Id { get; } = Generic1.AddInt32().SetPK().SetIdentity();
+        public SqlColumn Name { get; } = Generic1.AddNVarChar(100);
 
-        public SqlColumn ChildId { get; } = Generic1Columns.SetForeignKeyTo(nameof(TestDatabaseFksTyped.Child));
+        public SqlColumn ChildId { get; } = Generic1.SetForeignKeyTo(nameof(TestDatabaseFksTyped.Child));
     }
 
     public class Parent : SqlTable
     {
-        public SqlColumn Id { get; } = Generic1Columns.AddInt32().SetPK().SetIdentity();
-        public SqlColumn Name { get; } = Generic1Columns.AddNVarChar(100);
+        public SqlColumn Id { get; } = Generic1.AddInt32().SetPK().SetIdentity();
+        public SqlColumn Name { get; } = Generic1.AddNVarChar(100);
     }
 }

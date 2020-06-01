@@ -2,7 +2,7 @@
 {
     using FizzCode.DbTools.Configuration;
 
-    public static partial class Generic1Columns
+    public static class Generic1Columns
     {
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
         {

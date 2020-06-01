@@ -91,7 +91,7 @@
                 .Append(index.Name)
                 .Append(" { get; } = Generic1Columns.AddIndex(")
                 .Append(index.Unique ? "true" : "")
-                .Append(index.SqlColumns.Select(c => "nameof(" + c.SqlColumn.Name + ")"))
+                .Append(string.Join(", ", index.SqlColumns.Select(c => "nameof(" + c.SqlColumn.Name + ")")))
                 .AppendLine(");");
         }
 
@@ -102,7 +102,7 @@
                 .Append(2, "public UniqueConstraint ")
                 .Append(uniqueConstraint.Name)
                 .Append(" { get; } = Generic1Columns.AddUniqueConstraint(")
-                .Append(uniqueConstraint.SqlColumns.Select(c => "nameof(" + c.SqlColumn.Name + ")"))
+                .Append(string.Join(", ", uniqueConstraint.SqlColumns.Select(c => "nameof(" + c.SqlColumn.Name + ")")))
                 .AppendLine(");");
         }
 

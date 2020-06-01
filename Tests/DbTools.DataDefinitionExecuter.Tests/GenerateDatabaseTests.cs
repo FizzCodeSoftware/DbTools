@@ -91,11 +91,11 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
 
             public class Table_ : SqlTable
             {
-                public SqlColumn Id { get; } = Generic1Columns.AddInt32().SetPK().SetIdentity();
-                public SqlColumn Name { get; } = Generic1Columns.AddNVarChar(100);
+                public SqlColumn Id { get; } = Generic1.AddInt32().SetPK().SetIdentity();
+                public SqlColumn Name { get; } = Generic1.AddNVarChar(100);
 #pragma warning disable IDE1006 // Naming Styles
-                public Index _i1 { get; } = Generic1Columns.AddIndex(nameof(Name));
-                public Index _i2 { get; } = Generic1Columns.AddIndex(nameof(Id), nameof(Name));
+                public Index _i1 { get; } = Generic1.AddIndex(nameof(Name));
+                public Index _i2 { get; } = Generic1.AddIndex(nameof(Id), nameof(Name));
 #pragma warning restore IDE1006 // Naming Styles
             }
         }
@@ -219,18 +219,18 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
 
             public class Primary_ : SqlTable
             {
-                public SqlColumn Id { get; } = Generic1Columns.AddInt32();
-                public SqlColumn Name { get; } = Generic1Columns.AddNVarChar(100);
+                public SqlColumn Id { get; } = Generic1.AddInt32();
+                public SqlColumn Name { get; } = Generic1.AddNVarChar(100);
 
 #pragma warning disable IDE1006 // Naming Styles
-                public UniqueConstraint _uc1 { get; } = Generic1Columns.AddUniqueConstraint(nameof(Id));
+                public UniqueConstraint _uc1 { get; } = Generic1.AddUniqueConstraint(nameof(Id));
 #pragma warning restore IDE1006 // Naming Styles
             }
 
             public class Foreign_ : SqlTable
             {
-                public SqlColumn Id { get; } = Generic1Columns.AddInt32();
-                public SqlColumn PrimaryId { get; } = Generic1Columns.SetForeignKeyTo(nameof(Primary));
+                public SqlColumn Id { get; } = Generic1.AddInt32();
+                public SqlColumn PrimaryId { get; } = Generic1.SetForeignKeyTo(nameof(Primary));
             }
         }
 
