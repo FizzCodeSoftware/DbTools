@@ -37,7 +37,7 @@
             return GeneratorContext.Customizer.ShouldSkip(fkOnColumn.ReferredTable.SchemaAndTableName);
         }
 
-        protected string IsNullable(SqlColumn column)
+        protected virtual string IsNullable(SqlColumn column)
         {
             if (column.Types[Version].IsNullable)
                 return ", true";

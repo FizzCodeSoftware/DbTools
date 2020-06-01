@@ -30,6 +30,7 @@
                 SqlClob _ => $"{nameof(Oracle12cColumns.AddClob)}(\"{column.Name}\"",
                 SqlLong _ => $"{nameof(Oracle12cColumns.AddLong)}(\"{column.Name}\"",
                 SqlLongRaw _ => $"{nameof(Oracle12cColumns.AddLongRaw)}(\"{column.Name}\"",
+                // TODO number
                 SqlNumber _ => $"{nameof(Oracle12cColumns.AddLongRaw)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}, {type.Scale?.ToString("D", CultureInfo.InvariantCulture)}",
                 SqlDate _ => $"{nameof(Oracle12cColumns.AddDate)}(\"{column.Name}\"",
                 SqlTimeStampWithTimeZone _ => $"{nameof(Oracle12cColumns.AddTimeStampWithTimeZone)}(\"{column.Name}\"",

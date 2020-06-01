@@ -17,10 +17,10 @@
             var type = column.Types[Version];
             return type.SqlTypeInfo switch
             {
-                SqlInteger _ => $"{nameof(SqLite3Columns.AddInteger)}(",
-                SqlReal _ => $"{nameof(SqLite3Columns.AddReal)}(",
-                SqlText _ => $"{nameof(SqLite3Columns.AddText)}(",
-                SqlBlob _ => $"{nameof(SqLite3Columns.AddBlob)}(",
+                SqlInteger _ => $"{nameof(SqLite3)}.{nameof(SqLite3.AddInteger)}(",
+                SqlReal _ => $"{nameof(SqLite3)}.{nameof(SqLite3.AddReal)}(",
+                SqlText _ => $"{nameof(SqLite3)}.{nameof(SqLite3.AddText)}(",
+                SqlBlob _ => $"{nameof(SqLite3)}.{nameof(SqLite3.AddBlob)}(",
                 _ => throw new NotImplementedException($"Unmapped type: {type.SqlTypeInfo}"),
             };
         }

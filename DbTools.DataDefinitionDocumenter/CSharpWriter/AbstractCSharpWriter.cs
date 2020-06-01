@@ -25,11 +25,9 @@
             }
 
             sb.Append(3, "table.")
-                .Append(GetColumnCreationMethod(column));
-
-            sb.Append(IsNullable(column));
-
-            sb.Append(")");
+                .Append(GetColumnCreationMethod(column))
+                .Append(IsNullable(column))
+                .Append(")");
 
             if (column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
             {

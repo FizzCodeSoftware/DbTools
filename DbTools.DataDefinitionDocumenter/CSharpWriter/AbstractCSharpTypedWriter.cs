@@ -14,6 +14,19 @@
         {
         }
 
+        protected override string IsNullable(SqlColumn column)
+        {
+            if (column.Types[Version].IsNullable)
+            {
+                if(column.Types[Version].SqlTypeInfo.HasLength)
+                    return ", true";
+                else
+                    return "true";
+            }
+
+            return "";
+        }
+
         public override string GetColumnCreation(SqlColumn column, DocumenterHelper helper, string extraAnnotation, string comment)
         {
             var sb = new StringBuilder();
@@ -29,7 +42,8 @@
                 .Append(column.Name)
                 .Append(" { get; } = ")
                 .Append(GetColumnCreationMethod(column))
-                .Append(IsNullable(column));
+                .Append(IsNullable(column))
+                .Append(")");
 
             if (column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
             {

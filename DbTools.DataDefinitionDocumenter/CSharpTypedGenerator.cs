@@ -85,6 +85,8 @@
 
         protected override void GenerateIndex(StringBuilder sb, Index index)
         {
+            var tableName = Helper.GetSimplifiedSchemaAndTableName(index.SqlTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
+
             //public Index _i { get; } = Generic1Columns.AddIndex(true, nameof(Name));
             sb
                 .Append(2, "public Index ")
@@ -93,12 +95,14 @@
                 .Append(Version)
                 .Append(".AddIndex(")
                 .Append(index.Unique ? "true" : "")
-                .Append(string.Join(", ", index.SqlColumns.Select(c => "nameof(" + c.SqlColumn.Name + ")")))
+                .Append(string.Join(", ", index.SqlColumns.Select(c => "nameof(" + tableName + "." + c.SqlColumn.Name + ")")))
                 .AppendLine(");");
         }
 
         protected override void GenerateUniqueConstraint(StringBuilder sb, UniqueConstraint uniqueConstraint)
         {
+            var tableName = Helper.GetSimplifiedSchemaAndTableName(uniqueConstraint.SqlTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
+
             //public UniqueConstraint _uc1 { get; } = Generic1Columns.AddUniqueConstraint(nameof(Id));
             sb
                 .Append(2, "public UniqueConstraint ")
@@ -106,7 +110,7 @@
                 .Append(" { get; } = ")
                 .Append(Version)
                 .Append(".AddUniqueConstraint(")
-                .Append(string.Join(", ", uniqueConstraint.SqlColumns.Select(c => "nameof(" + c.SqlColumn.Name + ")")))
+                .Append(string.Join(", ", uniqueConstraint.SqlColumns.Select(c => "nameof(" + tableName + "." + c.SqlColumn.Name + ")")))
                 .AppendLine(");");
         }
 

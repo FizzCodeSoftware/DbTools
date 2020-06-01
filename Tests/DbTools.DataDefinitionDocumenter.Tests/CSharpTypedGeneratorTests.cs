@@ -13,9 +13,9 @@
         public void GeneratorTestDatabaseFks()
         {
             GeneratorTestDatabaseFks(MsSqlVersion.MsSql2016);
-            // GeneratorTestDatabaseFks(GenericVersion.Generic1);
-            // GeneratorTestDatabaseFks(OracleVersion.Oracle12c);
-            // GeneratorTestDatabaseFks(SqLiteVersion.SqLite3);
+            GeneratorTestDatabaseFks(GenericVersion.Generic1);
+            GeneratorTestDatabaseFks(OracleVersion.Oracle12c);
+            GeneratorTestDatabaseFks(SqLiteVersion.SqLite3);
         }
 
         public static void GeneratorTestDatabaseFks(SqlEngineVersion version)
@@ -64,27 +64,25 @@
         }
 
         [TestMethod]
-        public void GeneratorForeignKeyComposite2Typed()
+        [LatestSqlVersions]
+        public void GeneratorForeignKeyComposite2Typed(SqlEngineVersion version)
         {
-            var version = MsSqlVersion.MsSql2016;
-
             var dd = new ForeignKeyCompositeSetForeignKeyToTyped();
             var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
             var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext);
             var generator = new CSharpTypedGenerator(writer, version, "TestDatabaseFkNoCheckTest", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
-            generator.GenerateSingleFile(dd, "ForeignKeyCompositeSetForeignKeyToTyped_Typed.cs");
+            generator.GenerateSingleFile(dd, $"ForeignKeyCompositeSetForeignKeyToTyped_Typed{version}.cs");
         }
 
         [TestMethod]
-        public void GeneratorForeignKeyComposite2Typed_SingleFile()
+        [LatestSqlVersions]
+        public void GeneratorForeignKeyComposite2Typed_SingleFile(SqlEngineVersion version)
         {
-            var version = MsSqlVersion.MsSql2016;
-
             var dd = new ForeignKeyCompositeSetForeignKeyTo();
             var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
             var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext);
             var generator = new CSharpTypedGenerator(writer, version, "TestDatabaseFkNoCheckTest", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
-            generator.GenerateSingleFile(dd, "GeneratorForeignKeyComposite2Typed_SingleFile.cs");
+            generator.GenerateSingleFile(dd, $"GeneratorForeignKeyComposite2Typed_SingleFile_{version}.cs");
         }
 
         [TestMethod]
@@ -140,7 +138,7 @@
             var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
             var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext);
             var generator = new CSharpTypedGenerator(writer, version, "TestDatabaseFkNoCheckTest", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
-            generator.GenerateSingleFile(dd, "TestDatabaseFkNoCheckTest_Typed.cs");
+            generator.GenerateSingleFile(dd, $"TestDatabaseFkNoCheckTest_Typed_{version}.cs");
         }
     }
 }
