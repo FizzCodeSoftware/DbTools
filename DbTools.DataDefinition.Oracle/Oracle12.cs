@@ -2,14 +2,20 @@
 {
     using FizzCode.DbTools.Configuration;
 
-    public static class Oracle12cColumns
+    public static class Oracle12c
     {
-        private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
+        private static SqlColumn Add(SqlType sqlType)
         {
-            return SqlColumnHelper.Add(OracleVersion.Oracle12c, table, name, sqlType);
+            var sqlColumn = new SqlColumn
+            {
+                Table = new SqlTable() // dummy Sql Table
+            };
+            sqlColumn.Types.Add(OracleVersion.Oracle12c, sqlType);
+
+            return sqlColumn;
         }
 
-        public static SqlColumn AddChar(this SqlTable table, string name, int length, bool isNullable = false)
+        public static SqlColumn AddChar(int length, bool isNullable = false)
         {
             var sqlType = new SqlType
             {
@@ -18,10 +24,10 @@
                 IsNullable = isNullable
             };
 
-            return Add(table, name, sqlType);
+            return Add(sqlType);
         }
 
-        public static SqlColumn AddNChar(this SqlTable table, string name, int length, bool isNullable = false)
+        public static SqlColumn AddNChar(int length, bool isNullable = false)
         {
             var sqlType = new SqlType
             {
@@ -30,10 +36,10 @@
                 IsNullable = isNullable
             };
 
-            return Add(table, name, sqlType);
+            return Add(sqlType);
         }
 
-        public static SqlColumn AddVarChar(this SqlTable table, string name, int length, bool isNullable = false)
+        public static SqlColumn AddVarChar(int length, bool isNullable = false)
         {
             var sqlType = new SqlType
             {
@@ -42,10 +48,10 @@
                 IsNullable = isNullable
             };
 
-            return Add(table, name, sqlType);
+            return Add(sqlType);
         }
 
-        public static SqlColumn AddVarChar2(this SqlTable table, string name, int length, bool isNullable = false)
+        public static SqlColumn AddVarChar2(int length, bool isNullable = false)
         {
             var sqlType = new SqlType
             {
@@ -54,10 +60,10 @@
                 IsNullable = isNullable
             };
 
-            return Add(table, name, sqlType);
+            return Add(sqlType);
         }
 
-        public static SqlColumn AddNVarChar2(this SqlTable table, string name, int length, bool isNullable = false)
+        public static SqlColumn AddNVarChar2(int length, bool isNullable = false)
         {
             var sqlType = new SqlType
             {
@@ -66,10 +72,10 @@
                 IsNullable = isNullable
             };
 
-            return Add(table, name, sqlType);
+            return Add(sqlType);
         }
 
-        public static SqlColumn AddBinaryFloat(this SqlTable table, string name, bool isNullable = false)
+        public static SqlColumn AddBinaryFloat(bool isNullable = false)
         {
             var sqlType = new SqlType
             {
@@ -77,10 +83,10 @@
                 IsNullable = isNullable
             };
 
-            return Add(table, name, sqlType);
+            return Add(sqlType);
         }
 
-        public static SqlColumn AddBinaryDouble(this SqlTable table, string name, bool isNullable = false)
+        public static SqlColumn AddBinaryDouble(bool isNullable = false)
         {
             var sqlType = new SqlType
             {
@@ -88,10 +94,10 @@
                 IsNullable = isNullable
             };
 
-            return Add(table, name, sqlType);
+            return Add(sqlType);
         }
 
-        public static SqlColumn AddBlob(this SqlTable table, string name, bool isNullable = false)
+        public static SqlColumn AddBlob(bool isNullable = false)
         {
             var sqlType = new SqlType
             {
@@ -99,10 +105,10 @@
                 IsNullable = isNullable
             };
 
-            return Add(table, name, sqlType);
+            return Add(sqlType);
         }
 
-        public static SqlColumn AddClob(this SqlTable table, string name, bool isNullable = false)
+        public static SqlColumn AddClob(bool isNullable = false)
         {
             var sqlType = new SqlType
             {
@@ -110,10 +116,10 @@
                 IsNullable = isNullable
             };
 
-            return Add(table, name, sqlType);
+            return Add(sqlType);
         }
 
-        public static SqlColumn AddNClob(this SqlTable table, string name, bool isNullable = false)
+        public static SqlColumn AddNClob(bool isNullable = false)
         {
             var sqlType = new SqlType
             {
@@ -121,10 +127,10 @@
                 IsNullable = isNullable
             };
 
-            return Add(table, name, sqlType);
+            return Add(sqlType);
         }
 
-        public static SqlColumn AddBfile(this SqlTable table, string name, bool isNullable = false)
+        public static SqlColumn AddBfile(bool isNullable = false)
         {
             var sqlType = new SqlType
             {
@@ -132,10 +138,10 @@
                 IsNullable = isNullable
             };
 
-            return Add(table, name, sqlType);
+            return Add(sqlType);
         }
 
-        public static SqlColumn AddLong(this SqlTable table, string name, bool isNullable = false)
+        public static SqlColumn AddLong(bool isNullable = false)
         {
             var sqlType = new SqlType
             {
@@ -143,10 +149,10 @@
                 IsNullable = isNullable
             };
 
-            return Add(table, name, sqlType);
+            return Add(sqlType);
         }
 
-        public static SqlColumn AddLongRaw(this SqlTable table, string name, bool isNullable = false)
+        public static SqlColumn AddLongRaw(bool isNullable = false)
         {
             var sqlType = new SqlType
             {
@@ -154,10 +160,10 @@
                 IsNullable = isNullable
             };
 
-            return Add(table, name, sqlType);
+            return Add(sqlType);
         }
 
-        public static SqlColumn AddDate(this SqlTable table, string name, bool isNullable = false)
+        public static SqlColumn AddDate(bool isNullable = false)
         {
             var sqlType = new SqlType
             {
@@ -165,10 +171,10 @@
                 IsNullable = isNullable
             };
 
-            return Add(table, name, sqlType);
+            return Add(sqlType);
         }
 
-        public static SqlColumn AddTimeStampWithTimeZone(this SqlTable table, string name, bool isNullable = false)
+        public static SqlColumn AddTimeStampWithTimeZone(bool isNullable = false)
         {
             var sqlType = new SqlType
             {
@@ -176,10 +182,10 @@
                 IsNullable = isNullable
             };
 
-            return Add(table, name, sqlType);
+            return Add(sqlType);
         }
 
-        public static SqlColumn AddTimeStampWithLocalTimeZone(this SqlTable table, string name, bool isNullable = false)
+        public static SqlColumn AddTimeStampWithLocalTimeZone(bool isNullable = false)
         {
             var sqlType = new SqlType
             {
@@ -187,7 +193,7 @@
                 IsNullable = isNullable
             };
 
-            return Add(table, name, sqlType);
+            return Add(sqlType);
         }
     }
 }

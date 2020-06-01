@@ -14,7 +14,7 @@ namespace FizzCode.DbTools.DataDefinition
         public static SqlBlob Blob { get; } = new SqlBlob();
         public static SqlClob Clob { get; } = new SqlClob();
         public static SqlNClob NClob { get; } = new SqlNClob();
-        public static SqlBfile BFile { get; } = new SqlBfile();
+        public static SqlBFile BFile { get; } = new SqlBFile();
         public static SqlLong Long { get; } = new SqlLong();
         public static SqlLongRaw LongRaw { get; } = new SqlLongRaw();
         public static SqlNumber Number { get; } = new SqlNumber();

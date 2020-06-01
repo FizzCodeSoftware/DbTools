@@ -56,7 +56,7 @@
         public override bool HasScale => false;
     }
 
-    public class SqlBfile : OracleType12c
+    public class SqlBFile : OracleType12c
     {
         public override bool HasLength => false;
 

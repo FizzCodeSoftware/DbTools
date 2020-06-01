@@ -25,7 +25,7 @@
                 SqlNVarChar2 _ => $"{nameof(Oracle12cColumns.AddNVarChar2)}(\"{column.Name}\", {type.Length?.ToString("D", CultureInfo.InvariantCulture)}",
                 SqlBinaryFloat _ => $"{nameof(Oracle12cColumns.AddBinaryFloat)}(\"{column.Name}\"",
                 SqlBinaryDouble _ => $"{nameof(Oracle12cColumns.AddBinaryDouble)}(\"{column.Name}\"",
-                SqlBfile _ => $"{nameof(Oracle12cColumns.AddBfile)}(\"{column.Name}\"",
+                SqlBFile _ => $"{nameof(Oracle12cColumns.AddBfile)}(\"{column.Name}\"",
                 SqlBlob _ => $"{nameof(Oracle12cColumns.AddBlob)}(\"{column.Name}\"",
                 SqlClob _ => $"{nameof(Oracle12cColumns.AddClob)}(\"{column.Name}\"",
                 SqlLong _ => $"{nameof(Oracle12cColumns.AddLong)}(\"{column.Name}\"",
