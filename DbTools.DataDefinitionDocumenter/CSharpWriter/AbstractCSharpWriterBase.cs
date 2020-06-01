@@ -45,7 +45,7 @@
             return "";
         }
 
-        protected void AddForeignKeySettingsSingleColumn(StringBuilder sb, DocumenterHelper helper, ForeignKey fkOnColumn)
+        protected virtual void AddForeignKeySettingsSingleColumn(StringBuilder sb, DocumenterHelper helper, ForeignKey fkOnColumn)
         {
             sb.Append(".SetForeignKeyToColumn(nameof(")
                // TODO spec name

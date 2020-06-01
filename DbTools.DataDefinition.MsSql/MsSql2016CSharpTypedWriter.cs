@@ -2,6 +2,8 @@
 {
     using System;
     using System.Globalization;
+    using System.Linq;
+    using System.Text;
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionDocumenter;
@@ -47,6 +49,25 @@
                 SqlUniqueIdentifier _ => $"{nameof(MsSql2016Columns)}.AddUniqueIdentifier()",
                 _ => throw new NotImplementedException($"Unmapped type: {type.SqlTypeInfo}"),
             };
+        }
+
+        protected override void AddForeignKeySettingsSingleColumn(StringBuilder sb, DocumenterHelper helper, ForeignKey fkOnColumn)
+        {
+            if (fkOnColumn.SqlEngineVersionSpecificProperties.Count() == 1
+                && fkOnColumn.SqlEngineVersionSpecificProperties.First().Name == "Nocheck"
+                && fkOnColumn.SqlEngineVersionSpecificProperties.First().Value == "true")
+            {
+                sb.Append(".SetForeignKeyToColumnNoCheck(nameof(")
+                    .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
+                    .Append("), \"")
+                    .Append(fkOnColumn.ForeignKeyColumns[0].ReferredColumn.Name)
+                    .Append("\"")
+                    .Append(")");
+            }
+            else
+            {
+                base.AddForeignKeySettingsSingleColumn(sb, helper, fkOnColumn);
+            }
         }
     }
 }
