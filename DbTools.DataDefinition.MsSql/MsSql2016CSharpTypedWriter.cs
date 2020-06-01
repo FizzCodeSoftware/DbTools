@@ -59,7 +59,7 @@
             {
                 sb.Append(".SetForeignKeyToColumnNoCheck(nameof(")
                     .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
-                    .Append("), \"")
+                    .Append("_), \"")
                     .Append(fkOnColumn.ForeignKeyColumns[0].ReferredColumn.Name)
                     .Append("\"")
                     .Append(")");
