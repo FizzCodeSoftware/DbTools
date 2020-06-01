@@ -84,7 +84,7 @@
                 .Append(2, "public ForeignKey ")
                 .Append(fkOnColumn.Name)
                 .Append(" { get; } = ")
-                .Append("Generic1Columns") // TODO overwrite per engine
+                .Append(Version)
                 .Append(".SetForeignKeyTo(nameof(")
                 .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
                 .Append("), ")

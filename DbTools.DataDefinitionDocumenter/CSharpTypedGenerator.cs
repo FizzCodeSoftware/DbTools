@@ -89,7 +89,9 @@
             sb
                 .Append(2, "public Index ")
                 .Append(index.Name)
-                .Append(" { get; } = Generic1Columns.AddIndex(")
+                .Append(" { get; } = ")
+                .Append(Version)
+                .Append(".AddIndex(")
                 .Append(index.Unique ? "true" : "")
                 .Append(string.Join(", ", index.SqlColumns.Select(c => "nameof(" + c.SqlColumn.Name + ")")))
                 .AppendLine(");");
@@ -101,7 +103,9 @@
             sb
                 .Append(2, "public UniqueConstraint ")
                 .Append(uniqueConstraint.Name)
-                .Append(" { get; } = Generic1Columns.AddUniqueConstraint(")
+                .Append(" { get; } = ")
+                .Append(Version)
+                .Append(".AddUniqueConstraint(")
                 .Append(string.Join(", ", uniqueConstraint.SqlColumns.Select(c => "nameof(" + c.SqlColumn.Name + ")")))
                 .AppendLine(");");
         }
