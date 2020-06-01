@@ -124,13 +124,6 @@
                     table.SchemaAndTableName = schemaAndTableName;
                 }
 
-                var tablePlaceHolderProperties = table.Properties;
-
-                foreach (var tablePlaceHolderProperty in tablePlaceHolderProperties)
-                    tablePlaceHolderProperty.SqlTable = table;
-
-                table.Properties.AddRange(tablePlaceHolderProperties);
-
                 table.DatabaseDefinition = this;
                 AddDeclaredColumns(table);
                 AddDeclaredForeignKeys(table);
@@ -215,7 +208,7 @@
             var properties = table.GetType()
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(pi =>
-                    (typeof(ForeignKey).IsAssignableFrom(pi.PropertyType))
+                    typeof(ForeignKey).IsAssignableFrom(pi.PropertyType)
                     && !pi.GetIndexParameters().Any());
 
             foreach (var property in properties)

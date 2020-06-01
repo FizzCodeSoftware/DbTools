@@ -213,12 +213,9 @@
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
             var fk = new ForeignKeyRegistrationToReferredTableExistingColumns(table, referredTableNameWithSchema, null, map);
 
-            /*if (properties != null)
-                fk.SqlEngineVersionSpecificProperties.Add(properties);*/
-
             table.Properties.Add(fk);
 
-            return null; // dummy for now
+            return fk;
         }
 
         public static Index AddIndex(params string[] columnNames)
