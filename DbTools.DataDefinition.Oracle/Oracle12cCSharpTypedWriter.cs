@@ -30,7 +30,8 @@
                 SqlClob _ => $"{nameof(Oracle12c)}.{nameof(Oracle12c.AddClob)}(",
                 SqlLong _ => $"{nameof(Oracle12c)}.{nameof(Oracle12c.AddLong)}(",
                 SqlLongRaw _ => $"{nameof(Oracle12c)}.{nameof(Oracle12c.AddLongRaw)}(",
-                SqlNumber _ => $"{nameof(Oracle12c)}.{nameof(Oracle12c.addnu)}({type.Length?.ToString("D", CultureInfo.InvariantCulture)}, {type.Scale?.ToString("D", CultureInfo.InvariantCulture)}",
+                // TODO AddNumber
+                SqlNumber _ => $"{nameof(Oracle12c)}.{nameof(Oracle12c.AddLongRaw)}({type.Length?.ToString("D", CultureInfo.InvariantCulture)}, {type.Scale?.ToString("D", CultureInfo.InvariantCulture)}",
                 SqlDate _ => $"{nameof(Oracle12c)}.{nameof(Oracle12c.AddDate)}(",
                 SqlTimeStampWithTimeZone _ => $"{nameof(Oracle12c)}.{nameof(Oracle12c.AddTimeStampWithTimeZone)}(",
                 SqlTimeStampWithLocalTimeZone _ => $"{nameof(Oracle12c)}.{nameof(Oracle12c.AddTimeStampWithLocalTimeZone)}(",

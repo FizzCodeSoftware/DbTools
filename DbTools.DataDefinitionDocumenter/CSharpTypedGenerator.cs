@@ -21,6 +21,7 @@
             sb
                 .Append(1, "public class ")
                 .Append(tableName)
+                .Append("_")
                 .AppendLine(" : SqlTable")
                 .AppendLine(1, "{");
 
@@ -74,10 +75,12 @@
             sb
                 .Append(2, "public ")
                 .Append(tableName)
+                .Append("_")
                 .Append(" ")
                 .Append(tableName)
                 .Append(" { get; } = new ")
                 .Append(tableName)
+                .Append("_")
                 .AppendLine("();");
 
             GenerateTableProperties(sb, table);
@@ -95,7 +98,7 @@
                 .Append(Version)
                 .Append(".AddIndex(")
                 .Append(index.Unique ? "true" : "")
-                .Append(string.Join(", ", index.SqlColumns.Select(c => "nameof(" + tableName + "." + c.SqlColumn.Name + ")")))
+                .Append(string.Join(", ", index.SqlColumns.Select(c => "nameof(" + tableName + "_." + c.SqlColumn.Name + ")")))
                 .AppendLine(");");
         }
 
@@ -110,7 +113,7 @@
                 .Append(" { get; } = ")
                 .Append(Version)
                 .Append(".AddUniqueConstraint(")
-                .Append(string.Join(", ", uniqueConstraint.SqlColumns.Select(c => "nameof(" + tableName + "." + c.SqlColumn.Name + ")")))
+                .Append(string.Join(", ", uniqueConstraint.SqlColumns.Select(c => "nameof(" + tableName + "_." + c.SqlColumn.Name + ")")))
                 .AppendLine(");");
         }
 
