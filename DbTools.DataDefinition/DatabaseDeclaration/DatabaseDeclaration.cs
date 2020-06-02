@@ -230,7 +230,7 @@
             var properties = table.GetType()
                 .GetProperties(BindingFlags.Public | BindingFlags.Instance)
                 .Where(pi =>
-                    typeof(SqlTableCustomProperty).IsSubclassOf(pi.PropertyType)
+                    typeof(SqlTableCustomProperty).IsAssignableFrom(pi.PropertyType)
                     && !pi.GetIndexParameters().Any());
 
             foreach (var property in properties)

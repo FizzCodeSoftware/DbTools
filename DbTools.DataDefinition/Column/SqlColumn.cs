@@ -11,7 +11,7 @@
         public SqlTypes Types { get; } = new SqlTypes();
 
         private List<SqlColumnProperty> _properties;
-        public List<SqlColumnProperty> Properties => _properties ?? (_properties = new List<SqlColumnProperty>());
+        public List<SqlColumnProperty> Properties => _properties ??= new List<SqlColumnProperty>();
 
         public override string ToString()
         {
