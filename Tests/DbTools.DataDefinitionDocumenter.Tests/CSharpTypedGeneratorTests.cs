@@ -2,6 +2,7 @@
 {
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -139,6 +140,41 @@
             var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext, "TestDatabaseFkNoCheckTest");
             var generator = new CSharpTypedGenerator(writer, version, "TestDatabaseFkNoCheckTest", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateSingleFile(dd, $"TestDatabaseFkNoCheckTest_Typed_{version}.cs");
+        }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void GeneratorSqlTableCustomProperty(SqlEngineVersion version)
+        {
+            var db = new SqlTableCustomPropertyDbTyped();
+            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
+            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext, "SqlTableCustomPropertyDbTyped");
+            var generator = new CSharpTypedGenerator(writer, version, "SqlTableCustomPropertyDbTyped", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
+            generator.GenerateSingleFile(db, $"SqlTableCustomPropertyDbTyped_{version}.cs");
+        }
+
+        public class SqlTableCustomPropertyDbTyped: TestDatabaseDeclaration
+        {
+            public Table1Table Table1 { get; } = new Table1Table();
+        }
+
+        public class Table1Table : SqlTable
+        {
+            public SqlColumn Id { get; } = Generic1.AddInt32().SetPK().SetIdentity();
+            public SqlColumn Name { get; } = Generic1.AddNVarChar(100);
+            public SqlTableProperty MyCustomProperty { get; } = new MyCustomProperty();
+        }
+
+        public class MyCustomProperty : SqlTableCustomProperty
+        {
+            public MyCustomProperty()
+            {
+            }
+
+            public MyCustomProperty(SqlTable sqlTable)
+                : base(sqlTable)
+            {
+            }
         }
     }
 }

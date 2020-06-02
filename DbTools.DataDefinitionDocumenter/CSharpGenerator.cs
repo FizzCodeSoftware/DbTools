@@ -131,5 +131,9 @@
         {
             WriteSingleFileHeaderCommon(sb, partialClass);
         }
+
+        protected override void GenerateCustomTableProperties(StringBuilder sb, SqlTableCustomProperty customProperty)
+        {
+        }
     }
 }

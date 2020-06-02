@@ -133,5 +133,14 @@
 
             sb.AppendLine(1, "}");
         }
+
+        protected override void GenerateCustomTableProperties(StringBuilder sb, SqlTableCustomProperty customProperty)
+        {
+            sb.Append(2, "public SqlTableCustomProperty ")
+                .Append(customProperty.GetType().Name)
+                .Append(" { get; } = new ")
+                .Append(customProperty.GetType().Name)
+                .AppendLine("();");
+        }
     }
 }

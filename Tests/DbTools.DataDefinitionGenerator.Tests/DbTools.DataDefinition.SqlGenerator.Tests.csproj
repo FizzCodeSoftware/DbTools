@@ -5,7 +5,7 @@
     <IsPackable>false</IsPackable>
     <CodeAnalysisRuleSet>..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
     <PackageId>FizzCode.DbTools.DataDefinition.SqlGenerator.Tests</PackageId>
-    <AssemblyName>izzCode.DbTools.DataDefinition.SqlGenerator.Tests</AssemblyName>
+    <AssemblyName>FizzCode.DbTools.DataDefinition.SqlGenerator.Tests</AssemblyName>
     <RootNamespace>FizzCode.DbTools.DataDefinition.SqlGenerator.Tests</RootNamespace>
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>

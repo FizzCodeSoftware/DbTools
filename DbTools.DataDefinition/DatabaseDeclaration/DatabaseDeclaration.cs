@@ -128,6 +128,7 @@
                 AddDeclaredColumns(table);
                 AddDeclaredForeignKeys(table);
                 UpdateDeclaredIndexes(table);
+                UpdateDeclaredCustomProperties(table);
                 AddTable(table);
             }
 
@@ -221,6 +222,22 @@
                 fk.SqlTable = table;
 
                 table.Properties.Add(fk);
+            }
+        }
+
+        private static void UpdateDeclaredCustomProperties(SqlTable table)
+        {
+            var properties = table.GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(pi =>
+                    typeof(SqlTableCustomProperty).IsSubclassOf(pi.PropertyType)
+                    && !pi.GetIndexParameters().Any());
+
+            foreach (var property in properties)
+            {
+                var customProperty = (SqlTableCustomProperty)property.GetValue(table);
+                customProperty.SqlTable = table;
+                table.Properties.Add(customProperty);
             }
         }
     }

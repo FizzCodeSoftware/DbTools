@@ -226,8 +226,15 @@
                 foreach (var uniqueConstraint in uniqueConstraints)
                     GenerateUniqueConstraint(sb, uniqueConstraint);
             }
+
+            var customProperties = table.Properties.OfType<SqlTableCustomProperty>().ToList();
+            foreach (var customProperty in customProperties)
+                GenerateCustomTableProperties(sb, customProperty);
         }
+
         protected abstract void GenerateIndex(StringBuilder sb, DataDefinition.Index index);
         protected abstract void GenerateUniqueConstraint(StringBuilder sb, UniqueConstraint uniqueConstraint);
+
+        protected abstract void GenerateCustomTableProperties(StringBuilder sb, SqlTableCustomProperty customProperty);
     }
 }
