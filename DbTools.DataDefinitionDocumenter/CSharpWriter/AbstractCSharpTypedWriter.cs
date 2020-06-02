@@ -9,8 +9,8 @@
 
     public abstract class AbstractCSharpTypedWriter : AbstractCSharpWriterBase
     {
-        protected AbstractCSharpTypedWriter(GeneratorContext context, SqlEngineVersion version, Type typeMapperType)
-            : base(context, version, typeMapperType)
+        protected AbstractCSharpTypedWriter(GeneratorContext context, SqlEngineVersion version, Type typeMapperType, string databaseName)
+            : base(context, version, typeMapperType, databaseName)
         {
         }
 

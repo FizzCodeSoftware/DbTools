@@ -9,19 +9,19 @@
 
     public static class CSharpTypedWriterFactory
     {
-        public static AbstractCSharpTypedWriter GetCSharpTypedWriter(SqlEngineVersion version, GeneratorContext context)
+        public static AbstractCSharpTypedWriter GetCSharpTypedWriter(SqlEngineVersion version, GeneratorContext context, string databaseName)
         {
             if (version is GenericVersion)
-                return new Generic1CSharpTypedWriter(context, typeof(Generic1TypeMapper));
+                return new Generic1CSharpTypedWriter(context, typeof(Generic1TypeMapper), databaseName);
 
             if (version is SqLiteVersion)
-                return new SqLite3CSharpTypedWriter(context, typeof(SqLite3TypeMapper));
+                return new SqLite3CSharpTypedWriter(context, typeof(SqLite3TypeMapper), databaseName);
 
             if (version is MsSqlVersion)
-                return new MsSql2016CSharpTypedWriter(context, typeof(MsSql2016TypeMapper));
+                return new MsSql2016CSharpTypedWriter(context, typeof(MsSql2016TypeMapper), databaseName);
 
             if (version is OracleVersion)
-                return new Oracle12cCSharpTypedWriter(context, typeof(Oracle12cTypeMapper));
+                return new Oracle12cCSharpTypedWriter(context, typeof(Oracle12cTypeMapper), databaseName);
 
             throw new NotImplementedException($"Not implemented {version}.");
         }

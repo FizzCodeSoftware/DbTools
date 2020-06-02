@@ -23,7 +23,7 @@
             var db = new TestDatabaseFks();
 
             var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
-            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext);
+            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext, "TestDatabaseFks");
             var generator = new CSharpTypedGenerator(writer, version, "TestDatabaseFks", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
         }
@@ -35,7 +35,7 @@
             var db = new ForeignKeyComposite();
 
             var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version);
-            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext);
+            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext, "TestDatabaseFks");
             var generator = new CSharpTypedGenerator(writer, version, "TestDatabaseFks", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
         }
@@ -47,7 +47,7 @@
             var db = new ForeignKeyComposite();
 
             var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version);
-            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext);
+            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext, "ForeignKeyComposite");
             var generator = new CSharpTypedGenerator(writer, version, "ForeignKeyComposite", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
         }
@@ -58,7 +58,7 @@
         {
             var db = new ForeignKeyCompositeSetForeignKeyTo();
             var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
-            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext);
+            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext, "ForeignKeyCompositeSetForeignKeyTo");
             var generator = new CSharpTypedGenerator(writer, version, "ForeignKeyCompositeSetForeignKeyTo", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
         }
@@ -69,7 +69,7 @@
         {
             var dd = new ForeignKeyCompositeSetForeignKeyToTyped();
             var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
-            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext);
+            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext, "TestDatabaseFkNoCheckTest");
             var generator = new CSharpTypedGenerator(writer, version, "TestDatabaseFkNoCheckTest", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateSingleFile(dd, $"ForeignKeyCompositeSetForeignKeyToTyped_Typed{version}.cs");
         }
@@ -80,7 +80,7 @@
         {
             var dd = new ForeignKeyCompositeSetForeignKeyTo();
             var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
-            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext);
+            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext, "ForeignKeyCompositeSetForeignKeyTo");
             var generator = new CSharpTypedGenerator(writer, version, "TestDatabaseFkNoCheckTest", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateSingleFile(dd, $"GeneratorForeignKeyComposite2Typed_SingleFile_{version}.cs");
         }
@@ -91,7 +91,7 @@
         {
             var db = new TestDatabaseIndex();
             var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
-            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext);
+            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext, "TestDatabaseIndex");
             var generator = new CSharpTypedGenerator(writer, version, "TestDatabaseIndex", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
         }
@@ -102,7 +102,7 @@
         {
             var db = new TestDatabaseUniqueIndex();
             var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
-            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext);
+            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext, "TestDatabaseUniqueIndex");
             var generator = new CSharpTypedGenerator(writer, version, "TestDatabaseUniqueIndex", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
         }
@@ -113,7 +113,7 @@
         {
             var db = new TestDatabaseUniqueConstraint();
             var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
-            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext);
+            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext, "TestDatabaseUniqueConstraint");
             var generator = new CSharpTypedGenerator(writer, version, "TestDatabaseUniqueConstraint", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
         }
@@ -124,7 +124,7 @@
         {
             var db = new DbUniqueConstratintAsFk();
             var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
-            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext);
+            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext, "DbUniqueConstratintAsFk");
             var generator = new CSharpTypedGenerator(writer, version, "DbUniqueConstratintAsFk", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateMultiFile(db);
         }
@@ -136,7 +136,7 @@
 
             var dd = new TestDatabaseFkNoCheckTest();
             var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
-            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext);
+            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext, "TestDatabaseFkNoCheckTest");
             var generator = new CSharpTypedGenerator(writer, version, "TestDatabaseFkNoCheckTest", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateSingleFile(dd, $"TestDatabaseFkNoCheckTest_Typed_{version}.cs");
         }

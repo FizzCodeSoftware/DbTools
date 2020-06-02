@@ -10,8 +10,8 @@
 
     public class MsSql2016CSharpTypedWriter : AbstractCSharpTypedWriter
     {
-        public MsSql2016CSharpTypedWriter(GeneratorContext context, Type typeMapperType)
-            : base(context, MsSqlVersion.MsSql2016, typeMapperType)
+        public MsSql2016CSharpTypedWriter(GeneratorContext context, Type typeMapperType, string databaseName)
+            : base(context, MsSqlVersion.MsSql2016, typeMapperType, databaseName)
         {
         }
 
@@ -53,16 +53,21 @@
 
         protected override void AddForeignKeySettingsSingleColumn(StringBuilder sb, DocumenterHelper helper, ForeignKey fkOnColumn)
         {
+            var tableName = helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
+
             if (fkOnColumn.SqlEngineVersionSpecificProperties.Count() == 1
                 && fkOnColumn.SqlEngineVersionSpecificProperties.First().Name == "Nocheck"
                 && fkOnColumn.SqlEngineVersionSpecificProperties.First().Value == "true")
             {
                 sb.Append(".SetForeignKeyToColumnNoCheck(nameof(")
-                    .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
-                    .Append("_), \"")
+                    .Append(DatabaseName)
+                    .Append(".")
+                    .Append(tableName)
+                    .Append("), nameof(")
+                    .Append(tableName)
+                    .Append("Table.")
                     .Append(fkOnColumn.ForeignKeyColumns[0].ReferredColumn.Name)
-                    .Append("\"")
-                    .Append(")");
+                    .Append("))");
             }
             else
             {

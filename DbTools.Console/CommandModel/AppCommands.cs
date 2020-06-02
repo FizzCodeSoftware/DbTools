@@ -93,7 +93,7 @@ namespace FizzCode.DbTools.Console
             if (flags != null)
                 SetSettingsFromFlags(flags, generatorContext.GeneratorSettings);
 
-            var writer = CSharpWriterFactory.GetCSharpWriter(version, generatorContext);
+            var writer = CSharpWriterFactory.GetCSharpWriter(version, generatorContext, newDatabaseName);
             var generator = new CSharpGenerator(writer, version, newDatabaseName, @namespace);
 
             if (singleOrMulti == "s" || singleOrMulti == "single")
@@ -137,7 +137,7 @@ namespace FizzCode.DbTools.Console
             if (flags != null)
                 SetSettingsFromFlags(flags, generatorContext.GeneratorSettings);
 
-            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, generatorContext);
+            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, generatorContext, newDatabaseName);
             var generator = new CSharpTypedGenerator(writer, version, newDatabaseName, @namespace);
 
             if (singleOrMulti == "s" || singleOrMulti == "single")

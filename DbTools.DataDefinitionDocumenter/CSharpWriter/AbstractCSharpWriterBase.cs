@@ -12,12 +12,14 @@
         public GeneratorContext GeneratorContext { get; }
         public SqlEngineVersion Version { get; }
         public Type TypeMapperType { get; }
+        public string DatabaseName { get; }
 
-        protected AbstractCSharpWriterBase(GeneratorContext context, SqlEngineVersion version, Type typeMapperType)
+        protected AbstractCSharpWriterBase(GeneratorContext context, SqlEngineVersion version, Type typeMapperType, string databaseName)
         {
             GeneratorContext = context;
             Version = version;
             TypeMapperType = typeMapperType;
+            DatabaseName = databaseName;
         }
 
         public abstract string GetColumnCreation(SqlColumn column, DocumenterHelper helper, string extraAnnotation, string comment);
@@ -47,12 +49,17 @@
 
         protected virtual void AddForeignKeySettingsSingleColumn(StringBuilder sb, DocumenterHelper helper, ForeignKey fkOnColumn)
         {
+            var tableName = helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
+
             sb.Append(".SetForeignKeyToColumn(nameof(")
-               // TODO spec name
-               .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
-               .Append("), \"")
-               .Append(fkOnColumn.ForeignKeyColumns[0].ReferredColumn.Name)
-               .Append("\"");
+                .Append(DatabaseName)
+                .Append(".")
+                .Append(tableName)
+                .Append("), nameof(")
+                .Append(tableName)
+                .Append("Table.")
+                .Append(fkOnColumn.ForeignKeyColumns[0].ReferredColumn.Name)
+                .Append(")");
 
             // table.AddInt("PrimaryId").SetForeignKeyToTable(nameof(Primary), new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true")
             sb.Append(AddSqlEngineVersionSpecificProperties(fkOnColumn.SqlEngineVersionSpecificProperties));

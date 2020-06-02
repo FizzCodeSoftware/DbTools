@@ -8,8 +8,8 @@
 
     public class Oracle12cCSharpTypedWriter : AbstractCSharpTypedWriter
     {
-        public Oracle12cCSharpTypedWriter(GeneratorContext context, Type typeMapperType)
-            : base(context, OracleVersion.Oracle12c, typeMapperType)
+        public Oracle12cCSharpTypedWriter(GeneratorContext context, Type typeMapperType, string databaseName)
+            : base(context, OracleVersion.Oracle12c, typeMapperType, databaseName)
         {
         }
 

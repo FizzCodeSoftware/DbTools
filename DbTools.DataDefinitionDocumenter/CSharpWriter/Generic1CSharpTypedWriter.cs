@@ -8,8 +8,8 @@
 
     public class Generic1CSharpTypedWriter : AbstractCSharpTypedWriter
     {
-        public Generic1CSharpTypedWriter(GeneratorContext context, Type typeMapperType)
-            : base(context, GenericVersion.Generic1, typeMapperType)
+        public Generic1CSharpTypedWriter(GeneratorContext context, Type typeMapperType, string databaseName)
+            : base(context, GenericVersion.Generic1, typeMapperType, databaseName)
         {
         }
 
