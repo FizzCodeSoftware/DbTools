@@ -22,7 +22,7 @@
     public class OrderHeader : SqlTable
     {
         public SqlColumn Id { get; } = Generic1.AddInt32().SetPK().SetIdentity();
-        public SqlColumn OrderHeaderDescription { get; } = Generic1.AddNVarChar(100).SetPK().SetIdentity();
+        public SqlColumn OrderHeaderDescription { get; } = Generic1.AddNVarChar(100);
     }
 
     public class Order : SqlTable

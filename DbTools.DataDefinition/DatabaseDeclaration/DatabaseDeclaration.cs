@@ -157,13 +157,27 @@
                 var tablePlaceHolderProperties = column.Table.Properties;
 
                 foreach (var tablePlaceHolderProperty in tablePlaceHolderProperties)
+                {
                     tablePlaceHolderProperty.SqlTable = table;
-
-                table.Properties.AddRange(tablePlaceHolderProperties);
+                    AddTablePlaceHolderProperty(table, column, tablePlaceHolderProperty);
+                }
 
                 column.Table = table;
 
                 table.Columns.Add(column);
+            }
+        }
+
+        private static void AddTablePlaceHolderProperty(SqlTable table, SqlColumn column, SqlTableProperty tablePlaceHolderProperty)
+        {
+            if (tablePlaceHolderProperty is PrimaryKey pk
+                && table.HasProperty<PrimaryKey>())
+            {
+                table.SetPK(column, pk.SqlColumns[0].Order, pk.Name);
+            }
+            else
+            {
+                table.Properties.Add(tablePlaceHolderProperty);
             }
         }
 
