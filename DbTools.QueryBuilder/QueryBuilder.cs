@@ -30,7 +30,7 @@
 
             sb.Append("SELECT ");
             sb.Append(AddQueryElementColumns(_query));
-            sb.AppendComma(AddJoinColumns());
+            sb.Append(AddJoinColumns());
             sb.Append("\r\nFROM ");
             sb.Append(QueryHelper.GetSimplifiedSchemaAndTableName(query.Table.SchemaAndTableName));
             sb.Append(" ");
@@ -41,12 +41,22 @@
             return sb.ToString();
         }
 
-        private string AddQueryElementColumns(QueryElement queryElement, bool useAlias = false)
+        private static string AddQueryElementColumns(QueryElement queryElement, bool useAlias = false)
         {
             // TODO prefix same column names
             var sb = new StringBuilder();
 
-            var columns = queryElement.QueryColumns ?? queryElement.Table.Columns.ToList();
+            if (queryElement.QueryColumns.Count == 1
+                && queryElement.QueryColumns[0] is None)
+            {
+                return "";
+            }
+
+            var columns = new List<QueryColumn>();
+
+            columns = queryElement.QueryColumns.Count == 0
+                ? queryElement.Table.Columns.Select(c => (QueryColumn)c).ToList()
+                : queryElement.QueryColumns;
 
             var last = columns.LastOrDefault();
             foreach (var column in columns)
@@ -80,7 +90,7 @@
             var sb = new StringBuilder();
 
             foreach (var join in _query.Joins)
-                sb.Append(AddQueryElementColumns(join, true));
+                sb.AppendComma(AddQueryElementColumns(join, true));
 
             return sb.ToString();
         }
@@ -99,11 +109,14 @@
         {
             var sb = new StringBuilder();
 
-            sb.Append("\r\nLEFT JOIN ");
-            sb.Append(QueryHelper.GetSimplifiedSchemaAndTableName(join.Table.SchemaAndTableName));
-            sb.Append(" ");
-            sb.Append(join.Alias);
-            sb.Append(" ON ");
+            var joinType = join.JoinType.ToString().ToUpperInvariant();
+            sb.Append("\r\n")
+                .Append(joinType)
+                .Append(" JOIN ")
+                .Append(QueryHelper.GetSimplifiedSchemaAndTableName(join.Table.SchemaAndTableName))
+                .Append(" ")
+                .Append(join.Alias)
+                .Append(" ON ");
 
             var fk = _query.Table.Properties.OfType<ForeignKey>().First();
 
@@ -124,10 +137,15 @@
 
     public class Query : QueryElement
     {
-        public Query(SqlTable table, string alias = null)
-            : base(table, alias)
+        public Query(SqlTable table, string alias = null, params QueryColumn[] columns)
+            : base(table, alias, columns)
         {
             QueryElements.Add(Alias, this);
+        }
+
+        public Query(SqlTable table, params QueryColumn[] columns)
+            : this(table, null, columns)
+        {
         }
 
         public List<Join> Joins { get; } = new List<Join>();
@@ -140,24 +158,75 @@
             return this;
         }
 
-        public Query Join(SqlTable table, string alias = null)
+        public Query Join(SqlTable table, params QueryColumn[] columns)
         {
-            Joins.Add(new Join(table, alias));
+            return Join(table, null, columns);
+        }
+
+        public Query Join(SqlTable table, string alias, params QueryColumn[] columns)
+        {
+            Joins.Add(new Join(table, alias, JoinType.Left, columns));
             return this;
         }
 
-        public Query Join(SqlTable table, params SqlColumn[] columns)
+        public Query JoinRight(SqlTable table, params QueryColumn[] columns)
         {
-            Joins.Add(new Join(table, null, columns));
+            return JoinRight(table, null, columns);
+        }
+
+        public Query JoinRight(SqlTable table, string alias, params QueryColumn[] columns)
+        {
+            Joins.Add(new Join(table, alias, JoinType.Right, columns));
+            return this;
+        }
+
+        public Query JoinInner(SqlTable table, params QueryColumn[] columns)
+        {
+            return JoinInner(table, null, columns);
+        }
+
+        public Query JoinInner(SqlTable table, string alias, params QueryColumn[] columns)
+        {
+            Joins.Add(new Join(table, alias, JoinType.Inner, columns));
             return this;
         }
     }
 
+    public enum JoinType
+    {
+        Left,
+        Inner,
+        Right,
+        Outer
+    }
+
     public class Join : QueryElement
     {
-        public Join(SqlTable table, string alias, params SqlColumn[] columns)
+        public Join(SqlTable table, string alias, JoinType joinType, params QueryColumn[] columns)
             : base(table, alias, columns)
         {
+            JoinType = joinType;
+        }
+
+        public JoinType JoinType { get; set; }
+    }
+
+    public class None : QueryColumn
+    {
+    }
+
+    public class QueryColumn
+    {
+        public string Name { get; set; }
+        public string As { get; set; }
+
+        public static implicit operator QueryColumn(SqlColumn column)
+        {
+            var queryColumn = new QueryColumn
+            {
+                Name = column.Name
+            };
+            return queryColumn;
         }
     }
 
@@ -165,14 +234,20 @@
     {
         public SqlTable Table { get; set; }
         public string Alias { get; set; }
-        public List<SqlColumn> QueryColumns { get; set; }
+        public List<QueryColumn> QueryColumns { get; set; }
 
         public QueryElement(SqlTable table, string alias = null)
         {
             Table = table;
             Alias = alias ?? table.SchemaAndTableName.TableName.Substring(0, 1).ToLower();
         }
-        public QueryElement(SqlTable table, string alias, params SqlColumn[] columns)
+
+        public QueryElement(SqlTable table, params QueryColumn[] columns)
+            : this(table, null, columns)
+        {
+        }
+
+        public QueryElement(SqlTable table, string alias, params QueryColumn[] columns)
         {
             Table = table;
             Alias = alias ?? table.SchemaAndTableName.TableName.Substring(0, 1).ToLower();
