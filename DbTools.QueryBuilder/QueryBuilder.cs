@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.QueryBuilder
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -36,7 +37,7 @@
             sb.Append(" ");
             sb.Append(query.Alias);
 
-            sb.Append(AddJoins());
+            sb.Append(AddJoins(query));
 
             return sb.ToString();
         }
@@ -61,15 +62,21 @@
             var last = columns.LastOrDefault();
             foreach (var column in columns)
             {
-                if (useAlias)
-                {
+                //if (useAlias)
+                //{
                     sb.Append(queryElement.Alias);
                     sb.Append(".");
-                }
+                //}
 
                 sb.Append(column.Name);
 
-                if (useAlias)
+                if (column.As != null)
+                {
+                    sb.Append(" AS '");
+                    sb.Append(column.As);
+                    sb.Append("'");
+                }
+                else if (useAlias)
                 {
                     sb.Append(" AS '");
                     sb.Append(queryElement.Alias);
@@ -95,17 +102,17 @@
             return sb.ToString();
         }
 
-        private string AddJoins()
+        private string AddJoins(Query query)
         {
             var sb = new StringBuilder();
 
             foreach(var join in _query.Joins)
-                sb.Append(AddJoin(join));
+                sb.Append(AddJoin(query, join));
 
             return sb.ToString();
         }
 
-        private string AddJoin(Join join)
+        private string AddJoin(Query query, Join join)
         {
             var sb = new StringBuilder();
 
@@ -118,17 +125,38 @@
                 .Append(join.Alias)
                 .Append(" ON ");
 
-            var fk = _query.Table.Properties.OfType<ForeignKey>().First();
+            if (join.ColumnTo == null && join.ColumnFrom == null)
+            { // auto build JOIN ON
+                var fk = _query.Table.Properties.OfType<ForeignKey>().First(fk => fk.ForeignKeyColumns[0].ReferredColumn.Table.SchemaAndTableName == join.Table.SchemaAndTableName);
 
-            foreach (var fkm in fk.ForeignKeyColumns)
+                foreach (var fkm in fk.ForeignKeyColumns)
+                {
+                    sb.Append(join.Alias);
+                    sb.Append(".");
+                    sb.Append(fkm.ReferredColumn.Name);
+                    sb.Append(" = ");
+                    sb.Append(_query.Alias);
+                    sb.Append(".");
+                    sb.Append(fkm.ForeignKeyColumn.Name);
+                }
+            }
+            else if (join.ColumnTo != null && join.ColumnFrom != null)
             {
                 sb.Append(join.Alias);
                 sb.Append(".");
-                sb.Append(fkm.ReferredColumn.Name);
+                sb.Append(join.ColumnTo.Name);
                 sb.Append(" = ");
                 sb.Append(_query.Alias);
                 sb.Append(".");
-                sb.Append(fkm.ForeignKeyColumn.Name);
+                sb.Append(join.ColumnFrom.Name);
+            }
+            else if (join.ColumnTo != null && join.ColumnFrom == null)
+            {
+                throw new NotImplementedException();
+            }
+            else
+            {
+                throw new NotImplementedException();
             }
 
             return sb.ToString();
@@ -165,8 +193,12 @@
 
         public Query Join(SqlTable table, string alias, params QueryColumn[] columns)
         {
-            Joins.Add(new Join(table, alias, JoinType.Left, columns));
-            return this;
+            return Join(table, null, null, alias, columns);
+        }
+
+        public Query Join(SqlTable table, QueryColumn columnTo, QueryColumn columnFrom, string alias, params QueryColumn[] columns)
+        {
+            return Join(new Join(table, columnTo, columnFrom, alias, JoinType.Left, columns));
         }
 
         public Query JoinRight(SqlTable table, params QueryColumn[] columns)
@@ -176,8 +208,7 @@
 
         public Query JoinRight(SqlTable table, string alias, params QueryColumn[] columns)
         {
-            Joins.Add(new Join(table, alias, JoinType.Right, columns));
-            return this;
+            return Join(new Join(table, null, null, alias, JoinType.Right, columns));
         }
 
         public Query JoinInner(SqlTable table, params QueryColumn[] columns)
@@ -187,8 +218,7 @@
 
         public Query JoinInner(SqlTable table, string alias, params QueryColumn[] columns)
         {
-            Joins.Add(new Join(table, alias, JoinType.Inner, columns));
-            return this;
+            return Join(new Join(table, null, null, alias, JoinType.Inner, columns));
         }
     }
 
@@ -200,14 +230,36 @@
         Outer
     }
 
-    public class Join : QueryElement
+    public class On
     {
-        public Join(SqlTable table, string alias, JoinType joinType, params QueryColumn[] columns)
-            : base(table, alias, columns)
+        public string Value { get; set; }
+
+        public static implicit operator On(string on)
         {
-            JoinType = joinType;
+            var result = new On
+            {
+                Value = on
+            };
+            return result;
         }
 
+        public static implicit operator string(On on)
+        {
+            return on.Value;
+        }
+    }
+
+    public class Join : QueryElement
+    {
+        public Join(SqlTable table, QueryColumn columnTo, QueryColumn columnFrom, string alias, JoinType joinType, params QueryColumn[] columns)
+            : base(table, alias, columns)
+        {
+            ColumnTo = columnTo;
+            ColumnFrom = columnFrom;
+            JoinType = joinType;
+        }
+        public QueryColumn ColumnTo { get; set; }
+        public QueryColumn ColumnFrom { get; set; }
         public JoinType JoinType { get; set; }
     }
 
@@ -217,6 +269,16 @@
 
     public class QueryColumn
     {
+        public QueryColumn()
+        {
+        }
+
+        public QueryColumn(QueryColumn column, string alias)
+        {
+            Name = column.Name;
+            As = alias;
+        }
+
         public string Name { get; set; }
         public string As { get; set; }
 
@@ -239,7 +301,7 @@
         public QueryElement(SqlTable table, string alias = null)
         {
             Table = table;
-            Alias = alias ?? table.SchemaAndTableName.TableName.Substring(0, 1).ToLower();
+            Alias = alias ?? table.SchemaAndTableName.TableName.Substring(0, 1).ToLowerInvariant();
         }
 
         public QueryElement(SqlTable table, params QueryColumn[] columns)
@@ -250,7 +312,7 @@
         public QueryElement(SqlTable table, string alias, params QueryColumn[] columns)
         {
             Table = table;
-            Alias = alias ?? table.SchemaAndTableName.TableName.Substring(0, 1).ToLower();
+            Alias = alias ?? table.SchemaAndTableName.TableName.Substring(0, 1).ToLowerInvariant();
             QueryColumns = columns.ToList();
         }
     }
@@ -279,6 +341,16 @@
                 return schema + separator + tableName;
 
             return tableName;
+        }
+    }
+
+    public static class QueryBuilderHelper
+    {
+        public static QueryColumn[] Except(this SqlTable table, params SqlColumn[] columns)
+        {
+            var columnNames = columns.Select(c => c.Name);
+            var result = table.Columns.Where(c => !columnNames.Contains(c.Name));
+            return result.Select(r => (QueryColumn)r).ToArray();
         }
     }
 }
