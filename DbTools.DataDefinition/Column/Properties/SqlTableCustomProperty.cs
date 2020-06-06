@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-
     public abstract class SqlTableCustomProperty : SqlTableProperty
     {
         protected SqlTableCustomProperty()
