@@ -65,11 +65,16 @@
 
         public string WhereExpression { get; set; }
 
-        public Query Where(params object[] objects)
+        public Query Where(params object[] expressionParts)
+        {
+            return Where(GetExpression(expressionParts));
+        }
+
+        private string GetExpression(params object[] expressionParts)
         {
             var sb = new StringBuilder();
             string previous = null;
-            foreach (var obj in objects)
+            foreach (var obj in expressionParts)
             {
                 if (obj is SqlColumn sqlColumn)
                 {
@@ -81,7 +86,7 @@
                         sb.Append(".");
                     }
 
-                    sb.Append(((QueryColumn)sqlColumn).Name);
+                    sb.Append(((QueryColumn)sqlColumn).Value);
                     previous = null;
                 }
 
@@ -92,12 +97,38 @@
                 }
             }
 
-            return Where(sb.ToString());
+            return sb.ToString();
         }
 
         public Query Where(string whereExpression)
         {
             WhereExpression = whereExpression;
+            return this;
+        }
+
+        public Query AddColumn(string alias, params object[] expressionParts)
+        {
+            var qc = new QueryColumn
+            {
+                Value = GetExpression(expressionParts),
+                As = alias
+            };
+
+            QueryColumns.Add(qc);
+
+            return this;
+        }
+
+        public Query AddCase(string alias, object[] whenExpression, object[] thenExpression, object[] elseExpression)
+        {
+            var qc = new QueryColumn
+            {
+                Value = $"CASE WHEN {GetExpression(whenExpression)} THEN {GetExpression(thenExpression)} ELSE {GetExpression(elseExpression)} END",
+                As = alias
+            };
+
+            QueryColumns.Add(qc);
+
             return this;
         }
     }

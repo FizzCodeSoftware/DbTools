@@ -75,17 +75,36 @@
             Assert.AreEqual("SELECT c.Name, c.ParentId\r\nFROM Child c", result);
         }
 
-        /*[TestMethod]
+        [TestMethod]
         public void SimpleTableColumnExpression()
         {
             var db = new TestDatabaseFksTyped();
             var qb = new QueryBuilder();
-            var q = new Query(db.Child, db.Child.Name, db.Child.ParentId).AddColumn("CASE WHEN ", db.Child.ParentId, " = 1 THEN ", db.Child.ParentId, " ELSE 0 END AS IsParentId1");
+            var q = new Query(db.Child, db.Child.Name, db.Child.ParentId).AddColumn("now", "GetDate()");
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT c.Name, c.ParentId\r\nFROM Child c", result);
-        }*/
+            Assert.AreEqual("SELECT c.Name, c.ParentId, GetDate() AS 'now'\r\nFROM Child c", result);
+        }
+
+        public void Tuple1((object, object) p)
+        {
+            var db = new TestDatabaseFksTyped();
+            Tuple1((db.Child.ParentId, " = 1"));
+        }
+
+        [TestMethod]
+        public void SimpleTableColumnCase()
+        {
+            var db = new TestDatabaseFksTyped();
+            var qb = new QueryBuilder();
+
+            var q = new Query(db.Child, db.Child.Name, db.Child.ParentId).AddColumn("IsParentId1", "CASE WHEN ", db.Child.ParentId, " = 1 THEN ", db.Child.ParentId, " ELSE 0 END");
+
+            var result = qb.Build(q);
+
+            Assert.AreEqual("SELECT c.Name, c.ParentId, CASE WHEN c.ParentId = 1 THEN c.ParentId ELSE 0 END AS 'IsParentId1'\r\nFROM Child c", result);
+        }
 
         [TestMethod]
         public void JoinSameTable()

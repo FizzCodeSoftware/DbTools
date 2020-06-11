@@ -51,13 +51,13 @@
             var last = columns.LastOrDefault();
             foreach (var column in columns)
             {
-                //if (useAlias)
-                //{
-                sb.Append(queryElement.Alias);
-                sb.Append(".");
-                //}
+                if (column.IsDbColumn)
+                {
+                    sb.Append(queryElement.Alias);
+                    sb.Append(".");
+                }
 
-                sb.Append(column.Name);
+                sb.Append(column.Value);
 
                 if (column.As != null)
                 {
@@ -70,7 +70,7 @@
                     sb.Append(" AS '");
                     sb.Append(queryElement.Alias);
                     sb.Append("_");
-                    sb.Append(column.Name);
+                    sb.Append(column.Value);
                     sb.Append("'");
                 }
 
@@ -133,11 +133,11 @@
             {
                 sb.Append(join.Alias);
                 sb.Append(".");
-                sb.Append(join.ColumnTo.Name);
+                sb.Append(join.ColumnTo.Value);
                 sb.Append(" = ");
                 sb.Append(query.Alias);
                 sb.Append(".");
-                sb.Append(join.ColumnFrom.Name);
+                sb.Append(join.ColumnFrom.Value);
             }
             else if (join.ColumnTo != null && join.ColumnFrom == null)
             {

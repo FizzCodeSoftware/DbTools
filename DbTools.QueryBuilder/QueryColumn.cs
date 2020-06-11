@@ -10,18 +10,21 @@
 
         public QueryColumn(QueryColumn column, string alias)
         {
-            Name = column.Name;
+            Value = column.Value;
             As = alias;
         }
 
-        public string Name { get; set; }
+        public string Value { get; set; }
         public string As { get; set; }
+
+        public bool IsDbColumn { get; set; }
 
         public static implicit operator QueryColumn(SqlColumn column)
         {
             var queryColumn = new QueryColumn
             {
-                Name = column.Name
+                Value = column.Name,
+                IsDbColumn = true
             };
             return queryColumn;
         }
