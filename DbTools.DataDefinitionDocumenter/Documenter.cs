@@ -18,8 +18,8 @@
         public Documenter(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
             : base(documenterWriter, context, version, databaseName, fileName)
         {
-            Customizer = context.Customizer is PatternMatchingTableCustomizer
-                ? new PatternMatchingTableCustomizerWithTablesAndItems((PatternMatchingTableCustomizer)context.Customizer)
+            Customizer = context.Customizer is PatternMatchingTableCustomizer customizer
+                ? new PatternMatchingTableCustomizerWithTablesAndItems(customizer)
                 : context.Customizer;
         }
 
