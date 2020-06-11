@@ -7,12 +7,11 @@
         {
         }
 
+#pragma warning disable CA1822 // Mark members as static
         public new bool Unique
+#pragma warning restore CA1822 // Mark members as static
         {
-            get
-            {
-                return true;
-            }
+            get => true;
 
             set
             {

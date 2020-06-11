@@ -21,7 +21,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
     <PackageReference Include="MySql.Data" Version="8.0.20" />
     <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.70" />
     <PackageReference Include="Roslynator.Formatting.Analyzers" Version="1.0.0-rc">
@@ -29,10 +29,10 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
-    <PackageReference Include="Serilog.Exceptions" Version="5.4.0" />
+    <PackageReference Include="Serilog.Exceptions" Version="5.5.0" />
     <PackageReference Include="Serilog.Sinks.Debug" Version="1.0.1" />
     <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
-    <PackageReference Include="System.Data.SQLite" Version="1.0.112.2" />
+    <PackageReference Include="System.Data.SQLite" Version="1.0.113.1" />
   </ItemGroup>
 
   <ItemGroup>
