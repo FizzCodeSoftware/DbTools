@@ -12,6 +12,7 @@
         {
             Value = column.Value;
             As = alias;
+            IsDbColumn = column.IsDbColumn;
         }
 
         public string Value { get; set; }
