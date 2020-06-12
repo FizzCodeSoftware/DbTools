@@ -28,6 +28,13 @@
 
             sb.Append(AddWhere(query));
 
+            foreach (var union in query.Unions)
+            {
+                sb.AppendLine();
+                sb.AppendLine("UNION");
+                sb.Append(Build(union));
+            }
+
             return sb.ToString();
         }
 
@@ -101,7 +108,7 @@
             return sb.ToString();
         }
 
-        private static string AddJoin(Query query, Join join)
+        private static string AddJoin(Query query, JoinBase join)
         {
             var sb = new StringBuilder();
 
@@ -113,6 +120,24 @@
                 .Append(" ")
                 .Append(join.Alias)
                 .Append(" ON ");
+
+            if(join is Join join2)
+                sb.Append(AddJoinOn(query, join2));
+
+            if (join is JoinOn joinOn)
+                sb.Append(AddJoinOn(query, joinOn));
+
+            return sb.ToString();
+        }
+
+        private static string AddJoinOn(Query query, JoinOn joinOn)
+        {
+            return Expression.GetExpression(joinOn.OnExpression, query.QueryElements, joinOn);
+        }
+
+        private static string AddJoinOn(Query query, Join join)
+        {
+            var sb = new StringBuilder();
 
             if (join.ColumnTo == null && join.ColumnFrom == null)
             { // auto build JOIN ON

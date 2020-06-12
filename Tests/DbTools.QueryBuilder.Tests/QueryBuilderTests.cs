@@ -99,7 +99,7 @@
             var db = new TestDatabaseFksTyped();
             var qb = new QueryBuilder();
 
-            var q = new Query(db.Child, db.Child.Name, db.Child.ParentId).AddColumn("IsParentId1", "CASE WHEN ", db.Child.ParentId, " = 1 THEN ", db.Child.ParentId, " ELSE 0 END");
+            var q = new Query(db.Child, db.Child.Name, db.Child.ParentId).AddColumn("IsParentId1", "CASE WHEN", db.Child.ParentId, "= 1 THEN", db.Child.ParentId, "ELSE 0 END");
 
             var result = qb.Build(q);
 
@@ -142,7 +142,7 @@
             var db = new TestDatabaseFksTyped();
             var qb = new QueryBuilder();
             var q = new Query(db.Parent)
-                .Where(db.Parent.Name, " LIKE 'a%'");
+                .Where(db.Parent.Name, "LIKE 'a%'");
 
             var result = qb.Build(q);
 
@@ -157,8 +157,8 @@
             var q = new Query(db.Child)
                 .Join(db.Parent, "p1")
                 .Join(db.Parent, "p2")
-                .Where("p1.", db.Parent.Name, " LIKE 'a%'",
-                " AND ", "p2.", db.Parent.Name, " LIKE 'a%'");
+                .Where("p1.", db.Parent.Name, "LIKE 'a%'",
+                "AND", "p2.", db.Parent.Name, "LIKE 'a%'");
 
             var result = qb.Build(q);
 
@@ -167,6 +167,19 @@
                 "LEFT JOIN Parent p1 ON p1.Id = c.ParentId\r\n" +
                 "LEFT JOIN Parent p2 ON p2.Id = c.ParentId\r\n" +
                 "WHERE p1.Name LIKE 'a%' AND p2.Name LIKE 'a%'", result);
+        }
+
+        [TestMethod]
+        public void Union()
+        {
+            var db = new TestDatabaseFksTyped();
+            var qb = new QueryBuilder();
+            var q = new Query(db.Parent)
+                .Union(new Query(db.Parent));
+
+            var result = qb.Build(q);
+
+            Assert.AreEqual("SELECT p.Id, p.Name\r\nFROM Parent p\r\nUNION\r\nSELECT p.Id, p.Name\r\nFROM Parent p", result);
         }
     }
 }

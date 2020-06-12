@@ -13,5 +13,15 @@
 
             return sb;
         }
+
+        public static StringBuilder AppendSpace(this StringBuilder sb, string value)
+        {
+            if (sb.Length > 0)
+                sb.Append(" ");
+
+            sb.Append(value);
+
+            return sb;
+        }
     }
 }
