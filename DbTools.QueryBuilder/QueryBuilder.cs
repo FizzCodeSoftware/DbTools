@@ -17,6 +17,9 @@
             var sb = new StringBuilder();
 
             sb.Append("SELECT ");
+            if(query.IsDisctinct)
+                sb.Append("DISTINCT ");
+
             sb.Append(AddQueryElementColumns(_query));
             sb.Append(AddJoinColumns());
             sb.Append("\r\nFROM ");

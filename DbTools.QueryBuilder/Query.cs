@@ -117,6 +117,14 @@
             return this;
         }
 
+        public bool IsDisctinct { get; set; }
+
+        public Query Disctinct(bool isDistinct = true)
+        {
+            IsDisctinct = isDistinct;
+            return this;
+        }
+
         private object GetExpression(object[] expressionParts)
         {
             return Expression.GetExpression(expressionParts, QueryElements);
