@@ -15,6 +15,12 @@
             IsDbColumn = column.IsDbColumn;
         }
 
+        public QueryColumn(string value, string alias)
+        {
+            Value = value;
+            As = alias;
+        }
+
         public string Value { get; set; }
         public string As { get; set; }
 
