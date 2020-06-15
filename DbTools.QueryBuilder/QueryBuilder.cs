@@ -25,7 +25,7 @@
             sb.Append("\r\nFROM ");
             sb.Append(QueryHelper.GetSimplifiedSchemaAndTableName(query.Table.SchemaAndTableName));
             sb.Append(" ");
-            sb.Append(query.Alias);
+            sb.Append(query.Table.Alias);
 
             sb.Append(AddJoins(query));
 
@@ -63,7 +63,7 @@
             {
                 if (column.IsDbColumn)
                 {
-                    sb.Append(queryElement.Alias);
+                    sb.Append(queryElement.Table.Alias);
                     sb.Append(".");
                 }
 
@@ -78,7 +78,7 @@
                 else if (useAlias)
                 {
                     sb.Append(" AS '");
-                    sb.Append(queryElement.Alias);
+                    sb.Append(queryElement.Table.Alias);
                     sb.Append("_");
                     sb.Append(column.Value);
                     sb.Append("'");
@@ -126,7 +126,7 @@
                 .Append(" JOIN ")
                 .Append(QueryHelper.GetSimplifiedSchemaAndTableName(join.Table.SchemaAndTableName))
                 .Append(" ")
-                .Append(join.Alias)
+                .Append(join.Table.Alias)
                 .Append(" ON ");
 
             if(join is Join join2)
@@ -153,22 +153,22 @@
 
                 foreach (var fkm in fk.ForeignKeyColumns)
                 {
-                    sb.Append(join.Alias);
+                    sb.Append(join.Table.Alias);
                     sb.Append(".");
                     sb.Append(fkm.ReferredColumn.Name);
                     sb.Append(" = ");
-                    sb.Append(query.Alias);
+                    sb.Append(query.Table.Alias);
                     sb.Append(".");
                     sb.Append(fkm.ForeignKeyColumn.Name);
                 }
             }
             else if (join.ColumnTo != null && join.ColumnFrom != null)
             {
-                sb.Append(join.Alias);
+                sb.Append(join.Table.Alias);
                 sb.Append(".");
                 sb.Append(join.ColumnTo.Value);
                 sb.Append(" = ");
-                sb.Append(query.Alias);
+                sb.Append(query.Table.Alias);
                 sb.Append(".");
                 sb.Append(join.ColumnFrom.Value);
             }

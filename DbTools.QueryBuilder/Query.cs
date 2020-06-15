@@ -5,14 +5,14 @@
 
     public class Query : QueryElement
     {
-        public Query(SqlTable table, string alias = null, params QueryColumn[] columns)
-            : base(table, alias, columns)
+        public Query(SqlTable sqlTable, string alias = null, params QueryColumn[] columns)
+            : base(sqlTable, alias, columns)
         {
             QueryElements.Add(this);
         }
 
-        public Query(SqlTable table, params QueryColumn[] columns)
-            : this(table, null, columns)
+        public Query(SqlTable sqlTable, params QueryColumn[] columns)
+            : this(sqlTable, null, columns)
         {
         }
 
@@ -76,6 +76,11 @@
         public Query InnerJoinOn(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
         {
             return Join(new JoinOn(table, on, alias, JoinType.Inner, columns));
+        }
+
+        public Query InnerJoinOn(SqlTable table, Expression on, params QueryColumn[] columns)
+        {
+            return Join(new JoinOn(table, on, JoinType.Inner, columns));
         }
 
         public string WhereExpression { get; set; }

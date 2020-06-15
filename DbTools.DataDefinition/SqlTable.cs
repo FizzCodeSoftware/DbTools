@@ -51,5 +51,7 @@
             configurator.Invoke(sqlColumn);
             return sqlColumn;
         }
+
+        public string Alias { get; set; }
     }
 }

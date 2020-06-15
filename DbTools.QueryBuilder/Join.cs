@@ -15,6 +15,12 @@
             JoinType = joinType;
         }
 
+        protected JoinBase(SqlTable table, JoinType joinType, params QueryColumn[] columns)
+            : base(table, columns)
+        {
+            JoinType = joinType;
+        }
+
         public JoinType JoinType { get; set; }
     }
 
@@ -35,6 +41,12 @@
     {
         public JoinOn(SqlTable table, Expression on, string alias, JoinType joinType, params QueryColumn[] columns)
             : base(table, alias, joinType, columns)
+        {
+            OnExpression = on;
+        }
+
+        public JoinOn(SqlTable table, Expression on, JoinType joinType, params QueryColumn[] columns)
+            : base(table, joinType, columns)
         {
             OnExpression = on;
         }
@@ -83,9 +95,13 @@
                     {
                         var table = sqlColumn.Table;
 
-                        var alias = mainQueryElement?.Table == table
-                            ? mainQueryElement.Alias
-                            : queryElements.Where(qe => qe.Table == table).Select(qe => qe.Alias).Single();
+                        var alias = "";
+
+                        alias = table.Alias;
+
+                        /*var alias = mainQueryElement?.Table.SchemaAndTableName == table.SchemaAndTableName
+                            ? mainQueryElement.Table.Alias
+                            : queryElements.Where(qe => qe.Table.SchemaAndTableName == table.SchemaAndTableName).Select(qe => qe.Table.Alias).Single();*/
 
                         sb.AppendSpace(alias);
                         sb.Append(".");

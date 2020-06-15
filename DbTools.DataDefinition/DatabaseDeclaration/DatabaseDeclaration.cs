@@ -125,10 +125,7 @@
                 }
 
                 table.DatabaseDefinition = this;
-                AddDeclaredColumns(table);
-                AddDeclaredForeignKeys(table);
-                UpdateDeclaredIndexes(table);
-                UpdateDeclaredCustomProperties(table);
+                SetupDeclaredTable(table);
                 AddTable(table);
             }
 
@@ -141,6 +138,14 @@
             {
                 throw new InvalidOperationException(nameof(DatabaseDeclaration) + " is only compatible with tabled defined in public properties. Please review the following fields: " + string.Join(", ", fields.Select(fi => fi.Name)));
             }
+        }
+
+        private static void SetupDeclaredTable(SqlTable table)
+        {
+            AddDeclaredColumns(table);
+            AddDeclaredForeignKeys(table);
+            UpdateDeclaredIndexes(table);
+            UpdateDeclaredCustomProperties(table);
         }
 
         private static void AddDeclaredColumns(SqlTable table)
