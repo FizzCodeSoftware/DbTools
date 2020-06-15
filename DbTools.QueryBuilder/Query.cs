@@ -73,6 +73,12 @@
             return Join(new JoinOn(table, on, alias, JoinType.Left, columns));
         }
 
+        public Query LeftJoinOn(SqlTable table, Expression on, params QueryColumn[] columns)
+        {
+            return Join(new JoinOn(table, on, JoinType.Left, columns));
+        }
+
+
         public Query InnerJoinOn(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
         {
             return Join(new JoinOn(table, on, alias, JoinType.Inner, columns));

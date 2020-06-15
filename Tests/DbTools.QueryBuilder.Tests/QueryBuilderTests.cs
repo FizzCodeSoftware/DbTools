@@ -196,5 +196,26 @@
 
             Assert.AreEqual("SELECT p.Id, p.Name\r\nFROM Parent p\r\nUNION\r\nSELECT p.Id, p.Name\r\nFROM Parent p", result);
         }
+
+        [TestMethod]
+        public void TableAliases()
+        {
+            var db = new TestDatabaseFksTyped();
+            var qb = new QueryBuilder();
+
+            var p1 = db.Parent.Clone("p1");
+            var p2 = db.Parent.Clone("p2");
+
+            var q = new Query(db.Child)
+                .LeftJoinOn(p1, new Expression(p1.Id, "=", db.Child.ParentId), new None())
+                .LeftJoinOn(p2, new Expression(p2.Id, "=", p1.Id), new None());
+
+            var result = qb.Build(q);
+
+            Assert.AreEqual(@"SELECT c.Id, c.Name, c.ParentId
+FROM Child c
+LEFT JOIN Parent p1 ON p1.Id = c.ParentId
+LEFT JOIN Parent p2 ON p2.Id = p1.Id", result);
+        }
     }
 }
