@@ -25,7 +25,7 @@
             var db = new TestDatabaseFksTyped();
             var qb = new QueryBuilder();
             var q = new Query(db.Child)
-                .Join(db.Parent, "ppp");
+                .LeftJoin(db.Parent, "ppp");
 
             var result = qb.Build(q);
 
@@ -40,7 +40,7 @@
             var db = new TestDatabaseFksTyped();
             var qb = new QueryBuilder();
             var q = new Query(db.Child)
-                .JoinInner(db.Parent, new None());
+                .InnerJoin(db.Parent, new None());
 
             var result = qb.Build(q);
 
@@ -55,7 +55,7 @@
             var db = new TestDatabaseFksTyped();
             var qb = new QueryBuilder();
             var q = new Query(db.Child, new None())
-                .JoinInner(db.Parent);
+                .InnerJoin(db.Parent);
 
             var result = qb.Build(q);
 
@@ -70,7 +70,7 @@
             var db = new TestDatabaseFksTyped();
             var qb = new QueryBuilder();
             var q = new Query(db.Child)
-                .Join(db.Parent, db.Parent.Name);
+                .LeftJoin(db.Parent, db.Parent.Name);
 
             var result = qb.Build(q);
 
@@ -127,8 +127,8 @@
             var db = new TestDatabaseFksTyped();
             var qb = new QueryBuilder();
             var q = new Query(db.Child)
-                .Join(db.Parent, "p1")
-                .Join(db.Parent, "p2");
+                .LeftJoin(db.Parent, "p1")
+                .LeftJoin(db.Parent, "p2");
 
             var result = qb.Build(q);
 
@@ -170,8 +170,8 @@
             var db = new TestDatabaseFksTyped();
             var qb = new QueryBuilder();
             var q = new Query(db.Child)
-                .Join(db.Parent, "p1")
-                .Join(db.Parent, "p2")
+                .LeftJoin(db.Parent, "p1")
+                .LeftJoin(db.Parent, "p2")
                 .Where("p1.", db.Parent.Name, "LIKE 'a%'",
                 "AND", "p2.", db.Parent.Name, "LIKE 'a%'");
 

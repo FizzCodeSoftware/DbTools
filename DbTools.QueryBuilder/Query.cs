@@ -33,17 +33,17 @@
             return this;
         }
 
-        public Query Join(SqlTable table, params QueryColumn[] columns)
+        public Query LeftJoin(SqlTable table, params QueryColumn[] columns)
         {
-            return Join(table, null, columns);
+            return LeftJoin(table, null, columns);
         }
 
-        public Query Join(SqlTable table, string alias, params QueryColumn[] columns)
+        public Query LeftJoin(SqlTable table, string alias, params QueryColumn[] columns)
         {
-            return Join(table, null, null, alias, columns);
+            return LeftJoin(table, null, null, alias, columns);
         }
 
-        public Query Join(SqlTable table, QueryColumn columnTo, QueryColumn columnFrom, string alias, params QueryColumn[] columns)
+        public Query LeftJoin(SqlTable table, QueryColumn columnTo, QueryColumn columnFrom, string alias, params QueryColumn[] columns)
         {
             return Join(new Join(table, columnTo, columnFrom, alias, JoinType.Left, columns));
         }
@@ -58,22 +58,22 @@
             return Join(new Join(table, null, null, alias, JoinType.Right, columns));
         }
 
-        public Query JoinInner(SqlTable table, params QueryColumn[] columns)
+        public Query InnerJoin(SqlTable table, params QueryColumn[] columns)
         {
-            return JoinInner(table, null, columns);
+            return InnerJoin(table, null, columns);
         }
 
-        public Query JoinInner(SqlTable table, string alias, params QueryColumn[] columns)
+        public Query InnerJoin(SqlTable table, string alias, params QueryColumn[] columns)
         {
             return Join(new Join(table, null, null, alias, JoinType.Inner, columns));
         }
 
-        public Query JoinOn(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
+        public Query LeftJoinOn(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
         {
             return Join(new JoinOn(table, on, alias, JoinType.Left, columns));
         }
 
-        public Query JoinOnInner(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
+        public Query InnerJoinOn(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
         {
             return Join(new JoinOn(table, on, alias, JoinType.Inner, columns));
         }
