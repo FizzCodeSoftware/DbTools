@@ -50,6 +50,21 @@
         }
 
         [TestMethod]
+        public void JoinColumnsParentNone()
+        {
+            var db = new TestDatabaseFksTyped();
+            var qb = new QueryBuilder();
+            var q = new Query(db.Child, new None())
+                .JoinInner(db.Parent);
+
+            var result = qb.Build(q);
+
+            Assert.AreEqual("SELECT p.Id AS 'p_Id', p.Name AS 'p_Name'\r\n"
+                + "FROM Child c\r\n" +
+                "INNER JOIN Parent p ON p.Id = c.ParentId", result);
+        }
+
+        [TestMethod]
         public void ParentFieldWithChild()
         {
             var db = new TestDatabaseFksTyped();

@@ -95,8 +95,13 @@
         {
             var sb = new StringBuilder();
 
-            foreach (var join in _query.Joins)
-                sb.AppendComma(AddQueryElementColumns(join, true));
+            for (var i = 0; i < _query.Joins.Count; i++)
+            {
+                if(i == 0 && _query.QueryColumns.Count == 1 && _query.QueryColumns[0] is None)
+                    sb.Append(AddQueryElementColumns(_query.Joins[i], true));
+                else
+                    sb.AppendComma(AddQueryElementColumns(_query.Joins[i], true));
+            }
 
             return sb.ToString();
         }
