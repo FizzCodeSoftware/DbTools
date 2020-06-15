@@ -196,4 +196,11 @@
         public override bool HasScale => false;
         public override bool IsMaxLengthAllowed => false;
     }
+
+    public class SqlRowVersion : MsSqlType2016
+    {
+        public override bool HasLength => false;
+        public override bool HasScale => false;
+        public override bool IsMaxLengthAllowed => false;
+    }
 }

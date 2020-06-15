@@ -44,6 +44,7 @@
                 "UNIQUEIDENTIFIER" => base.MapSqlType(MsSqlType2016.UniqueIdentifier, isNullable),
                 "TEXT" => base.MapSqlType(MsSqlType2016.Text, isNullable),
                 "NTEXT" => base.MapSqlType(MsSqlType2016.NText, isNullable),
+                "TIMESTAMP" => base.MapSqlType(MsSqlType2016.RowVersion, isNullable),
                 _ => throw new NotImplementedException($"Unmapped SqlType: {type}."),
             };
         }

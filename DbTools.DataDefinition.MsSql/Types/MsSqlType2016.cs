@@ -34,6 +34,8 @@ namespace FizzCode.DbTools.DataDefinition
         public static SqlNText NText { get; } = new SqlNText();
         public static SqlUniqueIdentifier UniqueIdentifier { get; } = new SqlUniqueIdentifier();
         public static SqlXml Xml { get; } = new SqlXml();
+
+        public static SqlRowVersion RowVersion { get; } = new SqlRowVersion();
     }
 
     public static class MsSqlType2016Extensions
