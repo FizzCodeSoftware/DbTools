@@ -203,8 +203,8 @@
             var db = new TestDatabaseFksTyped();
             var qb = new QueryBuilder();
 
-            var p1 = db.Parent.Clone("p1");
-            var p2 = db.Parent.Clone("p2");
+            var p1 = db.Parent.Alias("p1");
+            var p2 = db.Parent.Alias("p2");
 
             var q = new Query(db.Child)
                 .LeftJoinOn(p1, new Expression(p1.Id, "=", db.Child.ParentId), new None())

@@ -5,9 +5,14 @@
     using System.Reflection;
     using FizzCode.DbTools.DataDefinition;
 
+    public class AliasTableProperty : SqlTableCustomProperty
+    {
+        public string Alias { get; set; }
+    }
+
     public static class SqlTableExtension
     {
-        public static T Clone<T>(this T table, string alias = null) where T : SqlTable, new()
+        public static T Alias<T>(this T table, string alias = null) where T : SqlTable, new()
         {
             var newTable = new T
             {
@@ -19,7 +24,10 @@
 
             foreach (var column in table.Columns)
             {
-                newTable.Columns.Add(column);
+                var newSqlColumn = new SqlColumn();
+                column.CopyTo(newSqlColumn);
+                newSqlColumn.Table = newTable;
+                newTable.Columns.Add(newSqlColumn);
             }
 
             SetAlias(newTable, alias);
@@ -29,11 +37,29 @@
             return newTable;
         }
 
+        private static void SetAliasProperty(this SqlTable sqlTable, string alias)
+        {
+            var aliasTableProperty = sqlTable.Properties.OfType<AliasTableProperty>().FirstOrDefault();
+            if (aliasTableProperty == null)
+            {
+                aliasTableProperty = new AliasTableProperty();
+                sqlTable.Properties.Add(aliasTableProperty);
+            }
+
+            aliasTableProperty.Alias = alias;
+        }
+
+        public static string GetAlias(this SqlTable sqlTable)
+        {
+            var aliasTableProperty = sqlTable.Properties.OfType<AliasTableProperty>().FirstOrDefault();
+            return aliasTableProperty?.Alias;
+        }
+
         public static void SetAlias(SqlTable table, string alias)
         {
             if (!string.IsNullOrEmpty(alias))
             {
-                table.Alias = alias;
+                table.SetAliasProperty(alias);
                 return;
             }
 
@@ -41,8 +67,8 @@
             var capitals = new string(tableName.Where(c => char.IsUpper(c)).ToArray());
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
-            table.Alias = capitals.Length > 0 ? capitals.ToLowerInvariant()
-                : alias ?? tableName.Substring(0, 1).ToLowerInvariant();
+            table.SetAliasProperty( capitals.Length > 0 ? capitals.ToLowerInvariant()
+                : alias ?? tableName.Substring(0, 1).ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
         }
 
@@ -147,10 +173,13 @@
         public QueryElement(SqlTable sqlTable, string alias, params QueryColumn[] columns)
             : this(sqlTable, columns)
         {
-            if (string.IsNullOrEmpty(Table.Alias))
+            if(alias == null || Table.GetAlias() != alias)
+                Table = sqlTable.Alias(alias);
+
+            /*if (string.IsNullOrEmpty(Table.Alias))
                 SqlTableExtension.SetAlias(Table, alias);
             else
-                Table = sqlTable.Clone(alias);
+                Table = sqlTable.Clone(alias);*/
         }
     }
 }

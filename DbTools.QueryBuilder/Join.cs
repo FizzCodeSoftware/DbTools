@@ -97,11 +97,14 @@
 
                         var alias = "";
 
-                        alias = table.Alias;
+                        alias = table.GetAlias();
 
-                        /*var alias = mainQueryElement?.Table.SchemaAndTableName == table.SchemaAndTableName
-                            ? mainQueryElement.Table.Alias
-                            : queryElements.Where(qe => qe.Table.SchemaAndTableName == table.SchemaAndTableName).Select(qe => qe.Table.Alias).Single();*/
+                        if (alias == null)
+                        {
+                            alias = mainQueryElement?.Table.SchemaAndTableName == table.SchemaAndTableName
+                            ? mainQueryElement.Table.GetAlias()
+                            : queryElements.Single(qe => qe.Table.SchemaAndTableName == table.SchemaAndTableName).Table.GetAlias();
+                        }
 
                         sb.AppendSpace(alias);
                         sb.Append(".");
