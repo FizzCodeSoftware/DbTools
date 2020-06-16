@@ -192,23 +192,4 @@
             return null;
         }
     }
-
-    public class On
-    {
-        public string Value { get; set; }
-
-        public static implicit operator On(string on)
-        {
-            var result = new On
-            {
-                Value = on
-            };
-            return result;
-        }
-
-        public static implicit operator string(On on)
-        {
-            return on.Value;
-        }
-    }
 }

@@ -3,6 +3,25 @@
     using System.Collections.Generic;
     using FizzCode.DbTools.DataDefinition;
 
+    public static class Q
+    {
+        /// <summary>
+        /// Shorthand to create new Expression "&lt;<paramref name="obj1"/>&gt; = &lt;<paramref name="obj2"/>&gt;".
+        /// </summary>
+        public static new Expression Equals(object obj1, object obj2)
+        {
+            return new Expression(obj1, "=", obj2);
+        }
+
+        /// <summary>
+        /// Shorthand for Expression().
+        /// </summary>
+        public static Expression Ex(params object[] expressionParts)
+        {
+            return new Expression(expressionParts);
+        }
+    }
+
     public class Query : QueryElement
     {
         public Query(SqlTable sqlTable, string alias = null, params QueryColumn[] columns)

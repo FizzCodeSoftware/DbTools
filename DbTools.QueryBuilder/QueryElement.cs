@@ -5,11 +5,6 @@
     using System.Reflection;
     using FizzCode.DbTools.DataDefinition;
 
-    public class AliasTableProperty : SqlTableCustomProperty
-    {
-        public string Alias { get; set; }
-    }
-
     public static class SqlTableExtension
     {
         public static T Alias<T>(this T table, string alias = null) where T : SqlTable, new()
