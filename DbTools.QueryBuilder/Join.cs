@@ -22,6 +22,13 @@
         }
 
         public JoinType JoinType { get; set; }
+
+        public override string ToString()
+        {
+#pragma warning disable IDE0071 // Simplify interpolation
+            return $"{JoinType.ToString()}Join {Table.SchemaAndTableName} AS {Table.GetAlias()}";
+#pragma warning restore IDE0071 // Simplify interpolation
+        }
     }
 
     public class Join : JoinBase

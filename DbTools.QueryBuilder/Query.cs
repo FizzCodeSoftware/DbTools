@@ -5,16 +5,29 @@
 
     public class Query : QueryElement
     {
-        public Query(SqlTable sqlTable, string alias = null, params QueryColumn[] columns)
+        public Query(SqlTable sqlTable, string alias, QueryColumnAliasStrategy queryColumnAliasStrategy, params QueryColumn[] columns)
             : base(sqlTable, alias, columns)
         {
             QueryElements.Add(this);
+            QueryColumnAliasStrategy = queryColumnAliasStrategy;
+        }
+
+        public Query(SqlTable sqlTable, string alias = null, params QueryColumn[] columns)
+            : this(sqlTable, alias, QueryColumnAliasStrategy.PrefixTableNameIfNeeded, columns)
+        {
         }
 
         public Query(SqlTable sqlTable, params QueryColumn[] columns)
             : this(sqlTable, null, columns)
         {
         }
+
+        public Query(SqlTable sqlTable, QueryColumnAliasStrategy queryColumnAliasStrategy, params QueryColumn[] columns)
+            : this(sqlTable, null, queryColumnAliasStrategy, columns)
+        {
+        }
+
+        public QueryColumnAliasStrategy QueryColumnAliasStrategy { get; set; }
 
         public List<JoinBase> Joins { get; } = new List<JoinBase>();
         public List<Query> Unions { get; } = new List<Query>();

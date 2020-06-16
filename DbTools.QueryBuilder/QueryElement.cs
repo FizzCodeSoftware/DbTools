@@ -21,5 +21,16 @@
             if(alias == null || Table.GetAlias() != alias)
                 Table = sqlTable.Alias(alias);
         }
+
+        public List<QueryColumn> GetColumns()
+        {
+            if (QueryColumns.Count == 1 && QueryColumns[0] is None)
+                return null;
+
+            if (QueryColumns.Count == 0)
+                return Table.Columns.Select(c => (QueryColumn)c).ToList();
+
+            return QueryColumns;
+        }
     }
 }

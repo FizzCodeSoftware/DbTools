@@ -2,6 +2,7 @@
 {
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.QueryBuilder;
+    using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -16,7 +17,7 @@
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT p.Id, p.Name\r\nFROM Parent p", result);
+            AssertCustom.AreEqual("SELECT p.Id, p.Name\r\nFROM Parent p", result);
         }
 
         [TestMethod]
@@ -24,12 +25,12 @@
         {
             var db = new TestDatabaseFksTyped();
             var qb = new QueryBuilder();
-            var q = new Query(db.Child)
+            var q = new Query(db.Child, QueryColumnAliasStrategy.PrefixTableAliasAlways)
                 .LeftJoin(db.Parent, "ppp");
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT c.Id, c.Name, c.ParentId, ppp.Id AS 'ppp_Id', ppp.Name AS 'ppp_Name'\r\n"
+            AssertCustom.AreEqual("SELECT c.Id, c.Name, c.ParentId, ppp.Id AS 'ppp_Id', ppp.Name AS 'ppp_Name'\r\n"
                 + "FROM Child c\r\n" +
                 "LEFT JOIN Parent ppp ON ppp.Id = c.ParentId", result);
         }
@@ -44,7 +45,7 @@
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT c.Id, c.Name, c.ParentId\r\n"
+            AssertCustom.AreEqual("SELECT c.Id, c.Name, c.ParentId\r\n"
                 + "FROM Child c\r\n" +
                 "INNER JOIN Parent p ON p.Id = c.ParentId", result);
         }
@@ -59,7 +60,22 @@
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT p.Id AS 'p_Id', p.Name AS 'p_Name'\r\n"
+            AssertCustom.AreEqual("SELECT p.Id, p.Name\r\n"
+                + "FROM Child c\r\n" +
+                "INNER JOIN Parent p ON p.Id = c.ParentId", result);
+        }
+
+        [TestMethod]
+        public void JoinColumnsParentNone_PrefixTableAliasAlways()
+        {
+            var db = new TestDatabaseFksTyped();
+            var qb = new QueryBuilder();
+            var q = new Query(db.Child, QueryColumnAliasStrategy.PrefixTableAliasAlways, new None())
+                .InnerJoin(db.Parent);
+
+            var result = qb.Build(q);
+
+            AssertCustom.AreEqual("SELECT p.Id AS 'p_Id', p.Name AS 'p_Name'\r\n"
                 + "FROM Child c\r\n" +
                 "INNER JOIN Parent p ON p.Id = c.ParentId", result);
         }
@@ -74,7 +90,7 @@
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT c.Id, c.Name, c.ParentId, p.Name AS 'p_Name'\r\nFROM Child c\r\n" +
+            AssertCustom.AreEqual("SELECT c.Id, c.Name, c.ParentId, p.Name AS 'ParentName'\r\nFROM Child c\r\n" +
                 "LEFT JOIN Parent p ON p.Id = c.ParentId", result);
         }
 
@@ -87,7 +103,7 @@
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT c.Name, c.ParentId\r\nFROM Child c", result);
+            AssertCustom.AreEqual("SELECT c.Name, c.ParentId\r\nFROM Child c", result);
         }
 
         [TestMethod]
@@ -99,13 +115,7 @@
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT c.Name, c.ParentId, GetDate() AS 'now'\r\nFROM Child c", result);
-        }
-
-        public void Tuple1((object, object) p)
-        {
-            var db = new TestDatabaseFksTyped();
-            Tuple1((db.Child.ParentId, " = 1"));
+            AssertCustom.AreEqual("SELECT c.Name, c.ParentId, GetDate() AS 'now'\r\nFROM Child c", result);
         }
 
         [TestMethod]
@@ -118,7 +128,7 @@
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT c.Name, c.ParentId, CASE WHEN c.ParentId = 1 THEN c.ParentId ELSE 0 END AS 'IsParentId1'\r\nFROM Child c", result);
+            AssertCustom.AreEqual("SELECT c.Name, c.ParentId, CASE WHEN c.ParentId = 1 THEN c.ParentId ELSE 0 END AS 'IsParentId1'\r\nFROM Child c", result);
         }
 
         [TestMethod]
@@ -132,7 +142,7 @@
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT c.Id, c.Name, c.ParentId, p1.Id AS 'p1_Id', p1.Name AS 'p1_Name', p2.Id AS 'p2_Id', p2.Name AS 'p2_Name'\r\n" +
+            AssertCustom.AreEqual("SELECT c.Id, c.Name, c.ParentId, p1.Id AS 'ParentId', p1.Name AS 'ParentName', p2.Id AS 'ParentId', p2.Name AS 'ParentName'\r\n" +
                 "FROM Child c\r\n" +
                 "LEFT JOIN Parent p1 ON p1.Id = c.ParentId\r\n" +
                 "LEFT JOIN Parent p2 ON p2.Id = c.ParentId", result);
@@ -148,7 +158,7 @@
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT p.Id, p.Name\r\nFROM Parent p\r\nWHERE 1 = 1", result);
+            AssertCustom.AreEqual("SELECT p.Id, p.Name\r\nFROM Parent p\r\nWHERE 1 = 1", result);
         }
 
         [TestMethod]
@@ -161,7 +171,7 @@
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT p.Id, p.Name\r\nFROM Parent p\r\nWHERE p.Name LIKE 'a%'", result);
+            AssertCustom.AreEqual("SELECT p.Id, p.Name\r\nFROM Parent p\r\nWHERE p.Name LIKE 'a%'", result);
         }
 
         [TestMethod]
@@ -169,7 +179,7 @@
         {
             var db = new TestDatabaseFksTyped();
             var qb = new QueryBuilder();
-            var q = new Query(db.Child)
+            var q = new Query(db.Child, QueryColumnAliasStrategy.PrefixTableAliasIfNeeded)
                 .LeftJoin(db.Parent, "p1")
                 .LeftJoin(db.Parent, "p2")
                 .Where("p1.", db.Parent.Name, "LIKE 'a%'",
@@ -177,7 +187,7 @@
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT c.Id, c.Name, c.ParentId, p1.Id AS 'p1_Id', p1.Name AS 'p1_Name', p2.Id AS 'p2_Id', p2.Name AS 'p2_Name'\r\n" +
+            AssertCustom.AreEqual("SELECT c.Id, c.Name, c.ParentId, p1.Id AS 'p1_Id', p1.Name AS 'p1_Name', p2.Id AS 'p2_Id', p2.Name AS 'p2_Name'\r\n" +
                 "FROM Child c\r\n" +
                 "LEFT JOIN Parent p1 ON p1.Id = c.ParentId\r\n" +
                 "LEFT JOIN Parent p2 ON p2.Id = c.ParentId\r\n" +
@@ -194,7 +204,7 @@
 
             var result = qb.Build(q);
 
-            Assert.AreEqual("SELECT p.Id, p.Name\r\nFROM Parent p\r\nUNION\r\nSELECT p.Id, p.Name\r\nFROM Parent p", result);
+            AssertCustom.AreEqual("SELECT p.Id, p.Name\r\nFROM Parent p\r\nUNION\r\nSELECT p.Id, p.Name\r\nFROM Parent p", result);
         }
 
         [TestMethod]
@@ -212,7 +222,7 @@
 
             var result = qb.Build(q);
 
-            Assert.AreEqual(@"SELECT c.Id, c.Name, c.ParentId
+            AssertCustom.AreEqual(@"SELECT c.Id, c.Name, c.ParentId
 FROM Child c
 LEFT JOIN Parent p1 ON p1.Id = c.ParentId
 LEFT JOIN Parent p2 ON p2.Id = p1.Id", result);
