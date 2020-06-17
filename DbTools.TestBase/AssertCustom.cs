@@ -2,7 +2,6 @@
 {
     using System.Globalization;
     using System.Linq;
-    using System.Reflection.Metadata.Ecma335;
     using System.Text;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -28,7 +27,7 @@
 
                 var firstDiffIndex = expecteds[i].Zip(actuals[i], (c1, c2) => c1 == c2).TakeWhile(b => b).Count();
 
-                msg.Append(i+1.ToString(CultureInfo.InvariantCulture));
+                msg.Append((i+1).ToString(CultureInfo.InvariantCulture));
                 msg.AppendLine(":");
                 msg.Append(' ', firstDiffIndex);
                 msg.AppendLine("ˇ");
