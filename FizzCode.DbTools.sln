@@ -49,7 +49,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.Configuration", "Db
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.Tabular", "DbTools.Tabular\DbTools.Tabular.csproj", "{B52E947E-10D7-48A3-B805-C01833EDCD53}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionExecuterMigrationIntegrationTests", "Tests\DbTools.DataDefinitionExecuterMigrationIntegrationTests\DbTools.DataDefinitionExecuterMigrationIntegrationTests.csproj", "{D4D31827-17B7-45D7-BB6C-568C38CCDE84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionExecuterMigrationIntegration.Tests", "Tests\DbTools.DataDefinitionExecuterMigrationIntegrationTests\DbTools.DataDefinitionExecuterMigrationIntegration.Tests.csproj", "{D4D31827-17B7-45D7-BB6C-568C38CCDE84}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.MsSql", "DbTools.DataDefinition.MsSql\DbTools.DataDefinition.MsSql.csproj", "{4C79E665-85EE-4A83-817A-C814E92D18F1}"
 EndProject
@@ -61,7 +61,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.Fact
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTools.QueryBuilder", "DbTools.QueryBuilder\DbTools.QueryBuilder.csproj", "{7C8358BA-7809-42DB-9BEC-A5A769024C1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTools.QueryBuilderTests", "Tests\DbTools.QueryBuilder.Tests\DbTools.QueryBuilderTests.csproj", "{7219150D-2272-4124-91C3-EA639A9D5082}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTools.QueryBuilder.Tests", "Tests\DbTools.QueryBuilder.Tests\DbTools.QueryBuilder.Tests.csproj", "{7219150D-2272-4124-91C3-EA639A9D5082}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
