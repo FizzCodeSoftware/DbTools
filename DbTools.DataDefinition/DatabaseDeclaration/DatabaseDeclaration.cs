@@ -4,12 +4,28 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using FizzCode.DbTools.QueryBuilder.Interface;
 
     public class DatabaseDeclaration : DatabaseDefinition
     {
         public NamingStrategies NamingStrategies { get; }
         public const char SchemaTableNameSeparator = 'ꜗ';
         public string DefaultSchema { get; }
+
+        protected DatabaseDeclaration(IQueryBuilder queryBuilder, AbstractTypeMapper mainTypeMapper, AbstractTypeMapper[] secondaryTypeMappers = null, string defaultSchema = null, NamingStrategies namingStrategies = null)
+            : base(mainTypeMapper, secondaryTypeMappers)
+        {
+            DefaultSchema = defaultSchema;
+            NamingStrategies = namingStrategies ?? new NamingStrategies();
+
+            QueryBuilder = queryBuilder;
+
+            AddDeclaredTables();
+            AddDeclaredStoredProcedures();
+            CreateRegisteredForeignKeys();
+            AddAutoNaming(GetTables());
+            CircularFKDetector.DectectCircularFKs(GetTables());
+        }
 
         protected DatabaseDeclaration(AbstractTypeMapper mainTypeMapper, AbstractTypeMapper[] secondaryTypeMappers = null, string defaultSchema = null, NamingStrategies namingStrategies = null)
             : base(mainTypeMapper, secondaryTypeMappers)
@@ -23,6 +39,8 @@
             AddAutoNaming(GetTables());
             CircularFKDetector.DectectCircularFKs(GetTables());
         }
+
+        public IQueryBuilder QueryBuilder { get; }
 
         private static IEnumerable<T> GetProperties<T>(SqlTable sqlTable)
         {
@@ -196,6 +214,9 @@
             foreach (var property in properties)
             {
                 var sp = (StoredProcedure)property.GetValue(this);
+
+                if (sp is StoredProcedureFromQuery spq)
+                    sp = new StoredProcedure(QueryBuilder.Build(spq.Query), spq.SpParameters?.ToArray());
 
                 if (sp.SchemaAndSpName == null)
                 {

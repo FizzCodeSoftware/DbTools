@@ -4,33 +4,34 @@
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.QueryBuilder.Interface;
 
-    public class QueryBuilder
+    public class QueryBuilder : IQueryBuilder
     {
         private Query _query;
 
-        public string Build(Query query)
+        public string Build(IQuery query)
         {
-            _query = query;
+            _query = query as Query;
 
             var sb = new StringBuilder();
 
             sb.Append("SELECT ");
-            if(query.IsDisctinct)
+            if(_query.IsDisctinct)
                 sb.Append("DISTINCT ");
 
             sb.Append(AddQueryElementColumns(_query));
             sb.Append(AddJoinColumns());
             sb.Append("\r\nFROM ");
-            sb.Append(QueryHelper.GetSimplifiedSchemaAndTableName(query.Table.SchemaAndTableName));
+            sb.Append(QueryHelper.GetSimplifiedSchemaAndTableName(_query.Table.SchemaAndTableName));
             sb.Append(" ");
-            sb.Append(query.Table.GetAlias());
+            sb.Append(_query.Table.GetAlias());
 
             sb.Append(AddJoins());
 
             sb.Append(AddWhere());
 
-            foreach (var union in query.Unions)
+            foreach (var union in _query.Unions)
             {
                 sb.AppendLine();
                 sb.AppendLine("UNION");

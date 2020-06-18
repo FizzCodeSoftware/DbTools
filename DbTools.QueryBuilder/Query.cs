@@ -2,8 +2,9 @@
 {
     using System.Collections.Generic;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.QueryBuilder.Interface;
 
-    public class Query : QueryElement
+    public class Query : QueryElement, IQuery
     {
         public Query(SqlTable sqlTable, string alias, QueryColumnAliasStrategy queryColumnAliasStrategy, params QueryColumn[] columns)
             : base(sqlTable, alias, columns)

@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
+    <ProjectReference Include="..\DbTools.QueryBuilder.Interface\DbTools.QueryBuilder.Interface.csproj" />
   </ItemGroup>
 
 
