@@ -216,7 +216,7 @@
                 var sp = (StoredProcedure)property.GetValue(this);
 
                 if (sp is StoredProcedureFromQuery spq)
-                    sp = new StoredProcedure(QueryBuilder.Build(spq.Query), spq.SpParameters?.ToArray());
+                    sp.SqlStatementBody = QueryBuilder.Build(spq.Query);
 
                 if (sp.SchemaAndSpName == null)
                 {

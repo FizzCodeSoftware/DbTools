@@ -3,6 +3,7 @@
     using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.MsSql2016;
+    using FizzCode.DbTools.DataDefinition.SqlGenerator;
     using FizzCode.DbTools.QueryBuilder;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -45,7 +46,10 @@
             var db = new DbWithSpQueryBuilder();
             Init(version, db);
 
-            SqlExecuterTestAdapter.GetExecuter(version.UniqueName).ExecuteQuery("GetCompanies");
+            var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC GetCompaniesWithParameter @Id=@Id");
+            sqlStatementWithParameters.Parameters.Add("@Id", 1);
+
+            SqlExecuterTestAdapter.GetExecuter(version.UniqueName).ExecuteQuery(sqlStatementWithParameters);
         }
 
         public class DbWithSpQueryBuilder : DatabaseDeclaration
@@ -64,6 +68,19 @@
                     return new StoredProcedureFromQuery(new Query(Company));
                 }
             }
+
+            public StoredProcedure GetCompaniesWithParameter
+            {
+                get
+                {
+                    var @id = Company.Id;
+
+                    return new StoredProcedureFromQuery(
+                        new Query(Company).Where(Company.Id, "= @id"),
+                        @id);
+                }
+            }
+
 
             public class CompanyTable : SqlTable
             {

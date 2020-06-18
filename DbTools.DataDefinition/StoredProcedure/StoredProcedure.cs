@@ -9,6 +9,9 @@
         {
             SqlStatementBody = sqlStatementBody;
             SpParameters = spParameters.ToList();
+
+            foreach(var spParameter in spParameters)
+                spParameter.StoredProcedure = this;
         }
 
         public string  SqlStatementBody { get; set; }

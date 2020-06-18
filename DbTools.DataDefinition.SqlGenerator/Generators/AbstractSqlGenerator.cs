@@ -330,11 +330,6 @@
                     .Append(p.Name)
                     .Append(" ");
                 sb.Append(GenerateType(p.Type));
-
-                if (p.Type.IsNullable)
-                    sb.Append(" NULL");
-                else
-                    sb.Append(" NOT NULL");
             }
 
             // EXECUTE AS
