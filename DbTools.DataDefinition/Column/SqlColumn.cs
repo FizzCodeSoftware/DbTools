@@ -3,12 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class SqlColumn
+    public class SqlColumn : SqlElementWithNameAndType
     {
         public SqlTable Table { get; set; }
-        public string Name { get; set; }
-
-        public SqlTypes Types { get; } = new SqlTypes();
 
         private List<SqlColumnProperty> _properties;
         public List<SqlColumnProperty> Properties => _properties ??= new List<SqlColumnProperty>();
@@ -44,18 +41,6 @@
             return Properties.Any(x => x is T);
         }
 
-        public SqlType Type
-        {
-            get
-            {
-                if (Table.DatabaseDefinition?.MainVersion != null)
-                    return Types[Table.DatabaseDefinition.MainVersion];
-
-                if (Types.Count == 1)
-                    return Types.First().Value;
-
-                return null;
-            }
-        }
+        protected override DatabaseDefinition DatabaseDefinition => Table.DatabaseDefinition;
     }
 }

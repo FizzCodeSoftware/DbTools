@@ -243,8 +243,36 @@
 
             var sb = new StringBuilder();
             sb.Append(GuardKeywords(column.Name))
-                .Append(" ")
-                .Append(type.SqlTypeInfo.SqlDataType);
+                .Append(" ");
+
+            sb.Append(GenerateType(type));
+
+            var identity = column.Properties.OfType<Identity>().FirstOrDefault();
+            if (identity != null)
+            {
+                GenerateCreateColumnIdentity(sb, identity);
+            }
+
+            var defaultValue = column.Properties.OfType<DefaultValue>().FirstOrDefault();
+            if (defaultValue != null)
+            {
+                sb.Append(" DEFAULT(")
+                    .Append(defaultValue.Value)
+                    .Append(")");
+            }
+
+            if (type.IsNullable)
+                sb.Append(" NULL");
+            else
+                sb.Append(" NOT NULL");
+
+            return sb.ToString();
+        }
+
+        protected virtual string GenerateType(SqlType type)
+        {
+            var sb = new StringBuilder();
+            sb.Append(type.SqlTypeInfo.SqlDataType);
 
             if (type.Scale.HasValue)
             {
@@ -274,25 +302,6 @@
                 sb.Append(")");
             }
 
-            var identity = column.Properties.OfType<Identity>().FirstOrDefault();
-            if (identity != null)
-            {
-                GenerateCreateColumnIdentity(sb, identity);
-            }
-
-            var defaultValue = column.Properties.OfType<DefaultValue>().FirstOrDefault();
-            if (defaultValue != null)
-            {
-                sb.Append(" DEFAULT(")
-                    .Append(defaultValue.Value)
-                    .Append(")");
-            }
-
-            if (type.IsNullable)
-                sb.Append(" NULL");
-            else
-                sb.Append(" NOT NULL");
-
             return sb.ToString();
         }
 
@@ -303,6 +312,38 @@
                 .Append(",")
                 .Append(identity.Increment)
                 .Append(")");
+        }
+
+        public virtual string CreateStoredProcedure(StoredProcedure sp)
+        {
+            var sb = new StringBuilder();
+            sb.Append("CREATE PROCEDURE ")
+                .AppendLine(GetSimplifiedSchemaAndTableName(sp.SchemaAndSpName));
+
+            var idx = 0;
+            foreach (var p in sp.SpParameters)
+            {
+                if (idx++ > 0)
+                    sb.AppendLine(",");
+
+                sb.Append("@")
+                    .Append(p.Name)
+                    .Append(" ");
+                sb.Append(GenerateType(p.Type));
+
+                if (p.Type.IsNullable)
+                    sb.Append(" NULL");
+                else
+                    sb.Append(" NOT NULL");
+            }
+
+            // EXECUTE AS
+            sb.AppendLine();
+            sb.AppendLine("AS");
+
+            sb.Append(sp.SqlStatementBody);
+
+            return sb.ToString();
         }
 
         public abstract string GuardKeywords(string name);

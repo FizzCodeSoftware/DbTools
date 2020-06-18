@@ -9,6 +9,7 @@
         public Dictionary<SqlEngineVersion, AbstractTypeMapper> TypeMappers { get; set; } = new Dictionary<SqlEngineVersion, AbstractTypeMapper>();
         public SqlEngineVersion MainVersion { get; private set; }
         internal Tables Tables { get; } = new Tables();
+        public List<StoredProcedure> StoredProcedures { get; } = new List<StoredProcedure>();
 
         public DatabaseDefinition(AbstractTypeMapper mainTypeMapper, AbstractTypeMapper[] secondaryTypeMappers = null)
         {

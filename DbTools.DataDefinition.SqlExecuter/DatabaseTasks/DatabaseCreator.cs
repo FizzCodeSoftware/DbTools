@@ -13,13 +13,14 @@
             DatabaseDefinition = databaseDefinition;
         }
 
-        public void ReCreateDatabase(bool createTables)
+        public void ReCreateDatabase(bool createElements)
         {
             Executer.InitializeDatabase(true, DatabaseDefinition);
 
-            if (createTables)
+            if (createElements)
             {
                 CreateTables();
+                CreateStoredProcedures();
             }
         }
 
@@ -144,6 +145,15 @@
         public void CleanupDatabase()
         {
             Executer.CleanupDatabase();
+        }
+
+        public void CreateStoredProcedures()
+        {
+            foreach (var sp in DatabaseDefinition.StoredProcedures)
+            {
+                var sql = Executer.Generator.CreateStoredProcedure(sp);
+                Executer.ExecuteNonQuery(sql);
+            }
         }
     }
 }

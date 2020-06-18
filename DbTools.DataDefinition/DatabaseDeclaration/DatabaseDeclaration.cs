@@ -18,6 +18,7 @@
             NamingStrategies = namingStrategies ?? new NamingStrategies();
 
             AddDeclaredTables();
+            AddDeclaredStoredProcedures();
             CreateRegisteredForeignKeys();
             AddAutoNaming(GetTables());
             CircularFKDetector.DectectCircularFKs(GetTables());
@@ -186,6 +187,30 @@
             }
         }
 
+        private void AddDeclaredStoredProcedures()
+        {
+            var properties = GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(pi => typeof(StoredProcedure).IsAssignableFrom(pi.PropertyType));
+
+            foreach (var property in properties)
+            {
+                var sp = (StoredProcedure)property.GetValue(this);
+
+                if (sp.SchemaAndSpName == null)
+                {
+                    var schemaAndTableName = new SchemaAndTableName(property.Name);
+                    if (string.IsNullOrEmpty(schemaAndTableName.Schema) && !string.IsNullOrEmpty(DefaultSchema))
+                        schemaAndTableName.Schema = DefaultSchema;
+
+                    sp.SchemaAndSpName = schemaAndTableName;
+                }
+
+                sp.DatabaseDefinition = this;
+
+                StoredProcedures.Add(sp);
+            }
+        }
         protected static SqlTable AddTable(Action<SqlTable> configurator)
         {
             var table = new SqlTable();
