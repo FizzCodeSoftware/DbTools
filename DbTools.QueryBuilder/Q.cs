@@ -20,5 +20,17 @@
         {
             return new Expression(expressionParts);
         }
+
+        public static None None { get; } = new None();
+
+        public static QueryColumn QC(QueryColumn column, string alias)
+        {
+            return new QueryColumn(column, alias);
+        }
+
+        public static QueryColumn QC(string value, string alias)
+        {
+            return new QueryColumn(value, alias);
+        }
     }
 }
