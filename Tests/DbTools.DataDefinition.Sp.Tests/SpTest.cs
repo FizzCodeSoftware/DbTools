@@ -76,7 +76,7 @@
                     var @id = Company.Id;
 
                     return new StoredProcedureFromQuery(
-                        new Query(Company).Where(Company.Id, "= @id"),
+                        new Query(Company).Where(Company.Id, "= @Id"),
                         @id);
                 }
             }
