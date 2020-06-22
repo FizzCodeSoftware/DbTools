@@ -18,8 +18,11 @@
         public QueryElement(SqlTable sqlTable, string alias, params QueryColumn[] columns)
             : this(sqlTable, columns)
         {
-            if(alias == null || Table.GetAlias() != alias)
+            if((alias == null && Table.GetAlias() == null)
+                || (alias != null && Table.GetAlias() != alias))
+            {
                 Table = sqlTable.Alias(alias);
+            }
         }
 
         public List<QueryColumn> GetColumns()
