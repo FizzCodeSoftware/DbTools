@@ -93,7 +93,7 @@
 
         public Query LeftJoinOn(SqlTable table, Expression on, params QueryColumn[] columns)
         {
-            return Join(new JoinOn(table, on, JoinType.Left, columns));
+            return LeftJoinOn(table, null, on, columns);
         }
 
         public Query InnerJoinOn(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
@@ -103,7 +103,7 @@
 
         public Query InnerJoinOn(SqlTable table, Expression on, params QueryColumn[] columns)
         {
-            return Join(new JoinOn(table, on, JoinType.Inner, columns));
+            return InnerJoinOn(table, null, on, columns);
         }
 
         public string WhereExpression { get; set; }
