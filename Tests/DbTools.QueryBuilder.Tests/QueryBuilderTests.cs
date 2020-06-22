@@ -2,7 +2,7 @@
 {
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.QueryBuilder;
-    using FizzCode.DbTools.TestBase;
+    using FizzCode.LightWeight.MsTest;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

@@ -61,6 +61,11 @@
             return Join(new Join(table, columnTo, columnFrom, alias, JoinType.Left, columns));
         }
 
+        public Query LeftJoin(SqlTable table, QueryColumn columnTo, QueryColumn columnFrom, params QueryColumn[] columns)
+        {
+            return LeftJoin(table, columnTo, columnFrom, null, columns);
+        }
+
         public Query JoinRight(SqlTable table, params QueryColumn[] columns)
         {
             return JoinRight(table, null, columns);
