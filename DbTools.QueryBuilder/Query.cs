@@ -49,22 +49,32 @@
 
         public Query LeftJoin(SqlTable table, params QueryColumn[] columns)
         {
-            return LeftJoin(table, null, columns);
+            return LeftJoin(table, null, null, columns);
         }
 
-        public Query LeftJoin(SqlTable table, string alias, params QueryColumn[] columns)
+        public Query LeftJoinAlias(SqlTable table, string alias, params QueryColumn[] columns)
         {
-            return LeftJoin(table, null, null, alias, columns);
+            return LeftJoinAlias(table, alias, null, null, columns);
         }
 
-        public Query LeftJoin(SqlTable table, QueryColumn columnTo, QueryColumn columnFrom, string alias, params QueryColumn[] columns)
+        public Query LeftJoinAlias(SqlTable table, string alias, QueryColumn columnTo, QueryColumn columnFrom, params QueryColumn[] columns)
         {
-            return Join(new Join(table, columnTo, columnFrom, alias, JoinType.Left, columns));
+            return Join(new Join(table, alias, columnTo, columnFrom, JoinType.Left, columns));
+        }
+
+        public Query LeftJoinAlias(SqlTable table, string alias, QueryColumn columnFrom, params QueryColumn[] columns)
+        {
+            return LeftJoinAlias(table, alias, null, columnFrom, columns);
         }
 
         public Query LeftJoin(SqlTable table, QueryColumn columnTo, QueryColumn columnFrom, params QueryColumn[] columns)
         {
-            return LeftJoin(table, columnTo, columnFrom, null, columns);
+            return Join(new Join(table, null, columnTo, columnFrom, JoinType.Left, columns));
+        }
+
+        public Query LeftJoinTo(SqlTable table, QueryColumn columnFrom, params QueryColumn[] columns)
+        {
+            return LeftJoin(table, null, columnFrom, columns);
         }
 
         public Query JoinRight(SqlTable table, params QueryColumn[] columns)
@@ -74,7 +84,7 @@
 
         public Query JoinRight(SqlTable table, string alias, params QueryColumn[] columns)
         {
-            return Join(new Join(table, null, null, alias, JoinType.Right, columns));
+            return Join(new Join(table, alias, null, null, JoinType.Right, columns));
         }
 
         public Query InnerJoin(SqlTable table, params QueryColumn[] columns)
@@ -84,12 +94,12 @@
 
         public Query InnerJoin(SqlTable table, string alias, params QueryColumn[] columns)
         {
-            return Join(new Join(table, null, null, alias, JoinType.Inner, columns));
+            return Join(new Join(table, alias, null, null, JoinType.Inner, columns));
         }
 
         public Query LeftJoinOn(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
         {
-            return Join(new JoinOn(table, on, alias, JoinType.Left, columns));
+            return Join(new JoinOn(table, alias, on, JoinType.Left, columns));
         }
 
         public Query LeftJoinOn(SqlTable table, Expression on, params QueryColumn[] columns)
@@ -99,7 +109,7 @@
 
         public Query InnerJoinOn(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
         {
-            return Join(new JoinOn(table, on, alias, JoinType.Inner, columns));
+            return Join(new JoinOn(table, alias, on, JoinType.Inner, columns));
         }
 
         public Query InnerJoinOn(SqlTable table, Expression on, params QueryColumn[] columns)

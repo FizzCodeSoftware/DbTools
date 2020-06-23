@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <PackageId>FizzCode.DbTools.QueryBulder</PackageId>
+    <PackageId>FizzCode.DbTools.QueryBuilder</PackageId>
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>
     <Description>Query builder for Fizzcode DbTools project</Description>

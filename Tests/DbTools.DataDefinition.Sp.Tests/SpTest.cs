@@ -81,7 +81,6 @@
                 }
             }
 
-
             public class CompanyTable : SqlTable
             {
                 public SqlColumn Id { get; } = MsSql2016.AddInt().SetPK().SetIdentity();

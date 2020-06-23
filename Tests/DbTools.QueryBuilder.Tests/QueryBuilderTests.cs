@@ -26,7 +26,7 @@
             var db = new TestDatabaseFksTyped();
             var qb = new QueryBuilder();
             var q = new Query(db.Child, QueryColumnAliasStrategy.PrefixTableAliasAlways)
-                .LeftJoin(db.Parent, "ppp");
+                .LeftJoinAlias(db.Parent, "ppp");
 
             var result = qb.Build(q);
 
@@ -137,8 +137,8 @@
             var db = new TestDatabaseFksTyped();
             var qb = new QueryBuilder();
             var q = new Query(db.Child)
-                .LeftJoin(db.Parent, "p1")
-                .LeftJoin(db.Parent, "p2");
+                .LeftJoinAlias(db.Parent, "p1")
+                .LeftJoinAlias(db.Parent, "p2");
 
             var result = qb.Build(q);
 
@@ -180,8 +180,8 @@
             var db = new TestDatabaseFksTyped();
             var qb = new QueryBuilder();
             var q = new Query(db.Child, QueryColumnAliasStrategy.PrefixTableAliasIfNeeded)
-                .LeftJoin(db.Parent, "p1")
-                .LeftJoin(db.Parent, "p2")
+                .LeftJoinAlias(db.Parent, "p1")
+                .LeftJoinAlias(db.Parent, "p2")
                 .Where("p1.", db.Parent.Name, "LIKE 'a%'",
                 "AND", "p2.", db.Parent.Name, "LIKE 'a%'");
 

@@ -4,7 +4,7 @@
 
     public class Join : JoinBase
     {
-        public Join(SqlTable table, QueryColumn columnTo, QueryColumn columnFrom, string alias, JoinType joinType, params QueryColumn[] columns)
+        public Join(SqlTable table, string alias, QueryColumn columnTo, QueryColumn columnFrom, JoinType joinType, params QueryColumn[] columns)
             : base(table, alias, joinType, columns)
         {
             ColumnTo = columnTo;

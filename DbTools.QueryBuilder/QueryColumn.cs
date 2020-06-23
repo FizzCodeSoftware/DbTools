@@ -35,5 +35,22 @@
             };
             return queryColumn;
         }
+
+        public override string ToString()
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.Append(Value);
+            if (As != null)
+            {
+                sb.Append(" AS ");
+                sb.Append(As);
+            }
+            if (IsDbColumn)
+            {
+                sb.Append(" (DbColumn)");
+            }
+
+            return sb.ToString();
+        }
     }
 }

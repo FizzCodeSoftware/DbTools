@@ -227,9 +227,26 @@
             {
                 throw new NotImplementedException();
             }
-            else
+            else if (join.ColumnTo == null && join.ColumnFrom != null)
             {
-                throw new NotImplementedException();
+                var fk = _query.Table.Properties.OfType<ForeignKey>().First(fk => fk.ForeignKeyColumns[0].ReferredColumn.Table.SchemaAndTableName == join.Table.SchemaAndTableName);
+
+                var pk = join.Table.Properties.OfType<PrimaryKey>().FirstOrDefault();
+                if(pk == null)
+                    throw new ArgumentException($"Target Join table has no Primary Key. Table: {join.Table.SchemaAndTableName}, referencing column: {join.ColumnFrom}.");
+
+                if (pk.SqlColumns.Count > 1)
+                    throw new ArgumentException("Target Join table Primary Key with multiple columns, Table: {join.Table.SchemaAndTableName}, referencing column: {join.ColumnFrom}.");
+
+                var cao = pk.SqlColumns[0];
+
+                sb.Append(join.Table.GetAlias());
+                sb.Append(".");
+                sb.Append(cao.SqlColumn.Name);
+                sb.Append(" = ");
+                sb.Append(_query.Table.GetAlias());
+                sb.Append(".");
+                sb.Append(join.ColumnFrom.Value);
             }
 
             return sb.ToString();
