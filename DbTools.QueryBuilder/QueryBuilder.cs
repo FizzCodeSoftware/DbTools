@@ -225,7 +225,22 @@
             }
             else if (join.ColumnSource == null && join.ColumnTarget != null)
             {
-                throw new NotImplementedException();
+                var pk = join.Table.Properties.OfType<PrimaryKey>().FirstOrDefault();
+                if (pk == null)
+                    throw new ArgumentException($"Target Join table has no Primary Key. Table: {join.Table.SchemaAndTableName}, source column: {join.ColumnSource}.");
+
+                if (pk.SqlColumns.Count > 1)
+                    throw new ArgumentException($"Target Join table Primary Key with multiple columns, Table: {join.Table.SchemaAndTableName}, source column: {join.ColumnSource}.");
+
+                var cao = pk.SqlColumns[0];
+
+                sb.Append(join.Table.GetAlias());
+                sb.Append(".");
+                sb.Append(cao.SqlColumn.Name);
+                sb.Append(" = ");
+                sb.Append(_query.Table.GetAlias());
+                sb.Append(".");
+                sb.Append(join.ColumnTarget.Value);
             }
             else if (join.ColumnSource != null && join.ColumnTarget == null)
             {
