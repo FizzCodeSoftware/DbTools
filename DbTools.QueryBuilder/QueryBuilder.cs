@@ -198,7 +198,7 @@
         {
             var sb = new StringBuilder();
 
-            if (join.ColumnTo == null && join.ColumnFrom == null)
+            if (join.ColumnSource == null && join.ColumnTarget == null)
             { // auto build JOIN ON
                 var fk = _query.Table.Properties.OfType<ForeignKey>().First(fk => fk.ForeignKeyColumns[0].ReferredColumn.Table.SchemaAndTableName == join.Table.SchemaAndTableName);
 
@@ -213,40 +213,38 @@
                     sb.Append(fkm.ForeignKeyColumn.Name);
                 }
             }
-            else if (join.ColumnTo != null && join.ColumnFrom != null)
+            else if (join.ColumnSource != null && join.ColumnTarget != null)
             {
                 sb.Append(join.Table.GetAlias());
                 sb.Append(".");
-                sb.Append(join.ColumnTo.Value);
+                sb.Append(join.ColumnSource.Value);
                 sb.Append(" = ");
                 sb.Append(_query.Table.GetAlias());
                 sb.Append(".");
-                sb.Append(join.ColumnFrom.Value);
+                sb.Append(join.ColumnTarget.Value);
             }
-            else if (join.ColumnTo != null && join.ColumnFrom == null)
+            else if (join.ColumnSource == null && join.ColumnTarget != null)
             {
                 throw new NotImplementedException();
             }
-            else if (join.ColumnTo == null && join.ColumnFrom != null)
+            else if (join.ColumnSource != null && join.ColumnTarget == null)
             {
-                var fk = _query.Table.Properties.OfType<ForeignKey>().First(fk => fk.ForeignKeyColumns[0].ReferredColumn.Table.SchemaAndTableName == join.Table.SchemaAndTableName);
-
-                var pk = join.Table.Properties.OfType<PrimaryKey>().FirstOrDefault();
+                var pk = _query.Table.Properties.OfType<PrimaryKey>().FirstOrDefault();
                 if(pk == null)
-                    throw new ArgumentException($"Target Join table has no Primary Key. Table: {join.Table.SchemaAndTableName}, referencing column: {join.ColumnFrom}.");
+                    throw new ArgumentException($"Target Join table has no Primary Key. Table: {join.Table.SchemaAndTableName}, source column: {join.ColumnSource}.");
 
                 if (pk.SqlColumns.Count > 1)
-                    throw new ArgumentException("Target Join table Primary Key with multiple columns, Table: {join.Table.SchemaAndTableName}, referencing column: {join.ColumnFrom}.");
+                    throw new ArgumentException($"Target Join table Primary Key with multiple columns, Table: {join.Table.SchemaAndTableName}, source column: {join.ColumnSource}.");
 
                 var cao = pk.SqlColumns[0];
 
                 sb.Append(join.Table.GetAlias());
                 sb.Append(".");
-                sb.Append(cao.SqlColumn.Name);
+                sb.Append(join.ColumnSource.Value);
                 sb.Append(" = ");
                 sb.Append(_query.Table.GetAlias());
                 sb.Append(".");
-                sb.Append(join.ColumnFrom.Value);
+                sb.Append(cao.SqlColumn.Name);
             }
 
             return sb.ToString();

@@ -47,74 +47,340 @@
             return this;
         }
 
-        public Query LeftJoin(SqlTable table, params QueryColumn[] columns)
+        /// <summary>
+        /// Left join the <paramref name="table"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the join condition, from the Foreign Key of the <paramref name="table"/> to the Primary Key of the main table of the Query. For this method, the  <paramref name="table"/> has to be one and only one Foreign Key to the Primary Key.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+            public Query LeftJoin(SqlTable table, params QueryColumn[] columns)
         {
             return LeftJoin(table, null, null, columns);
         }
 
+        /// <summary>
+        /// Left join the <paramref name="table"/> with an <paramref name="alias"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the equality join condition, from the Foreign Key of the <paramref name="table"/> to the Primary Key of the main table of the Query.
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="alias">The alias for the table.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
         public Query LeftJoinAlias(SqlTable table, string alias, params QueryColumn[] columns)
         {
             return LeftJoinAlias(table, alias, null, null, columns);
         }
 
-        public Query LeftJoinAlias(SqlTable table, string alias, QueryColumn columnTo, QueryColumn columnFrom, params QueryColumn[] columns)
+        /// <summary>
+        /// Left join the <paramref name="table"/> with an <paramref name="alias"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the equality join condition, from the <paramref name="columnSource"/> and the <paramref name="columnTarget"/>.
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="alias">The alias for the table.</param>
+        /// <param name="columnSource">The column of the joined table to join on.</param>
+        /// <param name="columnTarget">The column of the other table to join. This might be a column of the main table of the Query, or a column of the table of another QueryElement.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query LeftJoinAlias(SqlTable table, string alias, QueryColumn columnSource, QueryColumn columnTarget, params QueryColumn[] columns)
         {
-            return Join(new Join(table, alias, columnTo, columnFrom, JoinType.Left, columns));
+            return Join(new Join(table, alias, columnSource, columnTarget, JoinType.Left, columns));
         }
 
-        public Query LeftJoinAlias(SqlTable table, string alias, QueryColumn columnFrom, params QueryColumn[] columns)
+        /// <summary>
+        /// Left join the <paramref name="table"/> with an <paramref name="alias"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the equality join condition, from the <paramref name="columnSource"/> to the Primary Key of the main table of the Query..
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="alias">The alias for the table.</param>
+        /// <param name="columnSource">The column of the joined table to join on.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query LeftJoinAlias(SqlTable table, string alias, QueryColumn columnSource, params QueryColumn[] columns)
         {
-            return LeftJoinAlias(table, alias, null, columnFrom, columns);
+            return LeftJoinAlias(table, alias, columnSource, null, columns);
         }
 
-        public Query LeftJoin(SqlTable table, QueryColumn columnTo, QueryColumn columnFrom, params QueryColumn[] columns)
+        /// <summary>
+        /// Left join the <paramref name="table"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the equality join condition, from the <paramref name="columnSource"/> and the <paramref name="columnTarget"/>.
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="columnSource">The column of the joined table to join on.</param>
+        /// <param name="columnTarget">The column of the other table to join. This might be a column of the main table of the Query, or a column of the table of another QueryElement.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query LeftJoin(SqlTable table, QueryColumn columnSource, QueryColumn columnTarget, params QueryColumn[] columns)
         {
-            return Join(new Join(table, null, columnTo, columnFrom, JoinType.Left, columns));
+            return LeftJoinAlias(table, null, columnSource, columnTarget, columns);
         }
 
-        public Query LeftJoinTo(SqlTable table, QueryColumn columnFrom, params QueryColumn[] columns)
+        /// <summary>
+        /// Left join the <paramref name="table"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the equality join condition, from the <paramref name="columnSource"/> to the Primary Key of the main table of the Query..
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="columnSource">The column of the joined table to join on.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query LeftJoinTo(SqlTable table, QueryColumn columnSource, params QueryColumn[] columns)
         {
-            return LeftJoin(table, null, columnFrom, columns);
+            return LeftJoin(table, columnSource, null, columns);
         }
 
-        public Query JoinRight(SqlTable table, params QueryColumn[] columns)
-        {
-            return JoinRight(table, null, columns);
-        }
-
-        public Query JoinRight(SqlTable table, string alias, params QueryColumn[] columns)
-        {
-            return Join(new Join(table, alias, null, null, JoinType.Right, columns));
-        }
-
-        public Query InnerJoin(SqlTable table, params QueryColumn[] columns)
-        {
-            return InnerJoin(table, null, columns);
-        }
-
-        public Query InnerJoin(SqlTable table, string alias, params QueryColumn[] columns)
-        {
-            return Join(new Join(table, alias, null, null, JoinType.Inner, columns));
-        }
-
-        public Query LeftJoinOn(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
+        /// <summary>
+        /// Left join the <paramref name="table"/> with an <paramref name="alias"/>, providing the join condition.
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="alias">The alias for the table.</param>
+        /// <param name="on">The join condition.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query LeftJoinAliasOn(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
         {
             return Join(new JoinOn(table, alias, on, JoinType.Left, columns));
         }
 
+        /// <summary>
+        /// Left join the <paramref name="table"/>, providing the join condition.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="on">The join condition.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
         public Query LeftJoinOn(SqlTable table, Expression on, params QueryColumn[] columns)
         {
-            return LeftJoinOn(table, null, on, columns);
+            return LeftJoinAliasOn(table, null, on, columns);
         }
 
-        public Query InnerJoinOn(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
+        /// <summary>
+        /// Right join the <paramref name="table"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the join condition, from the Foreign Key of the <paramref name="table"/> to the Primary Key of the main table of the Query. For this method, the  <paramref name="table"/> has to be one and only one Foreign Key to the Primary Key.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query RightJoin(SqlTable table, params QueryColumn[] columns)
+        {
+            return RightJoin(table, null, null, columns);
+        }
+
+        /// <summary>
+        /// Right join the <paramref name="table"/> with an <paramref name="alias"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the equality join condition, from the Foreign Key of the <paramref name="table"/> to the Primary Key of the main table of the Query.
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="alias">The alias for the table.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query RightJoinAlias(SqlTable table, string alias, params QueryColumn[] columns)
+        {
+            return RightJoinAlias(table, alias, null, null, columns);
+        }
+
+        /// <summary>
+        /// Right join the <paramref name="table"/> with an <paramref name="alias"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the equality join condition, from the <paramref name="columnSource"/> and the <paramref name="columnTarget"/>.
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="alias">The alias for the table.</param>
+        /// <param name="columnSource">The column of the joined table to join on.</param>
+        /// <param name="columnTarget">The column of the other table to join. This might be a column of the main table of the Query, or a column of the table of another QueryElement.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query RightJoinAlias(SqlTable table, string alias, QueryColumn columnSource, QueryColumn columnTarget, params QueryColumn[] columns)
+        {
+            return Join(new Join(table, alias, columnSource, columnTarget, JoinType.Right, columns));
+        }
+
+        /// <summary>
+        /// Right join the <paramref name="table"/> with an <paramref name="alias"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the equality join condition, from the <paramref name="columnSource"/> to the Primary Key of the main table of the Query..
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="alias">The alias for the table.</param>
+        /// <param name="columnSource">The column of the joined table to join on.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query RightJoinAlias(SqlTable table, string alias, QueryColumn columnSource, params QueryColumn[] columns)
+        {
+            return RightJoinAlias(table, alias, columnSource, null, columns);
+        }
+
+        /// <summary>
+        /// Right join the <paramref name="table"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the equality join condition, from the <paramref name="columnSource"/> and the <paramref name="columnTarget"/>.
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="columnSource">The column of the joined table to join on.</param>
+        /// <param name="columnTarget">The column of the other table to join. This might be a column of the main table of the Query, or a column of the table of another QueryElement.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query RightJoin(SqlTable table, QueryColumn columnSource, QueryColumn columnTarget, params QueryColumn[] columns)
+        {
+            return RightJoinAlias(table, null, columnSource, columnTarget, columns);
+        }
+
+        /// <summary>
+        /// Right join the <paramref name="table"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the equality join condition, from the <paramref name="columnSource"/> to the Primary Key of the main table of the Query..
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="columnSource">The column of the joined table to join on.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query RightJoinTo(SqlTable table, QueryColumn columnSource, params QueryColumn[] columns)
+        {
+            return RightJoin(table, columnSource, null, columns);
+        }
+
+        /// <summary>
+        /// Right join the <paramref name="table"/> with an <paramref name="alias"/>, providing the join condition.
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="alias">The alias for the table.</param>
+        /// <param name="on">The join condition.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query RightJoinAliasOn(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
+        {
+            return Join(new JoinOn(table, alias, on, JoinType.Right, columns));
+        }
+
+        /// <summary>
+        /// Right join the <paramref name="table"/>, providing the join condition.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="on">The join condition.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query RightJoinOn(SqlTable table, Expression on, params QueryColumn[] columns)
+        {
+            return RightJoinAliasOn(table, null, on, columns);
+        }
+
+        /// <summary>
+        /// Inner join the <paramref name="table"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the join condition, from the Foreign Key of the <paramref name="table"/> to the Primary Key of the main table of the Query. For this method, the  <paramref name="table"/> has to be one and only one Foreign Key to the Primary Key.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query InnerJoin(SqlTable table, params QueryColumn[] columns)
+        {
+            return InnerJoin(table, null, null, columns);
+        }
+
+        /// <summary>
+        /// Inner join the <paramref name="table"/> with an <paramref name="alias"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the equality join condition, from the Foreign Key of the <paramref name="table"/> to the Primary Key of the main table of the Query.
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="alias">The alias for the table.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query InnerJoinAlias(SqlTable table, string alias, params QueryColumn[] columns)
+        {
+            return InnerJoinAlias(table, alias, null, null, columns);
+        }
+
+        /// <summary>
+        /// Inner join the <paramref name="table"/> with an <paramref name="alias"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the equality join condition, from the <paramref name="columnSource"/> and the <paramref name="columnTarget"/>.
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="alias">The alias for the table.</param>
+        /// <param name="columnSource">The column of the joined table to join on.</param>
+        /// <param name="columnTarget">The column of the other table to join. This might be a column of the main table of the Query, or a column of the table of another QueryElement.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query InnerJoinAlias(SqlTable table, string alias, QueryColumn columnSource, QueryColumn columnTarget, params QueryColumn[] columns)
+        {
+            return Join(new Join(table, alias, columnSource, columnTarget, JoinType.Inner, columns));
+        }
+
+        /// <summary>
+        /// Inner join the <paramref name="table"/> with an <paramref name="alias"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the equality join condition, from the <paramref name="columnSource"/> to the Primary Key of the main table of the Query..
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="alias">The alias for the table.</param>
+        /// <param name="columnSource">The column of the joined table to join on.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query InnerJoinAlias(SqlTable table, string alias, QueryColumn columnSource, params QueryColumn[] columns)
+        {
+            return InnerJoinAlias(table, alias, columnSource, null, columns);
+        }
+
+        /// <summary>
+        /// Inner join the <paramref name="table"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the equality join condition, from the <paramref name="columnSource"/> and the <paramref name="columnTarget"/>.
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="columnSource">The column of the joined table to join on.</param>
+        /// <param name="columnTarget">The column of the other table to join. This might be a column of the main table of the Query, or a column of the table of another QueryElement.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query InnerJoin(SqlTable table, QueryColumn columnSource, QueryColumn columnTarget, params QueryColumn[] columns)
+        {
+            return InnerJoinAlias(table, null, columnSource, columnTarget, columns);
+        }
+
+        /// <summary>
+        /// Inner join the <paramref name="table"/>.
+        /// The <see cref="QueryBuilder"/> will automatically build the equality join condition, from the <paramref name="columnSource"/> to the Primary Key of the main table of the Query..
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="columnSource">The column of the joined table to join on.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query InnerJoinTo(SqlTable table, QueryColumn columnSource, params QueryColumn[] columns)
+        {
+            return InnerJoin(table, columnSource, null, columns);
+        }
+
+        /// <summary>
+        /// Inner join the <paramref name="table"/> with an <paramref name="alias"/>, providing the join condition.
+        /// If the table is referenced in other parts of the query, use table aliasing.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="alias">The alias for the table.</param>
+        /// <param name="on">The join condition.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
+        public Query InnerJoinAliasOn(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
         {
             return Join(new JoinOn(table, alias, on, JoinType.Inner, columns));
         }
 
+        /// <summary>
+        /// Inner join the <paramref name="table"/>, providing the join condition.
+        /// </summary>
+        /// <param name="table">The table to join.</param>
+        /// <param name="on">The join condition.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <returns>The Query.</returns>
         public Query InnerJoinOn(SqlTable table, Expression on, params QueryColumn[] columns)
         {
-            return InnerJoinOn(table, null, on, columns);
+            return InnerJoinAliasOn(table, null, on, columns);
         }
 
         public string WhereExpression { get; set; }

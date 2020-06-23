@@ -4,14 +4,14 @@
 
     public class Join : JoinBase
     {
-        public Join(SqlTable table, string alias, QueryColumn columnTo, QueryColumn columnFrom, JoinType joinType, params QueryColumn[] columns)
+        public Join(SqlTable table, string alias, QueryColumn columnSource, QueryColumn columnTarget, JoinType joinType, params QueryColumn[] columns)
             : base(table, alias, joinType, columns)
         {
-            ColumnTo = columnTo;
-            ColumnFrom = columnFrom;
+            ColumnSource = columnSource;
+            ColumnTarget = columnTarget;
         }
 
-        public QueryColumn ColumnTo { get; set; }
-        public QueryColumn ColumnFrom { get; set; }
+        public QueryColumn ColumnSource { get; set; }
+        public QueryColumn ColumnTarget { get; set; }
     }
 }
