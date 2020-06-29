@@ -21,9 +21,9 @@
             QueryBuilder = queryBuilder;
 
             AddDeclaredTables();
-            AddDeclaredStoredProcedures();
             CreateRegisteredForeignKeys();
             AddAutoNaming(GetTables());
+            AddDeclaredStoredProcedures();
             CircularFKDetector.DectectCircularFKs(GetTables());
         }
 
@@ -215,8 +215,10 @@
             {
                 var sp = (StoredProcedure)property.GetValue(this);
 
-                if (sp is StoredProcedureFromQuery spq)
+                if (sp is StoredProcedureFromQuery spq && QueryBuilder != null)
+                {
                     sp.SqlStatementBody = QueryBuilder.Build(spq.Query);
+                }
 
                 if (sp.SchemaAndSpName == null)
                 {

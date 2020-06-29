@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
+    using System.Reflection.Metadata;
     using System.Text;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
@@ -153,6 +155,9 @@
                 Writer.GetSqlTypeNamespace(),
             };
 
+            if (Context.GeneratorSettings.ShouldUseStoredProceduresFromQueries)
+                usedNamespaces.Add("FizzCode.DbTools.QueryBuilder");
+
             if (AdditionalNamespaces != null)
             {
                 usedNamespaces.AddRange(AdditionalNamespaces);
@@ -173,8 +178,12 @@
             .AppendLine(" : DatabaseDeclaration")
             .AppendLine(1, "{")
             .AppendLine(2, "public " + DatabaseName + "(string defaultSchema = null, NamingStrategies namingStrategies = null)")
-            .Append(3, ": base(")
-            .Append("new ")
+            .Append(3, ": base(");
+
+            if (Context.GeneratorSettings.ShouldUseStoredProceduresFromQueries)
+                sb.Append("new QueryBuilder(), ");
+
+            sb.Append("new ")
             .Append(string.Equals(Writer.TypeMapperType.Namespace, Writer.GetSqlTypeNamespace(), StringComparison.InvariantCultureIgnoreCase)
                 ? Writer.TypeMapperType.Name
                 : Writer.TypeMapperType.AssemblyQualifiedName)

@@ -4,5 +4,7 @@
     {
         public bool ShouldCommentOutColumnsWithFkReferencedTables { get; set; }
         public bool ShouldCommentOutFkReferences { get; set; }
+
+        public bool ShouldUseStoredProceduresFromQueries { get; set; }
     }
 }
