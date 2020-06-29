@@ -151,5 +151,18 @@
             var generator = new CSharpTypedGenerator(writer, version, "SqlTableCustomPropertyDbTyped", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
             generator.GenerateSingleFile(db, $"SqlTableCustomPropertyDbTyped_{version}.cs");
         }
+
+        [TestMethod]
+        [LatestSqlVersions]
+        public void GeneratorSqlTableCustomPropertyConstructor(SqlEngineVersion version)
+        {
+            var db = new SqlTableCustomPropertyConstructor();
+            var documenterContext = DataDefinitionDocumenterTestsHelper.CreateTestGeneratorContext(version, new DocumenterTests.TableCustomizer());
+            var writer = CSharpTypedWriterFactory.GetCSharpTypedWriter(version, documenterContext, "SqlTableCustomPropertyDbTyped");
+            var generator = new CSharpTypedGenerator(writer, version, "SqlTableCustomPropertyConstructor", "FizzCode.DbTools.DataDefinitionDocumenter.Tests");
+            generator.GenerateSingleFile(db, $"SqlTableCustomPropertyConstructor_{version}.cs");
+        }
     }
+
+    
 }

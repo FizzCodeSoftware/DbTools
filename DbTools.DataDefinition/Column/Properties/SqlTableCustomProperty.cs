@@ -11,5 +11,15 @@
             : base(sqlTable)
         {
         }
+
+        /// <summary>
+        /// Override to provide the constructor parameters for the CSharp generator.
+        /// This is only needed if the property has mandatory constructor paramters, other than the SqlTable.
+        /// </summary>
+        /// <returns>The constructor parametrs as CSharp code.</returns>
+        public virtual string GenerateCSharpConstructorParameters()
+        {
+            return string.Empty;
+        }
     }
 }

@@ -140,7 +140,9 @@
                 .Append(customProperty.GetType().Name)
                 .Append(" { get; } = new ")
                 .Append(customProperty.GetType().Name)
-                .AppendLine("();");
+                .Append("(")
+                .Append(customProperty.GenerateCSharpConstructorParameters())
+                .AppendLine(");");
         }
     }
 }

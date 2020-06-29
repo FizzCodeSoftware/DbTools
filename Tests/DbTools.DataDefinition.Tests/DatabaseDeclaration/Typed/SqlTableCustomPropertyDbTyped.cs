@@ -12,7 +12,7 @@
     {
         public SqlColumn Id { get; } = Generic1.AddInt32().SetPK().SetIdentity();
         public SqlColumn Name { get; } = Generic1.AddNVarChar(100);
-        public SqlTableProperty MyCustomProperty { get; } = new MyCustomProperty();
+        public SqlTableCustomProperty MyCustomProperty { get; } = new MyCustomProperty();
     }
 
     public class MyCustomProperty : SqlTableCustomProperty
