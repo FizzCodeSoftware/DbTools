@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.QueryBuilder
 {
+    using System.Linq;
     using FizzCode.DbTools.DataDefinition;
 
     public class QueryColumn
@@ -8,10 +9,11 @@
         {
         }
 
-        public QueryColumn(QueryColumn column, string alias)
+        public QueryColumn(QueryColumn column, string @as)
         {
             Value = column.Value;
-            As = alias;
+            Alias = column.Alias;
+            As = @as;
             IsDbColumn = column.IsDbColumn;
         }
 
@@ -22,7 +24,16 @@
         }
 
         public string Value { get; set; }
+
+        /// <summary>
+        /// The name of the column, if different from Value (ex. ou.OrgUnitId AS 'MyId').
+        /// </summary>
         public string As { get; set; }
+
+        /// <summary>
+        /// The alias for the table.
+        /// </summary>
+        public string Alias { get; set; }
 
         public bool IsDbColumn { get; set; }
 
@@ -31,8 +42,13 @@
             var queryColumn = new QueryColumn
             {
                 Value = column.Name,
-                IsDbColumn = true
+                IsDbColumn = true,
             };
+
+            var aliasTableProperty = column.Table.Properties.OfType<AliasTableProperty>().FirstOrDefault();
+            if (aliasTableProperty != null)
+                queryColumn.Alias = aliasTableProperty.Alias;
+
             return queryColumn;
         }
 

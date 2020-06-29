@@ -53,7 +53,12 @@
             var last = columns.LastOrDefault();
             foreach (var column in columns)
             {
-                if (column.IsDbColumn)
+                if (column.Alias != null)
+                {
+                    sb.Append(column.Alias);
+                    sb.Append(".");
+                }
+                else if (column.IsDbColumn)
                 {
                     sb.Append(queryElement.Table.GetAlias());
                     sb.Append(".");
