@@ -282,6 +282,9 @@
 
         private string AddFilters()
         {
+            if (_query.Filters.Count == 0)
+                return null;
+
             var sb = new StringBuilder();
 
             sb.AppendLine("\r\n");
@@ -310,7 +313,7 @@
         {
             var q = query as Query;
 
-            var paramters = new List<ISqlParameter>();
+            var parameters = new List<ISqlParameter>();
 
             foreach (var filter in q.Filters)
             {
@@ -318,22 +321,22 @@
                 {
                     case FilterType.Between:
                         {
-                            paramters.Append(filter.Parameter.Copy("@min" + filter.Parameter.Name));
-                            paramters.Append(filter.Parameter.Copy("@max" + filter.Parameter.Name));
+                            parameters.Add(filter.Parameter.Copy("min" + filter.Column.Value));
+                            parameters.Add(filter.Parameter.Copy("max" + filter.Column.Value));
                             break;
                         }
 
                     case FilterType.Equal:
                     case FilterType.Greater:
                     case FilterType.Lesser:
-                        paramters.Append(filter.Parameter);
+                        parameters.Add(filter.Parameter);
                         break;
                     default:
                         throw new NotImplementedException($"Filtering for {filter.Type.ToString()} is not implemented.");
                 }
             }
 
-            return paramters;
+            return parameters;
         }
     }
 }

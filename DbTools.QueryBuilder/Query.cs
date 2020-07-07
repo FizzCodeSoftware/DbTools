@@ -443,11 +443,15 @@
             var table = QueryElements.First(qe => qe.Table.GetAlias() == column.Alias).Table;
             var sqlColumn = table.Columns[column.Value];
 
-            var parameter = new SqlParameter(sqlColumn.Table.DatabaseDefinition);
+            var parameter = new SqlParameter(sqlColumn.Table.DatabaseDefinition)
+            {
+                Name = column.Value
+            };
             sqlColumn.Types.CopyTo(parameter.Types);
 
             var filter = new Filter()
             {
+                Column = column,
                 Table = table,
                 Parameter = parameter,
                 Type = FilterType.Between
