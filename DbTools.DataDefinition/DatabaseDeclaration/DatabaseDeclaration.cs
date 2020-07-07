@@ -217,6 +217,11 @@
 
                 if (sp is StoredProcedureFromQuery spq && QueryBuilder != null)
                 {
+                    foreach (var p in QueryBuilder.GetParamtersFromFilters(spq.Query))
+                    {
+                        sp.SpParameters.Add((SqlParameter)p);
+                    }
+
                     sp.SqlStatementBody = QueryBuilder.Build(spq.Query);
                 }
 

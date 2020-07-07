@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.QueryBuilder
 {
     using System.Collections.Generic;
+    using System.Linq;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.QueryBuilder.Interface;
 
@@ -33,6 +34,8 @@
         public List<JoinBase> Joins { get; } = new List<JoinBase>();
         public List<Query> Unions { get; } = new List<Query>();
         public List<QueryElement> QueryElements { get; } = new List<QueryElement>();
+
+        public List<Filter> Filters { get; } = new List<Filter>();
 
         public Query Union(Query query)
         {
@@ -433,6 +436,25 @@
         private object GetExpression(object[] expressionParts)
         {
             return Expression.GetExpression(expressionParts, QueryElements);
+        }
+
+        public Query FilterBetween(QueryColumn column)
+        {
+            var table = QueryElements.First(qe => qe.Table.GetAlias() == column.Alias).Table;
+            var sqlColumn = table.Columns[column.Value];
+
+            var parameter = new SqlParameter(sqlColumn.Table.DatabaseDefinition);
+            sqlColumn.Types.CopyTo(parameter.Types);
+
+            var filter = new Filter()
+            {
+                Table = table,
+                Parameter = parameter,
+                Type = FilterType.Between
+            };
+            Filters.Add(filter);
+
+            return this;
         }
     }
 }

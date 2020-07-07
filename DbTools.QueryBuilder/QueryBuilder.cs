@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.QueryBuilder
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.DataDefinition;
@@ -30,6 +31,7 @@
             sb.Append(AddJoins());
 
             sb.Append(AddWhere());
+            sb.Append(AddFilters());
 
             foreach (var union in _query.Unions)
             {
@@ -276,6 +278,62 @@
                 return "\r\nWHERE " + _query.WhereExpression;
 
             return null;
+        }
+
+        private string AddFilters()
+        {
+            var sb = new StringBuilder();
+
+            sb.AppendLine("\r\n");
+
+            if (string.IsNullOrEmpty(_query.WhereExpression))
+                sb.Append("WHERE ");
+
+            foreach (var filter in _query.Filters)
+            {
+                switch (filter.Type)
+                {
+                    case FilterType.Between:
+                        //(@minStartDate IS NULL OR p.StartDate >= @minStartDate) AND (@maxStartDate IS NULL OR p.StartDate <= @maxStartDate)
+                        // TODO Alias for column
+                        sb.Append("(@min").Append(filter.Column.Value).Append(" IS NULL OR ").Append(filter.Column.Alias).Append('.').Append(filter.Column.Value).Append(" >= @min").Append(filter.Column.Value).Append(") AND (@max").Append(filter.Column.Value).Append(" IS NULL OR ").Append(filter.Column.Alias).Append('.').Append(filter.Column.Value).Append(" <= @max").Append(filter.Column.Value).Append(')');
+                        break;
+                    default:
+                        throw new NotImplementedException($"Filtering for {filter.Type.ToString()} is not implemented.");
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        public List<ISqlParameter> GetParamtersFromFilters(IQuery query)
+        {
+            var q = query as Query;
+
+            var paramters = new List<ISqlParameter>();
+
+            foreach (var filter in q.Filters)
+            {
+                switch (filter.Type)
+                {
+                    case FilterType.Between:
+                        {
+                            paramters.Append(filter.Parameter.Copy("@min" + filter.Parameter.Name));
+                            paramters.Append(filter.Parameter.Copy("@max" + filter.Parameter.Name));
+                            break;
+                        }
+
+                    case FilterType.Equal:
+                    case FilterType.Greater:
+                    case FilterType.Lesser:
+                        paramters.Append(filter.Parameter);
+                        break;
+                    default:
+                        throw new NotImplementedException($"Filtering for {filter.Type.ToString()} is not implemented.");
+                }
+            }
+
+            return paramters;
         }
     }
 }

@@ -2,10 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
-    using System.Reflection.Metadata;
     using System.Text;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;

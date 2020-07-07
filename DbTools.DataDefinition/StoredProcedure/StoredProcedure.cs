@@ -5,13 +5,13 @@
 
     public class StoredProcedure
     {
-        public StoredProcedure(string sqlStatementBody, params SpParameter[] spParameters)
+        public StoredProcedure(string sqlStatementBody, params SqlParameter[] sqlParameters)
         {
             SqlStatementBody = sqlStatementBody;
-            SpParameters = spParameters.ToList();
+            SpParameters = sqlParameters.ToList();
 
-            foreach(var spParameter in spParameters)
-                spParameter.StoredProcedure = this;
+            /*foreach(var spParameter in spParameters)
+                spParameter.StoredProcedure = this;*/
         }
 
         public string  SqlStatementBody { get; set; }
@@ -19,6 +19,6 @@
         public DatabaseDefinition DatabaseDefinition { get; set; }
         public SchemaAndTableName SchemaAndSpName { get; set; }
 
-        public List<SpParameter> SpParameters { get; } = new List<SpParameter>();
+        public List<SqlParameter> SpParameters { get; } = new List<SqlParameter>();
     }
 }

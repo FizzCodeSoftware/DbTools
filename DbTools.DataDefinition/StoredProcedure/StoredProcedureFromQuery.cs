@@ -4,7 +4,7 @@
 
     public class StoredProcedureFromQuery : StoredProcedure
     {
-        public StoredProcedureFromQuery(IQuery query, params SpParameter[] spParameters)
+        public StoredProcedureFromQuery(IQuery query, params SqlParameter[] spParameters)
             : base(null, spParameters)
         {
             Query = query;
