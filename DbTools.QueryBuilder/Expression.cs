@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.DataDefinition;
@@ -70,6 +71,11 @@
                 {
                     sb.AppendSpace(@string);
                     previous = @string;
+                }
+                else if (obj is int @int)
+                {
+                    sb.AppendSpace(@int.ToString(CultureInfo.InvariantCulture));
+                    // previous = @int;
                 }
                 else
                 {

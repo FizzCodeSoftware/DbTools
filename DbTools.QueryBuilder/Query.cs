@@ -386,6 +386,17 @@
             return InnerJoinAliasOn(table, null, on, columns);
         }
 
+        //join subquery
+        public Query InnerJoinOn(Query query, Expression on, params QueryColumn[] columns)
+        {
+            return InnerJoinAliasOn(query, null, on, columns);
+        }
+
+        public Query InnerJoinAliasOn(Query query, string alias, Expression on, params QueryColumn[] columns)
+        {
+            return Join(new JoinSubQueryOn(query, alias, on, JoinType.Inner, columns));
+        }
+
         public string WhereExpression { get; set; }
 
         public Query Where(params object[] expressionParts)
@@ -396,6 +407,14 @@
         public Query Where(string whereExpression)
         {
             WhereExpression = whereExpression;
+            return this;
+        }
+
+        public List<QueryColumn> GroupByColumns { get; } = new List<QueryColumn>();
+
+        public Query GroupBy(params QueryColumn[] columns)
+        {
+            GroupByColumns.AddRange(columns);
             return this;
         }
 

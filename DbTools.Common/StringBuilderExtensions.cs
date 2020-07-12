@@ -1,8 +1,8 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
+﻿namespace FizzCode.DbTools.Common
 {
     using System.Text;
 
-    internal static class StringBuilderExtensions
+    public static class StringBuilderExtensions
     {
         public static int indentationSpaces = 4;
 
@@ -18,6 +18,11 @@
             sb.Append(new string(' ', level * indentationSpaces))
                 .AppendLine(value);
             return sb;
+        }
+
+        public static string Spaces(int level)
+        {
+            return new string(' ', level * indentationSpaces);
         }
     }
 }

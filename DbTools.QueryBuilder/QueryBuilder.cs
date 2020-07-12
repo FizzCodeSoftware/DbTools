@@ -4,16 +4,24 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.QueryBuilder.Interface;
 
     public class QueryBuilder : IQueryBuilder
     {
         private Query _query;
+        private int _level;
 
         public string Build(IQuery query)
         {
+            return Build(query, 0);
+        }
+
+        protected string Build(IQuery query, int level)
+        {
             _query = query as Query;
+            _level = level;
 
             var sb = new StringBuilder();
 
@@ -23,7 +31,8 @@
 
             sb.Append(AddQueryElementColumns(_query));
             sb.Append(AddJoinColumns());
-            sb.Append("\r\nFROM ");
+            sb.AppendLine();
+            sb.Append(_level, "FROM ");
             sb.Append(QueryHelper.GetSimplifiedSchemaAndTableName(_query.Table.SchemaAndTableName));
             sb.Append(" ");
             sb.Append(_query.Table.GetAlias());
@@ -32,11 +41,12 @@
 
             sb.Append(AddWhere());
             sb.Append(AddFilters());
+            sb.Append(AddGroupBy(_query));
 
             foreach (var union in _query.Unions)
             {
                 sb.AppendLine();
-                sb.AppendLine("UNION");
+                sb.AppendLine(_level, "UNION");
                 sb.Append(Build(union));
             }
 
@@ -179,16 +189,30 @@
             var sb = new StringBuilder();
 
             var joinType = join.JoinType.ToString().ToUpperInvariant();
-            sb.Append("\r\n")
-                .Append(joinType)
-                .Append(" JOIN ")
-                .Append(QueryHelper.GetSimplifiedSchemaAndTableName(join.Table.SchemaAndTableName))
-                .Append(" ")
-                .Append(join.Table.GetAlias())
-                .Append(" ON ");
+            sb.AppendLine()
+                .Append(_level, joinType)
+                .Append(" JOIN");
+
+            if (join is JoinSubQueryOn joinSubQueryOn)
+            {
+                var subQb = new QueryBuilder();
+                sb.AppendLine()
+                    .Append(_level+1, "(")
+                    .Append(subQb.Build(joinSubQueryOn.SubQuery, _level+1 ))
+                    .Append(") ")
+                    .Append(joinSubQueryOn.Alias);
+            }
+            else
+            {
+                sb.Append(" ")
+                    .Append(QueryHelper.GetSimplifiedSchemaAndTableName(join.Table.SchemaAndTableName))
+                    .Append(" ")
+                    .Append(join.Table.GetAlias());
+            }
+            sb.Append(" ON ");
 
             if(join is Join join2)
-                sb.Append(AddJoinOn(join2));
+                sb.Append(AddJoin(join2));
 
             if (join is JoinOn joinOn)
                 sb.Append(AddJoinOn(joinOn));
@@ -201,7 +225,7 @@
             return Expression.GetExpression(joinOn.OnExpression, _query.QueryElements, joinOn);
         }
 
-        private string AddJoinOn(Join join)
+        private string AddJoin(Join join)
         {
             var sb = new StringBuilder();
 
@@ -275,9 +299,42 @@
         private string AddWhere()
         {
             if (!string.IsNullOrEmpty(_query.WhereExpression))
-                return "\r\nWHERE " + _query.WhereExpression;
+                return "\r\n" + StringBuilderExtensions.Spaces(_level) + "WHERE " + _query.WhereExpression;
 
             return null;
+        }
+
+        private string AddGroupBy(QueryElement queryElement)
+        {
+            if (_query.GroupByColumns.Count == 0)
+                return null;
+
+            var sb = new StringBuilder();
+
+            sb.AppendLine();
+            sb.Append(_level, "GROUP BY ");
+
+            var last = _query.GroupByColumns.Last();
+            foreach (var column in _query.GroupByColumns)
+            {
+                if (column.Alias != null)
+                {
+                    sb.Append(column.Alias);
+                    sb.Append(".");
+                }
+                else if (column.IsDbColumn)
+                {
+                    sb.Append(queryElement.Table.GetAlias());
+                    sb.Append(".");
+                }
+
+                sb.Append(column.Value);
+
+                if (column != last)
+                    sb.Append(", ");
+            }
+
+            return sb.ToString();
         }
 
         private string AddFilters()
@@ -290,7 +347,7 @@
             sb.AppendLine("\r\n");
 
             if (string.IsNullOrEmpty(_query.WhereExpression))
-                sb.Append("WHERE ");
+                sb.Append(_level, "WHERE ");
 
             foreach (var filter in _query.Filters)
             {
