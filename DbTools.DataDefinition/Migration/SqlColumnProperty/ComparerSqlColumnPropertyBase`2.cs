@@ -7,7 +7,7 @@
         where TProperty : SqlColumnProperty
         where TMigration : SqlColumnPropertyMigration
     {
-        public List<TMigration> CompareProperties(SqlColumn columnOriginal, SqlColumn  columnNew)
+        public List<TMigration> CompareProperties(SqlColumn columnOriginal, SqlColumn columnNew)
         {
             var changes = new List<TMigration>();
 

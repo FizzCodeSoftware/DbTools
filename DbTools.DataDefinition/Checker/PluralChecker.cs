@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Checker
 {
-    using System.Collections.Generic;
     using System;
+    using System.Collections.Generic;
 
     public class PluralChecker
     {

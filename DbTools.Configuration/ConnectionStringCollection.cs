@@ -8,7 +8,7 @@
         private readonly Dictionary<string, ConnectionStringWithProvider> _connectionStrings = new Dictionary<string, ConnectionStringWithProvider>();
         public IEnumerable<ConnectionStringWithProvider> All => _connectionStrings.Values;
 
-        public void LoadFromConfiguration(IConfigurationRoot configuration, string sectionKey = "ConnectionStrings")
+        public void LoadFromConfiguration(IConfigurationRoot configuration, string sectionKey = "ConnectionStrings", IConfigurationSecretProtector secretProtector = null)
         {
             var children = configuration
                 .GetSection(sectionKey)
@@ -16,11 +16,24 @@
 
             foreach (var child in children)
             {
-                Add(new ConnectionStringWithProvider(
-                    name: child.Key,
-                    providerName: child.GetValue<string>("ProviderName"),
-                    connectionString: child.GetValue<string>("ConnectionString"),
-                    version: child.GetValue<string>("Version")));
+                var name = child.Key;
+                var providerName = child.GetValue<string>("ProviderName");
+                var connectionString = child.GetValue<string>("ConnectionString");
+                var version = child.GetValue<string>("Version");
+
+                if (secretProtector != null)
+                {
+                    if (child.GetValue("ProviderName-protected", false))
+                        providerName = secretProtector.Decrypt(providerName);
+
+                    if (child.GetValue("ConnectionString-protected", false))
+                        connectionString = secretProtector.Decrypt(connectionString);
+
+                    if (child.GetValue("Version-protected", false))
+                        version = secretProtector.Decrypt(version);
+                }
+
+                Add(new ConnectionStringWithProvider(name, providerName, connectionString, version));
             }
         }
 

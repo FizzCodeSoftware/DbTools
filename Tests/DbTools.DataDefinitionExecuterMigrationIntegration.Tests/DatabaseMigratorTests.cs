@@ -33,7 +33,8 @@
         public override void Fk_Remove(SqlEngineVersion version)
         {
             var dds = Fk_Remove_Dds(version);
-            /* var databaseMigrator = */ ProcessAndGetMigrator(version, dds, out var changes);
+            /* var databaseMigrator = */
+            ProcessAndGetMigrator(version, dds, out var changes);
 
             var _ = changes[0] as ForeignKeyDelete;
 
@@ -46,7 +47,8 @@
         public override void Fk_Change_Composite_NameChange(SqlEngineVersion version)
         {
             var dds = Fk_Change_Composite_NameChange_Dds(version);
-            /* var databaseMigrator = */ ProcessAndGetMigrator(version, dds, out var changes);
+            /* var databaseMigrator = */
+            ProcessAndGetMigrator(version, dds, out var changes);
 
             var _ = changes[0] as ForeignKeyChange;
 
@@ -159,7 +161,8 @@
         {
             var dds = Identity_Change_Dds(version);
 
-            /* var databaseMigrator = */ ProcessAndGetMigrator(version, dds, out var changes);
+            /* var databaseMigrator = */
+            ProcessAndGetMigrator(version, dds, out var changes);
 
             var _ = changes[0] as ColumnChange;
             // databaseMigrator.;
@@ -316,7 +319,8 @@
         {
             var dds = Index_Add_Dds(version);
 
-            /* var databaseMigrator = */ ProcessAndGetMigrator(version, dds, out var changes);
+            /* var databaseMigrator = */
+            ProcessAndGetMigrator(version, dds, out var changes);
 
             _ = (IndexNew)changes[0];
 
@@ -362,7 +366,8 @@
         public override void UniqueConstraint_Change(SqlEngineVersion version)
         {
             var dds = UniqueConstraint_Change_Dds(version);
-            /* var databaseMigrator = */ ProcessAndGetMigrator(version, dds, out var changes);
+            /* var databaseMigrator = */
+            ProcessAndGetMigrator(version, dds, out var changes);
             _ = (UniqueConstraintDelete)changes[0];
             _ = (UniqueConstraintNew)changes[1];
             // databaseMigrator.

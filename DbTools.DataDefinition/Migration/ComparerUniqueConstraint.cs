@@ -15,7 +15,7 @@
         {
             return new IdentityChange()
             {
-                Identity  = originalProperty,
+                Identity = originalProperty,
                 NewIdentity = newProperty
             };
         }

@@ -10,11 +10,11 @@
     {
         private List<Row> _queryResult;
 
-        private List<Row> QueryResult => _queryResult ?? (_queryResult = Executer.ExecuteQuery(GetKeySql()).Rows
+        private List<Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetKeySql()).Rows
                         .OrderBy(row => row.GetAs<string>("schema_name"))
                         .ThenBy(row => row.GetAs<string>("index_name"))
                         .ThenBy(row => row.GetAs<int>("index_column_id"))
-                        .ToList());
+                        .ToList();
 
         public MsSqlIndexReader2016(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
             : base(executer, schemaNames)

@@ -6,13 +6,7 @@
     {
         public ForeignKey ForeignKey { get; set; }
 
-        public override string DisplayInfo
-        {
-            get
-            {
-                return $"{ForeignKey}";
-            }
-        }
+        public override string DisplayInfo => $"{ForeignKey}";
 
         public override string Schema => ForeignKey.SqlTable.SchemaAndTableName.Schema;
         public override string ElementName => ForeignKey.SqlTable.SchemaAndTableName.TableName;

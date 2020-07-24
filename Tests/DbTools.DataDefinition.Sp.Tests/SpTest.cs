@@ -61,23 +61,11 @@
 
             public CompanyTable Company { get; } = new CompanyTable();
 
-            public StoredProcedure GetCompanies
-            {
-                get
-                {
-                    return new StoredProcedureFromQuery(new Query(Company));
-                }
-            }
+            public StoredProcedure GetCompanies => new StoredProcedureFromQuery(new Query(Company));
 
-            public StoredProcedure GetCompaniesWithParameter
-            {
-                get
-                {
-                    return new StoredProcedureFromQuery(
+            public StoredProcedure GetCompaniesWithParameter => new StoredProcedureFromQuery(
                         new Query(Company).Where(Company.Id, "= @Id"),
                         Company.Id);
-                }
-            }
 
             public class CompanyTable : SqlTable
             {
@@ -85,13 +73,7 @@
                 public SqlColumn Name { get; } = MsSql2016.AddNVarChar(100);
             }
 
-            public Query GetCompaniesQuery
-            {
-                get
-                {
-                    return new Query(Company);
-                }
-            }
+            public Query GetCompaniesQuery => new Query(Company);
         }
     }
 }

@@ -228,7 +228,7 @@
             DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", table.SchemaAndTableName.Schema);
             DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", table.SchemaAndTableName.TableName);
 
-            if(!Customizer.ShouldSkip(table.SchemaAndTableName))
+            if (!Customizer.ShouldSkip(table.SchemaAndTableName))
                 DocumenterWriter.WriteLink("Tables", "link", Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName), GetColor(table.SchemaAndTableName));
             else
                 DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "Tables", "");

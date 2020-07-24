@@ -58,10 +58,10 @@ WHERE type = 'U'";
         }
 
         private MsSqlTableReader2016 _tableReader;
-        private MsSqlTableReader2016 TableReader => _tableReader ?? (_tableReader = new MsSqlTableReader2016(Executer, SchemaNames));
+        private MsSqlTableReader2016 TableReader => _tableReader ??= new MsSqlTableReader2016(Executer, SchemaNames);
 
         private MsSqlColumnDocumentationReader2016 _columnDocumentationReader;
-        private MsSqlColumnDocumentationReader2016 ColumnDocumentationReader => _columnDocumentationReader ?? (_columnDocumentationReader = new MsSqlColumnDocumentationReader2016(Executer));
+        private MsSqlColumnDocumentationReader2016 ColumnDocumentationReader => _columnDocumentationReader ??= new MsSqlColumnDocumentationReader2016(Executer);
 
         public override SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition = true)
         {

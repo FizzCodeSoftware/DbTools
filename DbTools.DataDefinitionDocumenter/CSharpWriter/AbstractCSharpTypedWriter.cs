@@ -18,7 +18,7 @@
         {
             if (column.Types[Version].IsNullable)
             {
-                if(column.Types[Version].SqlTypeInfo.HasLength)
+                if (column.Types[Version].SqlTypeInfo.HasLength)
                     return ", true";
                 else
                     return "true";

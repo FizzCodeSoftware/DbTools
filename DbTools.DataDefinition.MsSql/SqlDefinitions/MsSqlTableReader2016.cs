@@ -9,7 +9,7 @@
     public class MsSqlTableReader2016 : GenericDataDefinitionElementReader
     {
         private ILookup<string, Row> _queryResult;
-        private ILookup<string, Row> QueryResult => _queryResult ?? (_queryResult = Executer.ExecuteQuery(GetStatement()).Rows.ToLookup(x => x.GetAs<string>("SchemaAndTableName")));
+        private ILookup<string, Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement()).Rows.ToLookup(x => x.GetAs<string>("SchemaAndTableName"));
 
         protected MsSql2016TypeMapper TypeMapper { get; } = new MsSql2016TypeMapper();
 

@@ -155,7 +155,7 @@
             if (count == 0)
                 throw new InvalidForeignKeyRegistrationException("Can't define Foreign Key without finding the target column in primary key, unique index or unique constraint.");
 
-            var uniqueIndex = pkCandidate as IndexBase ?? uiCandidates.FirstOrDefault() as IndexBase ?? ucCandidates.First() as IndexBase;
+            var uniqueIndex = pkCandidate ?? uiCandidates.FirstOrDefault() ?? ucCandidates.First() as IndexBase;
 
             /*if (uniqueIndex.SqlColumns.Count > 1)
                 throw new InvalidForeignKeyRegistrationException("Can't define Foreign Key with single referencing column referring unique key wit multiple columns.");*/

@@ -2,10 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.Contracts;
     using System.IO;
     using System.Linq;
-    using System.Reflection.Metadata;
     using System.Text;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
@@ -140,7 +138,7 @@
             .AppendLine(1, "}");
         }
 
-        protected abstract void WriteSingleFileHeader(StringBuilder sb,  List<SqlTable> tables, bool partialClass = false);
+        protected abstract void WriteSingleFileHeader(StringBuilder sb, List<SqlTable> tables, bool partialClass = false);
 
         protected void WriteSingleFileHeaderCommon(StringBuilder sb, bool partialClass = false)
         {
