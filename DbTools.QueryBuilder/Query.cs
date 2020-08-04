@@ -57,7 +57,7 @@
         /// <param name="table">The table to join.</param>
         /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
         /// <returns>The Query.</returns>
-            public Query LeftJoin(SqlTable table, params QueryColumn[] columns)
+        public Query LeftJoin(SqlTable table, params QueryColumn[] columns)
         {
             return LeftJoin(table, null, null, columns);
         }

@@ -139,7 +139,7 @@
             .AppendLine(1, "}");
         }
 
-        protected abstract void WriteSingleFileHeader(StringBuilder sb,  List<SqlTable> tables, bool partialClass = false);
+        protected abstract void WriteSingleFileHeader(StringBuilder sb, List<SqlTable> tables, bool partialClass = false);
 
         protected void WriteSingleFileHeaderCommon(StringBuilder sb, bool partialClass = false)
         {

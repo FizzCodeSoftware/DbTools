@@ -69,7 +69,8 @@
                 tableNew.Columns.TryGetValue(columnOriginal.Name, out var columnNew);
                 if (columnNew == null)
                 {
-                    changes.Add(new ColumnDelete() {
+                    changes.Add(new ColumnDelete()
+                    {
                         SqlColumn = columnOriginal
                     });
                 }

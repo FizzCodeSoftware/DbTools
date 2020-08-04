@@ -26,7 +26,7 @@
             var sb = new StringBuilder();
 
             sb.Append("SELECT ");
-            if(_query.IsDisctinct)
+            if (_query.IsDisctinct)
                 sb.Append("DISTINCT ");
 
             sb.Append(AddQueryElementColumns(_query));
@@ -165,7 +165,7 @@
 
             for (var i = 0; i < _query.Joins.Count; i++)
             {
-                if(i == 0 && _query.QueryColumns.Count == 1 && _query.QueryColumns[0] is None)
+                if (i == 0 && _query.QueryColumns.Count == 1 && _query.QueryColumns[0] is None)
                     sb.Append(AddQueryElementColumns(_query.Joins[i], true));
                 else
                     sb.AppendComma(AddQueryElementColumns(_query.Joins[i], true));
@@ -211,7 +211,7 @@
             }
             sb.Append(" ON ");
 
-            if(join is Join join2)
+            if (join is Join join2)
                 sb.Append(AddJoin(join2));
 
             if (join is JoinOn joinOn)
@@ -276,7 +276,7 @@
             else if (join.ColumnSource != null && join.ColumnTarget == null)
             {
                 var pk = _query.Table.Properties.OfType<PrimaryKey>().FirstOrDefault();
-                if(pk == null)
+                if (pk == null)
                     throw new ArgumentException($"Target Join table has no Primary Key. Table: {join.Table.SchemaAndTableName}, source column: {join.ColumnSource}.");
 
                 if (pk.SqlColumns.Count > 1)

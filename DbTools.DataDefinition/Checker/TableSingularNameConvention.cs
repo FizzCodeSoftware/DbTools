@@ -23,13 +23,7 @@
 
         public override string DisplayName => "Table name should be singular.";
 
-        public override string DisplayInfo
-        {
-            get
-            {
-                return $"TableName: {_schemaAndTableName.TableName}";
-            }
-        }
+        public override string DisplayInfo => $"TableName: {_schemaAndTableName.TableName}";
 
         public override string Schema => _schemaAndTableName.Schema;
         public override string ElementName => _schemaAndTableName.TableName;

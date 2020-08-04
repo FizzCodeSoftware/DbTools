@@ -1,11 +1,11 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Checker
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
-    using System.Linq;
     using FizzCode.DbTools.DataDefinition.Migration;
-    using System;
 
     // TODO - pattern/skip
     // TODO - move base doc. functions to doc.wr. base

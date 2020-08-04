@@ -10,7 +10,7 @@
     public class MsSqlForeignKeyReader2016 : GenericDataDefinitionElementReader
     {
         private List<Row> _queryResult;
-        private List<Row> QueryResult => _queryResult ?? (_queryResult = Executer.ExecuteQuery(GetStatement()).Rows);
+        private List<Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement()).Rows;
 
         public MsSqlForeignKeyReader2016(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
             : base(executer, schemaNames)

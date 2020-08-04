@@ -6,13 +6,7 @@
 
         public string Comment { get; set; }
 
-        public override string DisplayInfo
-        {
-            get
-            {
-                return $"{base.DisplayInfo} - {Comment}";
-            }
-        }
+        public override string DisplayInfo => $"{base.DisplayInfo} - {Comment}";
 
         public override SchemaAndContentCheckSeverity Severity => SchemaAndContentCheckSeverity.Check;
     }

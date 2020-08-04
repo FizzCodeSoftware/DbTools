@@ -36,7 +36,7 @@
             var capitals = new string(tableName.Where(c => char.IsUpper(c)).ToArray());
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
-            table.SetAliasProperty( capitals.Length > 0 ? capitals.ToLowerInvariant()
+            table.SetAliasProperty(capitals.Length > 0 ? capitals.ToLowerInvariant()
                 : alias ?? tableName.Substring(0, 1).ToLowerInvariant());
 #pragma warning restore CA1308 // Normalize strings to uppercase
         }

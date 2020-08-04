@@ -9,12 +9,9 @@
         {
             SqlStatementBody = sqlStatementBody;
             SpParameters = sqlParameters.ToList();
-
-            /*foreach(var spParameter in spParameters)
-                spParameter.StoredProcedure = this;*/
         }
 
-        public string  SqlStatementBody { get; set; }
+        public string SqlStatementBody { get; set; }
 
         public DatabaseDefinition DatabaseDefinition { get; set; }
         public SchemaAndTableName SchemaAndSpName { get; set; }

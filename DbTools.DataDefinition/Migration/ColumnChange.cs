@@ -21,6 +21,6 @@
 
         private List<SqlColumnPropertyMigration> _sqlColumnPropertyMigrations;
 
-        public List<SqlColumnPropertyMigration> SqlColumnPropertyMigrations => _sqlColumnPropertyMigrations ?? (_sqlColumnPropertyMigrations = new List<SqlColumnPropertyMigration>());
+        public List<SqlColumnPropertyMigration> SqlColumnPropertyMigrations => _sqlColumnPropertyMigrations ??= new List<SqlColumnPropertyMigration>();
     }
 }

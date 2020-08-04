@@ -1,11 +1,11 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using System.IO;
-    using FizzCode.DbTools.Configuration;
+    using System.Linq;
     using FizzCode.DbTools.Common.Logger;
+    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Checker;
-    using System.Linq;
 
     public class SchemaCheckerDocumenter : DocumenterWriterBase
     {
@@ -27,7 +27,7 @@
 
             var schemaChecker = new SchemaChecker(Context);
 
-            var results =  schemaChecker.Check(dd);
+            var results = schemaChecker.Check(dd);
 
             foreach (var schemaCheck in results.OrderBy(sc => sc.Schema).ThenBy(sc => sc.ElementName).ThenByDescending(sc => sc.Severity))
             {

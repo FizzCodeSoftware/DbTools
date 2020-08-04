@@ -9,13 +9,7 @@
         public PrimaryKey PrimaryKey { get; set; }
         public string Comment { get; set; }
 
-        public override string DisplayInfo
-        {
-            get
-            {
-                return $"FK: {ForeignKey}\r\nPK: {PrimaryKey}";
-            }
-        }
+        public override string DisplayInfo => $"FK: {ForeignKey}\r\nPK: {PrimaryKey}";
 
         public override SchemaAndContentCheckSeverity Severity => SchemaAndContentCheckSeverity.Error;
     }
