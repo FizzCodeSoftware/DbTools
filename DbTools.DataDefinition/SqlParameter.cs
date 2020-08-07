@@ -1,8 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    using FizzCode.DbTools.QueryBuilder.Interface;
-
-    public class SqlParameter : SqlElementWithNameAndType, ISqlParameter
+    public class SqlParameter : SqlElementWithNameAndType
     {
         public SqlParameter(DatabaseDefinition databaseDefinition)
         {

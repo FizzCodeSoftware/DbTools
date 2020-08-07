@@ -8,19 +8,27 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.QueryBuilder.Interface;
 
-    public class QueryBuilder : IQueryBuilder
+    public class QueryBuilder : IQueryBuilderConnector
     {
+        public void ProcessStoredProcedureFromQuery(IStoredProcedureFromQuery storedProcedureFromQuery)
+        {
+            var sp = storedProcedureFromQuery as StoredProcedureFromQuery;
+
+            foreach (var p in GetParametersFromFilters(sp.Query))
+                sp.SpParameters.Add(p);
+        }
+
         private Query _query;
         private int _level;
 
-        public string Build(IQuery query)
+        public string Build(Query query)
         {
             return Build(query, 0);
         }
 
-        protected string Build(IQuery query, int level)
+        protected string Build(Query query, int level)
         {
-            _query = query as Query;
+            _query = query;
             _level = level;
 
             var sb = new StringBuilder();
@@ -359,20 +367,20 @@
                         sb.Append("(@min").Append(filter.Column.Value).Append(" IS NULL OR ").Append(filter.Column.Alias).Append('.').Append(filter.Column.Value).Append(" >= @min").Append(filter.Column.Value).Append(") AND (@max").Append(filter.Column.Value).Append(" IS NULL OR ").Append(filter.Column.Alias).Append('.').Append(filter.Column.Value).Append(" <= @max").Append(filter.Column.Value).Append(')');
                         break;
                     default:
+#pragma warning disable IDE0071 // Simplify interpolation
                         throw new NotImplementedException($"Filtering for {filter.Type.ToString()} is not implemented.");
+#pragma warning restore IDE0071 // Simplify interpolation
                 }
             }
 
             return sb.ToString();
         }
 
-        public List<ISqlParameter> GetParamtersFromFilters(IQuery query)
+        public List<SqlParameter> GetParametersFromFilters(Query query)
         {
-            var q = query as Query;
+            var parameters = new List<SqlParameter>();
 
-            var parameters = new List<ISqlParameter>();
-
-            foreach (var filter in q.Filters)
+            foreach (var filter in query.Filters)
             {
                 switch (filter.Type)
                 {
@@ -389,7 +397,9 @@
                         parameters.Add(filter.Parameter);
                         break;
                     default:
+#pragma warning disable IDE0071 // Simplify interpolation
                         throw new NotImplementedException($"Filtering for {filter.Type.ToString()} is not implemented.");
+#pragma warning restore IDE0071 // Simplify interpolation
                 }
             }
 

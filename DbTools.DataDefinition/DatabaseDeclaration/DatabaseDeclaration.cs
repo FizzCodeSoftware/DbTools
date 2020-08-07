@@ -12,13 +12,13 @@
         public const char SchemaTableNameSeparator = 'ꜗ';
         public string DefaultSchema { get; }
 
-        protected DatabaseDeclaration(IQueryBuilder queryBuilder, AbstractTypeMapper mainTypeMapper, AbstractTypeMapper[] secondaryTypeMappers = null, string defaultSchema = null, NamingStrategies namingStrategies = null)
+        protected DatabaseDeclaration(IQueryBuilderConnector queryBuilderConnector, AbstractTypeMapper mainTypeMapper, AbstractTypeMapper[] secondaryTypeMappers = null, string defaultSchema = null, NamingStrategies namingStrategies = null)
             : base(mainTypeMapper, secondaryTypeMappers)
         {
             DefaultSchema = defaultSchema;
             NamingStrategies = namingStrategies ?? new NamingStrategies();
 
-            QueryBuilder = queryBuilder;
+            QueryBuilderConnector = queryBuilderConnector;
 
             AddDeclaredTables();
             CreateRegisteredForeignKeys();
@@ -40,7 +40,7 @@
             CircularFKDetector.DectectCircularFKs(GetTables());
         }
 
-        public IQueryBuilder QueryBuilder { get; }
+        public IQueryBuilderConnector QueryBuilderConnector { get; }
 
         private static IEnumerable<T> GetProperties<T>(SqlTable sqlTable)
         {
@@ -215,14 +215,9 @@
             {
                 var sp = (StoredProcedure)property.GetValue(this);
 
-                if (sp is StoredProcedureFromQuery spq && QueryBuilder != null)
+                if (sp is IStoredProcedureFromQuery spq && QueryBuilderConnector != null)
                 {
-                    foreach (var p in QueryBuilder.GetParamtersFromFilters(spq.Query))
-                    {
-                        sp.SpParameters.Add((SqlParameter)p);
-                    }
-
-                    sp.SqlStatementBody = QueryBuilder.Build(spq.Query);
+                    QueryBuilderConnector.ProcessStoredProcedureFromQuery(spq);
                 }
 
                 if (sp.SchemaAndSpName == null)
@@ -239,6 +234,7 @@
                 StoredProcedures.Add(sp);
             }
         }
+
         protected static SqlTable AddTable(Action<SqlTable> configurator)
         {
             var table = new SqlTable();
