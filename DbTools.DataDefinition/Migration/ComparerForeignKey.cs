@@ -41,9 +41,6 @@
                         NewForeignKey = fkNew
                     };
 
-                    // compare ReferredTable
-                    // compare columns
-                    // compare SqlEngineVersionSpecificProperties - generally for SqlTableProperty
                     if (fkOriginal.ReferredTable.SchemaAndTableName != fkNew.ReferredTable.SchemaAndTableName)
                         fkChanged = true;
 

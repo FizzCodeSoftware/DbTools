@@ -22,7 +22,6 @@
             return $"[{name}]";
         }
 
-        // TODO paramter
         public SqlStatementWithParameters CreateDatabase(string databaseName)
         {
             return $"CREATE DATABASE {GuardKeywords(databaseName)}";
@@ -33,7 +32,6 @@
             return $"DROP DATABASE {GuardKeywords(databaseName)}";
         }
 
-        // TODO paramter
         public SqlStatementWithParameters DropDatabaseIfExists(string databaseName)
         {
             return new SqlStatementWithParameters($"IF EXISTS(select * from sys.databases where name = @DatabaseName)\r\n\t{DropDatabase(databaseName)}", databaseName);

@@ -36,9 +36,9 @@
                 "TIME" => base.MapSqlType(MsSqlType2016.Time, isNullable, datetimePrecision),
                 "DATETIME2" => base.MapSqlType(MsSqlType2016.DateTime2, isNullable, datetimePrecision),
                 "DATETIMEOFFSET" => base.MapSqlType(MsSqlType2016.DateTimeOffset, isNullable, datetimePrecision),
-                "BINARY" => base.MapSqlType(MsSqlType2016.Binary, isNullable, characterMaximumLength),// TODO which length?
-                                                                                                      // TODO max length allowed - what is in Row?
-                "VARBINARY" => base.MapSqlType(MsSqlType2016.VarBinary, isNullable, characterMaximumLength),// TODO which length?
+                "BINARY" => base.MapSqlType(MsSqlType2016.Binary, isNullable, characterMaximumLength), // TODO which length?
+                // TODO max length allowed - what is in Row?
+                "VARBINARY" => base.MapSqlType(MsSqlType2016.VarBinary, isNullable, characterMaximumLength), // TODO which length?
                 "IMAGE" => base.MapSqlType(MsSqlType2016.Image, isNullable),
                 "XML" => base.MapSqlType(MsSqlType2016.Xml, isNullable),
                 "UNIQUEIDENTIFIER" => base.MapSqlType(MsSqlType2016.UniqueIdentifier, isNullable),
