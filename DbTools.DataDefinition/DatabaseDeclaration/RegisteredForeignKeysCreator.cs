@@ -10,7 +10,7 @@
             var referredTable = definition.GetTable(fkRegistration.ReferredTableName);
             var referredUniqueKey = GetReferredUniqueIndex(referredTable);
 
-            // TODO check if Unique index is multi column
+            CheckValidity(referredUniqueKey, fkRegistration.SingleFkColumnName);
 
             var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
@@ -70,7 +70,7 @@
             var referredTable = definiton.GetTable(fkRegistration.ReferredTableName);
             var referredUniqueIndex = GetReferredUniqueIndex(referredTable, fkRegistration.SingleReferredColumnName);
 
-            CheckValidity(fkRegistration, referredUniqueIndex);
+            CheckValidity(referredUniqueIndex, fkRegistration.SingleFkColumn.Name);
 
             var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
@@ -82,24 +82,27 @@
             fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkRegistration.SingleFkColumn, pkColumn));
         }
 
-        private static void CheckValidity(ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn fkRegistration, IndexBase referredUnique)
+        private static void CheckValidity(IndexBase referredUnique, string fkColumName)
         {
             if (referredUnique.SqlColumns.Count > 1)
             {
                 var messageDescriptionSb = new StringBuilder();
+                System.Exception innerException = null;
                 try
                 {
                     messageDescriptionSb.Append("FK: ");
-                    messageDescriptionSb.AppendLine(fkRegistration.SingleFkColumn.ToString());
+                    messageDescriptionSb.AppendLine(fkColumName);
                     messageDescriptionSb.Append("UK: ");
                     foreach (var referredColumn in referredUnique.SqlColumns)
                         messageDescriptionSb.AppendLine(referredColumn.SqlColumn.ToString());
                 }
-                finally
+                catch (System.Exception ex)
                 {
+                    messageDescriptionSb.Append("Exception on gathering FK and UK info, see InnerException.");
+                    innerException = ex;
                 }
 
-                throw new InvalidForeignKeyRegistrationException("Single column FK refers to multi column PK or unique index or unique constraint. " + messageDescriptionSb.ToString());
+                throw new InvalidForeignKeyRegistrationException("Single column FK refers to multi column PK or unique index or unique constraint. " + messageDescriptionSb.ToString(), innerException);
             }
         }
 
@@ -156,9 +159,6 @@
                 throw new InvalidForeignKeyRegistrationException("Can't define Foreign Key without finding the target column in primary key, unique index or unique constraint.");
 
             var uniqueIndex = pkCandidate ?? uiCandidates.FirstOrDefault() ?? ucCandidates.First() as IndexBase;
-
-            /*if (uniqueIndex.SqlColumns.Count > 1)
-                throw new InvalidForeignKeyRegistrationException("Can't define Foreign Key with single referencing column referring unique key wit multiple columns.");*/
 
             return uniqueIndex;
         }

@@ -238,7 +238,16 @@ namespace FizzCode.DbTools.DataDefinition.Tests
         public void TestDatabaseSelfFK()
         {
             var dd = new TestDatabaseSelfFK();
-            dd.GetTable("Company");
+            var company = dd.GetTable("Company");
+
+            var cfk = company.Properties.OfType<CircularFK>().First();
+
+            Assert.AreEqual(1, cfk.ForeignKeyChain.Count);
+            Assert.AreEqual("Company", cfk.ForeignKeyChain.First().SqlTable.SchemaAndTableName.TableName);
+
+            var fk = company.Properties.OfType<ForeignKey>().First();
+
+            Assert.AreEqual("Company", fk.ReferredTable.SchemaAndTableName.TableName);
         }
     }
 }

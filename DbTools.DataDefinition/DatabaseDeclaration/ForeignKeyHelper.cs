@@ -22,6 +22,14 @@
             return singleFkColumn;
         }
 
+        /// <summary>
+        /// Sets an existing column as an FK, pointing to the unique key of <paramref name="referredTableName"/>, specifying <paramref name="referredColumnName"/>.
+        /// </summary>
+        /// <param name="singleFkColumn">The existing column to set as FK.</param>
+        /// <param name="referredTableName">The name of the referred table.</param>
+        /// <param name="referredColumnName">The name of the referred column.</param>
+        /// <param name="fkName">The name of the FK. Auto naming will set name if not provided.</param>
+        /// <returns>The original <paramref name="singleFkColumn"/>.</returns>
         public static SqlColumn SetForeignKeyToColumn(this SqlColumn singleFkColumn, string referredTableName, string referredColumnName, string fkName = null)
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
@@ -51,7 +59,7 @@
         /// </summary>
         /// <param name="singleFkColumn">The existing column to set as FK.</param>
         /// <param name="referredSchemaAndTableName">The referred table as <see cref="SchemaAndTableName"/>.</param>
-        /// <param name="properties"></param>
+        /// <param name="properties">Implementation dependent properties.</param>
         /// <param name="fkName">The name of the FK. Auto naming will set name if not provided.</param>
         /// <returns>The original <paramref name="singleFkColumn"/>.</returns>
         public static SqlColumn SetForeignKeyToTable(this SqlColumn singleFkColumn, SchemaAndTableName referredSchemaAndTableName, IEnumerable<SqlEngineVersionSpecificProperty> properties, string fkName = null)
@@ -70,8 +78,8 @@
         /// <param name="singleFkColumn">The existing column to set as FK.</param>
         /// <param name="referredTableName">The name of the referred table.</param>
         /// <param name="referredColumnName">The name of the referred column.</param>
-        /// <param name="properties"></param>
-        /// <param name="fkName"></param>
+        /// <param name="properties">Implementation dependent properties.</param>
+        /// <param name="fkName">The name of the FK. Auto naming will set name if not provided.</param>
         /// <returns>The original <paramref name="singleFkColumn"/>.</returns>
         public static SqlColumn SetForeignKeyToColumn(this SqlColumn singleFkColumn, string referredTableName, string referredColumnName, IEnumerable<SqlEngineVersionSpecificProperty> properties, string fkName = null)
         {
@@ -87,6 +95,14 @@
             return singleFkColumn;
         }
 
+        /// <summary>
+        /// Sets an existing column as an FK, pointing to the unique key of <paramref name="referredTableName"/>.
+        /// </summary>
+        /// <param name="singleFkColumn">The existing column to set as FK.</param>
+        /// <param name="referredTableName">The name of the referred table.</param>
+        /// <param name="properties">Implementation dependent properties.</param>
+        /// <param name="fkName">The name of the FK. Auto naming will set name if not provided.</param>
+        /// <returns>The original <paramref name="singleFkColumn"/>.</returns>
         public static SqlColumn SetForeignKeyToTable(this SqlColumn singleFkColumn, string referredTableName, IEnumerable<SqlEngineVersionSpecificProperty> properties, string fkName = null)
         {
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
