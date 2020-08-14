@@ -6,6 +6,7 @@
     using CommandDotNet;
     using CommandDotNet.Help;
     using FizzCode.DbTools.Configuration;
+    using FizzCode.LightWeight.Configuration;
     using Microsoft.Extensions.Configuration;
 
     public static class Program
@@ -16,7 +17,7 @@
 
         public static void Main(string[] args)
         {
-            Configuration = Common.Configuration.Load("config");
+            Configuration = ConfigurationLoader.LoadFromJsonFile("config");
             DbProviderFactoryRegistrator.LoadFromConfiguration(Configuration);
 
             if (args.Length > 0)

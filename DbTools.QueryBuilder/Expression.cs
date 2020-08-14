@@ -61,7 +61,7 @@
                         }
 
                         sb.AppendSpace(alias);
-                        sb.Append(".");
+                        sb.Append('.');
                     }
 
                     sb.Append(((QueryColumn)sqlColumn).Value);

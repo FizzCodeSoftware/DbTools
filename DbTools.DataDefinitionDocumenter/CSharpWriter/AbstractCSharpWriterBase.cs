@@ -53,18 +53,18 @@
 
             sb.Append(".SetForeignKeyToColumn(nameof(")
                 .Append(DatabaseName)
-                .Append(".")
+                .Append('.')
                 .Append(tableName)
                 .Append("), nameof(")
                 .Append(tableName)
                 .Append("Table.")
                 .Append(fkOnColumn.ForeignKeyColumns[0].ReferredColumn.Name)
-                .Append(")");
+                .Append(')');
 
             // table.AddInt("PrimaryId").SetForeignKeyToTable(nameof(Primary), new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true")
             sb.Append(AddSqlEngineVersionSpecificProperties(fkOnColumn.SqlEngineVersionSpecificProperties));
 
-            sb.Append(")");
+            sb.Append(')');
         }
 
         protected abstract void AddForeignKeySettingsMultiColumn(StringBuilder sb, DocumenterHelper helper, ForeignKey fkOnColumn);
@@ -94,7 +94,7 @@
                         sb.Append(AddSqlEngineVersionSpecificProperty(sqlEngineVersionSpecificProperty));
                     }
 
-                    sb.Append("}");
+                    sb.Append('}');
                 }
             }
 
@@ -107,7 +107,7 @@
 
             sb.Append("new SqlEngineVersionSpecificProperty(")
                                 .Append(sqlEngineVersionSpecificProperty.Version.GetType().Name)
-                                .Append(".")
+                                .Append('.')
                                 .Append(sqlEngineVersionSpecificProperty.Version)
                                 .Append(", \"")
                                 .Append(sqlEngineVersionSpecificProperty.Name)

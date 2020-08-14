@@ -77,7 +77,7 @@
                 .Append(2, "public ")
                 .Append(tableName)
                 .Append("Table")
-                .Append(" ")
+                .Append(' ')
                 .Append(tableName)
                 .Append(" { get; } = new ")
                 .Append(tableName)
@@ -141,7 +141,7 @@
                 .Append(customProperty.GetType().Name)
                 .Append(" { get; } = new ")
                 .Append(customProperty.GetType().Name)
-                .Append("(")
+                .Append('(')
                 .Append(customProperty.GenerateCSharpConstructorParameters())
                 .AppendLine(");");
         }

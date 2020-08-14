@@ -141,7 +141,7 @@
                 .AppendLine(clusteredPrefix)
                 .AppendLine("(")
                 .AppendLine(string.Join(", \r\n", pk.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)} {c.OrderAsKeyword}"))) // PK column list + asc desc
-                .Append(")");
+                .Append(')');
         }
 
         public virtual string CreateForeignKeys(SqlTable table)
@@ -170,14 +170,14 @@
             sb.Append("CONSTRAINT ")
                 .Append(GuardKeywords(fk.Name))
                 .Append(" FOREIGN KEY ")
-                .Append("(")
+                .Append('(')
                 .Append(string.Join(", \r\n", fk.ForeignKeyColumns.Select(fkc => $"{GuardKeywords(fkc.ForeignKeyColumn.Name)}")))
-                .Append(")")
+                .Append(')')
                 .Append(" REFERENCES ")
                 .Append(GetSimplifiedSchemaAndTableName(fk.ReferredTable.SchemaAndTableName))
                 .Append(" (")
                 .Append(string.Join(", \r\n", fk.ForeignKeyColumns.Select(pkc => $"{GuardKeywords(pkc.ReferredColumn.Name)}")))
-                .Append(")");
+                .Append(')');
 
             return sb.ToString();
         }
@@ -243,7 +243,7 @@
 
             var sb = new StringBuilder();
             sb.Append(GuardKeywords(column.Name))
-                .Append(" ");
+                .Append(' ');
 
             sb.Append(GenerateType(type));
 
@@ -258,7 +258,7 @@
             {
                 sb.Append(" DEFAULT(")
                     .Append(defaultValue.Value)
-                    .Append(")");
+                    .Append(')');
             }
 
             if (type.IsNullable)
@@ -278,28 +278,28 @@
             {
                 if (type.Length != null)
                 {
-                    sb.Append("(")
+                    sb.Append('(')
                         .Append(type.Length?.ToString("D", CultureInfo.InvariantCulture))
                         .Append(", ")
                         .Append(type.Scale?.ToString("D", CultureInfo.InvariantCulture))
-                        .Append(")");
+                        .Append(')');
                 }
                 else
                 {
-                    sb.Append("(")
+                    sb.Append('(')
                         .Append(type.Scale?.ToString("D", CultureInfo.InvariantCulture))
-                        .Append(")");
+                        .Append(')');
                 }
             }
             else if (type.Length.HasValue)
             {
-                sb.Append("(");
+                sb.Append('(');
                 if (type.Length == -1)
                     sb.Append("MAX");
                 else
                     sb.Append(type.Length?.ToString("D", CultureInfo.InvariantCulture));
 
-                sb.Append(")");
+                sb.Append(')');
             }
 
             return sb.ToString();
@@ -309,9 +309,9 @@
         {
             sb.Append(" IDENTITY(")
                 .Append(identity.Seed)
-                .Append(",")
+                .Append(',')
                 .Append(identity.Increment)
-                .Append(")");
+                .Append(')');
         }
 
         public virtual string CreateStoredProcedure(StoredProcedure sp)
@@ -326,9 +326,9 @@
                 if (idx++ > 0)
                     sb.AppendLine(",");
 
-                sb.Append("@")
+                sb.Append('@')
                     .Append(p.Name)
-                    .Append(" ");
+                    .Append(' ');
                 sb.Append(GenerateType(p.Type));
             }
 

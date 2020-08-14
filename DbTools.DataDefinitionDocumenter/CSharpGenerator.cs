@@ -82,7 +82,7 @@
                 sb.Append(index.Clustered.ToString().ToLowerInvariant())
                     .Append(", ");
 
-                sb.Append("\"")
+                sb.Append('"')
                     .Append(index.Name)
                     .Append("\", ");
 
@@ -93,7 +93,7 @@
                 sb.Append(index.Clustered.ToString().ToLowerInvariant())
                     .Append(", ");
 
-                sb.Append("\"")
+                sb.Append('"')
                     .Append(index.Name)
                     .Append("\", ");
 
@@ -102,7 +102,7 @@
                     .Append("}, ")
                     .Append("new [] {")
                     .Append(string.Join(", ", index.Includes.Select(i => "\"" + i.Name + "\"").ToList()))
-                    .Append("}");
+                    .Append('}');
             }
 
             sb.AppendLine(");");
@@ -113,7 +113,7 @@
         {
             sb.Append(3, "table.AddUniqueConstraintWithName(");
 
-            sb.Append("\"");
+            sb.Append('"');
             sb.Append(uniqueConstraint.Name);
             sb.Append("\", ");
 
@@ -125,7 +125,7 @@
         protected override void WriteSingleFileFooter(StringBuilder sb)
         {
             sb.AppendLine(1, "}")
-                .Append("}");
+                .Append('}');
         }
 
         protected override void WriteSingleFileHeader(StringBuilder sb, List<SqlTable> tables, bool partialClass = false)

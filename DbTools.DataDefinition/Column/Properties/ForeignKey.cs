@@ -31,11 +31,11 @@
                     isFirst = false;
 
                 sb.Append(fkColumn.ForeignKeyColumn.Table.SchemaAndTableName)
-                    .Append(".")
+                    .Append('.')
                     .Append(fkColumn.ForeignKeyColumn.Name)
                     .Append(" -> ")
                     .Append(fkColumn.ReferredColumn.Table.SchemaAndTableName)
-                    .Append(".")
+                    .Append('.')
                     .Append(fkColumn.ReferredColumn.Name);
             }
 

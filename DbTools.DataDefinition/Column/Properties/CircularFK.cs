@@ -18,7 +18,7 @@
             var sb = new StringBuilder();
 
             sb.Append(ForeignKeyChain.Count)
-                .Append(" ")
+                .Append(' ')
                 .Append(
                 string.Join(", ", ForeignKeyChain.Select(fk => fk.ToString()))
                 );

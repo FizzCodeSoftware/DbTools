@@ -60,7 +60,7 @@ GRANT UNLIMITED TABLESPACE TO ""{schemaName}""");
                 .Append(" PRIMARY KEY ")
                 .AppendLine("(")
                 .AppendLine(string.Join(", \r\n", pk.SqlColumns.Select(c => GuardKeywords(c.SqlColumn.Name))))
-                .Append(")");
+                .Append(')');
         }
 
         public static SqlStatementWithParameters IfExists(string table, string column, object value)

@@ -61,7 +61,7 @@
             {
                 sb.Append(".SetForeignKeyToColumnNoCheck(nameof(")
                     .Append(DatabaseName)
-                    .Append(".")
+                    .Append('.')
                     .Append(tableName)
                     .Append("), nameof(")
                     .Append(tableName)

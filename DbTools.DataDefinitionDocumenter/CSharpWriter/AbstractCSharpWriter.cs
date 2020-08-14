@@ -28,7 +28,7 @@
             sb.Append(3, "table.")
                 .Append(GetColumnCreationMethod(column))
                 .Append(IsNullable(column))
-                .Append(")");
+                .Append(')');
 
             if (column.Table.Properties.OfType<PrimaryKey>().Any(x => x.SqlColumns.Any(y => y.SqlColumn == column)))
             {
@@ -50,7 +50,7 @@
                 sb.Append(extraAnnotation);
             }
 
-            sb.Append(";");
+            sb.Append(';');
 
             var descriptionProperty = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
             var description = descriptionProperty?.Description
@@ -64,7 +64,7 @@
 
                 if (!string.IsNullOrEmpty(comment))
                 {
-                    sb.Append(" ").Append(comment);
+                    sb.Append(' ').Append(comment);
                 }
             }
             else if (!string.IsNullOrEmpty(comment))

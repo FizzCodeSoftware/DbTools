@@ -42,7 +42,7 @@
             sb.AppendLine();
             sb.Append(_level, "FROM ");
             sb.Append(QueryHelper.GetSimplifiedSchemaAndTableName(_query.Table.SchemaAndTableName));
-            sb.Append(" ");
+            sb.Append(' ');
             sb.Append(_query.Table.GetAlias());
 
             sb.Append(AddJoins());
@@ -76,12 +76,12 @@
                 if (column.Alias != null)
                 {
                     sb.Append(column.Alias);
-                    sb.Append(".");
+                    sb.Append('.');
                 }
                 else if (column.IsDbColumn)
                 {
                     sb.Append(queryElement.Table.GetAlias());
-                    sb.Append(".");
+                    sb.Append('.');
                 }
 
                 sb.Append(column.Value);
@@ -90,7 +90,7 @@
                 {
                     sb.Append(" AS '");
                     sb.Append(column.As);
-                    sb.Append("'");
+                    sb.Append('\'');
                 }
                 else if (useAlias)
                 {
@@ -100,9 +100,9 @@
                         {
                             sb.Append(" AS '");
                             sb.Append(queryElement.Table.GetAlias());
-                            sb.Append("_");
+                            sb.Append('_');
                             sb.Append(column.Value);
-                            sb.Append("'");
+                            sb.Append('\'');
                         }
                         else if (_query.QueryColumnAliasStrategy == QueryColumnAliasStrategy.PrefixTableNameIfNeeded
                              || _query.QueryColumnAliasStrategy == QueryColumnAliasStrategy.PrefixTableAliasIfNeeded)
@@ -128,11 +128,11 @@
                                 else // PrefixTableAliasIfNeeded
                                 {
                                     sb.Append(queryElement.Table.GetAlias());
-                                    sb.Append("_");
+                                    sb.Append('_');
                                 }
 
                                 sb.Append(column.Value);
-                                sb.Append("'");
+                                sb.Append('\'');
                             }
                         }
                         else if (_query.QueryColumnAliasStrategy == QueryColumnAliasStrategy.PrefixTableNameAlways)
@@ -140,7 +140,7 @@
                             sb.Append(" AS '");
                             sb.Append(QueryHelper.GetSimplifiedSchemaAndTableName(queryElement.Table.SchemaAndTableName));
                             sb.Append(column.Value);
-                            sb.Append("'");
+                            sb.Append('\'');
                         }
                         else
                         {
@@ -212,9 +212,9 @@
             }
             else
             {
-                sb.Append(" ")
+                sb.Append(' ')
                     .Append(QueryHelper.GetSimplifiedSchemaAndTableName(join.Table.SchemaAndTableName))
-                    .Append(" ")
+                    .Append(' ')
                     .Append(join.Table.GetAlias());
             }
             sb.Append(" ON ");
@@ -244,22 +244,22 @@
                 foreach (var fkm in fk.ForeignKeyColumns)
                 {
                     sb.Append(join.Table.GetAlias());
-                    sb.Append(".");
+                    sb.Append('.');
                     sb.Append(fkm.ReferredColumn.Name);
                     sb.Append(" = ");
                     sb.Append(_query.Table.GetAlias());
-                    sb.Append(".");
+                    sb.Append('.');
                     sb.Append(fkm.ForeignKeyColumn.Name);
                 }
             }
             else if (join.ColumnSource != null && join.ColumnTarget != null)
             {
                 sb.Append(join.Table.GetAlias());
-                sb.Append(".");
+                sb.Append('.');
                 sb.Append(join.ColumnSource.Value);
                 sb.Append(" = ");
                 sb.Append(_query.Table.GetAlias());
-                sb.Append(".");
+                sb.Append('.');
                 sb.Append(join.ColumnTarget.Value);
             }
             else if (join.ColumnSource == null && join.ColumnTarget != null)
@@ -274,11 +274,11 @@
                 var cao = pk.SqlColumns[0];
 
                 sb.Append(join.Table.GetAlias());
-                sb.Append(".");
+                sb.Append('.');
                 sb.Append(cao.SqlColumn.Name);
                 sb.Append(" = ");
                 sb.Append(_query.Table.GetAlias());
-                sb.Append(".");
+                sb.Append('.');
                 sb.Append(join.ColumnTarget.Value);
             }
             else if (join.ColumnSource != null && join.ColumnTarget == null)
@@ -293,11 +293,11 @@
                 var cao = pk.SqlColumns[0];
 
                 sb.Append(join.Table.GetAlias());
-                sb.Append(".");
+                sb.Append('.');
                 sb.Append(join.ColumnSource.Value);
                 sb.Append(" = ");
                 sb.Append(_query.Table.GetAlias());
-                sb.Append(".");
+                sb.Append('.');
                 sb.Append(cao.SqlColumn.Name);
             }
 
@@ -328,12 +328,12 @@
                 if (column.Alias != null)
                 {
                     sb.Append(column.Alias);
-                    sb.Append(".");
+                    sb.Append('.');
                 }
                 else if (column.IsDbColumn)
                 {
                     sb.Append(queryElement.Table.GetAlias());
-                    sb.Append(".");
+                    sb.Append('.');
                 }
 
                 sb.Append(column.Value);

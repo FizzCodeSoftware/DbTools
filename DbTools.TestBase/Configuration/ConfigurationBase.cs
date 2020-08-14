@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.TestBase
 {
     using FizzCode.DbTools.Configuration;
+    using FizzCode.LightWeight.Configuration;
     using Microsoft.Extensions.Configuration;
 
     public class ConfigurationBase
@@ -18,7 +19,7 @@
 
         private void Initialize()
         {
-            Configuration = Common.Configuration.Load(ConfigurationFileName);
+            Configuration = ConfigurationLoader.LoadFromJsonFile(ConfigurationFileName);
             ConnectionStrings.LoadFromConfiguration(Configuration);
         }
 

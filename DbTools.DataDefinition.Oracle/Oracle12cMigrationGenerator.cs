@@ -40,7 +40,7 @@
                 sb.AppendLine(Generator.GenerateCreateColumn(columnNew.SqlColumn));
             }
 
-            sb.Append(")");
+            sb.Append(')');
 
             return sb.ToString();
         }
@@ -71,7 +71,7 @@
                     sb.Append(column);
                 }
 
-                sb.Append(")");
+                sb.Append(')');
             }
             else
             {
@@ -116,31 +116,31 @@ MODIFY {GenerateColumnChange(columnChanges[0].SqlColumn, columnChanges[0].NewNam
             if ((typeOld.SqlTypeInfo.HasLength && typeOld.Length != typeNew.Length)
                 || (typeOld.SqlTypeInfo.HasScale && typeOld.Scale != typeNew.Scale))
             {
-                sb.Append(" ")
+                sb.Append(' ')
                 .Append(typeNew.SqlTypeInfo.SqlDataType);
 
                 if (typeNew.Scale.HasValue)
                 {
                     if (typeNew.Length != null)
                     {
-                        sb.Append("(")
+                        sb.Append('(')
                             .Append(typeNew.Length?.ToString("D", CultureInfo.InvariantCulture))
                             .Append(", ")
                             .Append(typeNew.Scale?.ToString("D", CultureInfo.InvariantCulture))
-                            .Append(")");
+                            .Append(')');
                     }
                     else
                     {
-                        sb.Append("(")
+                        sb.Append('(')
                             .Append(typeNew.Scale?.ToString("D", CultureInfo.InvariantCulture))
-                            .Append(")");
+                            .Append(')');
                     }
                 }
                 else if (typeNew.Length.HasValue)
                 {
-                    sb.Append("(")
+                    sb.Append('(')
                         .Append(typeNew.Length?.ToString("D", CultureInfo.InvariantCulture))
-                        .Append(")");
+                        .Append(')');
                 }
             }
 
@@ -159,7 +159,7 @@ MODIFY {GenerateColumnChange(columnChanges[0].SqlColumn, columnChanges[0].NewNam
             {
                 sb.Append(" DEFAULT(")
                     .Append(defaultValueNew.Value)
-                    .Append(")");
+                    .Append(')');
             }
 
             if (typeOld.IsNullable != typeNew.IsNullable)
@@ -170,7 +170,7 @@ MODIFY {GenerateColumnChange(columnChanges[0].SqlColumn, columnChanges[0].NewNam
                     sb.Append(" NOT NULL");
             }
 
-            sb.Append(";");
+            sb.Append(';');
 
             return sb.ToString();
         }

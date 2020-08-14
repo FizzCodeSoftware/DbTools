@@ -206,7 +206,7 @@
                     foreach (var sqlEngineVersionSpecificProperty in fk.SqlEngineVersionSpecificProperties)
                     {
                         propertySb.Append(sqlEngineVersionSpecificProperty.Version)
-                            .Append("/")
+                            .Append('/')
                             .Append(sqlEngineVersionSpecificProperty.Name)
                             .Append(" = ")
                             .AppendLine(sqlEngineVersionSpecificProperty.Value);

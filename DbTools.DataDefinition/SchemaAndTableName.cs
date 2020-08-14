@@ -16,7 +16,7 @@
 
         public SchemaAndTableName(string tableName)
         {
-            if (tableName.IndexOf(DatabaseDeclaration.SchemaTableNameSeparator, StringComparison.InvariantCultureIgnoreCase) == -1)
+            if (!tableName.Contains(DatabaseDeclaration.SchemaTableNameSeparator, StringComparison.InvariantCultureIgnoreCase))
             {
                 TableName = tableName;
             }

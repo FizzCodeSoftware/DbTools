@@ -17,7 +17,7 @@
         public static StringBuilder AppendSpace(this StringBuilder sb, string value)
         {
             if (sb.Length > 0)
-                sb.Append(" ");
+                sb.Append(' ');
 
             sb.Append(value);
 

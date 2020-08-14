@@ -9,6 +9,7 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.Configuration;
+    using FizzCode.LightWeight.Configuration;
     using Microsoft.Extensions.Configuration;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -21,7 +22,7 @@
         static TestHelper()
 #pragma warning restore CA1810 // Initialize reference type static fields inline
         {
-            _configuration = Configuration.Load("testconfig", true);
+            _configuration = ConfigurationLoader.LoadFromJsonFile("testconfig", true);
             var forceIntegrationTests = _configuration["forceIntegrationTests"];
             _forceIntegrationTests = forceIntegrationTests == "true";
         }
@@ -139,7 +140,7 @@
         {
             var logger = new Logger();
 
-            var configuration = Configuration.Load("testconfig", true);
+            var configuration = ConfigurationLoader.LoadFromJsonFile("testconfig", true);
 
             var logConfiguration = configuration?.GetSection("Log").Get<LogConfiguration>();
 

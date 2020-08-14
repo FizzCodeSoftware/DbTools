@@ -48,7 +48,7 @@
                 if (Scale != null)
                     sb.Append(Scale?.ToString("D", CultureInfo.InvariantCulture));
 
-                sb.Append(")");
+                sb.Append(')');
             }
 
             if (!IsNullable)
