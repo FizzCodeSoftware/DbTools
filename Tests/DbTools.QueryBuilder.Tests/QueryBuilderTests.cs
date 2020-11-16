@@ -222,10 +222,10 @@
 
             var result = qb.Build(q);
 
-            AssertCustom.AreEqual(@"SELECT c.Id, c.Name, c.ParentId
-FROM Child c
-LEFT JOIN Parent p1 ON p1.Id = c.ParentId
-LEFT JOIN Parent p2 ON p2.Id = p1.Id", result);
+            AssertCustom.AreEqual("SELECT c.Id, c.Name, c.ParentId\r\n" +
+"FROM Child c\r\n" +
+"LEFT JOIN Parent p1 ON p1.Id = c.ParentId\r\n" +
+"LEFT JOIN Parent p2 ON p2.Id = p1.Id", result);
         }
     }
 }
