@@ -44,10 +44,10 @@
                 {
                     if (IsRegex(item.Pattern.Schema) || IsRegex(item.Pattern.TableName))
                     {
-                        if (matchingItem == null)
-                            matchingItem = item;
-                        else
+                        if (matchingItem != null)
                             throw new ApplicationException($"Multiple patterns are matching for {schemaAndTableName.SchemaAndName}.");
+
+                        matchingItem = item;
                     }
                     else
                     {
@@ -77,10 +77,10 @@
                 {
                     if (IsRegex(item.Pattern.Schema) || IsRegex(item.Pattern.TableName))
                     {
-                        if (matchingItem == null)
-                            matchingItem = item;
-                        else
+                        if (matchingItem != null)
                             throw new ApplicationException($"Multiple patterns are matching for {schemaAndTableName.SchemaAndName}.");
+
+                        matchingItem = item;
                     }
                     else
                     {

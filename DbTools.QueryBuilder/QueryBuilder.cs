@@ -205,8 +205,8 @@
             {
                 var subQb = new QueryBuilder();
                 sb.AppendLine()
-                    .Append(_level+1, "(")
-                    .Append(subQb.Build(joinSubQueryOn.SubQuery, _level+1 ))
+                    .Append(_level + 1, "(")
+                    .Append(subQb.Build(joinSubQueryOn.SubQuery, _level + 1))
                     .Append(") ")
                     .Append(joinSubQueryOn.Alias);
             }
