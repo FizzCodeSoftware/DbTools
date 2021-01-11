@@ -168,7 +168,7 @@
             var fk = new ForeignKeyRegistrationToReferredTable(table, referredTableNameWithSchema, isNullable, fkName, map);
             table.Properties.Add(fk);
 
-            var mapColumnNames = string.Join("_", map.Select(m => m.ColumnName).ToList());
+            var mapColumnNames = string.Join("_", map.ConvertAll(m => m.ColumnName));
 
             var placeHolderColumnName = $"*{referredTableNameWithSchema}.{mapColumnNames}.{table.Columns.Count.ToString("D", CultureInfo.InvariantCulture)}";
             table.Columns.Add(new SqlColumnFKRegistration(placeHolderColumnName, fk));

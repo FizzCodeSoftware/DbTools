@@ -50,9 +50,7 @@
             Context = context;
         }
 
-#pragma warning disable CA1822 // Mark members as static
         public List<SchemaCheck> Check(DatabaseDefinition dd)
-#pragma warning restore CA1822 // Mark members as static
         {
             var schemaChecks = new List<SchemaCheck>();
 

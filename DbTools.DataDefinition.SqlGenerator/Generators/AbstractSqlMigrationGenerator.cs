@@ -72,7 +72,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
         public virtual string CreatePrimaryKey(PrimaryKeyNew primaryKeyNew)
         {
             // TODO asc desc in MsSql
-            var pkColumnsList = primaryKeyNew.PrimaryKey.SqlColumns.Select(c => "\"" + c.SqlColumn.Name + "\"").ToList();
+            var pkColumnsList = primaryKeyNew.PrimaryKey.SqlColumns.ConvertAll(c => "\"" + c.SqlColumn.Name + "\"");
             var pkColumns = string.Join(", ", pkColumnsList);
             return $"ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(primaryKeyNew.PrimaryKey.SqlTable.SchemaAndTableName)} ADD CONSTRAINT {primaryKeyNew.PrimaryKey.Name} PRIMARY KEY ({pkColumns})";
         }

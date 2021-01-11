@@ -53,8 +53,8 @@ WHERE type = 'U'";
             AddSchemaNamesFilter(ref sqlStatement, "ss.name");
 
             return Executer.ExecuteQuery(sqlStatement).Rows
-                .Select(row => new SchemaAndTableName(row.GetAs<string>("schemaName"), row.GetAs<string>("tableName")))
-                .ToList();
+                .ConvertAll(row => new SchemaAndTableName(row.GetAs<string>("schemaName"), row.GetAs<string>("tableName")))
+;
         }
 
         private MsSqlTableReader2016 _tableReader;

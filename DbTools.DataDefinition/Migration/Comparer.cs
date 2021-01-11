@@ -13,9 +13,7 @@
             Context = context;
         }
 
-#pragma warning disable CA1822 // Mark members as static
         public List<IMigration> Compare(DatabaseDefinition originalDd, DatabaseDefinition newDd)
-#pragma warning restore CA1822 // Mark members as static
         {
             // TODO needs to be ordered
             var changes = new List<IMigration>();

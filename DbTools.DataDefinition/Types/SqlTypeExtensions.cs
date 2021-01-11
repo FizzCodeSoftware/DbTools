@@ -1,5 +1,4 @@
-﻿#pragma warning disable CA1720 // Identifier contains type name
-
+﻿
 namespace FizzCode.DbTools.DataDefinition
 {
     public static class SqlTypeExtensions

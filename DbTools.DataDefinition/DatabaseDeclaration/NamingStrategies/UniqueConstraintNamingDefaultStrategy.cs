@@ -9,7 +9,7 @@
             if (uniqueConstraint.SqlTable.SchemaAndTableName.TableName == null)
                 return;
 
-            var indexNameColumnsPart = string.Join("_", uniqueConstraint.SqlColumns.Select(co => co.SqlColumn.Name).ToList());
+            var indexNameColumnsPart = string.Join("_", uniqueConstraint.SqlColumns.ConvertAll(co => co.SqlColumn.Name));
             uniqueConstraint.Name = $"UQ_{uniqueConstraint.SqlTable.SchemaAndTableName.TableName}_{indexNameColumnsPart}";
         }
     }
