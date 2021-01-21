@@ -2,7 +2,6 @@
 {
     using System.Collections;
     using System.Collections.Generic;
-    using FizzCode.DbTools.Configuration;
 
     public class SqlEngineVersionSpecificProperties : IEnumerable<SqlEngineVersionSpecificProperty>
     {

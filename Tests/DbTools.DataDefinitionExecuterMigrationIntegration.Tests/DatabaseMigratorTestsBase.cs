@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.SqlExecuterMigrationIntegration.Tests
 {
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;

@@ -4,9 +4,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
+    using FizzCode.LightWeight.AdoNet;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     public class SqlExecuterTestAdapter : ConfigurationBase
@@ -25,38 +25,40 @@
                 Assert.Inconclusive("Test is skipped, integration tests are not running.");
         }
 
-        public ConnectionStringWithProvider Initialize(string connectionStringKey, params DatabaseDefinition[] dds)
+        public NamedConnectionString Initialize(string connectionStringKey, params DatabaseDefinition[] dds)
         {
             return Initialize(connectionStringKey, false, dds);
         }
 
-        public ConnectionStringWithProvider InitializeAndCreate(string connectionStringKey, params DatabaseDefinition[] dds)
+        public NamedConnectionString InitializeAndCreate(string connectionStringKey, params DatabaseDefinition[] dds)
         {
             return Initialize(connectionStringKey, true, dds);
         }
 
-        private ConnectionStringWithProvider Initialize(string connectionStringKey, bool shouldCreate, params DatabaseDefinition[] dds)
+        private NamedConnectionString Initialize(string connectionStringKey, bool shouldCreate, params DatabaseDefinition[] dds)
         {
-            var connectionStringWithProvider = ConnectionStrings[connectionStringKey];
+            var connectionString = ConnectionStrings[connectionStringKey];
 
-            if (connectionStringWithProvider == null)
+            if (connectionString == null)
                 throw new InvalidOperationException($"No connection string is configured for {connectionStringKey}");
+
+            var sqlEngineVersion = connectionString.GetSqlEngineVersion();
 
             _dds.AddRange(dds);
 
             if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
             {
-                var generator = SqlGeneratorFactory.CreateGenerator(connectionStringWithProvider.SqlEngineVersion, GetContext(connectionStringWithProvider.SqlEngineVersion));
-                var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
-                sqlExecutersAndDialects.Add(connectionStringKey, (executer, connectionStringWithProvider.SqlEngineVersion));
+                var generator = SqlGeneratorFactory.CreateGenerator(sqlEngineVersion, GetContext(sqlEngineVersion));
+                var executer = SqlExecuterFactory.CreateSqlExecuter(connectionString, generator);
+                sqlExecutersAndDialects.Add(connectionStringKey, (executer, sqlEngineVersion));
 
-                if (shouldCreate && TestHelper.ShouldRunIntegrationTest(connectionStringWithProvider.SqlEngineVersion))
+                if (shouldCreate && TestHelper.ShouldRunIntegrationTest(sqlEngineVersion))
                 {
                     executer.InitializeDatabase(false, dds);
                 }
             }
 
-            return connectionStringWithProvider;
+            return connectionString;
         }
 
         private readonly Dictionary<SqlEngineVersion, Context> _contextPerSqlVersion = new Dictionary<SqlEngineVersion, Context>();
@@ -108,9 +110,11 @@
 
         public string ExecuteNonQuery(string connectionStringKey, string query)
         {
-            var connectionStringWithProvider = Initialize(connectionStringKey);
+            var connectionString = Initialize(connectionStringKey);
 
-            if (!TestHelper.ShouldRunIntegrationTest(connectionStringWithProvider.SqlEngineVersion))
+            var sqlEngineVersion = connectionString.GetSqlEngineVersion();
+
+            if (!TestHelper.ShouldRunIntegrationTest(sqlEngineVersion))
                 return "Query execution is skipped, integration tests are not running.";
 
             sqlExecutersAndDialects[connectionStringKey].SqlExecuter.ExecuteNonQuery(query);

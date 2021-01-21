@@ -1,5 +1,6 @@
-﻿namespace FizzCode.DbTools.Configuration
+﻿namespace FizzCode.DbTools
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -18,6 +19,24 @@
                     AllVersions.Add(version);
                 }
             }
+        }
+
+        public static SqlEngineVersion GetSqlEngineVersion(this LightWeight.AdoNet.NamedConnectionString connectionString)
+        {
+            var versionsByType = AllVersions.GroupBy(x => x.GetType());
+            foreach (var group in versionsByType)
+            {
+                var matches = group
+                    .Where(version => string.Equals(connectionString.ProviderName, version.ProviderName, StringComparison.InvariantCultureIgnoreCase))
+                    .ToList();
+
+                if (matches.Count > 0)
+                {
+                    return matches.Find(x => string.Equals(x.VersionString, connectionString.Version, StringComparison.InvariantCultureIgnoreCase));
+                }
+            }
+
+            return null;
         }
 
         public static List<SqlEngineVersion> AllVersions { get; } = new List<SqlEngineVersion>();

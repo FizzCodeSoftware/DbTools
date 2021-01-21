@@ -11,13 +11,13 @@
     <Platforms>AnyCPU</Platforms>
     <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>FizzCode.DbTools.Configuration</AssemblyName>
-    <RootNamespace>FizzCode.DbTools.Configuration</RootNamespace>
+    <RootNamespace>FizzCode.DbTools</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FizzCode.LightWeight.Configuration" Version="2.0.6.5993" />
+    <PackageReference Include="FizzCode.LightWeight.AdoNet.DbConnection" Version="2.0.8.6003" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="5.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

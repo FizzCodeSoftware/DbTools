@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;

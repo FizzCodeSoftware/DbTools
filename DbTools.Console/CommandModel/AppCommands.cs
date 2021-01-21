@@ -6,10 +6,10 @@ namespace FizzCode.DbTools.Console
     using CommandDotNet;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
     using FizzCode.DbTools.DataDefinitionDocumenter;
+    using FizzCode.LightWeight.AdoNet;
     using Microsoft.Extensions.Configuration;
 
     [Command(Name = ">")]
@@ -34,7 +34,7 @@ namespace FizzCode.DbTools.Console
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider(
+            var connectionStringWithProvider = new NamedConnectionString(
                 version.GetType().Name,
                 version.ProviderName,
                 connectionString,
@@ -77,7 +77,7 @@ namespace FizzCode.DbTools.Console
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider(
+            var connectionStringWithProvider = new NamedConnectionString(
                 version.GetType().Name,
                 version.ProviderName,
                 connectionString,
@@ -121,7 +121,7 @@ namespace FizzCode.DbTools.Console
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider(
+            var connectionStringWithProvider = new NamedConnectionString(
                 version.GetType().Name,
                 version.ProviderName,
                 connectionString,
@@ -202,7 +202,7 @@ namespace FizzCode.DbTools.Console
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider(
+            var connectionStringWithProvider = new NamedConnectionString(
                 version.GetType().Name,
                 version.ProviderName,
                 connectionString,
@@ -234,7 +234,7 @@ namespace FizzCode.DbTools.Console
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider(
+            var connectionStringWithProvider = new NamedConnectionString(
                 version.GetType().Name,
                 version.ProviderName,
                 connectionString,
@@ -367,7 +367,7 @@ namespace FizzCode.DbTools.Console
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new ConnectionStringWithProvider("", version.ProviderName, connectionString, version.VersionString);
+            var connectionStringWithProvider = new NamedConnectionString("", version.ProviderName, connectionString, version.VersionString);
 
             var context = CreateContext(version);
 
@@ -406,7 +406,7 @@ namespace FizzCode.DbTools.Console
 
             var contextOriginal = CreateContext(versionOriginal);
 
-            var connectionStringWithProviderOriginal = new ConnectionStringWithProvider(
+            var connectionStringWithProviderOriginal = new NamedConnectionString(
                 versionOriginal.GetType().Name,
                 versionOriginal.ProviderName,
                 connectionStringOriginal,
@@ -434,7 +434,7 @@ namespace FizzCode.DbTools.Console
 
             var contextNew = CreateContext(versionNew);
 
-            var connectionStringWithProviderNew = new ConnectionStringWithProvider(
+            var connectionStringWithProviderNew = new NamedConnectionString(
                 versionNew.GetType().Name,
                 versionNew.ProviderName,
                 connectionStringNew,

@@ -3,7 +3,6 @@
 namespace FizzCode.DbTools.DataDefinitionReader.Tests
 {
     using System.Linq;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
     using FizzCode.DbTools.DataDefinition.Tests;

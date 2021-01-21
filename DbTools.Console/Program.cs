@@ -5,7 +5,6 @@
     using System.Text.RegularExpressions;
     using CommandDotNet;
     using CommandDotNet.Help;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.LightWeight.Configuration;
     using Microsoft.Extensions.Configuration;
 

@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader.Tests
 {
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

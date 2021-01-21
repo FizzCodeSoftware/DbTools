@@ -2,22 +2,24 @@
 {
     using System;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition.MsSql2016;
     using FizzCode.DbTools.DataDefinition.Oracle12c;
     using FizzCode.DbTools.DataDefinitionReader;
+    using FizzCode.LightWeight.AdoNet;
 
     public static class DataDefinitionReaderFactory
     {
-        public static IDataDefinitionReader CreateDataDefinitionReader(ConnectionStringWithProvider connectionStringWithProvider, Context context, SchemaNamesToRead schemaNames)
+        public static IDataDefinitionReader CreateDataDefinitionReader(NamedConnectionString connectionStringWithProvider, Context context, SchemaNamesToRead schemaNames)
         {
-            if (connectionStringWithProvider.SqlEngineVersion is MsSqlVersion)
+            var sqlEngineVersion = connectionStringWithProvider.GetSqlEngineVersion();
+
+            if (sqlEngineVersion is MsSqlVersion)
                 return new MsSql2016DataDefinitionReader(connectionStringWithProvider, context, schemaNames);
 
-            if (connectionStringWithProvider.SqlEngineVersion is OracleVersion)
+            if (sqlEngineVersion is OracleVersion)
                 return new Oracle12cDataDefinitionReader(connectionStringWithProvider, context, schemaNames);
 
-            throw new NotImplementedException($"Not implemented {connectionStringWithProvider.SqlEngineVersion}.");
+            throw new NotImplementedException($"Not implemented {sqlEngineVersion}.");
         }
     }
 }

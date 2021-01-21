@@ -2,17 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
     using FizzCode.DbTools.DataDefinitionReader;
+    using FizzCode.LightWeight.AdoNet;
 
     public class MsSql2016DataDefinitionReader : GenericDataDefinitionReader
     {
-        public MsSql2016DataDefinitionReader(ConnectionStringWithProvider connectionStringWithProvider, Context context, SchemaNamesToRead schemaNames)
+        public MsSql2016DataDefinitionReader(NamedConnectionString connectionStringWithProvider, Context context, SchemaNamesToRead schemaNames)
             : base(new MsSql2016Executer(connectionStringWithProvider, new MsSql2016Generator(context)), schemaNames)
         {
         }

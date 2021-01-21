@@ -2,7 +2,6 @@
 namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
 {
     using System;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
 
     public abstract class GenerateDatabaseTestsBase : DataDefinitionSqlExecuterTests

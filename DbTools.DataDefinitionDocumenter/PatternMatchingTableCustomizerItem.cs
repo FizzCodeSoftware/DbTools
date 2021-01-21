@@ -31,7 +31,7 @@
 
         public override bool Equals(object obj)
         {
-            if (!(obj is PatternMatchingTableCustomizerItem item))
+            if (obj is not PatternMatchingTableCustomizerItem item)
                 return false;
 
             return ((item.Pattern == null && Pattern == null) || item.Pattern.Equals(Pattern))

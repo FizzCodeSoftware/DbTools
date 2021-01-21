@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Generic1
 {
     using System.Collections.Generic;
-    using FizzCode.DbTools.Configuration;
 
     public static class Generic1
     {

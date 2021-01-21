@@ -22,8 +22,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
-    <PackageReference Include="MySql.Data" Version="8.0.22" />
-    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.100" />
+    <PackageReference Include="MySql.Data" Version="8.0.23" />
+    <PackageReference Include="Oracle.ManagedDataAccess.Core" Version="2.19.101" />
     <PackageReference Include="Roslynator.Formatting.Analyzers" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

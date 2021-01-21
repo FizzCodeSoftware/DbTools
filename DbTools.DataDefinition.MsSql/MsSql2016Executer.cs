@@ -4,14 +4,14 @@
     using System.Data.Common;
     using System.Data.SqlClient;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
+    using FizzCode.LightWeight.AdoNet;
 
     public class MsSql2016Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDatabase
     {
-        public MsSql2016Executer(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
+        public MsSql2016Executer(NamedConnectionString connectionStringWithProvider, ISqlGenerator sqlGenerator)
             : base(connectionStringWithProvider, sqlGenerator)
         {
         }

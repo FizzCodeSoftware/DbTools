@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using FizzCode.DbTools.Configuration;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]

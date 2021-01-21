@@ -1,7 +1,6 @@
 ﻿#pragma warning disable CA1034 // Nested types should not be visible
 namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
 {
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.TestBase;

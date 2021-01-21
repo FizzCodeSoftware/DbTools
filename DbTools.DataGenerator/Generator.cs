@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
 
     public class Generator

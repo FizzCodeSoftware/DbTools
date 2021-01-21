@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.Common
 {
     using System.Collections.Generic;
-    using FizzCode.DbTools.Configuration;
 
     public class Feature
     {

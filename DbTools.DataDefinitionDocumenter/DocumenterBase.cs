@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.Configuration;
 
     public abstract class DocumenterBase
     {

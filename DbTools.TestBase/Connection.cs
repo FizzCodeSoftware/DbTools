@@ -14,7 +14,9 @@
 
             foreach (var c in StaticConfiguration.ConnectionStrings)
             {
-                if (TestHelper.ShouldRunIntegrationTest(c.SqlEngineVersion))
+                var sqlEngineVersion = c.GetSqlEngineVersion();
+
+                if (TestHelper.ShouldRunIntegrationTest(sqlEngineVersion))
                     yield return new[] { c.Name };
             }
         }

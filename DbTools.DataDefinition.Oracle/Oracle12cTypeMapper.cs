@@ -2,7 +2,6 @@
 {
     using System;
     using System.Globalization;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition.Generic1;
 
     public class Oracle12cTypeMapper : AbstractTypeMapper

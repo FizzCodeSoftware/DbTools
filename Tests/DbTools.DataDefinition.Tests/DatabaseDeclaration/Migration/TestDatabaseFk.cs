@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Tests
 {
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.TestBase;
 

@@ -1,5 +1,8 @@
-﻿namespace FizzCode.DbTools.Configuration
+﻿namespace FizzCode.DbTools
 {
+    using System;
+    using FizzCode.LightWeight.AdoNet;
+
     public abstract class SqlEngineVersion
     {
         public SqlEngine Engine { get; }
@@ -19,15 +22,11 @@
 
         public override int GetHashCode()
         {
-            return UniqueName.GetHashCode(System.StringComparison.InvariantCultureIgnoreCase);
+            return HashCode.Combine(UniqueName);
         }
-
         public override bool Equals(object obj)
         {
-            if (!(obj is SqlEngineVersion s))
-                return false;
-
-            return s.UniqueName == UniqueName;
+            return obj is SqlEngineVersion s && s.UniqueName == UniqueName;
         }
 
         public override string ToString()

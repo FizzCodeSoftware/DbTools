@@ -8,7 +8,7 @@
     using System.Reflection;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.Configuration;
+    using FizzCode.LightWeight.AdoNet;
     using FizzCode.LightWeight.Configuration;
     using Microsoft.Extensions.Configuration;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -96,7 +96,7 @@
                 Assert.Inconclusive($"Test is skipped, feature {feature} is not implemented (yet). ({featureSupport.Description}).");
         }
 
-        public static void CheckProvider(SqlEngineVersion version, IEnumerable<ConnectionStringWithProvider> connectionStringWithProviders)
+        public static void CheckProvider(SqlEngineVersion version, IEnumerable<NamedConnectionString> connectionStringWithProviders)
         {
             RegisterProviders();
             var usedVersions = GetSqlVersionsWithConfiguredConnectionStrting(connectionStringWithProviders);
@@ -106,15 +106,15 @@
 
         private static List<SqlEngineVersion> _sqlVersionsWithConfiguredConnectionStrting;
 
-        private static List<SqlEngineVersion> GetSqlVersionsWithConfiguredConnectionStrting(IEnumerable<ConnectionStringWithProvider> connectionStringCollection)
+        private static List<SqlEngineVersion> GetSqlVersionsWithConfiguredConnectionStrting(IEnumerable<NamedConnectionString> connectionStringCollection)
         {
             if (_sqlVersionsWithConfiguredConnectionStrting == null)
             {
                 _sqlVersionsWithConfiguredConnectionStrting = new List<SqlEngineVersion>();
-                foreach (var connectionStringWithProvider in connectionStringCollection)
+                foreach (var connectionString in connectionStringCollection)
                 {
-                    if (!string.IsNullOrEmpty(connectionStringWithProvider.ConnectionString))
-                        _sqlVersionsWithConfiguredConnectionStrting.Add(connectionStringWithProvider.SqlEngineVersion);
+                    if (!string.IsNullOrEmpty(connectionString.ConnectionString))
+                        _sqlVersionsWithConfiguredConnectionStrting.Add(connectionString.GetSqlEngineVersion());
                 }
             }
 

@@ -1,7 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.SqLite3
 {
-    using FizzCode.DbTools.Configuration;
-
     public static class SqLite3Columns
     {
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)

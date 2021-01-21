@@ -10,7 +10,6 @@
     using System.Text.Json;
     using System.Text.RegularExpressions;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionDocumenter.BimDTO;
     using FizzCode.DbTools.Tabular;

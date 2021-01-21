@@ -1,7 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Oracle12c
 {
-    using FizzCode.DbTools.Configuration;
-
     public static class Oracle12cColumns
     {
         private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)

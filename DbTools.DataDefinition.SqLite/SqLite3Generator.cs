@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
 

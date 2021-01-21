@@ -4,18 +4,18 @@
     using System.Data.Common;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
+    using FizzCode.LightWeight.AdoNet;
 
     public abstract class SqlStatementExecuter : ISqlStatementExecuter
     {
-        public ConnectionStringWithProvider ConnectionStringWithProvider { get; }
+        public NamedConnectionString ConnectionStringWithProvider { get; }
         public ISqlGenerator Generator { get; }
 
         protected Logger Logger => Generator.Context.Logger;
 
-        protected SqlStatementExecuter(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator)
+        protected SqlStatementExecuter(NamedConnectionString connectionStringWithProvider, ISqlGenerator sqlGenerator)
         {
             Generator = sqlGenerator;
 

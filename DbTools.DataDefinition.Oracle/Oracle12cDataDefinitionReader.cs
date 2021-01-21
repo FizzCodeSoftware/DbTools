@@ -3,13 +3,13 @@
     using System.Collections.Generic;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionReader;
+    using FizzCode.LightWeight.AdoNet;
 
     public class Oracle12cDataDefinitionReader : GenericDataDefinitionReader
     {
-        public Oracle12cDataDefinitionReader(ConnectionStringWithProvider connectionStringWithProvider, Context context, SchemaNamesToRead schemaNames)
+        public Oracle12cDataDefinitionReader(NamedConnectionString connectionStringWithProvider, Context context, SchemaNamesToRead schemaNames)
             : base(new Oracle12cExecuter(connectionStringWithProvider, new Oracle12cGenerator(context)), schemaNames)
         {
         }

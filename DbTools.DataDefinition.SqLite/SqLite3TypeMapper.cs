@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.SqLite3
 {
     using System;
-    using FizzCode.DbTools.Configuration;
 
     public class SqLite3TypeMapper : AbstractTypeMapper
     {

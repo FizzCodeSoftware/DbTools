@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.SqlGenerator.Tests
 {
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.TestBase;

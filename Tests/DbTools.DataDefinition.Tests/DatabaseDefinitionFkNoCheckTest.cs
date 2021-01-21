@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Tests
 {
     using System.Linq;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition.MsSql2016;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;

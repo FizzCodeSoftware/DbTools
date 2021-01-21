@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.Common
 {
-    using FizzCode.DbTools.Configuration;
     using Microsoft.Extensions.Configuration;
 
     public static class Helper

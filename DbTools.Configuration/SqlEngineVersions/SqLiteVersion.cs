@@ -1,5 +1,7 @@
-﻿namespace FizzCode.DbTools.Configuration
+﻿namespace FizzCode.DbTools
 {
+    using FizzCode.LightWeight.AdoNet;
+
     public class SqLiteVersion : SqlEngineVersion
     {
         internal SqLiteVersion(string uniqueName, string versionString, string versionNumber)

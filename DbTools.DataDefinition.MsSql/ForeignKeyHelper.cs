@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.MsSql2016
 {
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
 
     /// <summary>

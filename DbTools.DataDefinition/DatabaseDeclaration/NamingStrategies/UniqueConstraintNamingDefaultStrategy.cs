@@ -1,7 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    using System.Linq;
-
     public class UniqueConstraintNamingDefaultStrategy : IUniqueConstraintNamingStrategy
     {
         public void SetUniqueConstraintName(UniqueConstraint uniqueConstraint)

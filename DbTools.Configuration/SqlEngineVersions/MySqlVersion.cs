@@ -1,5 +1,7 @@
-﻿namespace FizzCode.DbTools.Configuration
+﻿namespace FizzCode.DbTools
 {
+    using FizzCode.LightWeight.AdoNet;
+
     public class MySqlVersion : SqlEngineVersion
     {
         internal MySqlVersion(string uniqueName, string versionString, string versionNumber)

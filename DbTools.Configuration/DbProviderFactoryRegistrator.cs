@@ -1,4 +1,4 @@
-﻿namespace FizzCode.DbTools.Configuration
+﻿namespace FizzCode.DbTools
 {
     using System.Data.Common;
     using Microsoft.Extensions.Configuration;

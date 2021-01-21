@@ -1,5 +1,7 @@
-﻿namespace FizzCode.DbTools.Configuration
+﻿namespace FizzCode.DbTools
 {
+    using FizzCode.LightWeight.AdoNet;
+
     public class OracleVersion : SqlEngineVersion
     {
         public OracleVersion(string uniqueName, string versionString, string versionNumber)

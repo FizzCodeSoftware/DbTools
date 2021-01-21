@@ -4,16 +4,16 @@
     using System.Data.SQLite;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.Configuration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
+    using FizzCode.LightWeight.AdoNet;
 
 #pragma warning disable CA1001 // Types that own disposable fields should be disposable
     public class SqLite3Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDatabase
 #pragma warning restore CA1001 // Types that own disposable fields should be disposable
     {
-        public SqLite3Executer(ConnectionStringWithProvider connectionStringWithProvider, ISqlGenerator sqlGenerator = null)
+        public SqLite3Executer(NamedConnectionString connectionStringWithProvider, ISqlGenerator sqlGenerator = null)
             : base(connectionStringWithProvider, sqlGenerator)
         {
         }
