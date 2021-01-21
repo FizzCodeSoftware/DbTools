@@ -66,12 +66,18 @@
 
         public bool Equals(SchemaAndTableName other)
         {
-            return other != null && Schema == other.Schema && TableName == other.TableName;
+            if (other is null)
+                return false;
+
+            return Schema == other.Schema && TableName == other.TableName;
         }
 
         public override bool Equals(object obj)
         {
-            return obj is SchemaAndTableName other && Equals(other);
+            if (obj is not SchemaAndTableName other)
+                return false;
+
+            return Equals(other);
         }
 
         public static bool operator ==(SchemaAndTableName obj1, SchemaAndTableName obj2)
