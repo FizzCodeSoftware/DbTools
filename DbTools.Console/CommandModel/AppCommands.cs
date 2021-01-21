@@ -34,7 +34,7 @@ namespace FizzCode.DbTools.Console
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new NamedConnectionString(
+            var connString = new NamedConnectionString(
                 version.GetType().Name,
                 version.ProviderName,
                 connectionString,
@@ -42,10 +42,10 @@ namespace FizzCode.DbTools.Console
 
             var context = CreateContext(version);
 
-            var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, context);
+            var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connString, context);
             var databaseName = sqlExecuter.GetDatabase();
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, context, null);
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connString, context, null);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -77,7 +77,7 @@ namespace FizzCode.DbTools.Console
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new NamedConnectionString(
+            var connString = new NamedConnectionString(
                 version.GetType().Name,
                 version.ProviderName,
                 connectionString,
@@ -85,7 +85,7 @@ namespace FizzCode.DbTools.Console
 
             var context = CreateContext(version);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, context, null);
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connString, context, null);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -121,7 +121,7 @@ namespace FizzCode.DbTools.Console
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new NamedConnectionString(
+            var connString = new NamedConnectionString(
                 version.GetType().Name,
                 version.ProviderName,
                 connectionString,
@@ -129,7 +129,7 @@ namespace FizzCode.DbTools.Console
 
             var context = CreateContext(version);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, context, null);
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connString, context, null);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -202,7 +202,7 @@ namespace FizzCode.DbTools.Console
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new NamedConnectionString(
+            var connString = new NamedConnectionString(
                 version.GetType().Name,
                 version.ProviderName,
                 connectionString,
@@ -210,7 +210,7 @@ namespace FizzCode.DbTools.Console
 
             var context = CreateContext(version);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, context, null);
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connString, context, null);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -234,7 +234,7 @@ namespace FizzCode.DbTools.Console
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new NamedConnectionString(
+            var connString = new NamedConnectionString(
                 version.GetType().Name,
                 version.ProviderName,
                 connectionString,
@@ -242,10 +242,10 @@ namespace FizzCode.DbTools.Console
 
             var context = CreateContext(version);
 
-            var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, context);
+            var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connString, context);
             var databaseName = sqlExecuter.GetDatabase();
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProvider, context, null);
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connString, context, null);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -367,13 +367,13 @@ namespace FizzCode.DbTools.Console
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
 
-            var connectionStringWithProvider = new NamedConnectionString("", version.ProviderName, connectionString, version.VersionString);
+            var connString = new NamedConnectionString("", version.ProviderName, connectionString, version.VersionString);
 
             var context = CreateContext(version);
 
             var generator = SqlGeneratorFactory.CreateGenerator(version, context);
 
-            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProvider, generator);
+            var executer = SqlExecuterFactory.CreateSqlExecuter(connString, generator);
             var dc = new DatabaseCreator(null, executer);
 
             dc.DropAllViews();
@@ -406,16 +406,16 @@ namespace FizzCode.DbTools.Console
 
             var contextOriginal = CreateContext(versionOriginal);
 
-            var connectionStringWithProviderOriginal = new NamedConnectionString(
+            var connString = new NamedConnectionString(
                 versionOriginal.GetType().Name,
                 versionOriginal.ProviderName,
                 connectionStringOriginal,
                 versionOriginal.VersionString);
 
-            var sqlExecuterOriginal = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProviderOriginal, contextOriginal);
+            var sqlExecuterOriginal = SqlExecuterFactory.CreateSqlExecuter(connString, contextOriginal);
             var databaseNameOriginal = sqlExecuterOriginal.GetDatabase();
 
-            var ddlReaderOriginal = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProviderOriginal, contextOriginal, null);
+            var ddlReaderOriginal = DataDefinitionReaderFactory.CreateDataDefinitionReader(connString, contextOriginal, null);
 
             //var ddOriginal = ddlReaderOriginal.GetDatabaseDefinition();
             var ddOriginalTask = Task.Run(() => ddlReaderOriginal.GetDatabaseDefinition());
@@ -434,16 +434,16 @@ namespace FizzCode.DbTools.Console
 
             var contextNew = CreateContext(versionNew);
 
-            var connectionStringWithProviderNew = new NamedConnectionString(
+            var connStringNew = new NamedConnectionString(
                 versionNew.GetType().Name,
                 versionNew.ProviderName,
                 connectionStringNew,
                 versionNew.VersionString);
 
-            var sqlExecuterNew = SqlExecuterFactory.CreateSqlExecuter(connectionStringWithProviderNew, contextNew);
+            var sqlExecuterNew = SqlExecuterFactory.CreateSqlExecuter(connStringNew, contextNew);
             var databaseNameNew = sqlExecuterNew.GetDatabase();
 
-            var ddlReaderNew = DataDefinitionReaderFactory.CreateDataDefinitionReader(connectionStringWithProviderNew, contextNew, null);
+            var ddlReaderNew = DataDefinitionReaderFactory.CreateDataDefinitionReader(connStringNew, contextNew, null);
 
             //var ddNew = ddlReaderNew.GetDatabaseDefinition();
             var ddNewTask = Task.Run(() => ddlReaderNew.GetDatabaseDefinition());

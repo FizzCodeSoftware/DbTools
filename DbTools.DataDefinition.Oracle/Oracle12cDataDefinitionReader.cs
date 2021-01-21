@@ -9,8 +9,8 @@
 
     public class Oracle12cDataDefinitionReader : GenericDataDefinitionReader
     {
-        public Oracle12cDataDefinitionReader(NamedConnectionString connectionStringWithProvider, Context context, SchemaNamesToRead schemaNames)
-            : base(new Oracle12cExecuter(connectionStringWithProvider, new Oracle12cGenerator(context)), schemaNames)
+        public Oracle12cDataDefinitionReader(NamedConnectionString connectionString, Context context, SchemaNamesToRead schemaNames)
+            : base(new Oracle12cExecuter(connectionString, new Oracle12cGenerator(context)), schemaNames)
         {
         }
 

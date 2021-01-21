@@ -96,10 +96,10 @@
                 Assert.Inconclusive($"Test is skipped, feature {feature} is not implemented (yet). ({featureSupport.Description}).");
         }
 
-        public static void CheckProvider(SqlEngineVersion version, IEnumerable<NamedConnectionString> connectionStringWithProviders)
+        public static void CheckProvider(SqlEngineVersion version, IEnumerable<NamedConnectionString> connectionStrings)
         {
             RegisterProviders();
-            var usedVersions = GetSqlVersionsWithConfiguredConnectionStrting(connectionStringWithProviders);
+            var usedVersions = GetSqlVersionsWithConfiguredConnectionStrting(connectionStrings);
             if (!usedVersions.Contains(version))
                 Assert.Inconclusive($"Test is skipped, .Net Framework Data Provider is not usabe for {version} engine version, provider name: {version.ProviderName}. No valid connection string is configured.");
         }

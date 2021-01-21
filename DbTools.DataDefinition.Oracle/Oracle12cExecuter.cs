@@ -11,8 +11,8 @@
 
     public class Oracle12cExecuter : SqlStatementExecuter
     {
-        public Oracle12cExecuter(NamedConnectionString connectionStringWithProvider, ISqlGenerator sqlGenerator)
-            : base(connectionStringWithProvider, sqlGenerator)
+        public Oracle12cExecuter(NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
+            : base(connectionString, sqlGenerator)
         {
         }
 

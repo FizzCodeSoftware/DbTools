@@ -9,15 +9,15 @@
 
     public static class DataDefinitionReaderFactory
     {
-        public static IDataDefinitionReader CreateDataDefinitionReader(NamedConnectionString connectionStringWithProvider, Context context, SchemaNamesToRead schemaNames)
+        public static IDataDefinitionReader CreateDataDefinitionReader(NamedConnectionString connectionString, Context context, SchemaNamesToRead schemaNames)
         {
-            var sqlEngineVersion = connectionStringWithProvider.GetSqlEngineVersion();
+            var sqlEngineVersion = connectionString.GetSqlEngineVersion();
 
             if (sqlEngineVersion is MsSqlVersion)
-                return new MsSql2016DataDefinitionReader(connectionStringWithProvider, context, schemaNames);
+                return new MsSql2016DataDefinitionReader(connectionString, context, schemaNames);
 
             if (sqlEngineVersion is OracleVersion)
-                return new Oracle12cDataDefinitionReader(connectionStringWithProvider, context, schemaNames);
+                return new Oracle12cDataDefinitionReader(connectionString, context, schemaNames);
 
             throw new NotImplementedException($"Not implemented {sqlEngineVersion}.");
         }

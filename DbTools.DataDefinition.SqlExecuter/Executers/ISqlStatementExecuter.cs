@@ -7,7 +7,7 @@
 
     public interface ISqlStatementExecuter
     {
-        NamedConnectionString ConnectionStringWithProvider { get; }
+        NamedConnectionString ConnectionString { get; }
         ISqlGenerator Generator { get; }
 
         void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters);

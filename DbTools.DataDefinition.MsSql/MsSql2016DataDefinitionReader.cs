@@ -11,8 +11,8 @@
 
     public class MsSql2016DataDefinitionReader : GenericDataDefinitionReader
     {
-        public MsSql2016DataDefinitionReader(NamedConnectionString connectionStringWithProvider, Context context, SchemaNamesToRead schemaNames)
-            : base(new MsSql2016Executer(connectionStringWithProvider, new MsSql2016Generator(context)), schemaNames)
+        public MsSql2016DataDefinitionReader(NamedConnectionString connectionString, Context context, SchemaNamesToRead schemaNames)
+            : base(new MsSql2016Executer(connectionString, new MsSql2016Generator(context)), schemaNames)
         {
         }
 

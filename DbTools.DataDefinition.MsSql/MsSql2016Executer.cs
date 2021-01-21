@@ -11,8 +11,8 @@
 
     public class MsSql2016Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDatabase
     {
-        public MsSql2016Executer(NamedConnectionString connectionStringWithProvider, ISqlGenerator sqlGenerator)
-            : base(connectionStringWithProvider, sqlGenerator)
+        public MsSql2016Executer(NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
+            : base(connectionString, sqlGenerator)
         {
         }
 
@@ -83,7 +83,7 @@
         private string ChangeInitialCatalog(string newInitialCatalog)
         {
             var builder = GetConnectionStringBuilder();
-            builder.ConnectionString = ConnectionStringWithProvider.ConnectionString;
+            builder.ConnectionString = ConnectionString.ConnectionString;
             if (newInitialCatalog != null)
                 builder[InitialCatalog] = newInitialCatalog;
 
@@ -95,7 +95,7 @@
         public override string GetDatabase()
         {
             var builder = GetConnectionStringBuilder();
-            builder.ConnectionString = ConnectionStringWithProvider.ConnectionString;
+            builder.ConnectionString = ConnectionString.ConnectionString;
             return builder.ValueOfKey<string>(InitialCatalog);
         }
     }

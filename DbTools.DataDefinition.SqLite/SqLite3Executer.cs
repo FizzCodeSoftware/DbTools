@@ -13,8 +13,8 @@
     public class SqLite3Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDatabase
 #pragma warning restore CA1001 // Types that own disposable fields should be disposable
     {
-        public SqLite3Executer(NamedConnectionString connectionStringWithProvider, ISqlGenerator sqlGenerator = null)
-            : base(connectionStringWithProvider, sqlGenerator)
+        public SqLite3Executer(NamedConnectionString connectionString, ISqlGenerator sqlGenerator = null)
+            : base(connectionString, sqlGenerator)
         {
         }
 
@@ -35,7 +35,7 @@
             if (_connection != null)
                 throw new Exception("Database already connected.");
 
-            _connection = new SQLiteConnection(ConnectionStringWithProvider.ConnectionString);
+            _connection = new SQLiteConnection(ConnectionString.ConnectionString);
             _connection.Open();
         }
 

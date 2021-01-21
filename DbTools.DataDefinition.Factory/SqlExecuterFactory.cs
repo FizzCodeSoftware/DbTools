@@ -11,29 +11,29 @@
 
     public static class SqlExecuterFactory
     {
-        public static SqlStatementExecuter CreateSqlExecuter(NamedConnectionString connectionStringWithProvider, ISqlGenerator sqlGenerator)
+        public static SqlStatementExecuter CreateSqlExecuter(NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
         {
-            var sqlEngineVersion = connectionStringWithProvider.GetSqlEngineVersion();
+            var sqlEngineVersion = connectionString.GetSqlEngineVersion();
 
             if (sqlEngineVersion == SqLiteVersion.SqLite3)
-                return new SqLite3Executer(connectionStringWithProvider, sqlGenerator);
+                return new SqLite3Executer(connectionString, sqlGenerator);
 
             if (sqlEngineVersion == OracleVersion.Oracle12c)
-                return new Oracle12cExecuter(connectionStringWithProvider, sqlGenerator);
+                return new Oracle12cExecuter(connectionString, sqlGenerator);
 
             if (sqlEngineVersion == MsSqlVersion.MsSql2016)
-                return new MsSql2016Executer(connectionStringWithProvider, sqlGenerator);
+                return new MsSql2016Executer(connectionString, sqlGenerator);
 
             throw new NotImplementedException($"Not implemented {sqlEngineVersion}.");
         }
 
-        public static SqlStatementExecuter CreateSqlExecuter(NamedConnectionString connectionStringWithProvider, Context context)
+        public static SqlStatementExecuter CreateSqlExecuter(NamedConnectionString connectionString, Context context)
         {
-            var sqlEngineVersion = connectionStringWithProvider.GetSqlEngineVersion();
+            var sqlEngineVersion = connectionString.GetSqlEngineVersion();
 
             var generator = SqlGeneratorFactory.CreateGenerator(sqlEngineVersion, context);
 
-            return CreateSqlExecuter(connectionStringWithProvider, generator);
+            return CreateSqlExecuter(connectionString, generator);
         }
     }
 }

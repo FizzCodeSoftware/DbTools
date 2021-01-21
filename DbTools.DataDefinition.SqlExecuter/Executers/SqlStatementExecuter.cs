@@ -10,16 +10,16 @@
 
     public abstract class SqlStatementExecuter : ISqlStatementExecuter
     {
-        public NamedConnectionString ConnectionStringWithProvider { get; }
+        public NamedConnectionString ConnectionString { get; }
         public ISqlGenerator Generator { get; }
 
         protected Logger Logger => Generator.Context.Logger;
 
-        protected SqlStatementExecuter(NamedConnectionString connectionStringWithProvider, ISqlGenerator sqlGenerator)
+        protected SqlStatementExecuter(NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
         {
             Generator = sqlGenerator;
 
-            ConnectionStringWithProvider = connectionStringWithProvider;
+            ConnectionString = connectionString;
         }
 
         protected abstract void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters);
@@ -28,10 +28,10 @@
         {
             // TODO log conn string without password?
             Log(LogSeverity.Verbose, "Opening connection to {Database}.", GetDatabase());
-            var dbf = DbProviderFactories.GetFactory(ConnectionStringWithProvider.ProviderName);
+            var dbf = DbProviderFactories.GetFactory(ConnectionString.ProviderName);
 
             var connection = dbf.CreateConnection();
-            connection.ConnectionString = ConnectionStringWithProvider.ConnectionString;
+            connection.ConnectionString = ConnectionString.ConnectionString;
             connection.Open();
 
             return connection;
@@ -39,7 +39,7 @@
 
         public virtual DbConnection OpenConnectionMaster()
         {
-            var dbf = DbProviderFactories.GetFactory(ConnectionStringWithProvider.ProviderName);
+            var dbf = DbProviderFactories.GetFactory(ConnectionString.ProviderName);
 
             var connection = dbf.CreateConnection();
             connection.Open();
@@ -49,7 +49,7 @@
 
         public virtual DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
         {
-            var dbf = DbProviderFactories.GetFactory(ConnectionStringWithProvider.ProviderName);
+            var dbf = DbProviderFactories.GetFactory(ConnectionString.ProviderName);
 
             var command = dbf.CreateCommand();
 #pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
@@ -69,7 +69,7 @@
 
         public DbConnectionStringBuilder GetConnectionStringBuilder()
         {
-            var dbf = DbProviderFactories.GetFactory(ConnectionStringWithProvider.ProviderName);
+            var dbf = DbProviderFactories.GetFactory(ConnectionString.ProviderName);
             return dbf.CreateConnectionStringBuilder();
         }
 
