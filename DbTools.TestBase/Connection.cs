@@ -12,7 +12,7 @@
         {
             StaticConfiguration.Initialize("testconfig");
 
-            foreach (var c in StaticConfiguration.ConnectionStrings)
+            foreach (var c in StaticConfiguration.ConnectionStrings.All)
             {
                 var sqlEngineVersion = c.GetSqlEngineVersion();
 
