@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
     using System.Collections.Generic;
-    using System.Linq;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
     public abstract class OracleDataDefinitionElementReader : GenericDataDefinitionElementReader
@@ -36,7 +35,7 @@ AND EXISTS (SELECT 1 FROM dba_objects o
             }
 
             if (schemaNames.Count > 0)
-                sqlStatement += $" AND {schemaColumnName} IN({string.Join(',', schemaNames.Select(s => "'" + s + "'").ToList())})";
+                sqlStatement += $" AND {schemaColumnName} IN({string.Join(',', schemaNames.ConvertAll(s => "'" + s + "'"))})";
         }
     }
 }

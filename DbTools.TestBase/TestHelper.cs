@@ -76,7 +76,7 @@
 
                 var assemblyName = initialAssembly.GetName().Name;
                 if (assemblyName.StartsWith("FizzCode.DbTools.", StringComparison.InvariantCultureIgnoreCase))
-                    assemblyName = assemblyName.Substring("FizzCode.DbTools.".Length);
+                    assemblyName = assemblyName["FizzCode.DbTools.".Length..];
 
                 var schemaName = assemblyName.Replace(".", "_", StringComparison.InvariantCultureIgnoreCase);
 

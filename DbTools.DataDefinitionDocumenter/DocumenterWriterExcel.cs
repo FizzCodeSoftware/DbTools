@@ -17,7 +17,7 @@
             _uniqueName = new UniqueName();
         }
 
-        private readonly Dictionary<string, Sheet> _sheets = new Dictionary<string, Sheet>();
+        private readonly Dictionary<string, Sheet> _sheets = new();
 
         protected string GetSheetName(string name)
         {

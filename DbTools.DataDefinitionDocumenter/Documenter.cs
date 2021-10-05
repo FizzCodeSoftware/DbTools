@@ -22,8 +22,8 @@
                 : context.Customizer;
         }
 
-        private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
-        private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
+        private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory = new();
+        private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategory = new();
 
         private ITableCustomizer Customizer { get; }
         public void Document(DatabaseDefinition databaseDefinition)

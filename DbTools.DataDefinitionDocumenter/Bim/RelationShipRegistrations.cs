@@ -5,7 +5,7 @@
 
     public class RelationShipRegistrations
     {
-        private readonly Dictionary<string, List<BimRelationship>> _fromTo = new Dictionary<string, List<BimRelationship>>();
+        private readonly Dictionary<string, List<BimRelationship>> _fromTo = new();
 
         public List<BimRelationship> GetByFromTable(string fromTableName)
         {

@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Oracle12c
 {
     using System.Collections.Generic;
-    using System.Linq;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionReader;
 
@@ -22,8 +21,7 @@ WHERE t.owner = u.username";
             AddSchemaNamesFilter(ref sqlStatement, "t.owner");
 
             return Executer.ExecuteQuery(sqlStatement).Rows
-                .Select(row => new SchemaAndTableName(row.GetAs<string>("SCHEMANAME"), row.GetAs<string>("TABLENAME")))
-                .ToList();
+                .ConvertAll(row => new SchemaAndTableName(row.GetAs<string>("SCHEMANAME"), row.GetAs<string>("TABLENAME")));
         }
     }
 }

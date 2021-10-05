@@ -12,7 +12,7 @@
         {
             // TODO VARCHAR2(20 BYTE) VS VARCHAR2(20 CHAR)
 
-            return (type.ToUpper(CultureInfo.InvariantCulture)) switch
+            return type.ToUpper(CultureInfo.InvariantCulture) switch
             {
                 "CHAR" => base.MapSqlType(OracleType12c.Char, isNullable, charLength),
                 "NCHAR" => base.MapSqlType(OracleType12c.NChar, isNullable, charLength),

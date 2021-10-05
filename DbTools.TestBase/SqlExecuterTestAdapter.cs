@@ -11,9 +11,9 @@
 
     public class SqlExecuterTestAdapter : ConfigurationBase
     {
-        private readonly Dictionary<string, (SqlStatementExecuter SqlExecuter, SqlEngineVersion Version)> sqlExecutersAndDialects = new Dictionary<string, (SqlStatementExecuter, SqlEngineVersion)>();
+        private readonly Dictionary<string, (SqlStatementExecuter SqlExecuter, SqlEngineVersion Version)> sqlExecutersAndDialects = new();
 
-        private readonly List<DatabaseDefinition> _dds = new List<DatabaseDefinition>();
+        private readonly List<DatabaseDefinition> _dds = new();
 
         public override string ConfigurationFileName => "testconfig";
 
@@ -61,7 +61,7 @@
             return connectionString;
         }
 
-        private readonly Dictionary<SqlEngineVersion, Context> _contextPerSqlVersion = new Dictionary<SqlEngineVersion, Context>();
+        private readonly Dictionary<SqlEngineVersion, Context> _contextPerSqlVersion = new();
 
         public Context GetContext(SqlEngineVersion version)
         {

@@ -7,7 +7,7 @@
     [TestClass]
     public abstract class DataDefinitionReaderTests
     {
-        protected static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new SqlExecuterTestAdapter();
+        protected static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new();
 
         protected static void Init(SqlEngineVersion version, DatabaseDefinition dd)
         {

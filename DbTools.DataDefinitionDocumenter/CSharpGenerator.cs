@@ -85,7 +85,7 @@
                     .Append(index.Name)
                     .Append("\", ");
 
-                sb.Append(string.Join(", ", index.SqlColumns.Select(i => "\"" + i.SqlColumn.Name + "\"").ToList()));
+                sb.AppendJoin(", ", index.SqlColumns.ConvertAll(i => "\"" + i.SqlColumn.Name + "\""));
             }
             else
             {
@@ -97,10 +97,10 @@
                     .Append("\", ");
 
                 sb.Append("new [] {")
-                    .Append(string.Join(", ", index.SqlColumns.Select(i => "\"" + i.SqlColumn.Name + "\"").ToList()))
+                    .AppendJoin(", ", index.SqlColumns.ConvertAll(i => "\"" + i.SqlColumn.Name + "\""))
                     .Append("}, ")
                     .Append("new [] {")
-                    .Append(string.Join(", ", index.Includes.Select(i => "\"" + i.Name + "\"").ToList()))
+                    .AppendJoin(", ", index.Includes.ConvertAll(i => "\"" + i.Name + "\""))
                     .Append('}');
             }
 
@@ -116,7 +116,7 @@
             sb.Append(uniqueConstraint.Name);
             sb.Append("\", ");
 
-            sb.Append(string.Join(", ", uniqueConstraint.SqlColumns.Select(c => "\"" + c.SqlColumn.Name + "\"").ToList()));
+            sb.AppendJoin(", ", uniqueConstraint.SqlColumns.ConvertAll(c => "\"" + c.SqlColumn.Name + "\""));
 
             sb.AppendLine(");");
         }

@@ -31,8 +31,8 @@
             var result = qb.Build(q);
 
             AssertCustom.AreEqual("SELECT c.Id, c.Name, c.ParentId, ppp.Id AS 'ppp_Id', ppp.Name AS 'ppp_Name'\r\n"
-                + "FROM Child c\r\n" +
-                "LEFT JOIN Parent ppp ON ppp.Id = c.ParentId", result);
+                + "FROM Child c\r\n"
+                + "LEFT JOIN Parent ppp ON ppp.Id = c.ParentId", result);
         }
 
         [TestMethod]
@@ -46,8 +46,8 @@
             var result = qb.Build(q);
 
             AssertCustom.AreEqual("SELECT c.Id, c.Name, c.ParentId\r\n"
-                + "FROM Child c\r\n" +
-                "INNER JOIN Parent p ON p.Id = c.ParentId", result);
+                + "FROM Child c\r\n"
+                + "INNER JOIN Parent p ON p.Id = c.ParentId", result);
         }
 
         [TestMethod]
@@ -61,8 +61,8 @@
             var result = qb.Build(q);
 
             AssertCustom.AreEqual("SELECT p.Id, p.Name\r\n"
-                + "FROM Child c\r\n" +
-                "INNER JOIN Parent p ON p.Id = c.ParentId", result);
+                + "FROM Child c\r\n"
+                + "INNER JOIN Parent p ON p.Id = c.ParentId", result);
         }
 
         [TestMethod]
@@ -76,8 +76,8 @@
             var result = qb.Build(q);
 
             AssertCustom.AreEqual("SELECT p.Id AS 'p_Id', p.Name AS 'p_Name'\r\n"
-                + "FROM Child c\r\n" +
-                "INNER JOIN Parent p ON p.Id = c.ParentId", result);
+                + "FROM Child c\r\n"
+                + "INNER JOIN Parent p ON p.Id = c.ParentId", result);
         }
 
         [TestMethod]
@@ -90,8 +90,8 @@
 
             var result = qb.Build(q);
 
-            AssertCustom.AreEqual("SELECT c.Id, c.Name, c.ParentId, p.Name AS 'ParentName'\r\nFROM Child c\r\n" +
-                "LEFT JOIN Parent p ON p.Id = c.ParentId", result);
+            AssertCustom.AreEqual("SELECT c.Id, c.Name, c.ParentId, p.Name AS 'ParentName'\r\nFROM Child c\r\n"
+                + "LEFT JOIN Parent p ON p.Id = c.ParentId", result);
         }
 
         [TestMethod]
@@ -142,10 +142,10 @@
 
             var result = qb.Build(q);
 
-            AssertCustom.AreEqual("SELECT c.Id, c.Name, c.ParentId, p1.Id AS 'ParentId', p1.Name AS 'ParentName', p2.Id AS 'ParentId', p2.Name AS 'ParentName'\r\n" +
-                "FROM Child c\r\n" +
-                "LEFT JOIN Parent p1 ON p1.Id = c.ParentId\r\n" +
-                "LEFT JOIN Parent p2 ON p2.Id = c.ParentId", result);
+            AssertCustom.AreEqual("SELECT c.Id, c.Name, c.ParentId, p1.Id AS 'ParentId', p1.Name AS 'ParentName', p2.Id AS 'ParentId', p2.Name AS 'ParentName'\r\n"
+                + "FROM Child c\r\n"
+                + "LEFT JOIN Parent p1 ON p1.Id = c.ParentId\r\n"
+                + "LEFT JOIN Parent p2 ON p2.Id = c.ParentId", result);
         }
 
         [TestMethod]
@@ -187,11 +187,11 @@
 
             var result = qb.Build(q);
 
-            AssertCustom.AreEqual("SELECT c.Id, c.Name, c.ParentId, p1.Id AS 'p1_Id', p1.Name AS 'p1_Name', p2.Id AS 'p2_Id', p2.Name AS 'p2_Name'\r\n" +
-                "FROM Child c\r\n" +
-                "LEFT JOIN Parent p1 ON p1.Id = c.ParentId\r\n" +
-                "LEFT JOIN Parent p2 ON p2.Id = c.ParentId\r\n" +
-                "WHERE p1.Name LIKE 'a%' AND p2.Name LIKE 'a%'", result);
+            AssertCustom.AreEqual("SELECT c.Id, c.Name, c.ParentId, p1.Id AS 'p1_Id', p1.Name AS 'p1_Name', p2.Id AS 'p2_Id', p2.Name AS 'p2_Name'\r\n"
+                + "FROM Child c\r\n"
+                + "LEFT JOIN Parent p1 ON p1.Id = c.ParentId\r\n"
+                + "LEFT JOIN Parent p2 ON p2.Id = c.ParentId\r\n"
+                + "WHERE p1.Name LIKE 'a%' AND p2.Name LIKE 'a%'", result);
         }
 
         [TestMethod]
@@ -222,10 +222,10 @@
 
             var result = qb.Build(q);
 
-            AssertCustom.AreEqual("SELECT c.Id, c.Name, c.ParentId\r\n" +
-"FROM Child c\r\n" +
-"LEFT JOIN Parent p1 ON p1.Id = c.ParentId\r\n" +
-"LEFT JOIN Parent p2 ON p2.Id = p1.Id", result);
+            AssertCustom.AreEqual("SELECT c.Id, c.Name, c.ParentId\r\n"
++ "FROM Child c\r\n"
++ "LEFT JOIN Parent p1 ON p1.Id = c.ParentId\r\n"
++ "LEFT JOIN Parent p2 ON p2.Id = p1.Id", result);
         }
     }
 }

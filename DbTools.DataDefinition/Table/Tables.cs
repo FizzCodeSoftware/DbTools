@@ -6,8 +6,8 @@
 
     internal class Tables : ICollection<SqlTable>
     {
-        private SortedList<int, SqlTable> _sorted = new SortedList<int, SqlTable>();
-        private readonly Dictionary<string, SqlTable> byName = new Dictionary<string, SqlTable>();
+        private SortedList<int, SqlTable> _sorted = new();
+        private readonly Dictionary<string, SqlTable> byName = new();
 
         public int Count => byName.Count;
 

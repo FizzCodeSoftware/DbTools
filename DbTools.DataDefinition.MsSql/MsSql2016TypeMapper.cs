@@ -10,7 +10,7 @@
 
         public SqlType MapSqlTypeFromReaderInfo(string type, bool isNullable, int numericPrecision, int numericSale, int characterMaximumLength, int datetimePrecision)
         {
-            return (type.ToUpper(CultureInfo.InvariantCulture)) switch
+            return type.ToUpper(CultureInfo.InvariantCulture) switch
             {
                 "CHAR" => base.MapSqlType(MsSqlType2016.Char, isNullable, characterMaximumLength),
                 "NCHAR" => base.MapSqlType(MsSqlType2016.NChar, isNullable, characterMaximumLength),

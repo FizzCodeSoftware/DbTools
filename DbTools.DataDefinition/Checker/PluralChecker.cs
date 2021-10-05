@@ -23,7 +23,7 @@ abyss
 arcus
 lens
 mass";
-        private readonly List<string> _singulars = new List<string>();
+        private readonly List<string> _singulars = new();
 
         public PluralChecker()
         {

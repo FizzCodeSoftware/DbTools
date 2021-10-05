@@ -73,7 +73,7 @@
                 public SqlColumn Name { get; } = MsSql2016.AddNVarChar(100);
             }
 
-            public Query GetCompaniesQuery => new Query(Company);
+            public Query GetCompaniesQuery => new(Company);
         }
     }
 }

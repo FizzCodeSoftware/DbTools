@@ -14,7 +14,7 @@
             _features["ColumnScale"].Add(SqLiteVersion.SqLite3, Support.NotSupported, "SqLite does not support any datatype Length.");
         }
 
-        private static readonly FeatureList _features = new FeatureList();
+        private static readonly FeatureList _features = new();
 
         public static FeatureSupport GetSupport(SqlEngineVersion version, string name)
         {

@@ -7,8 +7,8 @@
 
     public abstract class OrderedDictionaryWithInsert<TKey, TValue> : ICollection<TValue>
     {
-        private readonly Dictionary<TKey, TValue> _dictionary = new Dictionary<TKey, TValue>();
-        private readonly SortedDictionary<int, TKey> _order = new SortedDictionary<int, TKey>();
+        private readonly Dictionary<TKey, TValue> _dictionary = new();
+        private readonly SortedDictionary<int, TKey> _order = new();
         private int _maxOrder;
 
         public abstract void Add(TValue item);
@@ -18,7 +18,7 @@
             Add(key, value, ++_maxOrder);
         }
 
-        private readonly object syncRoot = new object();
+        private readonly object syncRoot = new();
 
         public void Add(TKey key, TValue value, int order)
         {

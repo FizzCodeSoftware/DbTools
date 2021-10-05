@@ -20,7 +20,9 @@
             return sb;
         }
 
+#pragma warning disable RCS1224 // Make method an extension method.
         public static string Spaces(int level)
+#pragma warning restore RCS1224 // Make method an extension method.
         {
             return new string(' ', level * IndentationSpaces);
         }

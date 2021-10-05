@@ -28,8 +28,8 @@
             NewDatabaseName = newDatabaseName;
         }
 
-        private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategoryOrignal = new List<KeyValuePair<string, SqlTable>>();
-        private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategoryOriginal = new List<KeyValuePair<string, SqlTable>>();
+        private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategoryOrignal = new();
+        private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategoryOriginal = new();
 
         //private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategoryNew = new List<KeyValuePair<string, SqlTable>>();
         //private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategoryNew = new List<KeyValuePair<string, SqlTable>>();

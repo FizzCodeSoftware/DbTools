@@ -30,8 +30,8 @@
             return new SchemaNamesToRead(schemaNames);
         }
 
-        public static SchemaNamesToRead AllSchemas => new SchemaNamesToRead(false, false, true);
-        public static SchemaNamesToRead AllNotSystemSchemas => new SchemaNamesToRead(false, true);
-        public static SchemaNamesToRead AllDefaultSchemas => new SchemaNamesToRead(true);
+        public static SchemaNamesToRead AllSchemas => new(false, false, true);
+        public static SchemaNamesToRead AllNotSystemSchemas => new(false, true);
+        public static SchemaNamesToRead AllDefaultSchemas => new(true);
     }
 }

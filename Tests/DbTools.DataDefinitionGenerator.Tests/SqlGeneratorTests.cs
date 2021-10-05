@@ -9,7 +9,7 @@
     [TestClass]
     public class SqlGeneratorTests
     {
-        private static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new SqlExecuterTestAdapter();
+        private static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new();
 
         [DataTestMethod]
         [LatestSqlVersions]

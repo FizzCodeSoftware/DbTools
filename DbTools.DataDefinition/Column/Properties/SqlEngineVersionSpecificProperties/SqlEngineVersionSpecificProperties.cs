@@ -5,7 +5,7 @@
 
     public class SqlEngineVersionSpecificProperties : IEnumerable<SqlEngineVersionSpecificProperty>
     {
-        private readonly Dictionary<string, SqlEngineVersionSpecificProperty> _properties = new Dictionary<string, SqlEngineVersionSpecificProperty>();
+        private readonly Dictionary<string, SqlEngineVersionSpecificProperty> _properties = new();
 
         public string this[SqlEngineVersion version, string name]
         {

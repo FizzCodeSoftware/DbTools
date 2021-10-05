@@ -6,7 +6,7 @@
     [TestClass]
     public abstract class DataDefinitionSqlExecuterTests
     {
-        protected static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new SqlExecuterTestAdapter();
+        protected static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new();
 
         [AssemblyCleanup]
         public static void Cleanup()

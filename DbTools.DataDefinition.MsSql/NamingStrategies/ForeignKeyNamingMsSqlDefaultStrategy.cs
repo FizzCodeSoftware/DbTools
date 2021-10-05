@@ -5,8 +5,8 @@
 
     public class ForeignKeyNamingMsSqlDefaultStrategy : ForeignKeyNamingDefaultStrategy
     {
-        private readonly Dictionary<string, ForeignKey> _generatedNames = new Dictionary<string, ForeignKey>();
-        private readonly Dictionary<string, List<ForeignKey>> _renames = new Dictionary<string, List<ForeignKey>>();
+        private readonly Dictionary<string, ForeignKey> _generatedNames = new();
+        private readonly Dictionary<string, List<ForeignKey>> _renames = new();
 
         public override void SetFKName(ForeignKey fk)
         {

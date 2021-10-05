@@ -19,9 +19,7 @@
 
             sb.Append(ForeignKeyChain.Count)
                 .Append(' ')
-                .Append(
-                string.Join(", ", ForeignKeyChain.Select(fk => fk.ToString()))
-                );
+                .AppendJoin(", ", ForeignKeyChain.Select(fk => fk.ToString()));
 
             return sb.ToString();
         }

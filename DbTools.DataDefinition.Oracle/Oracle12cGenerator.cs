@@ -58,7 +58,7 @@ GRANT UNLIMITED TABLESPACE TO ""{schemaName}""");
                 .Append(GuardKeywords(pk.Name))
                 .Append(" PRIMARY KEY ")
                 .AppendLine("(")
-                .AppendLine(string.Join(", \r\n", pk.SqlColumns.Select(c => GuardKeywords(c.SqlColumn.Name))))
+                .AppendJoin(", \r\n", pk.SqlColumns.Select(c => GuardKeywords(c.SqlColumn.Name))).AppendLine()
                 .Append(')');
         }
 

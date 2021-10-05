@@ -115,7 +115,7 @@
                 .Append(" ON ")
                 .Append(GetSimplifiedSchemaAndTableName(index.SqlTable.SchemaAndTableName))
                 .AppendLine(" (")
-                .AppendLine(string.Join(", \r\n", index.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)} {c.OrderAsKeyword}"))) // Index column list + asc desc
+                .AppendJoin(", \r\n", index.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)} {c.OrderAsKeyword}")).AppendLine() // Index column list + asc desc
                 .AppendLine(");");
 
             return sb.ToString();
@@ -139,7 +139,7 @@
                 .Append(" PRIMARY KEY ")
                 .AppendLine(clusteredPrefix)
                 .AppendLine("(")
-                .AppendLine(string.Join(", \r\n", pk.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)} {c.OrderAsKeyword}"))) // PK column list + asc desc
+                .AppendJoin(", \r\n", pk.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)} {c.OrderAsKeyword}")).AppendLine() // PK column list + asc desc
                 .Append(')');
         }
 
@@ -170,12 +170,12 @@
                 .Append(GuardKeywords(fk.Name))
                 .Append(" FOREIGN KEY ")
                 .Append('(')
-                .Append(string.Join(", \r\n", fk.ForeignKeyColumns.Select(fkc => $"{GuardKeywords(fkc.ForeignKeyColumn.Name)}")))
+                .AppendJoin(", \r\n", fk.ForeignKeyColumns.Select(fkc => $"{GuardKeywords(fkc.ForeignKeyColumn.Name)}"))
                 .Append(')')
                 .Append(" REFERENCES ")
                 .Append(GetSimplifiedSchemaAndTableName(fk.ReferredTable.SchemaAndTableName))
                 .Append(" (")
-                .Append(string.Join(", \r\n", fk.ForeignKeyColumns.Select(pkc => $"{GuardKeywords(pkc.ReferredColumn.Name)}")))
+                .AppendJoin(", \r\n", fk.ForeignKeyColumns.Select(pkc => $"{GuardKeywords(pkc.ReferredColumn.Name)}"))
                 .Append(')');
 
             return sb.ToString();
@@ -225,7 +225,7 @@
                 .Append(clusteredPrefix)
 
                 .AppendLine(" (")
-                .AppendLine(string.Join(", \r\n", uniqueConstraint.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)}"))) // Index column list
+                .AppendJoin(", \r\n", uniqueConstraint.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)}")).AppendLine() // Index column list
                 .AppendLine(");");
 
             return sb.ToString();

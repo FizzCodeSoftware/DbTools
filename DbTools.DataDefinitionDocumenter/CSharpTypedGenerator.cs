@@ -98,7 +98,7 @@
                 .Append(Version)
                 .Append(".AddIndex(")
                 .Append(index.Unique ? "true" : "")
-                .Append(string.Join(", ", index.SqlColumns.Select(c => "nameof(" + tableName + "Table." + c.SqlColumn.Name + ")")))
+                .AppendJoin(", ", index.SqlColumns.Select(c => "nameof(" + tableName + "Table." + c.SqlColumn.Name + ")"))
                 .AppendLine(");");
         }
 
@@ -113,7 +113,7 @@
                 .Append(" { get; } = ")
                 .Append(Version)
                 .Append(".AddUniqueConstraint(")
-                .Append(string.Join(", ", uniqueConstraint.SqlColumns.Select(c => "nameof(" + tableName + "Table." + c.SqlColumn.Name + ")")))
+                .AppendJoin(", ", uniqueConstraint.SqlColumns.Select(c => "nameof(" + tableName + "Table." + c.SqlColumn.Name + ")"))
                 .AppendLine(");");
         }
 

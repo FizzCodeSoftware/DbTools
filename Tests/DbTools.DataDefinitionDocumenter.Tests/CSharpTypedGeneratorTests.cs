@@ -162,5 +162,4 @@
             generator.GenerateSingleFile(db, $"SqlTableCustomPropertyConstructor_{version}.cs");
         }
     }
-
 }

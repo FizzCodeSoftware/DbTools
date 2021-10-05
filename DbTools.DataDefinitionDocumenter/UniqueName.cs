@@ -14,8 +14,8 @@
             _maxNameLength = maxNameLength;
         }
 
-        private readonly Dictionary<string, string> _originalNamesToUniqueNames = new Dictionary<string, string>();
-        private readonly Dictionary<string, int> _maxLenghtNamePartToNumber = new Dictionary<string, int>();
+        private readonly Dictionary<string, string> _originalNamesToUniqueNames = new();
+        private readonly Dictionary<string, int> _maxLenghtNamePartToNumber = new();
 
         public string GetUniqueName(string originalName)
         {

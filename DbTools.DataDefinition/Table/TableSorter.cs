@@ -57,7 +57,7 @@
 
                 foreach (var parent in current.Parents)
                 {
-                    var parentWithDependencies = GetTablesWithDependencies(new List<SqlTable>() { parent }).First();
+                    var parentWithDependencies = GetTablesWithDependencies(new List<SqlTable>() { parent })[0];
                     Visit(parentWithDependencies, visited, sorted);
                 }
 

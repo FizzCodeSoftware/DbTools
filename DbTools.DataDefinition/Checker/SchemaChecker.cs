@@ -65,7 +65,7 @@
             return schemaChecks;
         }
 
-        private readonly PluralChecker PluralChecker = new PluralChecker();
+        private readonly PluralChecker PluralChecker = new();
 
         private IEnumerable<SchemaCheck> CheckTableSingularNameConvention(SqlTable table)
         {

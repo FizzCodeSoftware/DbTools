@@ -42,7 +42,7 @@
 
         private OracleTableReader12c _tableReader;
 
-        private OracleTableReader12c TableReader => _tableReader ?? (_tableReader = new OracleTableReader12c(Executer, SchemaNames));
+        private OracleTableReader12c TableReader => _tableReader ??= new OracleTableReader12c(Executer, SchemaNames);
 
         public override SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition)
         {

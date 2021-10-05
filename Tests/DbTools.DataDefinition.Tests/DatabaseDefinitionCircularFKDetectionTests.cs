@@ -1,4 +1,5 @@
-﻿#pragma warning disable RCS1077 // Optimize LINQ method call.
+﻿#pragma warning disable RCS1246 // Use element access.
+#pragma warning disable RCS1077 // Optimize LINQ method call.
 namespace FizzCode.DbTools.DataDefinition.Tests
 {
     using System.Collections.Generic;
@@ -252,3 +253,4 @@ namespace FizzCode.DbTools.DataDefinition.Tests
     }
 }
 #pragma warning restore RCS1077 // Optimize LINQ method call.
+#pragma warning restore RCS1246 // Use element access.
