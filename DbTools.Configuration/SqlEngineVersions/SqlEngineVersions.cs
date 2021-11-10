@@ -50,7 +50,7 @@
         public static List<SqlEngineVersion> GetLatestExecutableVersions()
         {
             var latestVersions = AllVersions
-                .Where(v => !(v is GenericVersion))
+                .Where(v => v is not GenericVersion)
                 .GroupBy(t => t.GetType())
                 .SelectMany(t => new[] { t.Last() })
                 .ToList();

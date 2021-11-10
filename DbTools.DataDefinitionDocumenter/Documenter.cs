@@ -154,7 +154,7 @@
 
         private void AddPatternMatching()
         {
-            if (!(Customizer is PatternMatchingTableCustomizerWithTablesAndItems))
+            if (Customizer is not PatternMatchingTableCustomizerWithTablesAndItems)
                 return;
 
             var customizer = (PatternMatchingTableCustomizerWithTablesAndItems)Customizer;
@@ -198,7 +198,7 @@
 
         private void AddPatternMatchingNoMatch()
         {
-            if (!(Customizer is PatternMatchingTableCustomizerWithTablesAndItems))
+            if (Customizer is not PatternMatchingTableCustomizerWithTablesAndItems)
                 return;
 
             var customizer = (PatternMatchingTableCustomizerWithTablesAndItems)Customizer;

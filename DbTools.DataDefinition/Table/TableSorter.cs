@@ -63,7 +63,7 @@
 
                 sorted.Add(sorted.Count, current.SqlTable);
             }
-            else if (!sorted.Values.Contains(current.SqlTable))
+            else if (!sorted.ContainsValue(current.SqlTable))
             {
                 // circular dependency
             }

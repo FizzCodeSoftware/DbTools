@@ -76,7 +76,7 @@
 
         public bool Contains(TValue item)
         {
-            return _dictionary.Values.Contains(item);
+            return _dictionary.ContainsValue(item);
         }
 
         public void CopyTo(TValue[] array, int arrayIndex)
