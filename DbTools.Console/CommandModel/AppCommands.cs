@@ -12,24 +12,24 @@ namespace FizzCode.DbTools.Console
     using FizzCode.LightWeight.AdoNet;
     using Microsoft.Extensions.Configuration;
 
-    [Command(Name = ">")]
+    [Command(">")]
     internal class AppCommands
     {
-        [Command(Name = "exit", Description = "Exit from the command-line utility.")]
+        [Command("exit", Description = "Exit from the command-line utility.")]
         public void Exit()
         {
             Program.Terminated = true;
         }
 
-        [Command(Name = "document", Description = "Generate excel documentation of an existing database")]
+        [Command("document", Description = "Generate excel documentation of an existing database")]
         public void Document(
-            [Option(LongName = "connectionString", ShortName = "c")]
+            [Option('c', "connectionString")]
             string connectionString,
-            [Option(LongName = "sqlType", ShortName = "t")]
+            [Option('t', "sqlType")]
             string sqlType,
-            [Option(LongName = "patternFileName", ShortName = "p")]
+            [Option('p', "patternFileName")]
             string patternFileName,
-            [Option(LongName = "flags", ShortName = "f")]
+            [Option('f', "flags")]
             List<string> flags)
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
@@ -58,21 +58,21 @@ namespace FizzCode.DbTools.Console
             documenter.Document(dd);
         }
 
-        [Command(Name = "generate", Description = "Generate database definition into cs files.")]
+        [Command("generate", Description = "Generate database definition into cs files.")]
         public void Generate(
-            [Option(LongName = "connectionString", ShortName = "c", Description = "Provide a valid connection string to the database")]
+            [Option('c', "connectionString", Description = "Provide a valid connection string to the database")]
             string connectionString,
-            [Option(LongName = "singleOrMulti", ShortName = "m", Description = "multi for multi file, single for single file generation")]
+            [Option('m', "singleOrMulti", Description = "multi for multi file, single for single file generation")]
             string singleOrMulti,
-            [Option(LongName = "sqlType", ShortName = "t")]
+            [Option('t', "sqlType")]
             string sqlType,
-            [Option(LongName = "namespace", ShortName = "n")]
+            [Option('n', "namespace")]
             string @namespace,
-            [Option(LongName = "newDatabaseName", ShortName = "b")]
+            [Option('b', "newDatabaseName")]
             string newDatabaseName,
-            [Option(LongName = "patternFileName", ShortName = "p")]
+            [Option('p', "patternFileName")]
             string patternFileName,
-            [Option(LongName = "flags", ShortName = "f")]
+            [Option('f', "flags")]
             List<string> flags)
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
@@ -102,21 +102,21 @@ namespace FizzCode.DbTools.Console
                 generator.GenerateMultiFile(dd);
         }
 
-        [Command(Name = "generatetyped", Description = "Generate database definition into cs files with typed declaration.")]
+        [Command("generatetyped", Description = "Generate database definition into cs files with typed declaration.")]
         public void GenerateTyped(
-            [Option(LongName = "connectionString", ShortName = "c", Description = "Provide a valid connection string to the database")]
+            [Option('c', "connectionString", Description = "Provide a valid connection string to the database")]
             string connectionString,
-            [Option(LongName = "singleOrMulti", ShortName = "m", Description = "multi for multi file, single for single file generation")]
+            [Option('m', "singleOrMulti", Description = "multi for multi file, single for single file generation")]
             string singleOrMulti,
-            [Option(LongName = "sqlType", ShortName = "t")]
+            [Option('t', "sqlType")]
             string sqlType,
-            [Option(LongName = "namespace", ShortName = "n")]
+            [Option(',', "namespace")]
             string @namespace,
-            [Option(LongName = "newDatabaseName", ShortName = "b")]
+            [Option('b', "newDatabaseName")]
             string newDatabaseName,
-            [Option(LongName = "patternFileName", ShortName = "p")]
+            [Option('p', "patternFileName")]
             string patternFileName,
-            [Option(LongName = "flags", ShortName = "f")]
+            [Option('f', "flags")]
             List<string> flags)
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
@@ -189,15 +189,15 @@ namespace FizzCode.DbTools.Console
             }
         }
 
-        [Command(Name = "bim", Description = "Generate database definition into bim (analysis services Model.bim xml) file.")]
+        [Command("bim", Description = "Generate database definition into bim (analysis services Model.bim xml) file.")]
         public void Bim(
-            [Option(LongName = "connectionString", ShortName = "c")]
+            [Option('c', "connectionString")]
             string connectionString,
-            [Option(LongName = "sqlType", ShortName = "t")]
+            [Option('t', "sqlType")]
             string sqlType,
-            [Option(LongName = "databaseName", ShortName = "b")]
+            [Option('b', "databaseName")]
             string databaseName,
-            [Option(LongName = "patternFileName", ShortName = "p")]
+            [Option('p', "patternFileName")]
             string patternFileName)
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
@@ -221,15 +221,15 @@ namespace FizzCode.DbTools.Console
             generator.Generate(dd);
         }
 
-        [Command(Name = "check", Description = "")]
+        [Command("check", Description = "")]
         public void Check(
-    [Option(LongName = "connectionString", ShortName = "c")]
+            [Option('c', "connectionString")]
             string connectionString,
-    [Option(LongName = "sqlType", ShortName = "t")]
+            [Option('t', "sqlType")]
             string sqlType,
-    [Option(LongName = "patternFileName", ShortName = "p")]
+            [Option('p', "patternFileName")]
             string patternFileName,
-    [Option(LongName = "flags", ShortName = "f")]
+            [Option('f', "flags")]
             List<string> flags)
         {
             var version = SqlEngineVersions.GetVersion(sqlType);
@@ -357,11 +357,11 @@ namespace FizzCode.DbTools.Console
             return changeDocumenterContext;
         }
 
-        [Command(Name = "dropall", Description = "Drop every object from a database.")]
+        [Command("dropall", Description = "Drop every object from a database.")]
         public void DropAll(
-            [Option(LongName = "connectionString", ShortName = "c")]
+            [Option('c', "connectionString")]
             string connectionString,
-            [Option(LongName = "sqlType", ShortName = "t")]
+            [Option('t', "sqlType")]
             string sqlType
             )
         {
@@ -383,23 +383,23 @@ namespace FizzCode.DbTools.Console
             // dc.DropAllSchemas();
         }
 
-        [Command(Name = "changedocument", Description = "Generate compare excel documentation of two existing database")]
+        [Command("changedocument", Description = "Generate compare excel documentation of two existing database")]
         public void ChangeDocument(
-            [Option(LongName = "connectionStringOriginal")]
+            [Option("connectionStringOriginal")]
             string connectionStringOriginal,
-            [Option(LongName = "connectionStringNew")]
+            [Option("connectionStringNew")]
             string connectionStringNew,
-            [Option(LongName = "sqlTypeOriginal")]
+            [Option("sqlTypeOriginal")]
             string sqlTypeOriginal,
-            [Option(LongName = "sqlTypeNew")]
+            [Option("sqlTypeNew")]
             string sqlTypeNew,
-            [Option(LongName = "patternFileName", ShortName = "p")]
+            [Option('p', "patternFileName")]
             string patternFileName,
-            [Option(LongName = "patternFileNameOriginal")]
+            [Option("patternFileNameOriginal")]
             string patternFileNameOriginal,
-            [Option(LongName = "patternFileNameNew")]
+            [Option("patternFileNameNew")]
             string patternFileNameNew,
-            [Option(LongName = "flags", ShortName = "f")]
+            [Option('f', "flags")]
             List<string> flags)
         {
             var versionOriginal = SqlEngineVersions.GetVersion(sqlTypeOriginal);
