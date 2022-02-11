@@ -110,7 +110,7 @@ namespace FizzCode.DbTools.Console
             string singleOrMulti,
             [Option('t', "sqlType")]
             string sqlType,
-            [Option(',', "namespace")]
+            [Option('n', "namespace")]
             string @namespace,
             [Option('b', "newDatabaseName")]
             string newDatabaseName,
