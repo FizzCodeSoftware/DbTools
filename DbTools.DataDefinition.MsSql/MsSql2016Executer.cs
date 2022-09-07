@@ -18,7 +18,8 @@
 
         public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dds)
         {
-            DropDatabaseIfExists();
+            if(dropIfExists)
+                DropDatabaseIfExists();
             CreateDatabase();
         }
 
@@ -30,7 +31,7 @@
 
         public override void CleanupDatabase(bool hard = false, params DatabaseDefinition[] dds)
         {
-            DropDatabase();
+            DropDatabaseIfExists();
         }
 
         public virtual void DropDatabaseIfExists()

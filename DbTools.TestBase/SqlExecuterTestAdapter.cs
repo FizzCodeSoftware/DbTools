@@ -6,14 +6,41 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
+    using FizzCode.DbTools.DataDefinitionDocumenter;
     using FizzCode.LightWeight.AdoNet;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    internal class SqlConnectionKeyAndDatabaseDefinitionTypeAsKey
+    {
+        private readonly string _connectionStringKey;
+        private readonly string _databaseDefinitionTypeFullName;
+        internal SqlConnectionKeyAndDatabaseDefinitionTypeAsKey(string connectionStringKey, DatabaseDefinition dd)
+        {
+            _connectionStringKey = connectionStringKey;
+            _databaseDefinitionTypeFullName = dd.GetType().FullName;
+        }
+
+        public override string ToString()
+        {
+            return _connectionStringKey + "_" + _databaseDefinitionTypeFullName;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is SqlConnectionKeyAndDatabaseDefinitionTypeAsKey s && s.ToString() == ToString();
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(ToString());
+        }
+    }
 
     public class SqlExecuterTestAdapter : ConfigurationBase
     {
         private readonly Dictionary<string, (SqlStatementExecuter SqlExecuter, SqlEngineVersion Version)> sqlExecutersAndDialects = new();
 
-        private readonly List<DatabaseDefinition> _dds = new();
+        private readonly Dictionary<SqlConnectionKeyAndDatabaseDefinitionTypeAsKey, DatabaseDefinition> _dds = new();
 
         public override string ConfigurationFileName => "testconfig";
 
@@ -44,7 +71,12 @@
 
             var sqlEngineVersion = connectionString.GetSqlEngineVersion();
 
-            _dds.AddRange(dds);
+            foreach(var dd in dds)
+            {
+                var key = new SqlConnectionKeyAndDatabaseDefinitionTypeAsKey(connectionStringKey, dd);
+                if (_dds.ContainsKey(key))
+                    _dds.Add(key, dd);
+            }
 
             if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
             {
@@ -95,7 +127,8 @@
                     var shouldDrop = TestHelper.ShouldRunIntegrationTest(sqlExecuterAndDialect.Version);
                     if (shouldDrop)
                     {
-                        sqlExecuterAndDialect.SqlExecuter.CleanupDatabase(true, _dds.ToArray());
+                        var dds = _dds.Where(e => e.Key == new SqlConnectionKeyAndDatabaseDefinitionTypeAsKey(sqlExecuterAndDialect.Version.UniqueName, e.Value)).Select(e => e.Value).ToArray();
+                        sqlExecuterAndDialect.SqlExecuter.CleanupDatabase(true, dds);
                     }
                 }
                 catch (Exception ex)

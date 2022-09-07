@@ -341,7 +341,7 @@
         }
 
         [TestMethod]
-        [SqlVersions(nameof(MsSql2016), nameof(Oracle12c))]
+        [SqlVersions(nameof(MsSql2016.MsSql2016), nameof(Oracle12c.Oracle12c))]
         public override void Column_Change_DbType(SqlEngineVersion version)
         {
             var dds = Column_Change_DbType_Dds(version);

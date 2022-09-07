@@ -2,6 +2,8 @@
 {
     using System.Linq;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.MsSql2016;
+    using FizzCode.DbTools.DataDefinition.Oracle12c;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -125,7 +127,7 @@
         }
 
         [TestMethod]
-        [SqlVersions("MsSql2016", "Oracle12c")]
+        [SqlVersions(nameof(MsSql2016), nameof(Oracle12c))]
         public override void Column_Change_DbType(SqlEngineVersion version)
         {
             var dds = Column_Change_DbType_Dds(version);
@@ -133,7 +135,7 @@
         }
 
         [TestMethod]
-        [SqlVersions("MsSql2016", "Oracle12c")]
+        [SqlVersions(nameof(MsSql2016), nameof(Oracle12c))]
         public override void Column_Change_DbTypeAndLengthAndIsNullable(SqlEngineVersion version)
         {
             var dds = Column_Change_DbTypeAndLengthAndIsNullable_Dds(version);

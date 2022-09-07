@@ -12,7 +12,7 @@
     public class SpTest : DataDefinitionSpTestsBase
     {
         [TestMethod]
-        [SqlVersions("MsSql2016")]
+        [SqlVersions(nameof(MsSql2016))]
         public void SpSimple(SqlEngineVersion version)
         {
             var db = new DbWithSp();
@@ -40,7 +40,7 @@
         }
 
         [TestMethod]
-        [SqlVersions("MsSql2016")]
+        [SqlVersions(nameof(MsSql2016))]
         public void SpSimpleQuryBuilder(SqlEngineVersion version)
         {
             var db = new DbWithSpQueryBuilder();

@@ -90,10 +90,10 @@
         {
             var featureSupport = Features.GetSupport(version, feature);
             if (featureSupport.Support == Support.NotSupported)
-                Assert.Inconclusive($"Test is skipped, feature {feature} is not supported. ({featureSupport.Description}).");
+                Assert.Inconclusive($"Test is skipped, feature {feature} is not supported. ({featureSupport.Description})");
 
             if (featureSupport.Support == Support.NotImplementedYet)
-                Assert.Inconclusive($"Test is skipped, feature {feature} is not implemented (yet). ({featureSupport.Description}).");
+                Assert.Inconclusive($"Test is skipped, feature {feature} is not implemented (yet). ({featureSupport.Description})");
         }
 
         public static void CheckProvider(SqlEngineVersion version, IEnumerable<NamedConnectionString> connectionStrings)

@@ -36,3 +36,6 @@ Configuration values for tests are stored in testconfig.json files.
 
 You can use local config values to override content of these files, which are local (developer specific), or not desired to be included in source control (for example, a connection string with username and password to an internal environment).
 Use naming as config-local.json and testconfig-local.json.
+
+### Running Unit tests
+To run unit tests in parallel between assemblies, you have to enable it by selecting Test Explorer / Configure Run Settings / Select solution wide runsettings file, and then select the file \Tests\test.runsettings

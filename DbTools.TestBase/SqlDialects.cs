@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -78,7 +79,10 @@
             }
 
             if (Versions.Count == 0)
+            { 
+                Debug.WriteLine("No SqlEngineVersion was found, falling back to SqLiteVersion.SqLite3. Probable reason is missing test configuration with a connectionstring with a given sql type.");
                 Versions.Add(SqLiteVersion.SqLite3);
+            }
         }
     }
 }
