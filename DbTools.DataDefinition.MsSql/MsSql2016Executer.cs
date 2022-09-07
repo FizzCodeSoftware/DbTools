@@ -2,7 +2,7 @@
 {
     using System;
     using System.Data.Common;
-    using System.Data.SqlClient;
+    using Microsoft.Data.SqlClient;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
@@ -54,7 +54,7 @@
             Log(LogSeverity.Verbose, "Executing query {Query} on master.", sqlStatementWithParameters.Statement);
 
             var command = PrepareSqlCommand(sqlStatementWithParameters);
-            command.Connection = connection;
+            command.Connection = (DbConnection)connection;
 
             try
             {

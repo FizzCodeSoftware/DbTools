@@ -42,7 +42,7 @@
 
             return providerName switch
             {
-                "System.Data.SqlClient" => false,
+                "Microsoft.Data.SqlClient" => false,
                 "Oracle.ManagedDataAccess.Client" => false,
                 _ => true,
             };
@@ -127,7 +127,7 @@
         {
             if (!_areDbProviderFactoriesRegistered)
             {
-                DbProviderFactories.RegisterFactory("System.Data.SqlClient", System.Data.SqlClient.SqlClientFactory.Instance);
+                DbProviderFactories.RegisterFactory("Microsoft.Data.SqlClient", Microsoft.Data.SqlClient.SqlClientFactory.Instance);
                 DbProviderFactories.RegisterFactory("System.Data.SQLite", System.Data.SQLite.SQLiteFactory.Instance);
                 DbProviderFactories.RegisterFactory("MySql.Data.MySqlClient", MySql.Data.MySqlClient.MySqlClientFactory.Instance);
                 DbProviderFactories.RegisterFactory("Oracle.ManagedDataAccess.Client", Oracle.ManagedDataAccess.Client.OracleClientFactory.Instance);

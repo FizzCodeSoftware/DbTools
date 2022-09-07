@@ -5,7 +5,7 @@
     public class MsSqlVersion : SqlEngineVersion
     {
         internal MsSqlVersion(string uniqueName, string versionString, string versionNumber)
-            : base(SqlEngine.MsSql, uniqueName, versionString, versionNumber, "System.Data.SqlClient")
+            : base(SqlEngine.MsSql, uniqueName, versionString, versionNumber, "Microsoft.Data.SqlClient")
         {
         }
 

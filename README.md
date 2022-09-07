@@ -39,3 +39,5 @@ Use naming as config-local.json and testconfig-local.json.
 
 ### Running Unit tests
 To run unit tests in parallel between assemblies, you have to enable it by selecting Test Explorer / Configure Run Settings / Select solution wide runsettings file, and then select the file \Tests\test.runsettings
+
+See https://docs.microsoft.com/en-us/visualstudio/test/configure-unit-tests-by-using-a-dot-runsettings-file?branch=release-16.4&view=vs-2022
