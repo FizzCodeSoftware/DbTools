@@ -266,3 +266,4 @@ Local*.csproj
 App.Local.config
 App.Local.Global.config
 *-local.json
+DbTools.Console/Properties/launchSettings.json
