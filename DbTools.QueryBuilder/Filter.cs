@@ -4,7 +4,7 @@
 
     public class Filter
     {
-        public SqlTable Table { get; set; }
+        public SqlTableOrView Table { get; set; }
         public QueryColumn Column { get; set; }
         public FilterType Type { get; set; }
 

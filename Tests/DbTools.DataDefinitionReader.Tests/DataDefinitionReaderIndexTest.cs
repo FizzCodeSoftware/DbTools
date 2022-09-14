@@ -16,7 +16,7 @@
         {
             var dd = new TestDatabaseIndex();
             Init(version, dd);
-            var creator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.UniqueName));
+            var creator = new DatabaseCreator(dd, SqlExecuterTestAdapter.GetExecuter(version.UniqueName));
             creator.ReCreateDatabase(true);
         }
 
@@ -29,8 +29,8 @@
             Init(version, null);
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
-                _sqlExecuterTestAdapter.ConnectionStrings[version.UniqueName],
-                _sqlExecuterTestAdapter.GetContext(version), null);
+                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName],
+                SqlExecuterTestAdapter.GetContext(version), null);
             var dd = ddlReader.GetDatabaseDefinition();
 
             var _ = dd.GetTable("Company").Properties.OfType<Index>().First();

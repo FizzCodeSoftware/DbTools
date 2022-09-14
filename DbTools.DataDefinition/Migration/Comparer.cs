@@ -107,7 +107,7 @@
             return changes;
         }
 
-        public static bool ColumnChanged(SqlColumn columnNew, SqlColumn columnOriginal)
+        public static bool ColumnChanged(SqlColumnBase columnNew, SqlColumnBase columnOriginal)
         {
             return (columnOriginal.Type.SqlTypeInfo.HasLength && columnOriginal.Type.Length != columnNew.Type.Length)
                                  || (columnOriginal.Type.SqlTypeInfo.HasScale && columnOriginal.Type.Scale != columnNew.Type.Scale)

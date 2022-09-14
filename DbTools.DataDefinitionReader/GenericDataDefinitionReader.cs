@@ -33,5 +33,8 @@
 
             return new SchemaAndTableName(original.Schema, original.TableName);
         }
+
+        public abstract List<SchemaAndTableName> GetViews();
+        public abstract SqlView GetViewDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition);
     }
 }

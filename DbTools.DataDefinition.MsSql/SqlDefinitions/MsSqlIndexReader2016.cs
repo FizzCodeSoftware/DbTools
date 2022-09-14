@@ -91,6 +91,9 @@
         public void GetIndexes(SqlTable table)
         {
             Index index = null;
+            /*var rowsX = QueryResult
+                .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table, "schema_name", "view_name")).OrderBy(row => row.GetAs<string>("index_name")).ThenBy(row => row.GetAs<int>("index_column_id"));*/
+
             var rows = QueryResult
                 .Where(row => !row.GetAs<bool>("is_primary_key") && !row.GetAs<bool>("is_unique_constraint") && DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table)).OrderBy(row => row.GetAs<string>("index_name")).ThenBy(row => row.GetAs<int>("index_column_id"));
 
@@ -127,12 +130,12 @@
         private static string GetKeySql()
         {
             return @"
-SELECT schema_name(tab.schema_id) schema_name, 
-    i.[name] index_name,
-    ic.index_column_id,
-    col.[name] as column_name, 
-    tab.[name] as table_name
-	, i.type-- 1 CLUSTERED, 2 NONCLUSTERED
+SELECT SCHEMA_NAME(tab.schema_id) schema_name
+    , i.[name] index_name
+    , ic.index_column_id
+    , col.[name] as column_name
+    , tab.[name] as table_name
+	, i.type -- 1 CLUSTERED, 2 NONCLUSTERED
 	, is_unique, is_primary_key
 	, is_included_column, is_descending_key
     , i.is_unique_constraint

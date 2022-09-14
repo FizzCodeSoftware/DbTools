@@ -18,7 +18,73 @@
         {
         }
 
+        public SqlView GetViewDefinition(SchemaAndTableName schemaAndTableName)
+        {
+            var sqlView = new SqlView(schemaAndTableName);
+
+            var rows = QueryResult[schemaAndTableName.SchemaAndName]
+                .OrderBy(r => r.GetAs<int>("ORDINAL_POSITION"));
+
+            foreach (var row in rows)
+            {
+                var type = row.GetAs<string>("DATA_TYPE");
+
+                var numericPrecision = row.GetAs<byte?>("NUMERIC_PRECISION") ?? 0;
+                var numericScale = row.GetAs<int?>("NUMERIC_SCALE") ?? 0;
+                var characterMaximumLength = row.GetAs<int?>("CHARACTER_MAXIMUM_LENGTH") ?? 0;
+                var dateTimePrecision = row.GetAs<short?>("DATETIME_PRECISION") ?? 0;
+
+                var isNullable = row.GetAs<string>("IS_NULLABLE") == "YES";
+
+                var sqlType = TypeMapper.MapSqlTypeFromReaderInfo(type, isNullable, numericPrecision, numericScale, characterMaximumLength, dateTimePrecision);
+
+                var column = new SqlViewColumn
+                {
+                    SqlTableOrView = sqlView
+                };
+                column.Types.Add(Executer.Generator.Version, sqlType);
+                column.Name = row.GetAs<string>("COLUMN_NAME");
+
+                sqlView.Columns.Add(column.Name, column);
+            }
+
+            return sqlView;
+        }
+
         public SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName)
+        {
+            var sqlTable = new SqlTable(schemaAndTableName);
+
+            var rows = QueryResult[schemaAndTableName.SchemaAndName]
+                .OrderBy(r => r.GetAs<int>("ORDINAL_POSITION"));
+
+            foreach (var row in rows)
+            {
+                var type = row.GetAs<string>("DATA_TYPE");
+
+                var numericPrecision = row.GetAs<byte?>("NUMERIC_PRECISION") ?? 0;
+                var numericScale = row.GetAs<int?>("NUMERIC_SCALE") ?? 0;
+                var characterMaximumLength = row.GetAs<int?>("CHARACTER_MAXIMUM_LENGTH") ?? 0;
+                var dateTimePrecision = row.GetAs<short?>("DATETIME_PRECISION") ?? 0;
+
+                var isNullable = row.GetAs<string>("IS_NULLABLE") == "YES";
+
+                var sqlType = TypeMapper.MapSqlTypeFromReaderInfo(type, isNullable, numericPrecision, numericScale, characterMaximumLength, dateTimePrecision);
+
+                var column = new SqlColumn
+                {
+                    Table = sqlTable
+                };
+                column.Types.Add(Executer.Generator.Version, sqlType);
+                column.Name = row.GetAs<string>("COLUMN_NAME");
+
+                sqlTable.Columns.Add(column.Name, column);
+            }
+
+            return sqlTable;
+        }
+
+        private SqlTableOrView GetTableOrViewDefinition(SchemaAndTableName schemaAndTableName)
         {
             var sqlTable = new SqlTable(schemaAndTableName);
 

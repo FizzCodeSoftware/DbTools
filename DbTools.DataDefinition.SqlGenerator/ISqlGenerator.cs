@@ -23,6 +23,7 @@
         string CreateUniqueConstrainsts(SqlTable table);
 
         string CreateStoredProcedure(StoredProcedure sp);
+        string CreateView(SqlView view);
 
         SqlStatementWithParameters CreateDbTableDescription(SqlTable table);
         SqlStatementWithParameters CreateDbColumnDescription(SqlColumn column);

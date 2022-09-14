@@ -7,4 +7,12 @@
             Add(item.Name, item);
         }
     }
+
+    public class ViewColumnsOrdered : OrderedDictionaryWithInsert<string, SqlViewColumn>
+    {
+        public override void Add(SqlViewColumn item)
+        {
+            Add(item.Name, item);
+        }
+    }
 }

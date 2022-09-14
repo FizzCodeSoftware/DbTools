@@ -1,12 +1,12 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    public abstract class SqlTableProperty
+    public abstract class SqlTableOrViewPropertyBase<T> where T : SqlTableOrView
     {
-        public SqlTable SqlTable { get; set; }
+        public T SqlTableOrView { get; set; }
 
-        protected SqlTableProperty(SqlTable sqlTable)
+        protected SqlTableOrViewPropertyBase(T sqlTable)
         {
-            SqlTable = sqlTable;
+            SqlTableOrView = sqlTable;
         }
 
         public SqlEngineVersionSpecificProperties SqlEngineVersionSpecificProperties { get; } = new SqlEngineVersionSpecificProperties();

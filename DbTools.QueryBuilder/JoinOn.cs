@@ -4,7 +4,7 @@
 
     public class JoinOn : JoinBase
     {
-        public JoinOn(SqlTable table, string alias, Expression on, JoinType joinType, params QueryColumn[] columns)
+        public JoinOn(SqlTableOrView table, string alias, Expression on, JoinType joinType, params QueryColumn[] columns)
             : base(table, alias, joinType, columns)
         {
             OnExpression = on;

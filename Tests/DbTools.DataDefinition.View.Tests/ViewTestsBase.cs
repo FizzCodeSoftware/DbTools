@@ -1,26 +1,24 @@
-﻿namespace FizzCode.DbTools.DataDefinition.SqlExecuterMigrationIntegration.Tests
+﻿namespace FizzCode.DbTools.DataDefinition.View.Tests
 {
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
-    using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public abstract class DatabaseMigratorTestsBase : ComparerTestsBase
+    public class ViewTestsBase
     {
         protected static SqlExecuterTestAdapter SqlExecuterTestAdapter { get; } = new();
 
         [AssemblyCleanup]
         public static void Cleanup()
         {
-            SqlExecuterTestAdapter.Cleanup();
+            // SqlExecuterTestAdapter.Cleanup();
         }
 
         protected static void Init(SqlEngineVersion version, DatabaseDefinition dd)
         {
             SqlExecuterTestAdapter.Check(version);
             SqlExecuterTestAdapter.Initialize(version.UniqueName, dd);
-            TestHelper.CheckFeature(version, "ReadDdl");
 
             SqlExecuterTestAdapter.GetContext(version).Settings.Options.ShouldUseDefaultSchema = true;
 

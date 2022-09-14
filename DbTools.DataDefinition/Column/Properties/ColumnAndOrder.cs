@@ -18,7 +18,7 @@
 
     public class ColumnAndOrder
     {
-        public SqlColumn SqlColumn { get; set; }
+        public SqlColumnBase SqlColumn { get; set; }
         public AscDesc Order { get; set; }
         public string OrderAsKeyword => Order.ToString().ToUpperInvariant();
 
@@ -27,7 +27,7 @@
             Order = order;
         }
 
-        public ColumnAndOrder(SqlColumn sqlColumn, AscDesc order)
+        public ColumnAndOrder(SqlColumnBase sqlColumn, AscDesc order)
             : this(order)
         {
             SqlColumn = sqlColumn;

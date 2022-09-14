@@ -4,11 +4,13 @@
     {
         public void SetIndexName(Index index)
         {
-            if (index.SqlTable.SchemaAndTableName.TableName == null)
+            if (index.SqlTableOrView.SchemaAndTableName.TableName == null)
                 return;
 
+            // TODO view index name?
+
             var indexNameColumnsPart = string.Join("_", index.SqlColumns.ConvertAll(co => co.SqlColumn.Name));
-            index.Name = $"IX_{index.SqlTable.SchemaAndTableName.TableName}_{indexNameColumnsPart}";
+            index.Name = $"IX_{index.SqlTableOrView.SchemaAndTableName.TableName}_{indexNameColumnsPart}";
         }
     }
 }

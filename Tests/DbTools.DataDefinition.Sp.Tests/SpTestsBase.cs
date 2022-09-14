@@ -7,14 +7,14 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public abstract class DataDefinitionSpTestsBase
+    public abstract class SpTestsBase
     {
-        protected static SqlExecuterTestAdapter SqlExecuterTestAdapter { get; } = new SqlExecuterTestAdapter();
+        protected static SqlExecuterTestAdapter SqlExecuterTestAdapter { get; } = new();
 
         [AssemblyCleanup]
         public static void Cleanup()
         {
-            SqlExecuterTestAdapter.Cleanup();
+            // SqlExecuterTestAdapter.Cleanup();
         }
 
         protected static void Init(SqlEngineVersion version, DatabaseDefinition dd)

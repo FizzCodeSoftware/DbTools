@@ -17,7 +17,7 @@
             var dd = new ForeignKeyComposite();
             Init(version, dd);
 
-            var creator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.UniqueName));
+            var creator = new DatabaseCreator(dd, SqlExecuterTestAdapter.GetExecuter(version.UniqueName));
             creator.ReCreateDatabase(true);
         }
 
@@ -31,7 +31,7 @@
 
             var dd = new ForeignKeyComposite();
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(_sqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], _sqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
             var db = ddlReader.GetDatabaseDefinition();
 
             var company = db.GetTable("Company");

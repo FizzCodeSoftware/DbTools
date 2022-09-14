@@ -3,13 +3,15 @@
     using System.Collections.Generic;
     using System.Text;
 
-    public class ForeignKey : SqlTableProperty
+    public class ForeignKey : SqlTableOrViewPropertyBase<SqlTable>
     {
         public string Name { get; set; }
 
         public List<ForeignKeyColumnMap> ForeignKeyColumns { get; set; } = new List<ForeignKeyColumnMap>();
 
         public SqlTable ReferredTable { get; }
+
+        public SqlTable SqlTable { get => SqlTableOrView; }
 
         public ForeignKey(SqlTable table, SqlTable referredTable, string name)
             : base(table)

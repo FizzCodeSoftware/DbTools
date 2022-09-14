@@ -170,13 +170,13 @@
 
                 foreach (var change in changes.OfType<IndexMigration>())
                 {
-                    ProcessTable(processedTables, change.Index.SqlTable); // Ensure table header
+                    ProcessTable(processedTables, change.Index.SqlTableOrView); // Ensure table header
 
                     switch (change)
                     {
                         case IndexNew indexNew:
                             {
-                                if (Context.CustomizerNew.ShouldSkip(indexNew.Index.SqlTable.SchemaAndTableName))
+                                if (Context.CustomizerNew.ShouldSkip(indexNew.Index.SqlTableOrView.SchemaAndTableName))
                                     continue;
 
                                 ProcessIndex(processedIndexes, indexNew.Index, "New");
@@ -184,7 +184,7 @@
                             }
                         case IndexDelete indexDelete:
                             {
-                                if (Context.CustomizerOriginal.ShouldSkip(indexDelete.Index.SqlTable.SchemaAndTableName))
+                                if (Context.CustomizerOriginal.ShouldSkip(indexDelete.Index.SqlTableOrView.SchemaAndTableName))
                                     continue;
 
                                 ProcessIndex(processedIndexes, indexDelete.Index, "Delete");
@@ -193,7 +193,7 @@
                             }
                         case IndexChange indexChange:
                             {
-                                if (Context.CustomizerNew.ShouldSkip(indexChange.NewIndex.SqlTable.SchemaAndTableName))
+                                if (Context.CustomizerNew.ShouldSkip(indexChange.NewIndex.SqlTableOrView.SchemaAndTableName))
                                     continue;
 
                                 ProcessIndex(processedIndexes, indexChange.Index, "Original");
@@ -211,13 +211,13 @@
 
                 foreach (var change in changes.OfType<UniqueConstraintMigration>())
                 {
-                    ProcessTable(processedTables, change.UniqueConstraint.SqlTable); // Ensure table header
+                    ProcessTable(processedTables, change.UniqueConstraint.SqlTableOrView); // Ensure table header
 
                     switch (change)
                     {
                         case UniqueConstraintNew ucNew:
                             {
-                                if (Context.CustomizerNew.ShouldSkip(ucNew.UniqueConstraint.SqlTable.SchemaAndTableName))
+                                if (Context.CustomizerNew.ShouldSkip(ucNew.UniqueConstraint.SqlTableOrView.SchemaAndTableName))
                                     continue;
 
                                 ProcessUniqueConstraint(processedUniqueConsreaints, ucNew.UniqueConstraint, "New");
@@ -225,7 +225,7 @@
                             }
                         case UniqueConstraintDelete ucDelete:
                             {
-                                if (Context.CustomizerOriginal.ShouldSkip(ucDelete.UniqueConstraint.SqlTable.SchemaAndTableName))
+                                if (Context.CustomizerOriginal.ShouldSkip(ucDelete.UniqueConstraint.SqlTableOrView.SchemaAndTableName))
                                     continue;
 
                                 ProcessUniqueConstraint(processedUniqueConsreaints, ucDelete.UniqueConstraint, "Delete");
@@ -234,7 +234,7 @@
                             }
                         case UniqueConstraintChange ucChange:
                             {
-                                if (Context.CustomizerNew.ShouldSkip(ucChange.NewUniqueConstraint.SqlTable.SchemaAndTableName))
+                                if (Context.CustomizerNew.ShouldSkip(ucChange.NewUniqueConstraint.SqlTableOrView.SchemaAndTableName))
                                     continue;
 
                                 ProcessUniqueConstraint(processedUniqueConsreaints, ucChange.UniqueConstraint, "Original");
@@ -287,18 +287,18 @@
 
         private void ProcessIndex(List<SchemaAndTableName> procssedIndexes, Index index, string firstColumn)
         {
-            if (!procssedIndexes.Contains(index.SqlTable.SchemaAndTableName))
+            if (!procssedIndexes.Contains(index.SqlTableOrView.SchemaAndTableName))
             {
-                procssedIndexes.Add(index.SqlTable.SchemaAndTableName);
+                procssedIndexes.Add(index.SqlTableOrView.SchemaAndTableName);
 
                 var mergeAmount = 1 + (!Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11);
 
-                WriteLine(index.SqlTable.SchemaAndTableName);
+                WriteLine(index.SqlTableOrView.SchemaAndTableName);
 
-                WriteAndMerge(index.SqlTable.SchemaAndTableName, mergeAmount, "Indexes");
-                WriteLine(index.SqlTable.SchemaAndTableName);
+                WriteAndMerge(index.SqlTableOrView.SchemaAndTableName, mergeAmount, "Indexes");
+                WriteLine(index.SqlTableOrView.SchemaAndTableName);
 
-                WriteLine(index.SqlTable.SchemaAndTableName, "Event", "Index name", "Column", "Order", "Include");
+                WriteLine(index.SqlTableOrView.SchemaAndTableName, "Event", "Index name", "Column", "Order", "Include");
             }
 
             AddIndex(index, firstColumn);
@@ -306,18 +306,18 @@
 
         private void ProcessUniqueConstraint(List<SchemaAndTableName> procssedUniqueConstraints, UniqueConstraint uniqueConstraint, string firstColumn)
         {
-            if (!procssedUniqueConstraints.Contains(uniqueConstraint.SqlTable.SchemaAndTableName))
+            if (!procssedUniqueConstraints.Contains(uniqueConstraint.SqlTableOrView.SchemaAndTableName))
             {
-                procssedUniqueConstraints.Add(uniqueConstraint.SqlTable.SchemaAndTableName);
+                procssedUniqueConstraints.Add(uniqueConstraint.SqlTableOrView.SchemaAndTableName);
 
                 var mergeAmount = 1 + (!Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11);
 
-                WriteLine(uniqueConstraint.SqlTable.SchemaAndTableName);
+                WriteLine(uniqueConstraint.SqlTableOrView.SchemaAndTableName);
 
-                WriteAndMerge(uniqueConstraint.SqlTable.SchemaAndTableName, mergeAmount, "Unique constraints");
-                WriteLine(uniqueConstraint.SqlTable.SchemaAndTableName);
+                WriteAndMerge(uniqueConstraint.SqlTableOrView.SchemaAndTableName, mergeAmount, "Unique constraints");
+                WriteLine(uniqueConstraint.SqlTableOrView.SchemaAndTableName);
 
-                WriteLine(uniqueConstraint.SqlTable.SchemaAndTableName, "Unique constraint name", "Column");
+                WriteLine(uniqueConstraint.SqlTableOrView.SchemaAndTableName, "Unique constraint name", "Column");
             }
 
             AddUniqueConstraint(uniqueConstraint, firstColumn);
@@ -331,8 +331,9 @@
             AddColumnsToTableSheet(column, columnDocumentInfo, firstColumn);
         }
 
-        private void ProcessTable(List<SchemaAndTableName> processedTables, SqlTable table)
+        private void ProcessTable(List<SchemaAndTableName> processedTables, SqlTableOrView table)
         {
+            // TODO SqlTable and SqlView
             if (!processedTables.Contains(table.SchemaAndTableName))
             {
                 processedTables.Add(table.SchemaAndTableName);

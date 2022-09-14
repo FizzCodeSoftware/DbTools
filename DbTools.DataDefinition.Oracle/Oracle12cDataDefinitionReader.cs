@@ -63,5 +63,15 @@
 
             return sqlTable;
         }
+
+        public override List<SchemaAndTableName> GetViews()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override SqlView GetViewDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -33,9 +33,9 @@ namespace FizzCode.DbTools.DataDefinition.SqlExecuter.Tests
                 {
                     if (version == MsSqlVersion.MsSql2016)
                     {
-                        _sqlExecuterTestAdapter.ExecuteNonQuery(version.ToString(), "INSERT INTO [Primary] (Name) Values ('First')");
-                        _sqlExecuterTestAdapter.ExecuteNonQuery(version.ToString(), "INSERT INTO [Foreign] (PrimaryId) Values (1)");
-                        _sqlExecuterTestAdapter.ExecuteNonQuery(version.ToString(), "INSERT INTO [Foreign] (PrimaryId) Values (-1)");
+                        SqlExecuterTestAdapter.ExecuteNonQuery(version.ToString(), "INSERT INTO [Primary] (Name) Values ('First')");
+                        SqlExecuterTestAdapter.ExecuteNonQuery(version.ToString(), "INSERT INTO [Foreign] (PrimaryId) Values (1)");
+                        SqlExecuterTestAdapter.ExecuteNonQuery(version.ToString(), "INSERT INTO [Foreign] (PrimaryId) Values (-1)");
                     }
                 }
             );

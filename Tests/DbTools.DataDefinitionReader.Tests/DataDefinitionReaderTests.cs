@@ -1,31 +1,42 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader.Tests
 {
+    using System;
+    using System.Linq;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public abstract class DataDefinitionReaderTests
     {
-        protected static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new();
+        protected static SqlExecuterTestAdapter SqlExecuterTestAdapter { get; } = new();
 
         protected static void Init(SqlEngineVersion version, DatabaseDefinition dd)
         {
-            _sqlExecuterTestAdapter.Check(version);
+            SqlExecuterTestAdapter.Check(version);
             if (dd == null)
-                _sqlExecuterTestAdapter.Initialize(version.UniqueName);
+                SqlExecuterTestAdapter.Initialize(version.UniqueName);
             else
-                _sqlExecuterTestAdapter.Initialize(version.UniqueName, dd);
+                SqlExecuterTestAdapter.Initialize(version.UniqueName, dd);
 
             TestHelper.CheckFeature(version, "ReadDdl");
 
-            _sqlExecuterTestAdapter.GetContext(version).Settings.Options.ShouldUseDefaultSchema = true;
+            SqlExecuterTestAdapter.GetContext(version).Settings.Options.ShouldUseDefaultSchema = true;
         }
 
         [AssemblyCleanup]
         public static void Cleanup()
         {
-            _sqlExecuterTestAdapter.Cleanup();
+            SqlExecuterTestAdapter.Cleanup();
+        }
+
+        protected DatabaseDefinition ReadDd(SqlEngineVersion version, SchemaNamesToRead schemaNames)
+        {
+            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], SqlExecuterTestAdapter.GetContext(version), schemaNames);
+            var db = ddlReader.GetDatabaseDefinition();
+
+            return db;
         }
     }
 }

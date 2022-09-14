@@ -2,12 +2,15 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using FizzCode.DbTools.DataDefinition.View;
 
     public class DatabaseDefinition
     {
         public Dictionary<SqlEngineVersion, AbstractTypeMapper> TypeMappers { get; set; } = new Dictionary<SqlEngineVersion, AbstractTypeMapper>();
         public SqlEngineVersion MainVersion { get; private set; }
         internal Tables Tables { get; } = new Tables();
+        internal Views Views { get; } = new Views();
+
         public List<StoredProcedure> StoredProcedures { get; } = new List<StoredProcedure>();
 
         public DatabaseDefinition(AbstractTypeMapper mainTypeMapper, AbstractTypeMapper[] secondaryTypeMappers = null)
@@ -44,9 +47,26 @@
             Tables.Add(sqlTable);
         }
 
+        public void AddView(SqlView sqlTable)
+        {
+            sqlTable.DatabaseDefinition = this;
+
+            foreach (var column in sqlTable.Columns)
+            {
+                SqlColumnHelper.MapFromGen1(column);
+            }
+
+            Views.Add(sqlTable);
+        }
+
         public virtual List<SqlTable> GetTables()
         {
             return Tables.ToList();
+        }
+
+        public virtual List<SqlView> GetViews()
+        {
+            return Views.ToList();
         }
 
         public SqlTable GetTable(string schema, string tableName)

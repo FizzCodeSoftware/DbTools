@@ -1,10 +1,10 @@
 ﻿{
   "forceIntegrationTests": "false",
-  "oracleDatabaseName": "DbTools_DataDefinition_Sp_Tests",
+  "oracleDatabaseName": "DbTools_DataDefinition_View_Tests",
   "connectionStrings": {
     "MsSql2016": {
       "ProviderName": "Microsoft.Data.SqlClient",
-      "ConnectionString": "Data Source=(local);Initial Catalog=DbTools_DataDefinition_Sp_Tests;Integrated Security=SSPI;Connection Timeout=5;TrustServerCertificate=True",
+      "ConnectionString": "Data Source=(local);Initial Catalog=DbTools_DataDefinition_View_Tests;Integrated Security=SSPI;Connection Timeout=5;TrustServerCertificate=True",
       "Version": "2016"
     },
     "Oracle12c": {

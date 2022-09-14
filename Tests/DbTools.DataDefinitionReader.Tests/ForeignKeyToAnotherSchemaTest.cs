@@ -17,7 +17,7 @@
             var dd = new ForeignKeyToAnotherSchema();
             Init(version, dd);
 
-            var creator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.UniqueName));
+            var creator = new DatabaseCreator(dd, SqlExecuterTestAdapter.GetExecuter(version.UniqueName));
             creator.ReCreateDatabase(true);
         }
 
@@ -29,8 +29,7 @@
 
             TestHelper.CheckFeature(version, "ReadDdl");
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(_sqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], _sqlExecuterTestAdapter.GetContext(version), new ForeignKeyToAnotherSchema().GetSchemaNames().ToList());
-            var db = ddlReader.GetDatabaseDefinition();
+            var db = ReadDd(version, new ForeignKeyToAnotherSchema().GetSchemaNames().ToList());
 
             var parent = db.GetTable("Parent", "Parent");
 

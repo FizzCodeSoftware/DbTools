@@ -3,7 +3,7 @@
     /// <summary>
     /// Contains the <see cref="Description"/>, to document the given table.
     /// </summary>
-    public class SqlTableDescription : SqlTableProperty
+    public class SqlTableDescription : SqlTableOrViewPropertyBase<SqlTable>
     {
         public SqlTableDescription(SqlTable sqlTable, string description)
             : base(sqlTable)

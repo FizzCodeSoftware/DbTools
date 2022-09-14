@@ -29,7 +29,7 @@
             return column;
         }
 
-        public static void MapFromGen1(SqlColumn column)
+        public static void MapFromGen1(SqlColumnBase column)
         {
             if (column is SqlColumnFKRegistration)
                 return;
@@ -37,7 +37,7 @@
             if (!column.Types.ContainsKey(GenericVersion.Generic1))
                 return;
 
-            foreach (var typeMapper in column.Table.DatabaseDefinition.TypeMappers.Values)
+            foreach (var typeMapper in column.SqlTableOrView.DatabaseDefinition.TypeMappers.Values)
             {
                 if (!column.Types.ContainsKey(typeMapper.SqlVersion))
                 {

@@ -84,7 +84,7 @@
             return ColorTranslator.FromHtml(hexColor);
         }
 
-        protected void AddTableHeader(bool hasCategories, string category, SqlTable table, string firstColumn = null)
+        protected void AddTableHeader(bool hasCategories, string category, SqlTableOrView table, string firstColumn = null)
         {
             var mergeAmount = !Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11;
             mergeAmount += firstColumn == null ? 0 : 1;
@@ -97,7 +97,14 @@
             WriteAndMerge(table.SchemaAndTableName, mergeAmount, table.SchemaAndTableName.TableName);
             WriteLine(table.SchemaAndTableName);
 
-            var tableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
+            var tableDescription = table switch
+            {
+                 SqlTable sqlTable => sqlTable.Properties.OfType<SqlTableDescription>().FirstOrDefault(),
+                 SqlView sqlView => sqlView.Properties.OfType<SqlTableDescription>().FirstOrDefault(),
+                _ => throw new System.ArgumentException("Unknown SqlTableOrView Type.")
+            };
+
+
             WriteColor(table.SchemaAndTableName, "Description");
             WriteAndMerge(table.SchemaAndTableName, mergeAmount, tableDescription?.Description);
             WriteLine(table.SchemaAndTableName);
@@ -261,7 +268,7 @@
         protected void AddUniqueConstraint(UniqueConstraint uniqueConstraint, string firstColumn = null)
         {
             var countToMerge = 0;
-            var table = uniqueConstraint.SqlTable;
+            var table = uniqueConstraint.SqlTableOrView;
 
             foreach (var indexColumn in uniqueConstraint.SqlColumns)
             {

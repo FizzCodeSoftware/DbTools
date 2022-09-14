@@ -9,7 +9,7 @@
     [TestClass]
     public class SqlGeneratorTests
     {
-        private static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new();
+        protected static SqlExecuterTestAdapter SqlExecuterTestAdapter { get; } = new();
 
         [DataTestMethod]
         [LatestSqlVersions]
@@ -17,8 +17,8 @@
         public void _010_GenerateScriptAndCreateTable(SqlEngineVersion version)
 #pragma warning restore IDE1006 // Naming Styles
         {
-            _sqlExecuterTestAdapter.Check(version);
-            _sqlExecuterTestAdapter.InitializeAndCreate(version.UniqueName);
+            SqlExecuterTestAdapter.Check(version);
+            SqlExecuterTestAdapter.InitializeAndCreate(version.UniqueName);
 
             var dd = new DatabaseDefinition(null, new[] { MsSqlVersion.MsSql2016.GetTypeMapper(), OracleVersion.Oracle12c.GetTypeMapper(), SqLiteVersion.SqLite3.GetTypeMapper() });
 
@@ -39,7 +39,7 @@
 
             var sql = generator.CreateTable(table);
 
-            var result = _sqlExecuterTestAdapter.ExecuteNonQuery(version.UniqueName, sql);
+            var result = SqlExecuterTestAdapter.ExecuteNonQuery(version.UniqueName, sql);
 
             if (result != null)
                 Assert.Inconclusive(result);
@@ -51,14 +51,14 @@
         public void _020_DropTable(SqlEngineVersion version)
 #pragma warning restore IDE1006 // Naming Styles
         {
-            _sqlExecuterTestAdapter.Check(version);
-            _sqlExecuterTestAdapter.Initialize(version.UniqueName);
+            SqlExecuterTestAdapter.Check(version);
+            SqlExecuterTestAdapter.Initialize(version.UniqueName);
 
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
 
-            var generator = SqlGeneratorFactory.CreateGenerator(version, _sqlExecuterTestAdapter.GetContext(version));
+            var generator = SqlGeneratorFactory.CreateGenerator(version, SqlExecuterTestAdapter.GetContext(version));
             var sql = generator.DropTable(table);
-            var result = _sqlExecuterTestAdapter.ExecuteNonQuery(version.UniqueName, sql);
+            var result = SqlExecuterTestAdapter.ExecuteNonQuery(version.UniqueName, sql);
 
             if (result != null)
                 Assert.Inconclusive(result);
@@ -67,7 +67,7 @@
         [ClassCleanup]
         public static void Cleanup()
         {
-            _sqlExecuterTestAdapter.Cleanup();
+            SqlExecuterTestAdapter.Cleanup();
         }
     }
 }

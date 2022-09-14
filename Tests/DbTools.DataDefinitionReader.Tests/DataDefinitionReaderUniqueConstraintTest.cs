@@ -19,7 +19,7 @@ namespace FizzCode.DbTools.DataDefinitionReader.Tests
             var version = MsSqlVersion.MsSql2016;
             var dd = new TestDatabaseUniqueConstraint();
             Init(version, dd);
-            var creator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.UniqueName));
+            var creator = new DatabaseCreator(dd, SqlExecuterTestAdapter.GetExecuter(version.UniqueName));
             creator.ReCreateDatabase(true);
         }
 
@@ -32,10 +32,7 @@ namespace FizzCode.DbTools.DataDefinitionReader.Tests
 
             Init(version, null);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
-                _sqlExecuterTestAdapter.ConnectionStrings[version.UniqueName],
-                _sqlExecuterTestAdapter.GetContext(version), null);
-            var dd = ddlReader.GetDatabaseDefinition();
+            var dd = ReadDd(version, null);
 
             var _ = dd.GetTable("Company").Properties.OfType<UniqueConstraint>().First();
         }

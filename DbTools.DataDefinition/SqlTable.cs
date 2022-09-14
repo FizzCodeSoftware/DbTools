@@ -2,48 +2,30 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
 
-    [DebuggerDisplay("{ToString(),nq}")]
-    public class SqlTable
+    public class SqlTable : SqlTableOrView
     {
-        public DatabaseDefinition DatabaseDefinition { get; set; }
-        public SchemaAndTableName SchemaAndTableName { get; set; }
-        public List<SqlTableProperty> Properties { get; } = new List<SqlTableProperty>();
-        public ColumnsOrdered Columns { get; } = new ColumnsOrdered();
+        public List<SqlTableOrViewPropertyBase<SqlTable>> Properties { get; } = new();
 
         public SqlTable()
         {
         }
 
         public SqlTable(string schema, string tableName)
+            : base(schema, tableName)
         {
-            SchemaAndTableName = new SchemaAndTableName(schema, tableName);
         }
 
         public SqlTable(string tableName)
+            : base(tableName)
         {
-            SchemaAndTableName = new SchemaAndTableName(tableName);
         }
 
         public SqlTable(SchemaAndTableName schemaAndTableName)
+            : base(schemaAndTableName)
         {
-            SchemaAndTableName = schemaAndTableName;
         }
-
-        public override string ToString()
-        {
-            return SchemaAndTableName?.SchemaAndName ?? "";
-        }
-
-        public bool HasProperty<T>()
-            where T : SqlTableProperty
-        {
-            return Properties.Any(x => x is T);
-        }
-
-        public SqlColumn this[string columnName] => Columns[columnName];
 
         protected static SqlColumn AddColumn(Action<SqlColumn> configurator)
         {
@@ -51,5 +33,14 @@
             configurator.Invoke(sqlColumn);
             return sqlColumn;
         }
+
+        public bool HasProperty<TProperty>()
+            where TProperty : SqlTableOrViewPropertyBase<SqlTable>
+        {
+            return Properties.Any(x => x is TProperty);
+        }
+
+        public SqlColumn this[string columnName] => Columns[columnName];
+        public ColumnsOrdered Columns { get; } = new();
     }
 }

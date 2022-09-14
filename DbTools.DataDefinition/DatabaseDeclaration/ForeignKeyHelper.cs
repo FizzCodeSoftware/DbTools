@@ -17,7 +17,7 @@
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
             var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, null, fkName);
             singleFkColumn.Table.Properties.Add(fk);
-            Prepare(singleFkColumn.Table);
+            Prepare((SqlTable)singleFkColumn.Table);
             return singleFkColumn;
         }
 
@@ -34,7 +34,7 @@
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
             var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, referredColumnName, fkName);
             singleFkColumn.Table.Properties.Add(fk);
-            Prepare(singleFkColumn.Table);
+            Prepare((SqlTable)singleFkColumn.Table);
             return singleFkColumn;
         }
 
@@ -49,7 +49,7 @@
         {
             var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredSchemaAndTableName, null, fkName);
             singleFkColumn.Table.Properties.Add(fk);
-            Prepare(singleFkColumn.Table);
+            Prepare((SqlTable)singleFkColumn.Table);
             return singleFkColumn;
         }
 
@@ -66,7 +66,7 @@
             var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredSchemaAndTableName, null, fkName);
             fk.SqlEngineVersionSpecificProperties.Add(properties);
             singleFkColumn.Table.Properties.Add(fk);
-            Prepare(singleFkColumn.Table);
+            Prepare((SqlTable)singleFkColumn.Table);
             return singleFkColumn;
         }
 
@@ -89,7 +89,7 @@
 
             singleFkColumn.Table.Properties.Add(fk);
 
-            Prepare(singleFkColumn.Table);
+            Prepare((SqlTable)singleFkColumn.Table);
 
             return singleFkColumn;
         }
@@ -111,7 +111,7 @@
 
             singleFkColumn.Table.Properties.Add(fk);
 
-            Prepare(singleFkColumn.Table);
+            Prepare((SqlTable)singleFkColumn.Table);
 
             return singleFkColumn;
         }

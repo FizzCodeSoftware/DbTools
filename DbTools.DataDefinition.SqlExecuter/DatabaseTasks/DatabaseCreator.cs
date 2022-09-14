@@ -21,6 +21,7 @@
             {
                 CreateTables();
                 CreateStoredProcedures();
+                CreateViews();
             }
         }
 
@@ -152,6 +153,15 @@
             foreach (var sp in DatabaseDefinition.StoredProcedures)
             {
                 var sql = Executer.Generator.CreateStoredProcedure(sp);
+                Executer.ExecuteNonQuery(sql);
+            }
+        }
+
+        public void CreateViews()
+        {
+            foreach (var view in DatabaseDefinition.GetViews())
+            {
+                var sql = Executer.Generator.CreateView(view);
                 Executer.ExecuteNonQuery(sql);
             }
         }

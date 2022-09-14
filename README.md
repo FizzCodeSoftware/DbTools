@@ -1,8 +1,35 @@
 # Fizzcode DbTools
 ###### Fizzcode DbTools open source project
 
+The two main usage of DbTools is
+- Describe a database schema and properties in C# code, with the ability to generate the database on multiple database engines
+- Provide a command line tool, DbTools.Console to execute DbTools functions (examples: generating database documentation or comparison to an Excel file, generate database definition as .cs files)
 
-# Usage
+# DatabaseDeclaration
+A very simple database definition looks like this (from
+[TestDatabaseSimpleTyped.cs](https://github.com/FizzcodeSoftware/DbTools/blob/master/Tests/DbTools.DataDefinition.Tests/DatabaseDeclaration/Typed/TestDatabaseSimpleTyped.cs)):
+
+```cs
+namespace FizzCode.DbTools.DataDefinition.Tests
+{
+    using FizzCode.DbTools.DataDefinition.Generic1;
+    using FizzCode.DbTools.TestBase;
+
+    public class TestDatabaseSimpleTyped : TestDatabaseDeclaration
+    {
+        public Company Company { get; } = new Company();
+    }
+
+    public class Company : SqlTable
+    {
+        public SqlColumn Id { get; } = Generic1.AddInt32().SetPK().SetIdentity();
+
+        public SqlColumn Name { get; } = Generic1.AddNVarChar(100);
+    }
+}
+```
+
+# DbTools.Console usage
 Build, and run FizzCode.DbTools.Console.exe
 (DbTools\DbTools.Console\bin\Release\net6.0\FizzCode.DbTools.Console.exe)
 

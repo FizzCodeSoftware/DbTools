@@ -4,7 +4,7 @@
     {
         public void SetPrimaryKeyName(PrimaryKey pk)
         {
-            if (pk.SqlTable.SchemaAndTableName?.TableName == null)
+            if (pk.SqlTableOrView.SchemaAndTableName?.TableName == null)
                 return;
 
             pk.Name = $"PK_{pk.SqlTable.SchemaAndTableName.TableName}";

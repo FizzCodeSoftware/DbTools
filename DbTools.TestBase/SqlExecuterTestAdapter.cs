@@ -6,35 +6,8 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
-    using FizzCode.DbTools.DataDefinitionDocumenter;
     using FizzCode.LightWeight.AdoNet;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-    internal class SqlConnectionKeyAndDatabaseDefinitionTypeAsKey
-    {
-        private readonly string _connectionStringKey;
-        private readonly string _databaseDefinitionTypeFullName;
-        internal SqlConnectionKeyAndDatabaseDefinitionTypeAsKey(string connectionStringKey, DatabaseDefinition dd)
-        {
-            _connectionStringKey = connectionStringKey;
-            _databaseDefinitionTypeFullName = dd.GetType().FullName;
-        }
-
-        public override string ToString()
-        {
-            return _connectionStringKey + "_" + _databaseDefinitionTypeFullName;
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is SqlConnectionKeyAndDatabaseDefinitionTypeAsKey s && s.ToString() == ToString();
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(ToString());
-        }
-    }
 
     public class SqlExecuterTestAdapter : ConfigurationBase
     {
@@ -74,7 +47,7 @@
             foreach(var dd in dds)
             {
                 var key = new SqlConnectionKeyAndDatabaseDefinitionTypeAsKey(connectionStringKey, dd);
-                if (_dds.ContainsKey(key))
+                if (!_dds.ContainsKey(key))
                     _dds.Add(key, dd);
             }
 

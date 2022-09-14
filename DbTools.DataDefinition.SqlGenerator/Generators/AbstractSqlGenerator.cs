@@ -340,6 +340,20 @@
             return sb.ToString();
         }
 
+        public virtual string CreateView(SqlView view)
+        {
+            var sb = new StringBuilder();
+            sb.Append("CREATE VIEW ")
+                .AppendLine(GetSimplifiedSchemaAndTableName(view.SchemaAndTableName));
+
+            sb.AppendLine();
+            sb.AppendLine("AS");
+
+            sb.Append(view.SqlStatementBody);
+
+            return sb.ToString();
+        }
+
         public abstract string GuardKeywords(string name);
 
         public abstract string DropAllForeignKeys();

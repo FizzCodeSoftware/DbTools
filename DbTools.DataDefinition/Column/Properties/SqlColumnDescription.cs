@@ -5,7 +5,7 @@
     /// </summary>
     public class SqlColumnDescription : SqlColumnProperty
     {
-        public SqlColumnDescription(SqlColumn sqlColumn, string description)
+        public SqlColumnDescription(SqlColumnBase sqlColumn, string description)
             : base(sqlColumn)
         {
             Description = description;

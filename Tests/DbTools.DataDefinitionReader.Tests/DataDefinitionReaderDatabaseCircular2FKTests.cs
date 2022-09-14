@@ -15,7 +15,7 @@
         {
             var dd = new TestDatabaseCircular2FK();
             Init(version, dd);
-            var creator = new DatabaseCreator(dd, _sqlExecuterTestAdapter.GetExecuter(version.UniqueName));
+            var creator = new DatabaseCreator(dd, SqlExecuterTestAdapter.GetExecuter(version.UniqueName));
             creator.ReCreateDatabase(true);
         }
 
@@ -25,10 +25,7 @@
         {
             Init(version, null);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
-                _sqlExecuterTestAdapter.ConnectionStrings[version.UniqueName],
-                _sqlExecuterTestAdapter.GetContext(version), null);
-            _ = ddlReader.GetDatabaseDefinition();
+            _ = ReadDd(version, null);
         }
     }
 }

@@ -4,14 +4,14 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public abstract class DataDefinitionSqlExecuterTests
+    public abstract class SqlExecuterTestsBase
     {
-        protected static readonly SqlExecuterTestAdapter _sqlExecuterTestAdapter = new();
+        protected static SqlExecuterTestAdapter SqlExecuterTestAdapter { get; } = new();
 
         [AssemblyCleanup]
         public static void Cleanup()
         {
-            _sqlExecuterTestAdapter.Cleanup();
+            SqlExecuterTestAdapter.Cleanup();
         }
     }
 }

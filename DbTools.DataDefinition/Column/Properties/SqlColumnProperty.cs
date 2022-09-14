@@ -2,9 +2,9 @@
 {
     public abstract class SqlColumnProperty
     {
-        public SqlColumn SqlColumn { get; }
+        public SqlColumnBase SqlColumn { get; }
 
-        protected SqlColumnProperty(SqlColumn sqlColumn)
+        protected SqlColumnProperty(SqlColumnBase sqlColumn)
         {
             SqlColumn = sqlColumn;
         }

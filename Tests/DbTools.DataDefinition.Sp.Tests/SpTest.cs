@@ -9,7 +9,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class SpTest : DataDefinitionSpTestsBase
+    public class SpTest : SpTestsBase
     {
         [TestMethod]
         [SqlVersions(nameof(MsSql2016))]

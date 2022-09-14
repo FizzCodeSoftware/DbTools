@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.QueryBuilder
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.DataDefinition;
@@ -278,7 +279,7 @@
         /// The <see cref="QueryBuilder"/> will automatically build the join condition, from the Foreign Key of the <paramref name="table"/> to the Primary Key of the main table of the Query. For this method, the  <paramref name="table"/> has to be one and only one Foreign Key to the Primary Key.
         /// </summary>
         /// <param name="table">The table to join.</param>
-        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
+        /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.)</param>
         /// <returns>The Query.</returns>
         public Query InnerJoin(SqlTable table, params QueryColumn[] columns)
         {
@@ -458,19 +459,35 @@
 
         public Query FilterBetween(QueryColumn column)
         {
-            var table = QueryElements.First(qe => qe.Table.GetAlias() == column.Alias).Table;
-            var sqlColumn = table.Columns[column.Value];
+            var tableOrView = QueryElements.First(qe => qe.Table.GetAlias() == column.Alias).Table;
 
-            var parameter = new SqlParameter(sqlColumn.Table.DatabaseDefinition)
+            SqlParameter parameter;
+
+            if (tableOrView is SqlTable table)
             {
-                Name = column.Value
-            };
-            sqlColumn.Types.CopyTo(parameter.Types);
+                var sqlColumn = table.Columns[column.Value];
+
+                parameter = new SqlParameter(sqlColumn.Table.DatabaseDefinition)
+                {
+                    Name = column.Value
+                };
+                sqlColumn.Types.CopyTo(parameter.Types);
+            } else if (tableOrView is SqlView view)
+            {
+                var sqlColumn = view.Columns[column.Value];
+
+                parameter = new SqlParameter(sqlColumn.View.DatabaseDefinition)
+                {
+                    Name = column.Value
+                };
+                sqlColumn.Types.CopyTo(parameter.Types);
+            } else
+                throw new ArgumentException("Unknown SqlTableOrView Type.");
 
             var filter = new Filter()
             {
                 Column = column,
-                Table = table,
+                Table = tableOrView,
                 Parameter = parameter,
                 Type = FilterType.Between
             };

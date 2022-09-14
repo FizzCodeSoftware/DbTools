@@ -4,7 +4,7 @@
 
     public abstract class JoinBase : QueryElement
     {
-        protected JoinBase(SqlTable table, string alias, JoinType joinType, params QueryColumn[] columns)
+        protected JoinBase(SqlTableOrView table, string alias, JoinType joinType, params QueryColumn[] columns)
             : base(table, alias, columns)
         {
             JoinType = joinType;

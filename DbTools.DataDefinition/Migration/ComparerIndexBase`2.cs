@@ -4,7 +4,7 @@
     using System.Linq;
 
     public abstract class ComparerIndexBase<TIndex, TMigration>
-        where TIndex : IndexBase
+        where TIndex : IndexBase<SqlTable>
         where TMigration : IMigration
     {
         public List<TMigration> CompareIndexes(SqlTable tableOriginal, SqlTable tableNew)
@@ -34,7 +34,7 @@
 
                     // compare referred tables
                     // compare columns
-                    if (indexOriginal.SqlTable.SchemaAndTableName != indexNew.SqlTable.SchemaAndTableName)
+                    if (indexOriginal.SqlTableOrView.SchemaAndTableName != indexNew.SqlTableOrView.SchemaAndTableName)
                         indexChanged = true;
 
                     if (!CompareIndexColumns(indexOriginal, indexNew))

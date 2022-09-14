@@ -8,14 +8,36 @@
     {
         internal static void SetAliasProperty(this SqlTable sqlTable, string alias)
         {
-            var aliasTableProperty = sqlTable.Properties.OfType<AliasTableProperty>().FirstOrDefault();
-            if (aliasTableProperty == null)
+            var aliasProperty = sqlTable.Properties.OfType<AliasTableProperty>().FirstOrDefault();
+            if (aliasProperty == null)
             {
-                aliasTableProperty = new AliasTableProperty();
-                sqlTable.Properties.Add(aliasTableProperty);
+                aliasProperty = new AliasTableProperty();
+                sqlTable.Properties.Add(aliasProperty);
             }
 
-            aliasTableProperty.Alias = alias;
+            aliasProperty.Alias = alias;
+        }
+
+        internal static void SetAliasProperty(this SqlView sqlView, string alias)
+        {
+            var aliasProperty = sqlView.Properties.OfType<AliasViewProperty>().FirstOrDefault();
+            if (aliasProperty == null)
+            {
+                aliasProperty = new AliasViewProperty();
+                sqlView.Properties.Add(aliasProperty);
+            }
+
+            aliasProperty.Alias = alias;
+        }
+
+        public static string GetAlias(this SqlTableOrView sqlTableOrView)
+        {
+            return sqlTableOrView switch
+            {
+                SqlTable sqlTable => GetAlias(sqlTable),
+                SqlView sqlView => GetAlias(sqlView),
+                _ => throw new System.ArgumentException("Unknown SqlTableOrView Type.")
+            };
         }
 
         public static string GetAlias(this SqlTable sqlTable)
@@ -24,7 +46,30 @@
             return aliasTableProperty?.Alias;
         }
 
+        public static string GetAlias(this SqlView sqlTable)
+        {
+            var aliasProperty = sqlTable.Properties.OfType<AliasViewProperty>().FirstOrDefault();
+            return aliasProperty?.Alias;
+        }
+
         internal static void SetAlias(SqlTable table, string alias)
+        {
+            if (!string.IsNullOrEmpty(alias))
+            {
+                table.SetAliasProperty(alias);
+                return;
+            }
+
+            var tableName = table.SchemaAndTableName.TableName;
+            var capitals = new string(tableName.Where(c => char.IsUpper(c)).ToArray());
+
+#pragma warning disable CA1308 // Normalize strings to uppercase
+            table.SetAliasProperty(capitals.Length > 0 ? capitals.ToLowerInvariant()
+                : alias ?? tableName.Substring(0, 1).ToLowerInvariant());
+#pragma warning restore CA1308 // Normalize strings to uppercase
+        }
+
+        internal static void SetAlias(SqlView table, string alias)
         {
             if (!string.IsNullOrEmpty(alias))
             {
@@ -78,7 +123,7 @@
                 if (!property.Name.StartsWith('_'))
                     fk.Name = property.Name;
 
-                fk.SqlTable = table;
+                fk.SqlTableOrView = table;
             }
         }
 
@@ -93,12 +138,12 @@
 
             foreach (var property in properties)
             {
-                var index = (IndexBase)property.GetValue(table);
+                var index = (Index)property.GetValue(table);
 
                 if (!property.Name.StartsWith('_'))
                     index.Name = property.Name;
 
-                index.SqlTable = table;
+                index.SqlTableOrView = table;
 
                 var registeredIdexes = index.SqlColumns.OfType<ColumnAndOrderRegistration>().ToList();
 
@@ -123,7 +168,7 @@
             foreach (var property in properties)
             {
                 var customProperty = (SqlTableCustomProperty)property.GetValue(table);
-                customProperty.SqlTable = table;
+                customProperty.SqlTableOrView = table;
             }
         }
     }

@@ -14,7 +14,10 @@
 
             var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
-            var pkColumn = referredUniqueKey.SqlColumns[0].SqlColumn;
+            var pkColumnBase = referredUniqueKey.SqlColumns[0].SqlColumn;
+            // TODO 
+            // While Index is possible on view, in this case for FKs only SqlTable and SqlIndex
+            var pkColumn = (SqlColumn)pkColumnBase; 
 
             var col = new SqlColumn();
             pkColumn.CopyTo(col);
@@ -48,9 +51,12 @@
             var order = sqlTable.Columns.GetOrder(placeHolderColumn.Name);
             sqlTable.Columns.Remove(placeHolderColumn.Name);
 
-            foreach (var pkColumn in referredUniqueIndex.SqlColumns.Select(x => x.SqlColumn))
+            foreach (var pkColumnBase in referredUniqueIndex.SqlColumns.Select(x => x.SqlColumn))
             {
                 var col = new SqlColumn();
+
+                var pkColumn = (SqlColumn)pkColumnBase;
+
                 pkColumn.CopyTo(col);
 
                 col.Table = sqlTable;
@@ -74,7 +80,8 @@
 
             var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
-            var pkColumn = referredUniqueIndex.SqlColumns[0].SqlColumn;
+            var pkColumnBase = referredUniqueIndex.SqlColumns[0].SqlColumn;
+            var pkColumn = (SqlColumn)pkColumnBase;
 
             if (fkRegistration.SingleFkColumn.Types.Count == 0)
                 pkColumn.Types.CopyTo(fkRegistration.SingleFkColumn.Types);
@@ -82,7 +89,7 @@
             fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkRegistration.SingleFkColumn, pkColumn));
         }
 
-        private static void CheckValidity(IndexBase referredUnique, string fkColumName)
+        private static void CheckValidity(IndexBase<SqlTable> referredUnique, string fkColumName)
         {
             if (referredUnique.SqlColumns.Count > 1)
             {
@@ -144,13 +151,13 @@
             }
         }
 
-        private static IndexBase GetReferredUniqueIndex(SqlTable referredTable, string referredColumnName)
+        private static IndexBase<SqlTable> GetReferredUniqueIndex(SqlTable referredTable, string referredColumnName)
         {
             if (referredColumnName == null)
                 return GetReferredUniqueIndex(referredTable);
 
             var pkCandidate = referredTable.Properties.OfType<PrimaryKey>().FirstOrDefault(pk => pk.SqlColumns.Any(c => c.SqlColumn.Name == referredColumnName) && pk.SqlColumns.Count == 1);
-            var uiCandidates = referredTable.Properties.OfType<Index>().Where(i => i.Unique && i.SqlColumns.Any(c => c.SqlColumn.Name == referredColumnName) && i.SqlColumns.Count == 1);
+            var uiCandidates = referredTable.Properties.OfType <Index>().Where(i => i.Unique && i.SqlColumns.Any(c => c.SqlColumn.Name == referredColumnName) && i.SqlColumns.Count == 1);
             var ucCandidates = referredTable.Properties.OfType<UniqueConstraint>().Where(uc => uc.SqlColumns.Any(c => c.SqlColumn.Name == referredColumnName) && uc.SqlColumns.Count == 1);
 
             var count = (pkCandidate != null ? 1 : 0) + uiCandidates.Count() + ucCandidates.Count();
@@ -158,12 +165,12 @@
             if (count == 0)
                 throw new InvalidForeignKeyRegistrationException("Can't define Foreign Key without finding the target column in primary key, unique index or unique constraint.");
 
-            var uniqueIndex = pkCandidate ?? uiCandidates.FirstOrDefault() ?? ucCandidates.First() as IndexBase;
+            var uniqueIndex = pkCandidate ?? uiCandidates.FirstOrDefault() ?? ucCandidates.First() as IndexBase<SqlTable>;
 
             return uniqueIndex;
         }
 
-        private static IndexBase GetReferredUniqueIndex(SqlTable referredTable)
+        private static IndexBase<SqlTable> GetReferredUniqueIndex(SqlTable referredTable)
         {
             var pkCandidate = referredTable.Properties.OfType<PrimaryKey>().FirstOrDefault();
             var uiCandidates = referredTable.Properties.OfType<Index>().Where(i => i.Unique);
@@ -175,7 +182,7 @@
                 throw new InvalidForeignKeyRegistrationException("Can't define Foreign Key registration without target column in primary key, unique index or unique constraint.");
 
             var uniqueIndex = referredTable.Properties.OfType<PrimaryKey>().FirstOrDefault()
-                ?? referredTable.Properties.OfType<Index>().FirstOrDefault(i => i.Unique) as IndexBase
+                ?? referredTable.Properties.OfType<Index>().FirstOrDefault(i => i.Unique) as IndexBase<SqlTable>
                 ?? referredTable.Properties.OfType<UniqueConstraint>().FirstOrDefault();
 
             if (uniqueIndex == null)

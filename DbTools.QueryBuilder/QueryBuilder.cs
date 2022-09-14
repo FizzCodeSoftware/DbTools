@@ -16,6 +16,14 @@
 
             foreach (var p in GetParametersFromFilters(sp.Query))
                 sp.SpParameters.Add(p);
+
+            sp.SqlStatementBody = Build(sp.Query);
+        }
+
+        public void ProcessViewFromQuery(IViewFromQuery viewFromQuery)
+        {
+            var view = viewFromQuery as ViewFromQuery;
+            view.SqlStatementBody = Build(view.Query);
         }
 
         private Query _query;
@@ -237,9 +245,11 @@
         {
             var sb = new StringBuilder();
 
+            var queryTableProperties = (_query.Table as SqlTable).Properties;
+
             if (join.ColumnSource == null && join.ColumnTarget == null)
             { // auto build JOIN ON
-                var fk = _query.Table.Properties.OfType<ForeignKey>().First(fk => fk.ForeignKeyColumns[0].ReferredColumn.Table.SchemaAndTableName == join.Table.SchemaAndTableName);
+                var fk = queryTableProperties.OfType<ForeignKey>().First(fk => fk.ForeignKeyColumns[0].ReferredColumn.Table.SchemaAndTableName == join.Table.SchemaAndTableName);
 
                 foreach (var fkm in fk.ForeignKeyColumns)
                 {
@@ -264,7 +274,8 @@
             }
             else if (join.ColumnSource == null && join.ColumnTarget != null)
             {
-                var pk = join.Table.Properties.OfType<PrimaryKey>().FirstOrDefault();
+                var joinTableProperties = (join.Table as SqlTable).Properties;
+                var pk = joinTableProperties.OfType<PrimaryKey>().FirstOrDefault();
                 if (pk == null)
                     throw new ArgumentException($"Target Join table has no Primary Key. Table: {join.Table.SchemaAndTableName}, source column: {join.ColumnSource}.");
 
@@ -283,7 +294,7 @@
             }
             else if (join.ColumnSource != null && join.ColumnTarget == null)
             {
-                var pk = _query.Table.Properties.OfType<PrimaryKey>().FirstOrDefault();
+                var pk = queryTableProperties.OfType<PrimaryKey>().FirstOrDefault();
                 if (pk == null)
                     throw new ArgumentException($"Target Join table has no Primary Key. Table: {join.Table.SchemaAndTableName}, source column: {join.ColumnSource}.");
 

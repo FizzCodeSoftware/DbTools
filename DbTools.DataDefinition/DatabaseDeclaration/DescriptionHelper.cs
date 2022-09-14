@@ -9,7 +9,7 @@
             return table;
         }
 
-        public static SqlColumn AddDescription(this SqlColumn column, string description)
+        public static SqlColumnBase AddDescription(this SqlColumnBase column, string description)
         {
             var sqlColumnDescription = new SqlColumnDescription(column, description);
             column.Properties.Add(sqlColumnDescription);

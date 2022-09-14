@@ -23,7 +23,7 @@
             Log(LogSeverity.Debug, "Reading table definitions from database.");
 
             var module = "Reader/" + Executer.Generator.Version.UniqueName;
-            var logTimer = new LogTimer(Logger, LogSeverity.Debug, "Reading table definitions from database.", module);
+            var logTimer = new LogTimer(Logger, LogSeverity.Debug, "Reading definitions from database.", module);
 
             foreach (var schemaAndTableName in GetSchemaAndTableNames())
                 dd.AddTable(GetTableDefinition(schemaAndTableName, false));
@@ -37,17 +37,40 @@
             Log(LogSeverity.Debug, "Reading table foreign keys from database.", "Reader");
             new MsSqlForeignKeyReader2016(Executer, SchemaNames).GetForeignKeys(dd);
 
+            Log(LogSeverity.Debug, "Reading views from database.");
+            foreach (var schemaAndTableName in GetViews())
+                dd.AddView(GetViewDefinition(schemaAndTableName, false));
+
+            Log(LogSeverity.Debug, "Reading view indexes from database.");
+            new MsSqlViewIndexReader2016(Executer, SchemaNames).GetIndexes(dd);
+
             logTimer.Done();
 
             return dd;
         }
 
-        public override List<SchemaAndTableName> GetSchemaAndTableNames()
+        private static string SqlTables(char typeFilter)
         {
-            var sqlStatement = @"
+            return @$"
 SELECT ss.name schemaName, so.name tableName FROM sys.objects so
 INNER JOIN sys.schemas ss ON ss.schema_id = so.schema_id
-WHERE type = 'U'";
+WHERE type = '{typeFilter}'";
+        }
+
+        public override List<SchemaAndTableName> GetSchemaAndTableNames()
+        {
+            var sqlStatement = SqlTables('U');
+
+            AddSchemaNamesFilter(ref sqlStatement, "ss.name");
+
+            return Executer.ExecuteQuery(sqlStatement).Rows
+                .ConvertAll(row => new SchemaAndTableName(row.GetAs<string>("schemaName"), row.GetAs<string>("tableName")))
+;
+        }
+
+        public override List<SchemaAndTableName> GetViews()
+        {
+            var sqlStatement = SqlTables('V');
 
             AddSchemaNamesFilter(ref sqlStatement, "ss.name");
 
@@ -62,22 +85,38 @@ WHERE type = 'U'";
         private MsSqlColumnDocumentationReader2016 _columnDocumentationReader;
         private MsSqlColumnDocumentationReader2016 ColumnDocumentationReader => _columnDocumentationReader ??= new MsSqlColumnDocumentationReader2016(Executer);
 
+        public override SqlView GetViewDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition = true)
+        {
+            var sqlView = TableReader.GetViewDefinition(schemaAndTableName);
+
+            if (fullDefinition)
+            {
+                // TODO
+                // AddTableDocumentation(sqlView);
+            }
+
+            // TODO
+            // ColumnDocumentationReader.GetColumnDocumentation(sqlView);
+
+            sqlView.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlView.SchemaAndTableName, Executer.Generator.Context);
+            return sqlView;
+        }
+
         public override SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition = true)
         {
             var sqlTable = TableReader.GetTableDefinition(schemaAndTableName);
 
             if (fullDefinition)
             {
-                new MsSqlIndexReader2016(Executer, SchemaNames).
-                GetPrimaryKey(sqlTable);
-                new MsSqlForeignKeyReader2016(Executer, SchemaNames).GetForeignKeys(sqlTable);
+                new MsSqlIndexReader2016(Executer, SchemaNames).GetPrimaryKey((SqlTable)sqlTable);
+                new MsSqlForeignKeyReader2016(Executer, SchemaNames).GetForeignKeys((SqlTable)sqlTable);
                 AddTableDocumentation(sqlTable);
             }
 
             ColumnDocumentationReader.GetColumnDocumentation(sqlTable);
 
             sqlTable.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlTable.SchemaAndTableName, Executer.Generator.Context);
-            return sqlTable;
+            return (SqlTable)sqlTable;
         }
 
         private readonly string SqlGetTableDocumentation = @"

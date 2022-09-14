@@ -52,6 +52,21 @@
             return queryColumn;
         }
 
+        public static implicit operator QueryColumn(SqlViewColumn column)
+        {
+            var queryColumn = new QueryColumn
+            {
+                Value = column.Name,
+                IsDbColumn = true,
+            };
+
+            var aliasTableProperty = column.View.Properties.OfType<AliasViewProperty>().FirstOrDefault();
+            if (aliasTableProperty != null)
+                queryColumn.Alias = aliasTableProperty.Alias;
+
+            return queryColumn;
+        }
+
         public override string ToString()
         {
             var sb = new System.Text.StringBuilder();

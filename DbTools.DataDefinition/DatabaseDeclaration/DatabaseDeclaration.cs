@@ -24,6 +24,7 @@
             CreateRegisteredForeignKeys();
             AddAutoNaming(GetTables());
             AddDeclaredStoredProcedures();
+            AddDeclaredViews();
             CircularFKDetector.DectectCircularFKs(GetTables());
         }
 
@@ -35,6 +36,7 @@
 
             AddDeclaredTables();
             AddDeclaredStoredProcedures();
+            AddDeclaredViews();
             CreateRegisteredForeignKeys();
             AddAutoNaming(GetTables());
             CircularFKDetector.DectectCircularFKs(GetTables());
@@ -182,7 +184,7 @@
 
                 foreach (var tablePlaceHolderProperty in tablePlaceHolderProperties)
                 {
-                    tablePlaceHolderProperty.SqlTable = table;
+                    tablePlaceHolderProperty.SqlTableOrView = table;
                     AddTablePlaceHolderProperty(table, column, tablePlaceHolderProperty);
                 }
 
@@ -192,7 +194,7 @@
             }
         }
 
-        private static void AddTablePlaceHolderProperty(SqlTable table, SqlColumn column, SqlTableProperty tablePlaceHolderProperty)
+        private static void AddTablePlaceHolderProperty(SqlTable table, SqlColumn column, SqlTableOrViewPropertyBase<SqlTable> tablePlaceHolderProperty)
         {
             if (tablePlaceHolderProperty is PrimaryKey pk
                 && table.HasProperty<PrimaryKey>())
@@ -235,6 +237,36 @@
             }
         }
 
+        private void AddDeclaredViews()
+        {
+            var properties = GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(pi => typeof(SqlView).IsAssignableFrom(pi.PropertyType));
+
+            foreach (var property in properties)
+            {
+                var view = (SqlView)property.GetValue(this);
+
+                if (view is IViewFromQuery vq && QueryBuilderConnector != null)
+                {
+                    QueryBuilderConnector.ProcessViewFromQuery(vq);
+                }
+
+                if (view.SchemaAndTableName == null)
+                {
+                    var schemaAndTableName = new SchemaAndTableName(property.Name);
+                    if (string.IsNullOrEmpty(schemaAndTableName.Schema) && !string.IsNullOrEmpty(DefaultSchema))
+                        schemaAndTableName.Schema = DefaultSchema;
+
+                    view.SchemaAndTableName = schemaAndTableName;
+                }
+
+                view.DatabaseDefinition = this;
+
+                Views.Add(view);
+            }
+        }
+
         protected static SqlTable AddTable(Action<SqlTable> configurator)
         {
             var table = new SqlTable();
@@ -253,12 +285,12 @@
 
             foreach (var property in properties)
             {
-                var index = (IndexBase)property.GetValue(table);
+                var index = (IndexBase<SqlTable>)property.GetValue(table);
 
                 if (!property.Name.StartsWith('_'))
                     index.Name = property.Name;
 
-                index.SqlTable = table;
+                index.SqlTableOrView = table;
 
                 var registeredIdexes = index.SqlColumns.OfType<ColumnAndOrderRegistration>().ToList();
 
@@ -287,7 +319,7 @@
                 if (!property.Name.StartsWith('_'))
                     fk.Name = property.Name;
 
-                fk.SqlTable = table;
+                fk.SqlTableOrView = table;
 
                 table.Properties.Add(fk);
             }
@@ -304,8 +336,24 @@
             foreach (var property in properties)
             {
                 var customProperty = (SqlTableCustomProperty)property.GetValue(table);
-                customProperty.SqlTable = table;
+                customProperty.SqlTableOrView = table;
                 table.Properties.Add(customProperty);
+            }
+        }
+
+        private static void UpdateDeclaredCustomProperties(SqlView view)
+        {
+            var properties = view.GetType()
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Where(pi =>
+                    typeof(SqlViewCustomProperty).IsAssignableFrom(pi.PropertyType)
+                    && !pi.GetIndexParameters().Any());
+
+            foreach (var property in properties)
+            {
+                var customProperty = (SqlViewCustomProperty)property.GetValue(view);
+                customProperty.SqlTableOrView = view;
+                view.Properties.Add(customProperty);
             }
         }
     }

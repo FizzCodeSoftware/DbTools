@@ -3,7 +3,8 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public abstract class IndexBase : SqlTableProperty
+
+    public abstract class IndexBase<T> : SqlTableOrViewPropertyBase<T> where T : SqlTableOrView
     {
         public string Name { get; set; }
 
@@ -12,7 +13,7 @@
         public bool Unique { get; set; }
         public bool? Clustered { get; set; }
 
-        protected IndexBase(SqlTable sqlTable, string name, bool unique = false)
+        protected IndexBase(T sqlTable, string name, bool unique = false)
             : base(sqlTable)
         {
             Name = name;

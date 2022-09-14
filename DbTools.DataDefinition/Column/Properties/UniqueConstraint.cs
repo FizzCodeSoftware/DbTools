@@ -1,7 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    public class UniqueConstraint : IndexBase
+    public class UniqueConstraint : IndexBase<SqlTable>
     {
+        public SqlTable SqlTable { get => SqlTableOrView; }
+
         public UniqueConstraint(SqlTable sqlTable, string name)
             : base(sqlTable, name, true)
         {
@@ -20,7 +22,7 @@
 
         public override string ToString()
         {
-            return $"{GetColumnsInString()} on {SqlTable.SchemaAndTableName}";
+            return $"{GetColumnsInString()} on {SqlTableOrView.SchemaAndTableName}";
         }
     }
 }

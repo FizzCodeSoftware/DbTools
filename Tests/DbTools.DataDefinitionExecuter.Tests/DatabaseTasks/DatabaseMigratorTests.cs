@@ -10,15 +10,15 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class DatabaseMigratorTests : DataDefinitionSqlExecuterTests
+    public class DatabaseMigratorTests : SqlExecuterTestsBase
     {
         [TestMethod]
         [LatestSqlVersions]
         public void NewTableTest(SqlEngineVersion version)
         {
-            _sqlExecuterTestAdapter.Check(version);
+            SqlExecuterTestAdapter.Check(version);
             var dd = new TestDatabaseSimple();
-            _sqlExecuterTestAdapter.InitializeAndCreate(version.UniqueName, dd);
+            SqlExecuterTestAdapter.InitializeAndCreate(version.UniqueName, dd);
 
             var context = new Context
             {
@@ -28,14 +28,14 @@
 
             var migrationGenerator = SqlGeneratorFactory.CreateMigrationGenerator(version, context);
 
-            var executer = _sqlExecuterTestAdapter.GetExecuter(version.UniqueName);
+            var executer = SqlExecuterTestAdapter.GetExecuter(version.UniqueName);
 
             var databaseMigrator = new DatabaseMigrator(executer, migrationGenerator);
             var tableNew = new TableNew
             {
                 SchemaAndTableName = "NewTableToMigrate"
             };
-            ((SqlTable)tableNew).AddInt32("Id", false).SetPK().SetIdentity();
+            tableNew.AddInt32("Id", false).SetPK().SetIdentity();
 
             new PrimaryKeyNamingDefaultStrategy().SetPrimaryKeyName(tableNew.Properties.OfType<PrimaryKey>().First());
 
