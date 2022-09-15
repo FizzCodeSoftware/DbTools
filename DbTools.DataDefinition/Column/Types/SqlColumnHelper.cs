@@ -1,5 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
+    using FizzCode.DbTools.DataDefinition.Base;
+
     public static class SqlColumnHelper
     {
         public static SqlColumn Add(SqlEngineVersion version, SqlTable table, string name, SqlType sqlType)

@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.SqLite3
 {
     using System;
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinitionDocumenter;
 
     public class SqLite3CSharpTypedWriter : AbstractCSharpTypedWriter

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Globalization;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinitionDocumenter;
 
     public class MsSql2016CSharpWriter : AbstractCSharpWriter

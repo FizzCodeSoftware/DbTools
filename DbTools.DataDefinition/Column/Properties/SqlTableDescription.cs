@@ -1,5 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
+    using FizzCode.DbTools.DataDefinition.Base;
+
     /// <summary>
     /// Contains the <see cref="Description"/>, to document the given table.
     /// </summary>

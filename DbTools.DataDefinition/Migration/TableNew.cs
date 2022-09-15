@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
+    using FizzCode.DbTools.DataDefinition.Base;
     public class TableNew : TableMigration
     {
         public TableNew()

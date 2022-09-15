@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Tests
 {
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]

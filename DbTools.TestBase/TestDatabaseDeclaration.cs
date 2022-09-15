@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.TestBase
 {
+    using FizzCode.DbTools.DataDeclaration;
     using FizzCode.DbTools.DataDefinition;
 
     public class TestDatabaseDeclaration : DatabaseDeclaration

@@ -2,6 +2,8 @@
 
 namespace FizzCode.DbTools.DataDefinition.SqLite3
 {
+    using FizzCode.DbTools.DataDefinition.Base;
+
     public abstract class SqLiteType : SqlTypeInfo
     {
     }

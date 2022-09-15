@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.Tabular
 {
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     /// <summary>
     /// For a Tabular relationship, this property indicates that if multiple relationships are referencing to a table, references with the same <see cref="RelationshipIdentifier"/> will use the same key table.

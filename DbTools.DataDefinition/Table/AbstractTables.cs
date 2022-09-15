@@ -3,8 +3,9 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using FizzCode.DbTools.DataDefinition.Base;
 
-    internal abstract class AbstractTables<T> : ICollection<T> where T: SqlTableOrView
+    public abstract class AbstractTables<T> : ICollection<T> where T: SqlTableOrView
     {
         protected SortedList<int, T> _sorted = new();
         protected readonly Dictionary<string, T> byName = new();

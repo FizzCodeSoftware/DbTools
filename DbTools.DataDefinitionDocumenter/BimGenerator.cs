@@ -11,6 +11,7 @@
     using System.Text.RegularExpressions;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinitionDocumenter.BimDTO;
     using FizzCode.DbTools.Tabular;
 

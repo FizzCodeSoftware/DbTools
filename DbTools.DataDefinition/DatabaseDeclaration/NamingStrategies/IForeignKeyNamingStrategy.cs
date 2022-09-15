@@ -1,5 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
+    using FizzCode.DbTools.DataDefinition.Base;
+
     public interface IForeignKeyNamingStrategy : INamingStrategy
     {
         void SetFKName(ForeignKey fk);

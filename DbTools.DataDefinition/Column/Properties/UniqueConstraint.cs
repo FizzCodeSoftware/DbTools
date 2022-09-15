@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
+    using FizzCode.DbTools.DataDefinition.Base;
     public class UniqueConstraint : IndexBase<SqlTable>
     {
         public SqlTable SqlTable { get => SqlTableOrView; }

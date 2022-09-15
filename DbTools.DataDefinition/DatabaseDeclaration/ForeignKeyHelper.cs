@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Globalization;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public static class ForeignKeyHelper
     {
@@ -17,7 +18,7 @@
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
             var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, null, fkName);
             singleFkColumn.Table.Properties.Add(fk);
-            Prepare((SqlTable)singleFkColumn.Table);
+            Prepare(singleFkColumn.Table);
             return singleFkColumn;
         }
 
@@ -34,7 +35,7 @@
             var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
             var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, referredColumnName, fkName);
             singleFkColumn.Table.Properties.Add(fk);
-            Prepare((SqlTable)singleFkColumn.Table);
+            Prepare(singleFkColumn.Table);
             return singleFkColumn;
         }
 
@@ -49,7 +50,7 @@
         {
             var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredSchemaAndTableName, null, fkName);
             singleFkColumn.Table.Properties.Add(fk);
-            Prepare((SqlTable)singleFkColumn.Table);
+            Prepare(singleFkColumn.Table);
             return singleFkColumn;
         }
 
@@ -66,7 +67,7 @@
             var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredSchemaAndTableName, null, fkName);
             fk.SqlEngineVersionSpecificProperties.Add(properties);
             singleFkColumn.Table.Properties.Add(fk);
-            Prepare((SqlTable)singleFkColumn.Table);
+            Prepare(singleFkColumn.Table);
             return singleFkColumn;
         }
 
@@ -89,7 +90,7 @@
 
             singleFkColumn.Table.Properties.Add(fk);
 
-            Prepare((SqlTable)singleFkColumn.Table);
+            Prepare(singleFkColumn.Table);
 
             return singleFkColumn;
         }
@@ -111,7 +112,7 @@
 
             singleFkColumn.Table.Properties.Add(fk);
 
-            Prepare((SqlTable)singleFkColumn.Table);
+            Prepare(singleFkColumn.Table);
 
             return singleFkColumn;
         }
@@ -195,7 +196,7 @@
 
         public static void Prepare(SqlTable table)
         {
-            if (table.DatabaseDefinition is DatabaseDeclaration dd)
+            if (table.DatabaseDefinition is IDatabaseDeclaration dd)
             {
                 dd.CreateRegisteredForeignKeys(table);
                 dd.AddAutoNaming(new List<SqlTable>() { table });

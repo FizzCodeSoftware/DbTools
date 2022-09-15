@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public class Generic1TypeMapper : AbstractTypeMapper
     {

@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Text;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public class ColumnChange : ColumnMigration
     {

@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
+    using FizzCode.DbTools.DataDefinition.Base;
     public class PrimaryKeyNamingDefaultStrategy : IPrimaryKeyNamingStrategy
     {
         public void SetPrimaryKeyName(PrimaryKey pk)

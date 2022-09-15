@@ -6,6 +6,7 @@
     using System.Text;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public class CSharpTypedGenerator : AbstractCSharpGenerator
     {
@@ -16,7 +17,7 @@
 
         protected override void GenerateTable(StringBuilder sb, SqlTable table)
         {
-            var tableName = Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
+            var tableName = Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
 
             sb
                 .Append(1, "public class ")
@@ -70,7 +71,7 @@
                 sb.Append(2, "// ").AppendLine(tableComment);
             }
 
-            var tableName = Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
+            var tableName = Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
 
             sb
                 .Append(2, "public ")
@@ -88,7 +89,7 @@
 
         protected override void GenerateIndex(StringBuilder sb, Index index)
         {
-            var tableName = Helper.GetSimplifiedSchemaAndTableName(index.SqlTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
+            var tableName = Helper.GetSimplifiedSchemaAndTableName(index.SqlTable.SchemaAndTableName, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
 
             //public Index _i { get; } = Generic1Columns.AddIndex(true, nameof(Name));
             sb
@@ -104,7 +105,7 @@
 
         protected override void GenerateUniqueConstraint(StringBuilder sb, UniqueConstraint uniqueConstraint)
         {
-            var tableName = Helper.GetSimplifiedSchemaAndTableName(uniqueConstraint.SqlTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
+            var tableName = Helper.GetSimplifiedSchemaAndTableName(uniqueConstraint.SqlTable.SchemaAndTableName, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
 
             //public UniqueConstraint _uc1 { get; } = Generic1Columns.AddUniqueConstraint(nameof(Id));
             sb

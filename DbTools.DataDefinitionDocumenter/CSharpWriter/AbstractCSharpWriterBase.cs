@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public abstract class AbstractCSharpWriterBase
     {
@@ -48,7 +49,7 @@
 
         protected virtual void AddForeignKeySettingsSingleColumn(StringBuilder sb, DocumenterHelper helper, ForeignKey fkOnColumn)
         {
-            var tableName = helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
+            var tableName = helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
 
             sb.Append(".SetForeignKeyToColumn(nameof(")
                 .Append(DatabaseName)

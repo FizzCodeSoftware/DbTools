@@ -1,8 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.View
 {
     using System.Linq;
+    using FizzCode.DbTools.DataDefinition.Base;
 
-    internal class Views : AbstractTables<SqlView>
+    public class Views : AbstractTables<SqlView>
     {
         protected override void EnsureSorted()
         {

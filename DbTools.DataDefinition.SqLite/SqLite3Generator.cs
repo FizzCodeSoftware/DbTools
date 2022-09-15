@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
 
     public class SqLite3Generator : AbstractSqlGenerator

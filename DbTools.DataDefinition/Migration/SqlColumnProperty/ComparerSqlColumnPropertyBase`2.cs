@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public abstract class ComparerSqlColumnPropertyBase<TProperty, TMigration>
         where TProperty : SqlColumnProperty

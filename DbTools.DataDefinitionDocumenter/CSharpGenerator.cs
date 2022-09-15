@@ -6,6 +6,7 @@
     using System.Text;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public class CSharpGenerator : AbstractCSharpGenerator
     {
@@ -30,7 +31,7 @@
 
             sb
                 .Append(2, "public SqlTable ")
-                .Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
+                .Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
                 .AppendLine(" { get; } = AddTable(table =>")
                 .AppendLine(2, "{");
 

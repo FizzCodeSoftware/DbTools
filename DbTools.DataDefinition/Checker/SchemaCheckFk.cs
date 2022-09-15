@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Checker
 {
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public abstract class SchemaCheckFk : SchemaCheck
     {

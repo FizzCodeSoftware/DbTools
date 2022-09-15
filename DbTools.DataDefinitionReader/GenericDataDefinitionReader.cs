@@ -4,6 +4,7 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
     public abstract class GenericDataDefinitionReader : GenericDataDefinitionElementReader, IDataDefinitionReader

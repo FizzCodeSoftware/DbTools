@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
     using System.Collections.Generic;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public class ComparerIdentity : ComparerSqlColumnPropertyBase<Identity, IdentityMigration>
     {

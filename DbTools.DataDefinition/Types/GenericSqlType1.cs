@@ -2,6 +2,8 @@
 
 namespace FizzCode.DbTools.DataDefinition.Generic1
 {
+    using FizzCode.DbTools.DataDefinition.Base;
+
     public abstract class GenericSqlType1 : SqlTypeInfo
     {
         public static SqlChar Char { get; } = new SqlChar();

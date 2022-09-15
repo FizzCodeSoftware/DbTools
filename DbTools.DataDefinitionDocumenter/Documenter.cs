@@ -6,6 +6,7 @@
     using System.Linq;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public class Documenter : DocumenterWriterBase
     {

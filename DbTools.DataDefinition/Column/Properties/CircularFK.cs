@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public class CircularFK : SqlTableOrViewPropertyBase<SqlTable>
     {

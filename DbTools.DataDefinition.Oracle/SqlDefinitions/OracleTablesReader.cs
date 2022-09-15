@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Oracle12c
 {
     using System.Collections.Generic;
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinitionReader;
 
     public class OracleTablesReader : OracleDataDefinitionElementReader

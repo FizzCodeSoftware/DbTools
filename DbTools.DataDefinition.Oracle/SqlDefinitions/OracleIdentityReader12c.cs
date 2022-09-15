@@ -4,6 +4,7 @@
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
     public class OracleIdentityReader12c : OracleDataDefinitionElementReader

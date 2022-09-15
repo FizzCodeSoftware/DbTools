@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataGenerator
 {
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     /// <summary>
     /// Column Property containing information about how to generate data for the column.

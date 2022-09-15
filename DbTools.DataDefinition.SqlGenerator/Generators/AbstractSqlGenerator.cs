@@ -6,6 +6,7 @@
     using System.Text;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public abstract class AbstractSqlGenerator : ISqlGenerator
     {

@@ -1,6 +1,7 @@
 ﻿
 namespace FizzCode.DbTools.DataDefinition
 {
+    using FizzCode.DbTools.DataDefinition.Base;
     public static class SqlTypeExtensions
     {
         public static bool AnyOf(this SqlType sqlType, params SqlTypeInfo[] sqlTypeInfos)

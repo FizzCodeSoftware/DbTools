@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinitionDocumenter;
 
     public class MsSql2016CSharpTypedWriter : AbstractCSharpTypedWriter
@@ -52,7 +53,7 @@
 
         protected override void AddForeignKeySettingsSingleColumn(StringBuilder sb, DocumenterHelper helper, ForeignKey fkOnColumn)
         {
-            var tableName = helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
+            var tableName = helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
 
             if (fkOnColumn.SqlEngineVersionSpecificProperties.Count() == 1
                 && fkOnColumn.SqlEngineVersionSpecificProperties.First().Name == "Nocheck"

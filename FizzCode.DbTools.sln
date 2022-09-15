@@ -69,6 +69,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.QueryBuilder.Interf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.View.Tests", "Tests\DbTools.DataDefinition.View.Tests\DbTools.DataDefinition.View.Tests.csproj", "{AF2A42CF-A6B5-4F6F-BE1B-A7265A3F2C3D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTools.DataDeclaration", "DbTools.DataDeclaration\DbTools.DataDeclaration\DbTools.DataDeclaration.csproj", "{79FB9F1D-66EB-4C33-9AF4-F1D4948693C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTools.DataDefinition.Base", "DbTools.DataDefinition.Base\DbTools.DataDefinition.Base\DbTools.DataDefinition.Base.csproj", "{DD14A6E0-64D2-456B-B282-C1279B618111}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -183,6 +187,14 @@ Global
 		{AF2A42CF-A6B5-4F6F-BE1B-A7265A3F2C3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF2A42CF-A6B5-4F6F-BE1B-A7265A3F2C3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF2A42CF-A6B5-4F6F-BE1B-A7265A3F2C3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79FB9F1D-66EB-4C33-9AF4-F1D4948693C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79FB9F1D-66EB-4C33-9AF4-F1D4948693C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79FB9F1D-66EB-4C33-9AF4-F1D4948693C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79FB9F1D-66EB-4C33-9AF4-F1D4948693C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD14A6E0-64D2-456B-B282-C1279B618111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD14A6E0-64D2-456B-B282-C1279B618111}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD14A6E0-64D2-456B-B282-C1279B618111}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD14A6E0-64D2-456B-B282-C1279B618111}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

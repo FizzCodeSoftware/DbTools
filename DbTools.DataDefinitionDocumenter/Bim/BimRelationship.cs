@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using FizzCode.DbTools.DataDefinition;
-
     public class BimRelationship
     {
         public SqlColumn FromColumn { get; set; }

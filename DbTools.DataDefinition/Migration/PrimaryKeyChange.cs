@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
     using System.Text;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public class PrimaryKeyChange : PrimaryKeyMigration
     {

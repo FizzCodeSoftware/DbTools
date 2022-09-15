@@ -4,6 +4,7 @@
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.SqlExecuter;
 
     public class MsSqlViewIndexReader2016 : GenericDataDefinitionElementReader
@@ -31,6 +32,7 @@
 
         public void GetIndexes(SqlView view)
         {
+            // TODO
         }
 
         public void GetIndexes(SqlTable table)

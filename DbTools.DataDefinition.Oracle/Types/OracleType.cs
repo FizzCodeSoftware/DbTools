@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Oracle12c
 {
     using System.Globalization;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public abstract class OracleType : SqlTypeInfo
     {

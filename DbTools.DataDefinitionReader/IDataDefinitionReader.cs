@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public interface IDataDefinitionReader
     {

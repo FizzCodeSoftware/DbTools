@@ -1,7 +1,9 @@
 ﻿namespace DbTools.DataDefinition.Sp.Tests
 {
     using FizzCode.DbTools;
+    using FizzCode.DbTools.DataDeclaration;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.MsSql2016;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
     using FizzCode.DbTools.QueryBuilder;

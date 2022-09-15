@@ -1,8 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System.Linq;
+    using FizzCode.DbTools.DataDefinition.Base;
 
-    internal class Tables : AbstractTables<SqlTable>
+    public class Tables : AbstractTables<SqlTable>
     {
         protected override void EnsureSorted()
         {

@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public abstract class ComparerIndexBase<TIndex, TMigration>
         where TIndex : IndexBase<SqlTable>

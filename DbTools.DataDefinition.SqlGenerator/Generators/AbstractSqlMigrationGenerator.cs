@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.Migration;
 
     public abstract class AbstractSqlMigrationGenerator : ISqlMigrationGenerator

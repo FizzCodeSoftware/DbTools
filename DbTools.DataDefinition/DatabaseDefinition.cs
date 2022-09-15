@@ -2,14 +2,15 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.View;
 
-    public class DatabaseDefinition
+    public class DatabaseDefinition : IDatabaseDefinition
     {
         public Dictionary<SqlEngineVersion, AbstractTypeMapper> TypeMappers { get; set; } = new Dictionary<SqlEngineVersion, AbstractTypeMapper>();
         public SqlEngineVersion MainVersion { get; private set; }
-        internal Tables Tables { get; } = new Tables();
-        internal Views Views { get; } = new Views();
+        public Tables Tables { get; } = new Tables();
+        protected Views Views { get; } = new Views();
 
         public List<StoredProcedure> StoredProcedures { get; } = new List<StoredProcedure>();
 

@@ -3,6 +3,7 @@
     using System.Linq;
     using System.Reflection;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public static class SqlTableHelper
     {

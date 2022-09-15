@@ -6,6 +6,7 @@
     using System.Text;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public abstract class AbstractCSharpTypedWriter : AbstractCSharpWriterBase
     {
@@ -100,7 +101,7 @@
                 .Append(" { get; } = ")
                 .Append(Version)
                 .Append(".SetForeignKeyTo(nameof(")
-                .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclaration.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
+                .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
                 .Append("), ")
                 .AppendLine("new []")
                 .AppendLine("#pragma warning restore IDE1006 // Naming Styles")

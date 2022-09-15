@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System.Collections.Generic;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public class Index : IndexBase<SqlTable>
     {

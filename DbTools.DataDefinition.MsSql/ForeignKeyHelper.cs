@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.MsSql2016
 {
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     /// <summary>
     /// MsSql2016 specific Foreign key helper extension methods
