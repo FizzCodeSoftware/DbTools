@@ -17,6 +17,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Column\Properties\ForeignKeyRegistration\**" />
+    <Compile Remove="Column\Properties\SqlEngineVersionSpecificProperties\**" />
+    <EmbeddedResource Remove="Column\Properties\ForeignKeyRegistration\**" />
+    <EmbeddedResource Remove="Column\Properties\SqlEngineVersionSpecificProperties\**" />
+    <None Remove="Column\Properties\ForeignKeyRegistration\**" />
+    <None Remove="Column\Properties\SqlEngineVersionSpecificProperties\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -31,11 +40,6 @@
     <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition.Base\DbTools.DataDefinition.Base\DbTools.DataDefinition.Base.csproj" />
     <ProjectReference Include="..\DbTools.QueryBuilder.Interface\DbTools.QueryBuilder.Interface.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Column\Properties\ForeignKeyRegistration\" />
-    <Folder Include="Column\Properties\SqlEngineVersionSpecificProperties\" />
   </ItemGroup>
 
 </Project>
