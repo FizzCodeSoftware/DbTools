@@ -1,6 +1,6 @@
 ﻿{
   "forceIntegrationTests": "false",
-  "oracleDatabaseName": "DbTools_DataDefinitionExecuter_Tests",
+  "oracleDatabaseName": "DbTools_DataDefinition_SqlExecuter_Tests",
   "connectionStrings": {
     "SqLite3": {
       "ProviderName": "System.Data.SQLite",
@@ -9,7 +9,7 @@
     },
     "MsSql2016": {
       "ProviderName": "Microsoft.Data.SqlClient",
-      "ConnectionString": "Data Source=(local);Initial Catalog=DbTools_DataDefinitionExecuter_Tests;Integrated Security=SSPI;Connection Timeout=5;TrustServerCertificate=True",
+      "ConnectionString": "Data Source=(local);Initial Catalog=DbTools_DataDefinition_SqlExecuter_Tests;Integrated Security=SSPI;Connection Timeout=5;TrustServerCertificate=True",
       "Version": "2016"
     },
     "Oracle12c": {

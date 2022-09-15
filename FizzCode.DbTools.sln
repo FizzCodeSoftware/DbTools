@@ -37,11 +37,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionDocumenter.Tests", "Tests\DbTools.DataDefinitionDocumenter.Tests\DbTools.DataDefinitionDocumenter.Tests.csproj", "{3FF4B200-6057-4D2F-954D-030CDF48C821}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.SqlExecuter.Tests", "Tests\DbTools.DataDefinitionExecuter.Tests\DbTools.DataDefinition.SqlExecuter.Tests.csproj", "{401D6622-3FBC-43C5-9BBF-BA14F6532A5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.SqlExecuter.Tests", "Tests\Integration\DbTools.DataDefinitionExecuter.Tests\DbTools.DataDefinition.SqlExecuter.Tests.csproj", "{401D6622-3FBC-43C5-9BBF-BA14F6532A5B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.SqlGenerator.Tests", "Tests\DbTools.DataDefinitionGenerator.Tests\DbTools.DataDefinition.SqlGenerator.Tests.csproj", "{88209CDC-62E4-495C-9B83-1857958D40B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionReader.Tests", "Tests\DbTools.DataDefinitionReader.Tests\DbTools.DataDefinitionReader.Tests.csproj", "{84341D96-101A-450B-A41B-D3E17CE53C5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionReader.Tests", "Tests\Integration\DbTools.DataDefinitionReader.Tests\DbTools.DataDefinitionReader.Tests.csproj", "{84341D96-101A-450B-A41B-D3E17CE53C5A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataGenerator.Tests", "Tests\DbTools.DataGenerator.Tests\DbTools.DataGenerator.Tests.csproj", "{16204090-4BA5-490C-898C-C94EF54FC9FE}"
 EndProject
@@ -49,7 +49,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.Configuration", "Db
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.Tabular", "DbTools.Tabular\DbTools.Tabular.csproj", "{B52E947E-10D7-48A3-B805-C01833EDCD53}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionExecuterMigrationIntegration.Tests", "Tests\DbTools.DataDefinitionExecuterMigrationIntegration.Tests\DbTools.DataDefinitionExecuterMigrationIntegration.Tests.csproj", "{D4D31827-17B7-45D7-BB6C-568C38CCDE84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinitionExecuterMigrationIntegration.Tests", "Tests\Integration\DbTools.DataDefinitionExecuterMigrationIntegration.Tests\DbTools.DataDefinitionExecuterMigrationIntegration.Tests.csproj", "{D4D31827-17B7-45D7-BB6C-568C38CCDE84}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.MsSql", "DbTools.DataDefinition.MsSql\DbTools.DataDefinition.MsSql.csproj", "{4C79E665-85EE-4A83-817A-C814E92D18F1}"
 EndProject
@@ -63,15 +63,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.QueryBuilder", "DbT
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.QueryBuilder.Tests", "Tests\DbTools.QueryBuilder.Tests\DbTools.QueryBuilder.Tests.csproj", "{7219150D-2272-4124-91C3-EA639A9D5082}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.Sp.Tests", "Tests\DbTools.DataDefinition.Sp.Tests\DbTools.DataDefinition.Sp.Tests.csproj", "{1F4B0A07-7D90-41FC-8BBA-AAE181E4C981}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.Sp.Tests", "Tests\Integration\DbTools.DataDefinition.Sp.Tests\DbTools.DataDefinition.Sp.Tests.csproj", "{1F4B0A07-7D90-41FC-8BBA-AAE181E4C981}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.QueryBuilder.Interface", "DbTools.QueryBuilder.Interface\DbTools.QueryBuilder.Interface.csproj", "{EFF0BE20-4522-4339-B753-5E83DCE64127}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.View.Tests", "Tests\DbTools.DataDefinition.View.Tests\DbTools.DataDefinition.View.Tests.csproj", "{AF2A42CF-A6B5-4F6F-BE1B-A7265A3F2C3D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.View.Tests", "Tests\Integration\DbTools.DataDefinition.View.Tests\DbTools.DataDefinition.View.Tests.csproj", "{AF2A42CF-A6B5-4F6F-BE1B-A7265A3F2C3D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTools.DataDeclaration", "DbTools.DataDeclaration\DbTools.DataDeclaration\DbTools.DataDeclaration.csproj", "{79FB9F1D-66EB-4C33-9AF4-F1D4948693C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDeclaration", "DbTools.DataDeclaration\DbTools.DataDeclaration\DbTools.DataDeclaration.csproj", "{79FB9F1D-66EB-4C33-9AF4-F1D4948693C4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTools.DataDefinition.Base", "DbTools.DataDefinition.Base\DbTools.DataDefinition.Base\DbTools.DataDefinition.Base.csproj", "{DD14A6E0-64D2-456B-B282-C1279B618111}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.Base", "DbTools.DataDefinition.Base\DbTools.DataDefinition.Base\DbTools.DataDefinition.Base.csproj", "{DD14A6E0-64D2-456B-B282-C1279B618111}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{09B5E37C-9ABB-4A34-9661-72F4E4F3E8D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -202,14 +204,15 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9936F23B-CD9F-42EA-9A46-B4B96CD16304} = {FC2D850B-2168-44E5-9A58-A3EE132A3F8D}
 		{3FF4B200-6057-4D2F-954D-030CDF48C821} = {FC2D850B-2168-44E5-9A58-A3EE132A3F8D}
-		{401D6622-3FBC-43C5-9BBF-BA14F6532A5B} = {FC2D850B-2168-44E5-9A58-A3EE132A3F8D}
+		{401D6622-3FBC-43C5-9BBF-BA14F6532A5B} = {09B5E37C-9ABB-4A34-9661-72F4E4F3E8D5}
 		{88209CDC-62E4-495C-9B83-1857958D40B5} = {FC2D850B-2168-44E5-9A58-A3EE132A3F8D}
-		{84341D96-101A-450B-A41B-D3E17CE53C5A} = {FC2D850B-2168-44E5-9A58-A3EE132A3F8D}
+		{84341D96-101A-450B-A41B-D3E17CE53C5A} = {09B5E37C-9ABB-4A34-9661-72F4E4F3E8D5}
 		{16204090-4BA5-490C-898C-C94EF54FC9FE} = {FC2D850B-2168-44E5-9A58-A3EE132A3F8D}
-		{D4D31827-17B7-45D7-BB6C-568C38CCDE84} = {FC2D850B-2168-44E5-9A58-A3EE132A3F8D}
+		{D4D31827-17B7-45D7-BB6C-568C38CCDE84} = {09B5E37C-9ABB-4A34-9661-72F4E4F3E8D5}
 		{7219150D-2272-4124-91C3-EA639A9D5082} = {FC2D850B-2168-44E5-9A58-A3EE132A3F8D}
-		{1F4B0A07-7D90-41FC-8BBA-AAE181E4C981} = {FC2D850B-2168-44E5-9A58-A3EE132A3F8D}
-		{AF2A42CF-A6B5-4F6F-BE1B-A7265A3F2C3D} = {FC2D850B-2168-44E5-9A58-A3EE132A3F8D}
+		{1F4B0A07-7D90-41FC-8BBA-AAE181E4C981} = {09B5E37C-9ABB-4A34-9661-72F4E4F3E8D5}
+		{AF2A42CF-A6B5-4F6F-BE1B-A7265A3F2C3D} = {09B5E37C-9ABB-4A34-9661-72F4E4F3E8D5}
+		{09B5E37C-9ABB-4A34-9661-72F4E4F3E8D5} = {FC2D850B-2168-44E5-9A58-A3EE132A3F8D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F87A2145-1EC9-465A-A21F-452B1C6A4F16}
