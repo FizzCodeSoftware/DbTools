@@ -2,7 +2,6 @@
 {
     using System;
     using System.Data.Common;
-    using Microsoft.Data.SqlClient;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;

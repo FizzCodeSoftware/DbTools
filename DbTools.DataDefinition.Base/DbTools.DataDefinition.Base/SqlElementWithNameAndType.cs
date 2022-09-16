@@ -9,7 +9,7 @@
 
         protected abstract IDatabaseDefinition DatabaseDefinition { get; }
 
-        public SqlType Type
+        public SqlType? Type
         {
             get
             {

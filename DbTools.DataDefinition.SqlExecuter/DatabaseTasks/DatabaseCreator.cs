@@ -2,7 +2,6 @@
 {
     using System.Linq;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.Base;
 
     public class DatabaseCreator : DatabaseTask
     {

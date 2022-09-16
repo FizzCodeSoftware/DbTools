@@ -23,10 +23,10 @@
             return Keys.Last();
         }
 
-        public string Describe(SqlEngineVersion preferredVersion = null)
+        public string Describe(SqlEngineVersion? preferredVersion = null)
         {
             var version = preferredVersion;
-            if (preferredVersion == null)
+            if (version == null)
                 version = GetVersion();
 
             return this[version].ToString();
