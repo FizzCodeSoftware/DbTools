@@ -5,7 +5,7 @@
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.SqlExecuter;
+    using FizzCode.DbTools.SqlExecuter;
     using FizzCode.LightWeight.AdoNet;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

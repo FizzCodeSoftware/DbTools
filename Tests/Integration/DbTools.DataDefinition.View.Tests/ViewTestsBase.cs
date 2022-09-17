@@ -3,7 +3,7 @@
 
 namespace FizzCode.DbTools.DataDefinition.View.Tests
 {
-    using FizzCode.DbTools.DataDefinition.SqlExecuter;
+    using FizzCode.DbTools.SqlExecuter;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

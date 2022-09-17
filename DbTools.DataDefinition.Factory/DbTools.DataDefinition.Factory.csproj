@@ -29,12 +29,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DbTools.Configuration\DbTools.Configuration.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinition.MsSql\DbTools.DataDefinition.MsSql.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinition.Oracle\DbTools.DataDefinition.Oracle.csproj" />
+    <ProjectReference Include="..\Implementation\DbTools.DataDefinition.MsSql\DbTools.DataDefinition.MsSql.csproj" />
+    <ProjectReference Include="..\Implementation\DbTools.DataDefinition.Oracle\DbTools.DataDefinition.Oracle.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition.SqlGenerator\DbTools.DataDefinition.SqlGenerator.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinition.SqLite\DbTools.DataDefinition.SqLite.csproj" />
+    <ProjectReference Include="..\Implementation\DbTools.DataDefinition.SqLite\DbTools.DataDefinition.SqLite.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinitionDocumenter\DbTools.DataDefinitionDocumenter.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinition.SqlExecuter\DbTools.DataDefinition.SqlExecuter.csproj" />
+    <ProjectReference Include="..\DbTools.SqlExecuter\DbTools.SqlExecuter.csproj" />
   </ItemGroup>
 
 </Project>

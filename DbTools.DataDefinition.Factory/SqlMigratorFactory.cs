@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition.SqlExecuter;
+    using FizzCode.DbTools.SqlExecuter;
     using FizzCode.LightWeight.AdoNet;
 
     public static class SqlMigratorFactory

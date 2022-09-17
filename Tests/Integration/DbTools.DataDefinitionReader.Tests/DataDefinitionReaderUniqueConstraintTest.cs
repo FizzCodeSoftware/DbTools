@@ -4,7 +4,7 @@ namespace FizzCode.DbTools.DataDefinitionReader.Tests
 {
     using System.Linq;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.SqlExecuter;
+    using FizzCode.DbTools.SqlExecuter;
     using FizzCode.DbTools.DataDefinition.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

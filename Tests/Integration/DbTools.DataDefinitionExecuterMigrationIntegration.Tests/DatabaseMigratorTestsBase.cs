@@ -1,13 +1,16 @@
 ﻿// Ensure no in-assembly parallel execution of tests (“IAP”) is happening
 [assembly: Microsoft.VisualStudio.TestTools.UnitTesting.Parallelize(Workers = 1, Scope = Microsoft.VisualStudio.TestTools.UnitTesting.ExecutionScope.ClassLevel)]
 
-namespace FizzCode.DbTools.DataDefinition.SqlExecuterMigrationIntegration.Tests
+namespace DbTools.DataDefinitionExecuterMigrationIntegration.Tests
 {
-    using FizzCode.DbTools.DataDefinition.SqlExecuter;
+    using FizzCode.DbTools;
+    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Tests;
+    using FizzCode.DbTools.SqlExecuter;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     
+
     [TestClass]
     public abstract class DatabaseMigratorTestsBase : ComparerTestsBase
     {

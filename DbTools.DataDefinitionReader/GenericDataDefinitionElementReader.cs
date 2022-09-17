@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.DataDefinition.SqlExecuter;
+    using FizzCode.DbTools.SqlExecuter;
 
     public abstract class GenericDataDefinitionElementReader
     {

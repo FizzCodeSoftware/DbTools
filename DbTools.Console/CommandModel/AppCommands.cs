@@ -7,7 +7,7 @@ namespace FizzCode.DbTools.Console
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.SqlExecuter;
+    using FizzCode.DbTools.SqlExecuter;
     using FizzCode.DbTools.DataDefinitionDocumenter;
     using FizzCode.LightWeight.AdoNet;
     using Microsoft.Extensions.Configuration;

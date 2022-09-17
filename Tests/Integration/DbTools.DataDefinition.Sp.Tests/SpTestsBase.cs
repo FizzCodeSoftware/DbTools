@@ -5,7 +5,7 @@ namespace DbTools.DataDefinition.Sp.Tests
 {
     using FizzCode.DbTools;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.SqlExecuter;
+    using FizzCode.DbTools.SqlExecuter;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

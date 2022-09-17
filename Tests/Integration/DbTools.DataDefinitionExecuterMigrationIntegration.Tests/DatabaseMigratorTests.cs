@@ -1,14 +1,15 @@
-﻿namespace FizzCode.DbTools.DataDefinition.SqlExecuterMigrationIntegration.Tests
+﻿namespace DbTools.DataDefinitionExecuterMigrationIntegration.Tests
 {
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using FizzCode.DbTools;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.DataDefinition.Migration;
-    using FizzCode.DbTools.DataDefinition.SqlExecuter;
     using FizzCode.DbTools.DataDefinition.Tests;
+    using FizzCode.DbTools.SqlExecuter;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -342,7 +343,7 @@
         }
 
         [TestMethod]
-        [SqlVersions(nameof(MsSql2016.MsSql2016), nameof(Oracle12c.Oracle12c))]
+        [SqlVersions(nameof(MsSqlVersion.MsSql2016), nameof(OracleVersion.Oracle12c))]
         public override void Column_Change_DbType(SqlEngineVersion version)
         {
             var dds = Column_Change_DbType_Dds(version);
@@ -352,7 +353,7 @@
         }
 
         [TestMethod]
-        [SqlVersions(nameof(MsSql2016), nameof(Oracle12c))]
+        [SqlVersions(nameof(MsSqlVersion.MsSql2016), nameof(OracleVersion.Oracle12c))]
         public override void Column_Change_DbTypeAndLengthAndIsNullable(SqlEngineVersion version)
         {
             var dds = Column_Change_DbTypeAndLengthAndIsNullable_Dds(version);
