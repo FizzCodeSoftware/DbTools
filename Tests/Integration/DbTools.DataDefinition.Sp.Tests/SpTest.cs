@@ -1,4 +1,4 @@
-﻿namespace DbTools.DataDefinition.Sp.Tests
+﻿namespace FizzCode.DbTools.DataDefinition.Sp.Tests
 {
     using FizzCode.DbTools;
     using FizzCode.DbTools.DataDeclaration;

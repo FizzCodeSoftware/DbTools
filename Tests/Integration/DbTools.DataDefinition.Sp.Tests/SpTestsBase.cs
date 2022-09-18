@@ -1,7 +1,7 @@
 ﻿// Ensure no in-assembly parallel execution of tests (“IAP”) is happening
 [assembly: Microsoft.VisualStudio.TestTools.UnitTesting.Parallelize(Workers = 1, Scope = Microsoft.VisualStudio.TestTools.UnitTesting.ExecutionScope.ClassLevel)]
 
-namespace DbTools.DataDefinition.Sp.Tests
+namespace FizzCode.DbTools.DataDefinition.Sp.Tests
 {
     using FizzCode.DbTools;
     using FizzCode.DbTools.DataDefinition;

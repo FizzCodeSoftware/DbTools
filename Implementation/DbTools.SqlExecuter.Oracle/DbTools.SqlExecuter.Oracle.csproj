@@ -1,19 +1,21 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <PackageId>FizzCode.DbTools.DataDefinition.SqLite</PackageId>
+    <PackageId>FizzCode.DbTools.SqlExecuter.Oracle</PackageId>
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>
-    <Description>SQLite specific database definition for Fizzcode DbTools project</Description>
+    <Description>Oracle SQL Server specific sql executer for Fizzcode DbTools project</Description>
     <Copyright>Copyright © 2019-2022 FizzCode Ltd.</Copyright>
     <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
     <Platforms>AnyCPU</Platforms>
     <CodeAnalysisRuleSet>..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
-    <AssemblyName>FizzCode.DbTools.DataDefinition.SqLite</AssemblyName>
-    <RootNamespace>FizzCode.DbTools.DataDefinition.SqLite</RootNamespace>
+    <AssemblyName>FizzCode.DbTools.SqlExecuter.Oracle</AssemblyName>
+    <RootNamespace>FizzCode.DbTools.SqlExecuter.Oracle</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>CS1591</NoWarn>
+	<NoWarn>CS1591</NoWarn>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,22 +23,22 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.0" />
     <PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="System.Data.SQLite" Version="1.0.116" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\DbTools.Common\DbTools.Common.csproj" />
     <ProjectReference Include="..\..\DbTools.Configuration\DbTools.Configuration.csproj" />
-    <ProjectReference Include="..\..\DbTools.DataDefinitionDocumenter\DbTools.DataDefinitionDocumenter.csproj" />
-    <ProjectReference Include="..\..\DbTools.SqlExecuter\DbTools.SqlExecuter.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinition.SqlGenerator\DbTools.DataDefinition.SqlGenerator.csproj" />
-    <ProjectReference Include="..\..\DbTools.DataDefinitionReader\DbTools.DataDefinitionReader.csproj" />
-    <ProjectReference Include="..\..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
-    <ProjectReference Include="..\DbTools.SqlGenerator.SqLite\DbTools.SqlGenerator.SqLite.csproj" />
+    <ProjectReference Include="..\..\DbTools.SqlExecuter\DbTools.SqlExecuter.csproj" />
   </ItemGroup>
 
 </Project>

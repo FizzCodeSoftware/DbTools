@@ -13,8 +13,8 @@
 
         public string SqlStatementBody { get; set; }
 
-        public IDatabaseDefinition DatabaseDefinition { get; set; }
-        public SchemaAndTableName SchemaAndSpName { get; set; }
+        public IDatabaseDefinition? DatabaseDefinition { get; set; }
+        public SchemaAndTableName? SchemaAndSpName { get; set; }
 
         public List<SqlParameter> SpParameters { get; } = new List<SqlParameter>();
     }

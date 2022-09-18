@@ -1,4 +1,4 @@
-﻿namespace FizzCode.DbTools.SqlExecuter
+﻿namespace FizzCode.DbTools.SqlExecuter.Oracle
 {
     using System;
     using System.Data.Common;

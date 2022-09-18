@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using FizzCode.DbTools.SqlGenerator.MsSql;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
@@ -12,14 +13,9 @@
     public class MsSql2016Generator : AbstractSqlGenerator, ISqlGeneratorDropAndCreateDatabase
     {
         public MsSql2016Generator(Context context)
-            : base(context)
+            : base(context, new MsSqlGenerator())
         {
             Version = MsSqlVersion.MsSql2016;
-        }
-
-        public override string GuardKeywords(string name)
-        {
-            return $"[{name}]";
         }
 
         public SqlStatementWithParameters CreateDatabase(string databaseName)

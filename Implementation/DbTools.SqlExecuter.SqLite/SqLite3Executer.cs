@@ -1,4 +1,4 @@
-﻿namespace FizzCode.DbTools.DataDefinition.SqLite3
+﻿    namespace FizzCode.DbTools.SqlExecuter.SqLite3
 {
     using System;
     using System.Data.SQLite;

@@ -7,6 +7,7 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.SqlGenerator.Base;
 
     public abstract class AbstractSqlGenerator : ISqlGenerator
     {
@@ -14,9 +15,12 @@
 
         public SqlEngineVersion Version { get; protected set; }
 
-        protected AbstractSqlGenerator(Context context)
+        private readonly ISqlGeneratorBase _sqlGeneratorBase;
+
+        protected AbstractSqlGenerator(Context context, ISqlGeneratorBase sqlGeneratorBase)
         {
             Context = context;
+            _sqlGeneratorBase = sqlGeneratorBase;
         }
 
         public virtual string CreateTable(SqlTable table)
@@ -355,7 +359,7 @@
             return sb.ToString();
         }
 
-        public abstract string GuardKeywords(string name);
+        // public abstract string GuardKeywords(string name);
 
         public abstract string DropAllForeignKeys();
 
@@ -420,6 +424,11 @@ SELECT
         public virtual string GetSchema(string schema)
         {
             return schema;
+        }
+
+        public string GuardKeywords(string name)
+        {
+            return _sqlGeneratorBase.GuardKeywords(name);
         }
     }
 }

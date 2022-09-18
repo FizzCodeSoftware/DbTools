@@ -2,16 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <PackageId>FizzCode.DbTools.SqlGenerator.MsSql</PackageId>
+    <PackageId>FizzCode.DbTools.SqlGenerator.SqLite</PackageId>
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>
-    <Description>Microsoft SQL Server specific database definition for Fizzcode DbTools project</Description>
+    <Description>SqLite specific database definition for Fizzcode DbTools project</Description>
     <Copyright>Copyright © 2019-2022 FizzCode Ltd.</Copyright>
     <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
     <Platforms>AnyCPU</Platforms>
     <CodeAnalysisRuleSet>..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
-    <AssemblyName>FizzCode.DbTools.SqlGenerator.MsSql</AssemblyName>
-    <RootNamespace>FizzCode.DbTools.SqlGenerator.MsSql</RootNamespace>
+    <AssemblyName>FizzCode.DbTools.SqlGenerator.SqLite</AssemblyName>
+    <RootNamespace>FizzCode.DbTools.SqlGenerator.SqLite</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>	

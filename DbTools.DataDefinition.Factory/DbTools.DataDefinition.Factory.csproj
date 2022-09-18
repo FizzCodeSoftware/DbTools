@@ -36,6 +36,8 @@
     <ProjectReference Include="..\DbTools.DataDefinitionDocumenter\DbTools.DataDefinitionDocumenter.csproj" />
     <ProjectReference Include="..\DbTools.SqlExecuter\DbTools.SqlExecuter.csproj" />
     <ProjectReference Include="..\Implementation\DbTools.SqlExecuter.MsSql\DbTools.SqlExecuter.MsSql.csproj" />
+    <ProjectReference Include="..\Implementation\DbTools.SqlExecuter.Oracle\DbTools.SqlExecuter.Oracle.csproj" />
+    <ProjectReference Include="..\Implementation\DbTools.SqlExecuter.SqLite\DbTools.SqlExecuter.SqLite.csproj" />
   </ItemGroup>
 
 </Project>

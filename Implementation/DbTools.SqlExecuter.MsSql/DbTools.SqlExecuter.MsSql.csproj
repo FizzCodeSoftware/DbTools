@@ -12,7 +12,8 @@
     <CodeAnalysisRuleSet>..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>FizzCode.DbTools.SqlExecuter.MsSql</AssemblyName>
     <RootNamespace>FizzCode.DbTools.SqlExecuter.MsSql</RootNamespace>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>	  
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<NoWarn>CS1591</NoWarn>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>

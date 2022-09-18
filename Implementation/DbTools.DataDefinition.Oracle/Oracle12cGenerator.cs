@@ -7,18 +7,14 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
+    using FizzCode.DbTools.SqlGenerator.Oracle;
 
     public class Oracle12cGenerator : AbstractSqlGenerator
     {
         public Oracle12cGenerator(Context context)
-            : base(context)
+            : base(context, new OracleGenerator())
         {
             Version = OracleVersion.Oracle12c;
-        }
-
-        public override string GuardKeywords(string name)
-        {
-            return $"\"{ name}\"";
         }
 
         public override SqlStatementWithParameters CreateSchema(string schemaName)
@@ -60,14 +56,6 @@ GRANT UNLIMITED TABLESPACE TO ""{schemaName}""");
                 .AppendLine("(")
                 .AppendJoin(", \r\n", pk.SqlColumns.Select(c => GuardKeywords(c.SqlColumn.Name))).AppendLine()
                 .Append(')');
-        }
-
-        public static SqlStatementWithParameters IfExists(string table, string column, object value)
-        {
-            return new SqlStatementWithParameters($@"
-SELECT CASE WHEN MAX({column}) IS NULL THEN 1 ELSE 0 END
-FROM {table}
-WHERE {column} = @{column}", value);
         }
 
         public override string CreateForeignKey(ForeignKey fk)

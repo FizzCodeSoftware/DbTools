@@ -1,4 +1,4 @@
-﻿namespace DbTools.DataDefinitionExecuterMigrationIntegration.Tests
+﻿namespace FizzCode.DbTools.DataDefinitionExecuterMigrationIntegration.Tests
 {
     using System.Collections.Generic;
     using System.Globalization;

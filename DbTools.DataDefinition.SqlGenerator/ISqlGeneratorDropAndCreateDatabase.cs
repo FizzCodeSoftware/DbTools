@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.SqlGenerator
 {
-    public interface ISqlGeneratorDropAndCreateDatabase : ISqlGenerator
+    public interface ISqlGeneratorDropAndCreateDatabase
     {
         SqlStatementWithParameters CreateDatabase(string databaseName);
         string DropDatabase(string databaseName);

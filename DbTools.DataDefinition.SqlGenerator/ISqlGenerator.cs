@@ -3,8 +3,9 @@
     using System.Collections.Generic;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.SqlGenerator.Base;
 
-    public interface ISqlGenerator
+    public interface ISqlGenerator : ISqlGeneratorBase
     {
         Context Context { get; }
 
@@ -40,6 +41,5 @@
 
         string GenerateCreateColumn(SqlColumn column);
         string GetSimplifiedSchemaAndTableName(SchemaAndTableName schemaAndTableName);
-        string GuardKeywords(string name);
     }
 }

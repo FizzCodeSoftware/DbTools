@@ -4,18 +4,14 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
+    using FizzCode.DbTools.SqlGenerator.SqLite;
 
     public class SqLite3Generator : AbstractSqlGenerator
     {
         public SqLite3Generator(Context context)
-            : base(context)
+            : base(context, new SqLiteGenerator())
         {
             Version = SqLiteVersion.SqLite3;
-        }
-
-        public override string GuardKeywords(string name)
-        {
-            return $"\"{name}\"";
         }
 
         public override string DropAllForeignKeys()

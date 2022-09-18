@@ -36,6 +36,8 @@
     <ProjectReference Include="..\..\DbTools.DataDefinition.SqlGenerator\DbTools.DataDefinition.SqlGenerator.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinitionReader\DbTools.DataDefinitionReader.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
+    <ProjectReference Include="..\DbTools.SqlExecuter.Oracle\DbTools.SqlExecuter.Oracle.csproj" />
+    <ProjectReference Include="..\DbTools.SqlGenerator.Oracle\DbTools.SqlGenerator.Oracle.csproj" />
   </ItemGroup>
 
 </Project>

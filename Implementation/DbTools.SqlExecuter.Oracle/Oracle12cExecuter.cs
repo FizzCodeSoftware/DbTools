@@ -1,4 +1,4 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Oracle12c
+﻿namespace FizzCode.DbTools.SqlExecuter.Oracle
 {
     using System;
     using System.Collections.Generic;
@@ -11,6 +11,8 @@
 
     public class Oracle12cExecuter : SqlStatementExecuter
     {
+        public object Oracle12cGenerator { get; private set; }
+
         public Oracle12cExecuter(NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
             : base(connectionString, sqlGenerator)
         {
@@ -66,9 +68,17 @@
             ExecuteNonQuery($"ALTER SESSION SET current_schema = \"{defaultSchema}\"");
         }
 
+        public static SqlStatementWithParameters IfExists(string table, string column, object value)
+        {
+            return new SqlStatementWithParameters($@"
+SELECT CASE WHEN MAX({column}) IS NULL THEN 1 ELSE 0 END
+FROM {table}
+WHERE {column} = @{column}", value);
+        }
+
         public bool CheckIfUserExists(string userName)
         {
-            var result = ExecuteScalar(Oracle12cGenerator.IfExists("dba_users", "username", userName));
+            var result = ExecuteScalar(IfExists("dba_users", "username", userName));
             return (decimal)result == 0;
         }
 
