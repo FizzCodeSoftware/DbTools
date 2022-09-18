@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    using FizzCode.DbTools.DataDefinition.Base;
     public static class DescriptionHelper
     {
         public static SqlTable AddDescription(this SqlTable table, string description)

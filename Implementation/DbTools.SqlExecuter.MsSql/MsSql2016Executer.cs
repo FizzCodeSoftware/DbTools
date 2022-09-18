@@ -1,4 +1,4 @@
-﻿namespace FizzCode.DbTools.DataDefinition.MsSql2016
+﻿namespace FizzCode.DbTools.SqlExecuter.MsSql
 {
     using System;
     using System.Data.Common;
@@ -54,7 +54,7 @@
             Log(LogSeverity.Verbose, "Executing query {Query} on master.", sqlStatementWithParameters.Statement);
 
             var command = PrepareSqlCommand(sqlStatementWithParameters);
-            command.Connection = (DbConnection)connection;
+            command.Connection = connection;
 
             try
             {

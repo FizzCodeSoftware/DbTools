@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
+    using System;
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
@@ -28,16 +29,7 @@
 
             foreach (var row in rows)
             {
-                var type = row.GetAs<string>("DATA_TYPE");
-
-                var numericPrecision = row.GetAs<byte?>("NUMERIC_PRECISION") ?? 0;
-                var numericScale = row.GetAs<int?>("NUMERIC_SCALE") ?? 0;
-                var characterMaximumLength = row.GetAs<int?>("CHARACTER_MAXIMUM_LENGTH") ?? 0;
-                var dateTimePrecision = row.GetAs<short?>("DATETIME_PRECISION") ?? 0;
-
-                var isNullable = row.GetAs<string>("IS_NULLABLE") == "YES";
-
-                var sqlType = TypeMapper.MapSqlTypeFromReaderInfo(type, isNullable, numericPrecision, numericScale, characterMaximumLength, dateTimePrecision);
+                var sqlType = GetSqlTypeFromRow(row);
 
                 var column = new SqlViewColumn
                 {
@@ -61,16 +53,7 @@
 
             foreach (var row in rows)
             {
-                var type = row.GetAs<string>("DATA_TYPE");
-
-                var numericPrecision = row.GetAs<byte?>("NUMERIC_PRECISION") ?? 0;
-                var numericScale = row.GetAs<int?>("NUMERIC_SCALE") ?? 0;
-                var characterMaximumLength = row.GetAs<int?>("CHARACTER_MAXIMUM_LENGTH") ?? 0;
-                var dateTimePrecision = row.GetAs<short?>("DATETIME_PRECISION") ?? 0;
-
-                var isNullable = row.GetAs<string>("IS_NULLABLE") == "YES";
-
-                var sqlType = TypeMapper.MapSqlTypeFromReaderInfo(type, isNullable, numericPrecision, numericScale, characterMaximumLength, dateTimePrecision);
+                var sqlType = GetSqlTypeFromRow(row);
 
                 var column = new SqlColumn
                 {
@@ -85,37 +68,19 @@
             return sqlTable;
         }
 
-        private SqlTableOrView GetTableOrViewDefinition(SchemaAndTableName schemaAndTableName)
+        private SqlType GetSqlTypeFromRow(Row row)
         {
-            var sqlTable = new SqlTable(schemaAndTableName);
+            var type = row.GetAs<string>("DATA_TYPE");
 
-            var rows = QueryResult[schemaAndTableName.SchemaAndName]
-                .OrderBy(r => r.GetAs<int>("ORDINAL_POSITION"));
+            var numericPrecision = row.GetAs<byte?>("NUMERIC_PRECISION") ?? 0;
+            var numericScale = row.GetAs<int?>("NUMERIC_SCALE") ?? 0;
+            var characterMaximumLength = row.GetAs<int?>("CHARACTER_MAXIMUM_LENGTH") ?? 0;
+            var dateTimePrecision = row.GetAs<short?>("DATETIME_PRECISION") ?? 0;
 
-            foreach (var row in rows)
-            {
-                var type = row.GetAs<string>("DATA_TYPE");
+            var isNullable = row.GetAs<string>("IS_NULLABLE") == "YES";
 
-                var numericPrecision = row.GetAs<byte?>("NUMERIC_PRECISION") ?? 0;
-                var numericScale = row.GetAs<int?>("NUMERIC_SCALE") ?? 0;
-                var characterMaximumLength = row.GetAs<int?>("CHARACTER_MAXIMUM_LENGTH") ?? 0;
-                var dateTimePrecision = row.GetAs<short?>("DATETIME_PRECISION") ?? 0;
-
-                var isNullable = row.GetAs<string>("IS_NULLABLE") == "YES";
-
-                var sqlType = TypeMapper.MapSqlTypeFromReaderInfo(type, isNullable, numericPrecision, numericScale, characterMaximumLength, dateTimePrecision);
-
-                var column = new SqlColumn
-                {
-                    Table = sqlTable
-                };
-                column.Types.Add(Executer.Generator.Version, sqlType);
-                column.Name = row.GetAs<string>("COLUMN_NAME");
-
-                sqlTable.Columns.Add(column.Name, column);
-            }
-
-            return sqlTable;
+            var sqlType = TypeMapper.MapSqlTypeFromReaderInfo(type, isNullable, numericPrecision, numericScale, characterMaximumLength, dateTimePrecision);
+            return sqlType;
         }
 
         private static string GetStatement()

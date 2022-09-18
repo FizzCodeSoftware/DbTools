@@ -6,7 +6,7 @@
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>
     <Description>DataDefinitionExecuter factory for Fizzcode DbTools project</Description>
-    <Copyright>Copyright © 2019-2021 FizzCode Ltd.</Copyright>
+    <Copyright>Copyright © 2019-2022 FizzCode Ltd.</Copyright>
     <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
     <Platforms>AnyCPU</Platforms>
     <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
@@ -35,6 +35,7 @@
     <ProjectReference Include="..\Implementation\DbTools.DataDefinition.SqLite\DbTools.DataDefinition.SqLite.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinitionDocumenter\DbTools.DataDefinitionDocumenter.csproj" />
     <ProjectReference Include="..\DbTools.SqlExecuter\DbTools.SqlExecuter.csproj" />
+    <ProjectReference Include="..\Implementation\DbTools.SqlExecuter.MsSql\DbTools.SqlExecuter.MsSql.csproj" />
   </ItemGroup>
 
 </Project>

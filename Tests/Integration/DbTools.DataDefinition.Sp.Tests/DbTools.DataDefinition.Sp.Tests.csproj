@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <CodeAnalysisRuleSet>..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>
     <AssemblyName>FizzCode.DbTools.DataDefinition.Sp.Tests</AssemblyName>

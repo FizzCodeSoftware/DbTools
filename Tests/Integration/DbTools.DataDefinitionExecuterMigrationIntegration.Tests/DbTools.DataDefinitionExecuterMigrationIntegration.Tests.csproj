@@ -3,10 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <CodeAnalysisRuleSet>..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>FizzCode.DbTools.DataDefinitionExecuterMigrationIntegrationTests</AssemblyName>
     <RootNamespace>FizzCode.DbTools.DataDefinitionExecuterMigrationIntegrationTests</RootNamespace>
-    <Copyright>Copyright © 2019-2021 FizzCode Ltd.</Copyright>
+    <Copyright>Copyright © 2019-2022 FizzCode Ltd.</Copyright>
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>
     <Description>Tests for FizzCode.DbTools.DataDefinitionExecuter and Migration</Description>

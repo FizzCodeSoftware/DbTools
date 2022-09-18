@@ -9,6 +9,7 @@
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
     using FizzCode.DbTools.DataDefinitionReader;
     using FizzCode.LightWeight.AdoNet;
+    using FizzCode.DbTools.SqlExecuter.MsSql;
 
     public class MsSql2016DataDefinitionReader : GenericDataDefinitionReader
     {

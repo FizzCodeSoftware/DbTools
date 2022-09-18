@@ -2,12 +2,12 @@
 {
     using System;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition.MsSql2016;
     using FizzCode.DbTools.DataDefinition.Oracle12c;
     using FizzCode.DbTools.SqlExecuter;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
     using FizzCode.DbTools.DataDefinition.SqLite3;
     using FizzCode.LightWeight.AdoNet;
+    using FizzCode.DbTools.SqlExecuter.MsSql;
 
     public static class SqlExecuterFactory
     {

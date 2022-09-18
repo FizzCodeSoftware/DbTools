@@ -3,8 +3,8 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
-    <CodeAnalysisRuleSet>..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
-    <Copyright>Copyright © 2019-2021 FizzCode Ltd.</Copyright>
+    <CodeAnalysisRuleSet>..\..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
+    <Copyright>Copyright © 2019-2022 FizzCode Ltd.</Copyright>
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>
     <Description>Tests for FizzCode.DbTools.SqlExecuter</Description>

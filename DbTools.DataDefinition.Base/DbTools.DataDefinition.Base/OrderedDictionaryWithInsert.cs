@@ -6,6 +6,7 @@
     using System.Linq;
 
     public abstract class OrderedDictionaryWithInsert<TKey, TValue> : ICollection<TValue>
+        where TKey : notnull
     {
         private readonly Dictionary<TKey, TValue> _dictionary = new();
         private readonly SortedDictionary<int, TKey> _order = new();

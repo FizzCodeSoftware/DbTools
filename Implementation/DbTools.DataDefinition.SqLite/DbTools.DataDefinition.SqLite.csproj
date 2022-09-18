@@ -6,10 +6,10 @@
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>
     <Description>SQLite specific database definition for Fizzcode DbTools project</Description>
-    <Copyright>Copyright © 2019-2021 FizzCode Ltd.</Copyright>
+    <Copyright>Copyright © 2019-2022 FizzCode Ltd.</Copyright>
     <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
     <Platforms>AnyCPU</Platforms>
-    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>FizzCode.DbTools.DataDefinition.SqLite</AssemblyName>
     <RootNamespace>FizzCode.DbTools.DataDefinition.SqLite</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

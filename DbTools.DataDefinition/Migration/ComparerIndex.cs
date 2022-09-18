@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Migration
 {
     using System.Collections.Generic;
-    using FizzCode.DbTools.DataDefinition.Base;
 
     public class ComparerIndex : ComparerIndexBase<Index, IndexMigration>
     {

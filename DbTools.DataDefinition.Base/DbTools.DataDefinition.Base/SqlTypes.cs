@@ -26,8 +26,7 @@
         public string Describe(SqlEngineVersion? preferredVersion = null)
         {
             var version = preferredVersion;
-            if (version == null)
-                version = GetVersion();
+            version ??= GetVersion();
 
             return this[version].ToString();
         }
