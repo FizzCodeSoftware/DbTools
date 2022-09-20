@@ -9,7 +9,7 @@
     public class SqLite3Generator : AbstractSqlGenerator
     {
         public SqLite3Generator(Context context)
-            : base(context, new SqLiteGenerator())
+            : base(context, new SqLiteGenerator(context))
         {
             Version = SqLiteVersion.SqLite3;
         }

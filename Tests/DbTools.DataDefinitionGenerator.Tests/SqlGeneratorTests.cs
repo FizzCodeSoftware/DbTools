@@ -36,7 +36,7 @@
                 Logger = TestHelper.CreateLogger()
             };
 
-            var generator = SqlGeneratorFactory.CreateGenerator(version, context);
+            var generator = SqlGeneratorFactory.CreateSqlGenerator(version, context);
 
             var sql = generator.CreateTable(table);
 
@@ -57,7 +57,7 @@
 
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
 
-            var generator = SqlGeneratorFactory.CreateGenerator(version, SqlExecuterTestAdapter.GetContext(version));
+            var generator = SqlGeneratorFactory.CreateSqlGenerator(version, SqlExecuterTestAdapter.GetContext(version));
             var sql = generator.DropTable(table);
             var result = SqlExecuterTestAdapter.ExecuteNonQuery(version.UniqueName, sql);
 

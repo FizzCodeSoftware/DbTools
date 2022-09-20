@@ -371,7 +371,7 @@ namespace FizzCode.DbTools.Console
 
             var context = CreateContext(version);
 
-            var generator = SqlGeneratorFactory.CreateGenerator(version, context);
+            var generator = SqlGeneratorFactory.CreateSqlGenerator(version, context);
 
             var executer = SqlExecuterFactory.CreateSqlExecuter(connString, generator);
             var dc = new DatabaseCreator(null, executer);

@@ -10,7 +10,7 @@
         {
             var sqlEngineVersion = connectionString.GetSqlEngineVersion();
 
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlEngineVersion, context);
+            var generator = SqlGeneratorFactory.CreateSqlGenerator(sqlEngineVersion, context);
             var migrationGenerator = SqlGeneratorFactory.CreateMigrationGenerator(sqlEngineVersion, context);
             var executer = SqlExecuterFactory.CreateSqlExecuter(connectionString, generator);
 

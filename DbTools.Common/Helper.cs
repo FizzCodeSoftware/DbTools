@@ -18,6 +18,11 @@
             if (version is OracleVersion)
             {
                 sqlVersionSpecificSettings["OracleDatabaseName"] = configuration["oracleDatabaseName"];
+                var upperCaseEscapedNames = configuration["upperCaseEscapedNames"];
+                if (upperCaseEscapedNames == null || upperCaseEscapedNames == "")
+                    upperCaseEscapedNames = "false";
+
+                sqlVersionSpecificSettings["UpperCaseEscapedNames"] = upperCaseEscapedNames;
             }
 
             settings.SqlVersionSpecificSettings = sqlVersionSpecificSettings;

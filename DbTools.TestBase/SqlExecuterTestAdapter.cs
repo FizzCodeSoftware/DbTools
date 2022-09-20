@@ -53,7 +53,7 @@
 
             if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
             {
-                var generator = SqlGeneratorFactory.CreateGenerator(sqlEngineVersion, GetContext(sqlEngineVersion));
+                var generator = SqlGeneratorFactory.CreateSqlGenerator(sqlEngineVersion, GetContext(sqlEngineVersion));
                 var executer = SqlExecuterFactory.CreateSqlExecuter(connectionString, generator);
                 sqlExecutersAndDialects.Add(connectionStringKey, (executer, sqlEngineVersion));
 

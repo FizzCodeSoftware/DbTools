@@ -31,7 +31,7 @@
         {
             var sqlEngineVersion = connectionString.GetSqlEngineVersion();
 
-            var generator = SqlGeneratorFactory.CreateGenerator(sqlEngineVersion, context);
+            var generator = SqlGeneratorFactory.CreateSqlGenerator(sqlEngineVersion, context);
 
             return CreateSqlExecuter(connectionString, generator);
         }
