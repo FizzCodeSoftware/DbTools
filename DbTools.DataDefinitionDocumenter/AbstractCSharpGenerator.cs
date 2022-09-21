@@ -8,7 +8,6 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.Base;
 
     public abstract class AbstractCSharpGenerator : DocumenterBase
     {
