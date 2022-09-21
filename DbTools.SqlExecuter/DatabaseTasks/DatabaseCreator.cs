@@ -7,7 +7,7 @@
     {
         public DatabaseDefinition DatabaseDefinition { get; }
 
-        public DatabaseCreator(DatabaseDefinition databaseDefinition, SqlStatementExecuter sqlExecuter)
+        public DatabaseCreator(DatabaseDefinition databaseDefinition, ISqlStatementExecuter sqlExecuter)
             : base(sqlExecuter)
         {
             DatabaseDefinition = databaseDefinition;

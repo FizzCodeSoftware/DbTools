@@ -1,4 +1,4 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition.Factory
 {
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.MsSql2016;

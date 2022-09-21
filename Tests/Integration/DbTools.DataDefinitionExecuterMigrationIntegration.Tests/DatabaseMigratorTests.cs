@@ -6,9 +6,11 @@
     using FizzCode.DbTools;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.DataDefinition.Migration;
     using FizzCode.DbTools.DataDefinition.Tests;
+    using FizzCode.DbTools.Factory.Interfaces;
     using FizzCode.DbTools.SqlExecuter;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -16,6 +18,13 @@
     [TestClass]
     public class DatabaseMigratorTests : DatabaseMigratorTestsBase
     {
+        private readonly ISqlGeneratorFactory _sqlGeneratorFactory;
+
+        public DatabaseMigratorTests()
+        {
+            _sqlGeneratorFactory = new SqlGeneratorFactory();
+        }
+
         [TestMethod]
         [LatestSqlVersions]
         public override void Fk_Add(SqlEngineVersion version)
@@ -110,7 +119,7 @@
 
             _ = changes[0] as ForeignKeyChange;
 
-            _ = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
+            _ = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), _sqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
 
             // TODO change FK
             // databaseMigrator.
@@ -169,7 +178,7 @@
             // databaseMigrator.;
         }
 
-        private static DatabaseMigrator ProcessAndGetMigrator(SqlEngineVersion version, DatabaseDefinitions dds, out List<IMigration> changes)
+        private DatabaseMigrator ProcessAndGetMigrator(SqlEngineVersion version, DatabaseDefinitions dds, out List<IMigration> changes)
         {
             Init(version, dds.Original);
 
@@ -179,7 +188,7 @@
             var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
             changes = comparer.Compare(ddInDatabase, dds.New);
 
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), SqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
+            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), _sqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
 
             return databaseMigrator;
         }

@@ -3,6 +3,7 @@
     using System.Linq;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.DataDefinition.Generic1;
 
     public abstract class ComparerTestsBase

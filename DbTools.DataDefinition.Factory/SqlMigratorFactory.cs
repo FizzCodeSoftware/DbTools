@@ -1,18 +1,26 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition.Factory
 {
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Factory.Interfaces;
     using FizzCode.DbTools.SqlExecuter;
     using FizzCode.LightWeight.AdoNet;
 
-    public static class SqlMigratorFactory
+    public class SqlMigratorFactory : ISqlMigratorFactory
     {
-        public static DatabaseMigrator FromConnectionStringSettings(NamedConnectionString connectionString, Context context)
+        private readonly ISqlGeneratorFactory _sqlGeneratorFactory;
+        private readonly ISqlExecuterFactory _sqlExecuterFactory;
+        public SqlMigratorFactory(ISqlGeneratorFactory sqlGeneratorFactory, ISqlExecuterFactory sqlExecuterFactory)
+        {
+            _sqlGeneratorFactory = sqlGeneratorFactory;
+            _sqlExecuterFactory = sqlExecuterFactory;
+        }
+
+        public DatabaseMigrator FromConnectionStringSettings(NamedConnectionString connectionString, Context context)
         {
             var sqlEngineVersion = connectionString.GetSqlEngineVersion();
 
-            var generator = SqlGeneratorFactory.CreateSqlGenerator(sqlEngineVersion, context);
-            var migrationGenerator = SqlGeneratorFactory.CreateMigrationGenerator(sqlEngineVersion, context);
-            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionString, generator);
+            var migrationGenerator = _sqlGeneratorFactory.CreateMigrationGenerator(sqlEngineVersion, context);
+            var executer = _sqlExecuterFactory.CreateSqlExecuter(connectionString, context);
 
             return new DatabaseMigrator(executer, migrationGenerator);
         }

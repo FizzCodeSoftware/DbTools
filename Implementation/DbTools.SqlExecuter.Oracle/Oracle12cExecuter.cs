@@ -8,6 +8,7 @@
     using FizzCode.DbTools.SqlExecuter;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
     using FizzCode.LightWeight.AdoNet;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public class Oracle12cExecuter : SqlStatementExecuter
     {
@@ -29,7 +30,7 @@
             return oracleDatabaseName;
         }
 
-        public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dds)
+        public override void InitializeDatabase(bool dropIfExists, params IDatabaseDefinition[] dds)
         {
             var defaultSchema = Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
 
@@ -82,7 +83,7 @@ WHERE {column} = @{column}", value);
             return (decimal)result == 0;
         }
 
-        public override void CleanupDatabase(bool hard, params DatabaseDefinition[] dds)
+        public override void CleanupDatabase(bool hard, params IDatabaseDefinition[] dds)
         {
             var allSchemas = dds.SelectMany(dd => dd.GetSchemaNames().ToList()).ToList();
             if (allSchemas.Count > 0)

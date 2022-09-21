@@ -11,7 +11,7 @@
     <Platforms>AnyCPU</Platforms>
     <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>FizzCode.DbTools.DataDefinition.Factory</AssemblyName>
-    <RootNamespace>FizzCode.DbTools.DataDefinition</RootNamespace>
+    <RootNamespace>FizzCode.DbTools.DataDefinition.Factory</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
@@ -29,6 +29,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DbTools.Configuration\DbTools.Configuration.csproj" />
+    <ProjectReference Include="..\DbTools.Factory.Interfaces\DbTools.Factory.Interfaces\DbTools.Factory.Interfaces.csproj" />
     <ProjectReference Include="..\Implementation\DbTools.DataDefinition.MsSql\DbTools.DataDefinition.MsSql.csproj" />
     <ProjectReference Include="..\Implementation\DbTools.DataDefinition.Oracle\DbTools.DataDefinition.Oracle.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition.SqlGenerator\DbTools.DataDefinition.SqlGenerator.csproj" />

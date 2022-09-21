@@ -4,6 +4,7 @@
 namespace FizzCode.DbTools.DataDefinitionReader.Tests
 {
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

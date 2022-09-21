@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Base
 {
-    public abstract class AbstractTypeMapper
+    public abstract class AbstractTypeMapper : ITypeMapper
     {
         public abstract SqlEngineVersion SqlVersion { get; }
 

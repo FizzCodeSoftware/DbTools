@@ -1,15 +1,22 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition.Factory
 {
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Factory.Interfaces;
     using FizzCode.DbTools.SqlExecuter;
     using FizzCode.LightWeight.AdoNet;
 
-    public static class DatabaseCreatorFactory
+    public class DatabaseCreatorFactory
     {
-        public static DatabaseCreator FromConnectionStringSettings(DatabaseDefinition databaseDefinition, NamedConnectionString connectionString, Context context)
+        private readonly ISqlExecuterFactory _sqlExecuterFactory;
+        public DatabaseCreatorFactory(ISqlExecuterFactory sqlExecuterFactory)
         {
-            var generator = SqlGeneratorFactory.CreateSqlGenerator(connectionString.GetSqlEngineVersion(), context);
-            var executer = SqlExecuterFactory.CreateSqlExecuter(connectionString, generator);
+            _sqlExecuterFactory = sqlExecuterFactory;
+
+        }
+
+        public DatabaseCreator FromConnectionStringSettings(DatabaseDefinition databaseDefinition, NamedConnectionString connectionString, Context context)
+        {
+            var executer = _sqlExecuterFactory.CreateSqlExecuter(connectionString, context);
             return new DatabaseCreator(databaseDefinition, executer);
         }
     }

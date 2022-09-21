@@ -8,6 +8,7 @@
     using FizzCode.DbTools.SqlExecuter;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
     using FizzCode.LightWeight.AdoNet;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public class MsSql2016Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDatabase
     {
@@ -16,7 +17,7 @@
         {
         }
 
-        public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dds)
+        public override void InitializeDatabase(bool dropIfExists, params IDatabaseDefinition[] dds)
         {
             if(dropIfExists)
                 DropDatabaseIfExists();
@@ -29,7 +30,7 @@
             ExecuteNonQueryMaster(sql);
         }
 
-        public override void CleanupDatabase(bool hard = false, params DatabaseDefinition[] dds)
+        public override void CleanupDatabase(bool hard = false, params IDatabaseDefinition[] dds)
         {
             DropDatabaseIfExists();
         }

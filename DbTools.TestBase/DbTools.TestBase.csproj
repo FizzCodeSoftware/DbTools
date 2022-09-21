@@ -37,6 +37,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj" />
+    <ProjectReference Include="..\DbTools.Configuration\DbTools.Configuration.csproj" />
     <ProjectReference Include="..\DbTools.DataDeclaration\DbTools.DataDeclaration\DbTools.DataDeclaration.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition.Base\DbTools.DataDefinition.Base\DbTools.DataDefinition.Base.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition.Factory\DbTools.DataDefinition.Factory.csproj" />

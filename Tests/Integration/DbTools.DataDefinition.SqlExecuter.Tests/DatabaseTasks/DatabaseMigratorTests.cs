@@ -4,15 +4,24 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.DataDefinition.Migration;
     using FizzCode.DbTools.DataDefinition.Tests;
+    using FizzCode.DbTools.Factory.Interfaces;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class DatabaseMigratorTests : SqlExecuterTestsBase
     {
+        private readonly ISqlGeneratorFactory _sqlGeneratorFactory;
+
+        public DatabaseMigratorTests()
+        {
+            _sqlGeneratorFactory = new SqlGeneratorFactory();
+        }
+
         [TestMethod]
         [LatestSqlVersions]
         public void NewTableTest(SqlEngineVersion version)
@@ -27,7 +36,7 @@
                 Logger = TestHelper.CreateLogger()
             };
 
-            var migrationGenerator = SqlGeneratorFactory.CreateMigrationGenerator(version, context);
+            var migrationGenerator = _sqlGeneratorFactory.CreateMigrationGenerator(version, context);
 
             var executer = SqlExecuterTestAdapter.GetExecuter(version.UniqueName);
 

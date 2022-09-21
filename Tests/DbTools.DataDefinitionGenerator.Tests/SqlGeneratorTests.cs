@@ -3,7 +3,9 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.DataDefinition.Generic1;
+    using FizzCode.DbTools.Factory.Interfaces;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -11,6 +13,13 @@
     public class SqlGeneratorTests
     {
         protected static SqlExecuterTestAdapter SqlExecuterTestAdapter { get; } = new();
+
+        private readonly ISqlGeneratorFactory _sqlGeneratorFactory;
+
+        public SqlGeneratorTests()
+        {
+            _sqlGeneratorFactory = new SqlGeneratorFactory();
+        }
 
         [DataTestMethod]
         [LatestSqlVersions]
@@ -36,7 +45,7 @@
                 Logger = TestHelper.CreateLogger()
             };
 
-            var generator = SqlGeneratorFactory.CreateSqlGenerator(version, context);
+            var generator = _sqlGeneratorFactory.CreateSqlGenerator(version, context);
 
             var sql = generator.CreateTable(table);
 
@@ -57,7 +66,7 @@
 
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
 
-            var generator = SqlGeneratorFactory.CreateSqlGenerator(version, SqlExecuterTestAdapter.GetContext(version));
+            var generator = _sqlGeneratorFactory.CreateSqlGenerator(version, SqlExecuterTestAdapter.GetContext(version));
             var sql = generator.DropTable(table);
             var result = SqlExecuterTestAdapter.ExecuteNonQuery(version.UniqueName, sql);
 

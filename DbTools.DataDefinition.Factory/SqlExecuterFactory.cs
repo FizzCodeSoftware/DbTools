@@ -1,4 +1,4 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition.Factory
 {
     using System;
     using FizzCode.DbTools.Common;
@@ -8,10 +8,17 @@
     using FizzCode.DbTools.SqlExecuter.MsSql;
     using FizzCode.DbTools.SqlExecuter.Oracle;
     using FizzCode.DbTools.SqlExecuter.SqLite3;
+    using FizzCode.DbTools.Factory.Interfaces;
 
-    public static class SqlExecuterFactory
+    public class SqlExecuterFactory : ISqlExecuterFactory
     {
-        public static SqlStatementExecuter CreateSqlExecuter(NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
+        private readonly ISqlGeneratorFactory _sqlGeneratorFactory;
+        public SqlExecuterFactory(ISqlGeneratorFactory sqlGeneratorFactory)
+        {
+            _sqlGeneratorFactory = sqlGeneratorFactory;
+        }
+
+        protected ISqlStatementExecuter CreateSqlExecuter(NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
         {
             var sqlEngineVersion = connectionString.GetSqlEngineVersion();
 
@@ -27,11 +34,11 @@
             throw new NotImplementedException($"Not implemented {sqlEngineVersion}.");
         }
 
-        public static SqlStatementExecuter CreateSqlExecuter(NamedConnectionString connectionString, Context context)
+        public ISqlStatementExecuter CreateSqlExecuter(NamedConnectionString connectionString, Context context)
         {
             var sqlEngineVersion = connectionString.GetSqlEngineVersion();
 
-            var generator = SqlGeneratorFactory.CreateSqlGenerator(sqlEngineVersion, context);
+            var generator =_sqlGeneratorFactory.CreateSqlGenerator(sqlEngineVersion, context);
 
             return CreateSqlExecuter(connectionString, generator);
         }

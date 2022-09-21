@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.SqlExecuter
 {
     using System.Data.Common;
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
     using FizzCode.LightWeight.AdoNet;
 
@@ -18,7 +18,7 @@
         DbConnection OpenConnection();
         DbConnection OpenConnectionMaster();
         DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters);
-        void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dds);
-        void CleanupDatabase(bool hard = false, params DatabaseDefinition[] dds);
+        void InitializeDatabase(bool dropIfExists, params IDatabaseDefinition[] dds);
+        void CleanupDatabase(bool hard = false, params IDatabaseDefinition[] dds);
     }
 }

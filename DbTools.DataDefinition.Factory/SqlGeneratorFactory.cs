@@ -1,4 +1,4 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition.Factory
 {
     using System;
     using FizzCode.DbTools.Common;
@@ -6,28 +6,11 @@
     using FizzCode.DbTools.DataDefinition.Oracle12c;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
     using FizzCode.DbTools.DataDefinition.SqLite3;
-    using FizzCode.DbTools.SqlGenerator.Base;
-    using FizzCode.DbTools.SqlGenerator.MsSql;
-    using FizzCode.DbTools.SqlGenerator.Oracle;
-    using FizzCode.DbTools.SqlGenerator.SqLite;
+    using FizzCode.DbTools.Factory.Interfaces;
 
-    public static class SqlGeneratorFactory
+    public class SqlGeneratorFactory : ISqlGeneratorFactory
     {
-        public static ISqlGeneratorBase CreateGenerator(SqlEngineVersion version, Context context)
-        {
-            if (version == SqLiteVersion.SqLite3)
-                return new SqLiteGenerator(context);
-
-            if (version == MsSqlVersion.MsSql2016)
-                return new MsSqlGenerator(context);
-
-            if (version == OracleVersion.Oracle12c)
-                return new OracleGenerator(context);
-
-            throw new NotImplementedException($"Not implemented {version}.");
-        }
-
-        public static ISqlGenerator CreateSqlGenerator(SqlEngineVersion version, Context context)
+        public ISqlGenerator CreateSqlGenerator(SqlEngineVersion version, Context context)
         {
             if (version == SqLiteVersion.SqLite3)
                 return new SqLite3Generator(context);
@@ -41,7 +24,7 @@
             throw new NotImplementedException($"Not implemented {version}.");
         }
 
-        public static ISqlMigrationGenerator CreateMigrationGenerator(SqlEngineVersion version, Context context)
+        public ISqlMigrationGenerator CreateMigrationGenerator(SqlEngineVersion version, Context context)
         {
             if (version == SqLiteVersion.SqLite3)
                 return new SqLite3MigrationGenerator(context);

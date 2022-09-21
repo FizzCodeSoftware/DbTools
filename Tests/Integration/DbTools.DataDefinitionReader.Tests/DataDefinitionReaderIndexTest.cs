@@ -6,6 +6,7 @@
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using FizzCode.DbTools.DataDefinition.Factory;
 
     [TestClass]
     public class DataDefinitionReaderIndexTest : DataDefinitionReaderTests

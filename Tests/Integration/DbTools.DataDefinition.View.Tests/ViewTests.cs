@@ -2,6 +2,7 @@
 {
     using FizzCode.DbTools.DataDeclaration;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.QueryBuilder;
     using FizzCode.DbTools.TestBase;

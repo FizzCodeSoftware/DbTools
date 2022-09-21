@@ -5,7 +5,7 @@
 
     public class DatabaseMigrator : DatabaseTask
     {
-        public DatabaseMigrator(SqlStatementExecuter sqlExecuter, ISqlMigrationGenerator migrationGenerator)
+        public DatabaseMigrator(ISqlStatementExecuter sqlExecuter, ISqlMigrationGenerator migrationGenerator)
             : base(sqlExecuter)
         {
             MigrationGenerator = migrationGenerator;

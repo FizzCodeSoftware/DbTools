@@ -18,5 +18,24 @@
   },
   "Log": {
     "MinimumLogLevelOnConsole": "Verbose"
-  }
+  },
+
+  "components": [
+    {
+      "type": "FizzCode.DbTools.DataDefinition.Factory.SqlExecuterFactory, FizzCode.DbTools.DataDefinition.Factory",
+      "services": [
+        {
+          "type": "FizzCode.DbTools.Factory.Interfaces.ISqlExecuterFactory, FizzCode.DbTools.Factory.Interfaces"
+        }
+      ]
+    },
+    {
+      "type": "FizzCode.DbTools.DataDefinition.Factory.SqlGeneratorFactory, FizzCode.DbTools.DataDefinition.Factory",
+      "services": [
+        {
+          "type": "FizzCode.DbTools.Factory.Interfaces.ISqlGeneratorFactory, FizzCode.DbTools.Factory.Interfaces"
+        }
+      ]
+    }
+  ]
 }

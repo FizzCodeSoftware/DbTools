@@ -43,6 +43,7 @@
     <ProjectReference Include="..\DbTools.DataDefinitionDocumenter\DbTools.DataDefinitionDocumenter.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinitionReader\DbTools.DataDefinitionReader.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
+    <ProjectReference Include="..\DbTools.Factory\DbTools.Factory.csproj" />
   </ItemGroup>
 
   <ItemGroup>

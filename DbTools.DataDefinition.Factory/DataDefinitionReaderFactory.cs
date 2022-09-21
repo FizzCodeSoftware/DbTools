@@ -1,4 +1,4 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition.Factory
 {
     using System;
     using FizzCode.DbTools.Common;

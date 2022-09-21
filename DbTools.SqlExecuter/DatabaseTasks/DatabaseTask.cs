@@ -2,11 +2,11 @@
 {
     public abstract class DatabaseTask
     {
-        protected DatabaseTask(SqlStatementExecuter sqlExecuter)
+        protected DatabaseTask(ISqlStatementExecuter sqlExecuter)
         {
             Executer = sqlExecuter;
         }
 
-        protected SqlStatementExecuter Executer { get; }
+        protected ISqlStatementExecuter Executer { get; }
     }
 }

@@ -1,14 +1,11 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.SqlGenerator
 {
     using System.Collections.Generic;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.SqlGenerator.Base;
 
     public interface ISqlGenerator : ISqlGeneratorBase
     {
-        Context Context { get; }
-
         SqlEngineVersion Version { get; }
 
         SqlStatementWithParameters CreateSchema(string schemaName);

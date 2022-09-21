@@ -5,17 +5,26 @@
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Factory;
+    using FizzCode.DbTools.Factory.Interfaces;
     using FizzCode.DbTools.SqlExecuter;
     using FizzCode.LightWeight.AdoNet;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     public class SqlExecuterTestAdapter : ConfigurationBase
     {
-        private readonly Dictionary<string, (SqlStatementExecuter SqlExecuter, SqlEngineVersion Version)> sqlExecutersAndDialects = new();
+        private readonly Dictionary<string, (ISqlStatementExecuter SqlExecuter, SqlEngineVersion Version)> sqlExecutersAndDialects = new();
 
         private readonly Dictionary<SqlConnectionKeyAndDatabaseDefinitionTypeAsKey, DatabaseDefinition> _dds = new();
 
         public override string ConfigurationFileName => "testconfig";
+
+        private readonly ISqlExecuterFactory _sqlExecuterFactory;
+
+        public SqlExecuterTestAdapter()
+        {
+            _sqlExecuterFactory = new SqlExecuterFactory(new SqlGeneratorFactory());
+        }
 
         public void Check(SqlEngineVersion version)
         {
@@ -53,8 +62,8 @@
 
             if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
             {
-                var generator = SqlGeneratorFactory.CreateSqlGenerator(sqlEngineVersion, GetContext(sqlEngineVersion));
-                var executer = SqlExecuterFactory.CreateSqlExecuter(connectionString, generator);
+                //var generator = _sqlGeneratorFactory.CreateSqlGenerator(sqlEngineVersion, GetContext(sqlEngineVersion));
+                var executer = _sqlExecuterFactory.CreateSqlExecuter(connectionString, GetContext(sqlEngineVersion));
                 sqlExecutersAndDialects.Add(connectionStringKey, (executer, sqlEngineVersion));
 
                 if (shouldCreate && TestHelper.ShouldRunIntegrationTest(sqlEngineVersion))
@@ -127,7 +136,7 @@
             return null;
         }
 
-        public SqlStatementExecuter GetExecuter(string connectionStringKey)
+        public ISqlStatementExecuter GetExecuter(string connectionStringKey)
         {
             return sqlExecutersAndDialects[connectionStringKey].SqlExecuter;
         }

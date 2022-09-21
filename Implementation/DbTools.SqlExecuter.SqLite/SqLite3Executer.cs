@@ -8,6 +8,7 @@
     using FizzCode.DbTools.SqlExecuter;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
     using FizzCode.LightWeight.AdoNet;
+    using FizzCode.DbTools.DataDefinition.Base;
 
 #pragma warning disable CA1001 // Types that own disposable fields should be disposable
     public class SqLite3Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDatabase
@@ -20,7 +21,7 @@
 
         private SQLiteConnection _connection;
 
-        public override void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dds)
+        public override void InitializeDatabase(bool dropIfExists, params IDatabaseDefinition[] dds)
         {
             if (dropIfExists)
                 DropDatabase();
@@ -39,7 +40,7 @@
             _connection.Open();
         }
 
-        public override void CleanupDatabase(bool hard = false, params DatabaseDefinition[] dds)
+        public override void CleanupDatabase(bool hard = false, params IDatabaseDefinition[] dds)
         {
             DropDatabase();
         }

@@ -5,6 +5,7 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
     using FizzCode.LightWeight.AdoNet;
 
@@ -18,7 +19,6 @@
         protected SqlStatementExecuter(NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
         {
             Generator = sqlGenerator;
-
             ConnectionString = connectionString;
         }
 
@@ -75,9 +75,9 @@
 
         public abstract string GetDatabase();
 
-        public abstract void InitializeDatabase(bool dropIfExists, params DatabaseDefinition[] dds);
+        public abstract void InitializeDatabase(bool dropIfExists, params IDatabaseDefinition[] dds);
 
-        public abstract void CleanupDatabase(bool hard = false, params DatabaseDefinition[] dds);
+        public abstract void CleanupDatabase(bool hard = false, params IDatabaseDefinition[] dds);
 
         public virtual void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
         {

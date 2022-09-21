@@ -6,15 +6,25 @@ namespace FizzCode.DbTools.Console
     using CommandDotNet;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.SqlExecuter;
     using FizzCode.DbTools.DataDefinitionDocumenter;
     using FizzCode.LightWeight.AdoNet;
     using Microsoft.Extensions.Configuration;
+    using FizzCode.DbTools.DataDefinition.Factory;
+    using FizzCode.DbTools.Factory.Interfaces;
+    using FizzCode.DbTools.Factory;
 
     [Command(">")]
     internal class AppCommands
     {
+        private readonly ISqlExecuterFactory _sqlExecuterFactory;
+
+        public AppCommands()
+        {
+            var root = new Root();
+            _sqlExecuterFactory = root.Get<ISqlExecuterFactory>();
+        }
+
         [Command("exit", Description = "Exit from the command-line utility.")]
         public void Exit()
         {
@@ -42,7 +52,7 @@ namespace FizzCode.DbTools.Console
 
             var context = CreateContext(version);
 
-            var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connString, context);
+            var sqlExecuter = _sqlExecuterFactory.CreateSqlExecuter(connString, context);
             var databaseName = sqlExecuter.GetDatabase();
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connString, context, null);
@@ -242,7 +252,7 @@ namespace FizzCode.DbTools.Console
 
             var context = CreateContext(version);
 
-            var sqlExecuter = SqlExecuterFactory.CreateSqlExecuter(connString, context);
+            var sqlExecuter = _sqlExecuterFactory.CreateSqlExecuter(connString, context);
             var databaseName = sqlExecuter.GetDatabase();
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connString, context, null);
@@ -371,9 +381,7 @@ namespace FizzCode.DbTools.Console
 
             var context = CreateContext(version);
 
-            var generator = SqlGeneratorFactory.CreateSqlGenerator(version, context);
-
-            var executer = SqlExecuterFactory.CreateSqlExecuter(connString, generator);
+            var executer = _sqlExecuterFactory.CreateSqlExecuter(connString, context);
             var dc = new DatabaseCreator(null, executer);
 
             dc.DropAllViews();
@@ -412,7 +420,7 @@ namespace FizzCode.DbTools.Console
                 connectionStringOriginal,
                 versionOriginal.VersionString);
 
-            var sqlExecuterOriginal = SqlExecuterFactory.CreateSqlExecuter(connString, contextOriginal);
+            var sqlExecuterOriginal = _sqlExecuterFactory.CreateSqlExecuter(connString, contextOriginal);
             var databaseNameOriginal = sqlExecuterOriginal.GetDatabase();
 
             var ddlReaderOriginal = DataDefinitionReaderFactory.CreateDataDefinitionReader(connString, contextOriginal, null);
@@ -420,11 +428,9 @@ namespace FizzCode.DbTools.Console
             //var ddOriginal = ddlReaderOriginal.GetDatabaseDefinition();
             var ddOriginalTask = Task.Run(() => ddlReaderOriginal.GetDatabaseDefinition());
 
-            if (patternFileNameOriginal == null)
-                patternFileNameOriginal = patternFileName;
+            patternFileNameOriginal ??= patternFileName;
 
-            if (patternFileNameNew == null)
-                patternFileNameNew = patternFileName;
+            patternFileNameNew ??= patternFileName;
 
             var changeDocumenterContext = CreateChangeDocumenterContext(contextOriginal, patternFileNameOriginal, patternFileNameNew);
             if (flags != null)
@@ -440,7 +446,7 @@ namespace FizzCode.DbTools.Console
                 connectionStringNew,
                 versionNew.VersionString);
 
-            var sqlExecuterNew = SqlExecuterFactory.CreateSqlExecuter(connStringNew, contextNew);
+            var sqlExecuterNew = _sqlExecuterFactory.CreateSqlExecuter(connStringNew, contextNew);
             var databaseNameNew = sqlExecuterNew.GetDatabase();
 
             var ddlReaderNew = DataDefinitionReaderFactory.CreateDataDefinitionReader(connStringNew, contextNew, null);

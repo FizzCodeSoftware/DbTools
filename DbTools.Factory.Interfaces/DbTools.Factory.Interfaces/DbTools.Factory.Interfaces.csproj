@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <PackageId>FizzCode.DbTools.Factory.Interfaces</PackageId>
+    <Authors>FizzCode Ltd.</Authors>
+    <Product>FizzCode DbTools</Product>
+    <Description>Factory interfaces for Fizzcode DbTools project</Description>
+    <Copyright>Copyright © 2019-2022 FizzCode Ltd.</Copyright>
+    <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
+    <Platforms>AnyCPU</Platforms>
+    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
+    <AssemblyName>FizzCode.DbTools.Factory.Interfaces</AssemblyName>
+    <RootNamespace>FizzCode.DbTools.Factory.Interfaces</RootNamespace>
+	<ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\DbTools.Common\DbTools.Common.csproj" />
+    <ProjectReference Include="..\..\DbTools.Configuration\DbTools.Configuration.csproj" />
+    <ProjectReference Include="..\..\DbTools.DataDefinition.SqlGenerator\DbTools.DataDefinition.SqlGenerator.csproj" />
+    <ProjectReference Include="..\..\DbTools.SqlExecuter\DbTools.SqlExecuter.csproj" />
+    <ProjectReference Include="..\..\DbTools.SqlGenerator.Base\DbTools.SqlGenerator.Base.csproj" />
+  </ItemGroup>
+
+</Project>

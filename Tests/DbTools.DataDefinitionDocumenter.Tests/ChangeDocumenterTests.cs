@@ -1,8 +1,8 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
     using System.Linq;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.DataDefinition.MsSql2016;
     using FizzCode.DbTools.DataDefinition.Oracle12c;
     using FizzCode.DbTools.DataDefinition.Tests;
