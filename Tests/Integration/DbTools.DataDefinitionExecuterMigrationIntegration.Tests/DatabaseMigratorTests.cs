@@ -4,6 +4,7 @@
     using System.Globalization;
     using System.Linq;
     using FizzCode.DbTools;
+    using FizzCode.DbTools.DataDeclaration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.Factory;

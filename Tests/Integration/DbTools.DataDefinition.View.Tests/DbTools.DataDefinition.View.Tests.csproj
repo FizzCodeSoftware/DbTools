@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\DbTools.DataDeclaration\DbTools.DataDeclaration\DbTools.DataDeclaration.csproj" />
+    <ProjectReference Include="..\..\..\DbTools.DataDeclaration\DbTools.DataDeclaration.csproj" />
     <ProjectReference Include="..\..\..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
     <ProjectReference Include="..\..\..\DbTools.QueryBuilder\DbTools.QueryBuilder.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinition.Tests\DbTools.DataDefinition.Tests.csproj" />

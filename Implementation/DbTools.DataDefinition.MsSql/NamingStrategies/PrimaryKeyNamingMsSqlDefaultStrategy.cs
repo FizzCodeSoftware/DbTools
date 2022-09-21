@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using FizzCode.DbTools.DataDeclaration;
     using FizzCode.DbTools.DataDefinition.Base;
 
     public class PrimaryKeyNamingMsSqlDefaultStrategy : IPrimaryKeyNamingStrategy

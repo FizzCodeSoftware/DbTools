@@ -1,5 +1,7 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDeclaration
 {
+    using FizzCode.DbTools.DataDefinition;
+
     public interface IIndexNamingStrategy : INamingStrategy
     {
         void SetIndexName(Index index);

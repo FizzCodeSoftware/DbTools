@@ -69,9 +69,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.QueryBuilder.Interf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.View.Tests", "Tests\Integration\DbTools.DataDefinition.View.Tests\DbTools.DataDefinition.View.Tests.csproj", "{AF2A42CF-A6B5-4F6F-BE1B-A7265A3F2C3D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDeclaration", "DbTools.DataDeclaration\DbTools.DataDeclaration\DbTools.DataDeclaration.csproj", "{79FB9F1D-66EB-4C33-9AF4-F1D4948693C4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDeclaration", "DbTools.DataDeclaration\DbTools.DataDeclaration.csproj", "{79FB9F1D-66EB-4C33-9AF4-F1D4948693C4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.Base", "DbTools.DataDefinition.Base\DbTools.DataDefinition.Base\DbTools.DataDefinition.Base.csproj", "{DD14A6E0-64D2-456B-B282-C1279B618111}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.Base", "DbTools.DataDefinition.Base\DbTools.DataDefinition.Base.csproj", "{DD14A6E0-64D2-456B-B282-C1279B618111}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Integration", "Integration", "{09B5E37C-9ABB-4A34-9661-72F4E4F3E8D5}"
 EndProject
@@ -93,7 +93,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.SqlGenerator.Base",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.Factory", "DbTools.Factory\DbTools.Factory.csproj", "{EE028584-0C74-474F-9347-5A8CA95EE9AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTools.Factory.Interfaces", "DbTools.Factory.Interfaces\DbTools.Factory.Interfaces\DbTools.Factory.Interfaces.csproj", "{DA13B110-4341-4DA8-A352-6AF9CA6C8914}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTools.Factory.Interfaces", "DbTools.Factory.Interfaces\DbTools.Factory.Interfaces.csproj", "{DA13B110-4341-4DA8-A352-6AF9CA6C8914}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

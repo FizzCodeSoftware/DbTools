@@ -1,5 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.MsSql2016
 {
+    using FizzCode.DbTools.DataDeclaration;
+
     public class UniqueConstraintNamingMsSqlDefaultStrategy : IUniqueConstraintNamingStrategy
     {
         public void SetUniqueConstraintName(UniqueConstraint uniqueConstraint)

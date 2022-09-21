@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.DataDeclaration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.Factory;
