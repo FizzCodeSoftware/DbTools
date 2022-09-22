@@ -1,7 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+	  <TargetFramework>net6.0</TargetFramework>
+	  <PackageId>FizzCode.DbTools.DataDefinition.Base</PackageId>
+	  <Authors>FizzCode Ltd.</Authors>
+	  <Product>FizzCode DbTools</Product>
+	  <Description>Database definition base for Fizzcode DbTools project</Description>
+	  <Copyright>Copyright © 2019-2022 FizzCode Ltd.</Copyright>
+	  <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
+	  <Platforms>AnyCPU</Platforms>
+	  <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
+	  <AssemblyName>FizzCode.DbTools.DataDefinition.Base</AssemblyName>
+	  <RootNamespace>FizzCode.DbTools.DataDefinition.Base</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>

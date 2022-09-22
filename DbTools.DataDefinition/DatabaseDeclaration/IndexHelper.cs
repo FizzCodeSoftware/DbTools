@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using FizzCode.DbTools.DataDefinition.Base;
+
     public static class IndexHelper
     {
         public static SqlTable AddIndex(this SqlTable table, params string[] columnNames)
