@@ -1,13 +1,14 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Factory
 {
-    using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+    using FizzCode.DbTools.DataDefinition.Factory.Interfaces;
     using FizzCode.DbTools.DataDefinition.MsSql2016;
     using FizzCode.DbTools.DataDefinition.Oracle12c;
     using FizzCode.DbTools.DataDefinition.SqLite3;
 
-    public static class TypeMapperFactory
+    public class TypeMapperFactory : ITypeMapperFactory
     {
-        public static AbstractTypeMapper GetTypeMapper(this SqlEngineVersion version)
+        public ITypeMapper GetTypeMapper(SqlEngineVersion version)
         {
             if (version == SqLiteVersion.SqLite3)
                 return new SqLite3TypeMapper();

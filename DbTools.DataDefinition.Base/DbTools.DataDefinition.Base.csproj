@@ -1,23 +1,26 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	  <TargetFramework>net6.0</TargetFramework>
-	  <PackageId>FizzCode.DbTools.DataDefinition.Base</PackageId>
-	  <Authors>FizzCode Ltd.</Authors>
-	  <Product>FizzCode DbTools</Product>
-	  <Description>Database definition base for Fizzcode DbTools project</Description>
-	  <Copyright>Copyright © 2019-2022 FizzCode Ltd.</Copyright>
-	  <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
-	  <Platforms>AnyCPU</Platforms>
-	  <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
-	  <AssemblyName>FizzCode.DbTools.DataDefinition.Base</AssemblyName>
-	  <RootNamespace>FizzCode.DbTools.DataDefinition.Base</RootNamespace>
+	<TargetFramework>net6.0</TargetFramework>
+	<PackageId>FizzCode.DbTools.DataDefinition.Base</PackageId>
+	<Authors>FizzCode Ltd.</Authors>
+	<Product>FizzCode DbTools</Product>
+	<Description>Database definition base for Fizzcode DbTools project</Description>
+	<Copyright>Copyright © 2019-2022 FizzCode Ltd.</Copyright>
+	<RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
+	<Platforms>AnyCPU</Platforms>
+	<CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
+	<AssemblyName>FizzCode.DbTools.DataDefinition.Base</AssemblyName>
+	<RootNamespace>FizzCode.DbTools.DataDefinition.Base</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\DbTools.Configuration\DbTools.Configuration.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.Base.Interfaces\DbTools.DataDefinition.Base.Interfaces.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.Factory.Interfaces\DbTools.DataDefinition.Factory.Interfaces.csproj" />
+    <ProjectReference Include="..\DbTools.Factory.Collections\DbTools.Factory.Collections.csproj" />
   </ItemGroup>
 
 </Project>

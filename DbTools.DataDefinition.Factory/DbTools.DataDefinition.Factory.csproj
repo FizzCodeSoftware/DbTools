@@ -17,18 +17,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.1.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\DbTools.Configuration\DbTools.Configuration.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.Base.Interfaces\DbTools.DataDefinition.Base.Interfaces.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.Base\DbTools.DataDefinition.Base.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.Factory.Interfaces\DbTools.DataDefinition.Factory.Interfaces.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
     <ProjectReference Include="..\DbTools.Factory.Interfaces\DbTools.Factory.Interfaces.csproj" />
     <ProjectReference Include="..\Implementation\DbTools.DataDefinition.MsSql\DbTools.DataDefinition.MsSql.csproj" />
     <ProjectReference Include="..\Implementation\DbTools.DataDefinition.Oracle\DbTools.DataDefinition.Oracle.csproj" />

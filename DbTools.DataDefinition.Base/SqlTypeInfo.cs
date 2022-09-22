@@ -1,8 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Base
 {
     using System;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 
-    public abstract class SqlTypeInfo
+    public abstract class SqlTypeInfo : ISqlTypeInfo
     {
         public abstract bool HasLength { get; }
         public abstract bool HasScale { get; }

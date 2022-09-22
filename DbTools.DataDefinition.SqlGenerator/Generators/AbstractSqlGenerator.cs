@@ -7,6 +7,7 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.SqlGenerator.Base;
 
     public abstract class AbstractSqlGenerator : ISqlGenerator
@@ -272,7 +273,7 @@
             return sb.ToString();
         }
 
-        protected virtual string GenerateType(SqlType type)
+        protected virtual string GenerateType(ISqlType type)
         {
             var sb = new StringBuilder();
             sb.Append(type.SqlTypeInfo.SqlDataType);

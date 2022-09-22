@@ -2,12 +2,13 @@
 {
     using System;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 
     public class SqLite3TypeMapper : AbstractTypeMapper
     {
         public override SqlEngineVersion SqlVersion => SqLiteVersion.SqLite3;
 
-        public override SqlType MapFromGeneric1(SqlType genericType)
+        public override ISqlType MapFromGeneric1(ISqlType genericType)
         {
             return genericType.SqlTypeInfo switch
             {
@@ -28,7 +29,7 @@
             };
         }
 
-        public override SqlType MapToGeneric1(SqlType sqlType)
+        public override ISqlType MapToGeneric1(ISqlType sqlType)
         {
             return sqlType.SqlTypeInfo switch
             {

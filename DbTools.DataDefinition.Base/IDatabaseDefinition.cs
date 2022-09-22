@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using FizzCode.DbTools;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 
     public interface IDatabaseDeclaration
     {
@@ -13,7 +14,7 @@
     {
         SqlEngineVersion MainVersion { get; }
         List<StoredProcedure> StoredProcedures { get; }
-        Dictionary<SqlEngineVersion, AbstractTypeMapper> TypeMappers { get; set; }
+        TypeMappers TypeMappers { get; set; }
 
         void AddTable(SqlTable sqlTable);
         void AddView(SqlView sqlTable);
@@ -25,6 +26,6 @@
         SqlTable GetTable(string schema, string tableName);
         List<SqlTable> GetTables();
         List<SqlView> GetViews();
-        void SetVersions(AbstractTypeMapper mainTypeMapper, AbstractTypeMapper[] secondaryTypeMappers = null);
+        void SetVersions(ITypeMapper mainTypeMapper, ITypeMapper[] secondaryTypeMappers = null);
     }
 }

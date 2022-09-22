@@ -5,7 +5,7 @@
     public abstract class ColumnNewOrDelete : ColumnMigration
     {
         public string Name => SqlColumn.Name;
-        public SqlType Type => SqlColumn.Type;
+        public SqlType Type => (SqlType)SqlColumn.Type;
 
         public SqlTable Table => SqlColumn.Table;
     }

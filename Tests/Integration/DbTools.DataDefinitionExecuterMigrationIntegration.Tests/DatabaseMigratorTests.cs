@@ -101,7 +101,7 @@
             var version = MsSqlVersion.MsSql2016;
 
             var dd = new TestDatabaseFk();
-            dd.SetVersions(version.GetTypeMapper());
+            dd.SetVersions(TypeMapperGetter.GetTypeMapper(version));
             Init(version, dd);
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(

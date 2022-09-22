@@ -5,6 +5,7 @@
     using System.Reflection;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.QueryBuilder.Interface;
 
     public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
@@ -12,7 +13,7 @@
         public NamingStrategies NamingStrategies { get; }
         public string? DefaultSchema { get; }
 
-        protected DatabaseDeclaration(IQueryBuilderConnector queryBuilderConnector, AbstractTypeMapper mainTypeMapper, AbstractTypeMapper[]? secondaryTypeMappers = null, string? defaultSchema = null, NamingStrategies? namingStrategies = null)
+        protected DatabaseDeclaration(IQueryBuilderConnector queryBuilderConnector, ITypeMapper mainTypeMapper, ITypeMapper[]? secondaryTypeMappers = null, string? defaultSchema = null, NamingStrategies? namingStrategies = null)
             : base(mainTypeMapper, secondaryTypeMappers)
         {
             DefaultSchema = defaultSchema;
@@ -28,7 +29,7 @@
             CircularFKDetector.DectectCircularFKs(GetTables());
         }
 
-        protected DatabaseDeclaration(AbstractTypeMapper mainTypeMapper, AbstractTypeMapper[]? secondaryTypeMappers = null, string? defaultSchema = null, NamingStrategies? namingStrategies = null)
+        protected DatabaseDeclaration(ITypeMapper mainTypeMapper, ITypeMapper[]? secondaryTypeMappers = null, string? defaultSchema = null, NamingStrategies? namingStrategies = null)
             : base(mainTypeMapper, secondaryTypeMappers)
         {
             DefaultSchema = defaultSchema;

@@ -3,6 +3,7 @@
     using System;
     using System.Globalization;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.DataDefinition.Generic1;
 
     public class Oracle12cTypeMapper : AbstractTypeMapper
@@ -40,7 +41,7 @@
             };
         }
 
-        public override SqlType MapFromGeneric1(SqlType genericType)
+        public override ISqlType MapFromGeneric1(ISqlType genericType)
         {
             return genericType.SqlTypeInfo switch
             {
@@ -61,7 +62,7 @@
             };
         }
 
-        public override SqlType MapToGeneric1(SqlType sqlType)
+        public override ISqlType MapToGeneric1(ISqlType sqlType)
         {
             return sqlType.SqlTypeInfo switch
             {

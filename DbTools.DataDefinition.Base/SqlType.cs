@@ -2,15 +2,16 @@
 {
     using System.Globalization;
     using System.Text;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 
-    public class SqlType
+    public class SqlType : ISqlType
     {
-        public SqlTypeInfo SqlTypeInfo { get; set; }
+        public ISqlTypeInfo SqlTypeInfo { get; set; }
         public bool IsNullable { get; set; }
         public int? Length { get; set; }
         public int? Scale { get; set; }
 
-        public SqlType Clone(SqlTypeInfo sqlTypeInfo)
+        public ISqlType Clone(ISqlTypeInfo sqlTypeInfo)
         {
             var sqlType = new SqlType
             {
@@ -23,7 +24,7 @@
             return sqlType;
         }
 
-        public SqlType Copy()
+        public ISqlType Copy()
         {
             var sqlType = new SqlType
             {

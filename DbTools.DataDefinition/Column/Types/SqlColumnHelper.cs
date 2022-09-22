@@ -44,7 +44,7 @@
                 if (!column.Types.ContainsKey(typeMapper.SqlVersion))
                 {
                     var othertype = typeMapper.MapFromGeneric1(column.Types[GenericVersion.Generic1]);
-                    column.Types.Add(typeMapper.SqlVersion, othertype);
+                    column.Types.Add(typeMapper.SqlVersion, (SqlType)othertype);
                 }
             }
         }

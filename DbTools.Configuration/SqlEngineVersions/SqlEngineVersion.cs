@@ -18,6 +18,10 @@
             VersionString = versionString;
             VersionNumber = versionNumber;
             ProviderName = providerName;
+
+            // pull in Container
+            // and get mapper
+
         }
 
         public override int GetHashCode()

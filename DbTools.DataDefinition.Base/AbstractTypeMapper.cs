@@ -1,5 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Base
 {
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+
     public abstract class AbstractTypeMapper : ITypeMapper
     {
         public abstract SqlEngineVersion SqlVersion { get; }
@@ -17,8 +19,8 @@
             return sqlType;
         }
 
-        public abstract SqlType MapFromGeneric1(SqlType genericType);
+        public abstract ISqlType MapFromGeneric1(ISqlType genericType);
 
-        public abstract SqlType MapToGeneric1(SqlType sqlType);
+        public abstract ISqlType MapToGeneric1(ISqlType sqlType);
     }
 }

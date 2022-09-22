@@ -2,7 +2,6 @@
 {
     using System.Linq;
     using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.DataDefinition.MsSql2016;
     using FizzCode.DbTools.DataDefinition.Oracle12c;
     using FizzCode.DbTools.DataDefinition.Tests;
@@ -165,10 +164,10 @@
             var version = MsSqlVersion.MsSql2016;
 
             var ddOriginal = new TestDatabaseFk();
-            ddOriginal.SetVersions(version.GetTypeMapper());
+            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddFkChanged = new TestDatabaseFk();
-            ddFkChanged.SetVersions(version.GetTypeMapper());
+            ddFkChanged.SetVersions(_typeMappers[version]);
 
             var fk = ddFkChanged.GetTable("Foreign").Properties.OfType<ForeignKey>().First();
             fk.SqlEngineVersionSpecificProperties[version, "Nocheck"] = "false";

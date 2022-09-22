@@ -35,7 +35,7 @@
         {
             foreach (var kvp in this)
             {
-                sqlTypes.Add(kvp.Key, kvp.Value.Copy());
+                sqlTypes.Add(kvp.Key, (SqlType)kvp.Value.Copy());
             }
 
             return sqlTypes;

@@ -4,7 +4,6 @@
     using FizzCode.DbTools.DataDeclaration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.DataDefinition.MsSql2016;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
     using FizzCode.DbTools.QueryBuilder;
@@ -27,7 +26,7 @@
         public class DbWithSp : DatabaseDeclaration
         {
             public DbWithSp()
-                : base(MsSqlVersion.MsSql2016.GetTypeMapper(), new[] { OracleVersion.Oracle12c.GetTypeMapper() })
+                : base(TypeMapperGetter.GetTypeMapper(MsSqlVersion.MsSql2016), TypeMapperGetter.GetTypeMappers(OracleVersion.Oracle12c))
             {
             }
 
@@ -58,7 +57,7 @@
         public class DbWithSpQueryBuilder : DatabaseDeclaration
         {
             public DbWithSpQueryBuilder()
-                : base(new QueryBuilder(), MsSqlVersion.MsSql2016.GetTypeMapper(), new[] { OracleVersion.Oracle12c.GetTypeMapper() })
+                : base(new QueryBuilder(), TypeMapperGetter.GetTypeMapper(MsSqlVersion.MsSql2016), TypeMapperGetter.GetTypeMappers(OracleVersion.Oracle12c))
             {
             }
 

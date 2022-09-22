@@ -28,6 +28,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\DbTools.Common\DbTools.Common.csproj" />
+    <ProjectReference Include="..\..\DbTools.DataDefinition.Factory.Interfaces\DbTools.DataDefinition.Factory.Interfaces.csproj" />
+    <ProjectReference Include="..\..\DbTools.DataDefinition.Factory\DbTools.DataDefinition.Factory.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
     <ProjectReference Include="..\..\DbTools.TestBase\DbTools.TestBase.csproj" />
   </ItemGroup>

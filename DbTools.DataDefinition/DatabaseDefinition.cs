@@ -3,23 +3,24 @@
     using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.DataDefinition.View;
 
     public class DatabaseDefinition : IDatabaseDefinition
     {
-        public Dictionary<SqlEngineVersion, AbstractTypeMapper> TypeMappers { get; set; } = new Dictionary<SqlEngineVersion, AbstractTypeMapper>();
+        public TypeMappers TypeMappers { get; set; }
         public SqlEngineVersion MainVersion { get; private set; }
         public Tables Tables { get; } = new Tables();
         protected Views Views { get; } = new Views();
 
         public List<StoredProcedure> StoredProcedures { get; } = new List<StoredProcedure>();
 
-        public DatabaseDefinition(AbstractTypeMapper mainTypeMapper, AbstractTypeMapper[] secondaryTypeMappers = null)
+        public DatabaseDefinition(ITypeMapper mainTypeMapper, ITypeMapper[] secondaryTypeMappers = null)
         {
             SetVersions(mainTypeMapper, secondaryTypeMappers);
         }
 
-        public void SetVersions(AbstractTypeMapper mainTypeMapper, AbstractTypeMapper[] secondaryTypeMappers = null)
+        public void SetVersions(ITypeMapper mainTypeMapper, ITypeMapper[] secondaryTypeMappers = null)
         {
             TypeMappers.Clear();
             MainVersion = mainTypeMapper?.SqlVersion;

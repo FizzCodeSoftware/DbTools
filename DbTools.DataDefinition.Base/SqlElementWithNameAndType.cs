@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Base
 {
     using System.Linq;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 
     public abstract class SqlElementWithNameAndType
     {
@@ -9,7 +10,7 @@
 
         protected abstract IDatabaseDefinition DatabaseDefinition { get; }
 
-        public SqlType? Type
+        public ISqlType? Type
         {
             get
             {

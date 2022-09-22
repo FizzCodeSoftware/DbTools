@@ -29,9 +29,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinition.Factory\DbTools.DataDefinition.Factory.csproj" />
     <ProjectReference Include="..\DbTools.SqlExecuter\DbTools.SqlExecuter.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
+    <ProjectReference Include="..\Implementation\DbTools.DataDefinition.MsSql\DbTools.DataDefinition.MsSql.csproj" />
+    <ProjectReference Include="..\Implementation\DbTools.DataDefinition.Oracle\DbTools.DataDefinition.Oracle.csproj" />
+    <ProjectReference Include="..\Implementation\DbTools.DataDefinition.SqLite\DbTools.DataDefinition.SqLite.csproj" />
   </ItemGroup>
 
 </Project>

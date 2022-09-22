@@ -110,7 +110,7 @@
         public void CircularFKDetectorABC_X(SqlEngineVersion version)
         {
             var dd = new CircularDdABC_X();
-            dd.SetVersions(version.GetTypeMapper());
+            dd.SetVersions(TypeMapperGetter.GetTypeMapper(version));
 
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "CircularDdABC_X");
 
@@ -126,7 +126,7 @@
         public void CircularFKDetectorAB_CD(SqlEngineVersion version)
         {
             var dd = new CircularDdAB_CD();
-            dd.SetVersions(version.GetTypeMapper());
+            dd.SetVersions(TypeMapperGetter.GetTypeMapper(version));
 
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "CircularFKDetectorAB_CD");
 
@@ -138,7 +138,7 @@
         public void CircularDdA0B1C1_B2C2(SqlEngineVersion version)
         {
             var dd = new CircularDdA0B1C1_B2C2();
-            dd.SetVersions(version.GetTypeMapper());
+            dd.SetVersions(TypeMapperGetter.GetTypeMapper(version));
 
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "CircularDdA0B1C1_B2C2");
 
