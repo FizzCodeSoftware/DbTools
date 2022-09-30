@@ -2,7 +2,7 @@
 {
     using System;
     using System.Globalization;
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.Generic1;
 
     public class Generic1CSharpWriter : AbstractCSharpWriter

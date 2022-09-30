@@ -3,38 +3,42 @@
     using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+    using FizzCode.DbTools.DataDefinition.Factory.Interfaces;
     using FizzCode.DbTools.DataDefinition.View;
+    using FizzCode.DbTools.Factory;
+    using FizzCode.DbTools.Factory.Interfaces;
+
+    // using FizzCode.DbTools.Factory;
 
     public class DatabaseDefinition : IDatabaseDefinition
     {
-        public TypeMappers TypeMappers { get; set; }
+        public TypeMappers TypeMappers { get; }
         public SqlEngineVersion MainVersion { get; private set; }
+        public List<SqlEngineVersion> SecondaryVersions { get; private set; }
         public Tables Tables { get; } = new Tables();
         protected Views Views { get; } = new Views();
 
+        protected IFactoryContainer FactoryContainer;
+
         public List<StoredProcedure> StoredProcedures { get; } = new List<StoredProcedure>();
 
-        public DatabaseDefinition(ITypeMapper mainTypeMapper, ITypeMapper[] secondaryTypeMappers = null)
+        public DatabaseDefinition(SqlEngineVersion mainVersion, params SqlEngineVersion[] secondaryVersions)
+            : this(new Root(), mainVersion, secondaryVersions)
         {
-            SetVersions(mainTypeMapper, secondaryTypeMappers);
+            /*var root = new Root();
+            foreach (var version in secondaryVersions)
+                TypeMappers.Add(root.Get<ITypeMapperFactory>().GetTypeMapper(version));*/
         }
 
-        public void SetVersions(ITypeMapper mainTypeMapper, ITypeMapper[] secondaryTypeMappers = null)
+        public DatabaseDefinition(IFactoryContainer factoryContainer, SqlEngineVersion mainVersion, params SqlEngineVersion[] secondaryVersions)
         {
-            TypeMappers.Clear();
-            MainVersion = mainTypeMapper?.SqlVersion;
+            FactoryContainer = factoryContainer;
 
-            if (mainTypeMapper != null && (secondaryTypeMappers?.Contains(mainTypeMapper) != true))
-                TypeMappers.Add(mainTypeMapper.SqlVersion, mainTypeMapper);
+            MainVersion = mainVersion;
+            SecondaryVersions = secondaryVersions?.ToList();
 
-            if (secondaryTypeMappers != null)
-            {
-                foreach (var mapper in secondaryTypeMappers)
-                {
-                    TypeMappers.Add(mapper.SqlVersion, mapper);
-                }
-            }
+            factoryContainer.TryGet(out ITypeMapperFactory typeMapperFactory);
+            TypeMappers = new TypeMappers(typeMapperFactory);
         }
 
         public void AddTable(SqlTable sqlTable)

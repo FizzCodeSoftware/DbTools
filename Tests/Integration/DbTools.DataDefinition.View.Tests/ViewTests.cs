@@ -33,7 +33,7 @@
         }*/
 
         public TestDatabaseSimpleWithView()
-            : base(new QueryBuilder(), null, TypeMapperGetter.GetTypeMappers(MsSqlVersion.MsSql2016, OracleVersion.Oracle12c, SqLiteVersion.SqLite3))
+            : base(new TestFactoryContainer(), new QueryBuilder(), null, new SqlEngineVersion[] { MsSqlVersion.MsSql2016, OracleVersion.Oracle12c, SqLiteVersion.SqLite3 })
         {
         }
 

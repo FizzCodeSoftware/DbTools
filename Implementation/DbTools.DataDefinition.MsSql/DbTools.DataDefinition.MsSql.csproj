@@ -34,9 +34,7 @@
     <ProjectReference Include="..\..\DbTools.DataDeclaration\DbTools.DataDeclaration.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinitionDocumenter\DbTools.DataDefinitionDocumenter.csproj" />
     <ProjectReference Include="..\..\DbTools.SqlExecuter\DbTools.SqlExecuter.csproj" />
-    <ProjectReference Include="..\..\DbTools.DataDefinition.SqlGenerator\DbTools.DataDefinition.SqlGenerator.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinitionReader\DbTools.DataDefinitionReader.csproj" />
-    <ProjectReference Include="..\..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
     <ProjectReference Include="..\DbTools.SqlExecuter.MsSql\DbTools.SqlExecuter.MsSql.csproj" />
     <ProjectReference Include="..\DbTools.SqlGenerator.MsSql\DbTools.SqlGenerator.MsSql.csproj" />
   </ItemGroup>

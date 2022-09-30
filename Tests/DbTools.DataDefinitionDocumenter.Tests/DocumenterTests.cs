@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,7 +13,6 @@
         public void DocumentTest(SqlEngineVersion version)
         {
             var db = new TestDatabaseFks();
-            db.SetVersions(TypeMapperGetter.GetTypeMapper(version));
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "TestDatabaseFks");
 
             documenter.Document(db);
@@ -24,7 +23,6 @@
         public void TableCustomizerTest(SqlEngineVersion version)
         {
             var db = new TestDatabaseFks();
-            db.SetVersions(TypeMapperGetter.GetTypeMapper(version));
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version, new TableCustomizer()), version, "TestDatabaseFks");
             documenter.Document(db);
         }
@@ -34,7 +32,6 @@
         public void DocumentTestForeignKeyComposite(SqlEngineVersion version)
         {
             var db = new ForeignKeyComposite();
-            db.SetVersions(TypeMapperGetter.GetTypeMapper(version));
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "ForeignKeyComposite");
             documenter.Document(db);
         }
@@ -44,7 +41,6 @@
         public void DocumentTestIndexMultiColumn(SqlEngineVersion version)
         {
             var db = new TestDatabaseIndexMultiColumn();
-            db.SetVersions(TypeMapperGetter.GetTypeMapper(version));
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "TestDatabaseIndexMultiColumn");
             documenter.Document(db);
         }
@@ -54,7 +50,6 @@
         public void DocumentTestIndexMultiColumnAndInclude(SqlEngineVersion version)
         {
             var db = new TestDatabaseIndexMultiColumnAndInclude();
-            db.SetVersions(TypeMapperGetter.GetTypeMapper(version));
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "TestDatabaseIndexMultiColumnAndInclude");
             documenter.Document(db);
         }
@@ -64,7 +59,6 @@
         public void DocumentTestUniqueConstraint(SqlEngineVersion version)
         {
             var db = new TestDatabaseUniqueConstraint();
-            db.SetVersions(TypeMapperGetter.GetTypeMapper(version));
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "TestDatabaseUniqueConstraint");
             documenter.Document(db);
         }

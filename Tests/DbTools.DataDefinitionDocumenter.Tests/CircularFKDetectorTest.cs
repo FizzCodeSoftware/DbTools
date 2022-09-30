@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests
 {
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.Factory;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -110,7 +110,6 @@
         public void CircularFKDetectorABC_X(SqlEngineVersion version)
         {
             var dd = new CircularDdABC_X();
-            dd.SetVersions(TypeMapperGetter.GetTypeMapper(version));
 
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "CircularDdABC_X");
 
@@ -126,7 +125,6 @@
         public void CircularFKDetectorAB_CD(SqlEngineVersion version)
         {
             var dd = new CircularDdAB_CD();
-            dd.SetVersions(TypeMapperGetter.GetTypeMapper(version));
 
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "CircularFKDetectorAB_CD");
 
@@ -138,7 +136,6 @@
         public void CircularDdA0B1C1_B2C2(SqlEngineVersion version)
         {
             var dd = new CircularDdA0B1C1_B2C2();
-            dd.SetVersions(TypeMapperGetter.GetTypeMapper(version));
 
             var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "CircularDdA0B1C1_B2C2");
 

@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.MsSql2016
 {
     using FizzCode.DbTools.DataDeclaration;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public class IndexNamingMsSqlDefaultStrategy : IIndexNamingStrategy
     {

@@ -3,7 +3,7 @@
     using System;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Factory.Interfaces;
-    using FizzCode.DbTools.SqlGenerator.Base;
+    using FizzCode.DbTools.Interfaces;
     using FizzCode.DbTools.SqlGenerator.MsSql;
     using FizzCode.DbTools.SqlGenerator.Oracle;
     using FizzCode.DbTools.SqlGenerator.SqLite;

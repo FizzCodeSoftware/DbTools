@@ -35,7 +35,7 @@
   </ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\DbTools.SqlGenerator.Base\DbTools.SqlGenerator.Base.csproj" />
+	  <ProjectReference Include="..\DbTools.Factory.Interfaces\DbTools.Factory.Interfaces.csproj" />
 	</ItemGroup>
 
 </Project>

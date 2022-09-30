@@ -13,8 +13,9 @@
     public interface IDatabaseDefinition
     {
         SqlEngineVersion MainVersion { get; }
+        List<SqlEngineVersion> SecondaryVersions { get; }
         List<StoredProcedure> StoredProcedures { get; }
-        TypeMappers TypeMappers { get; set; }
+        TypeMappers TypeMappers { get; }
 
         void AddTable(SqlTable sqlTable);
         void AddView(SqlView sqlTable);
@@ -26,6 +27,5 @@
         SqlTable GetTable(string schema, string tableName);
         List<SqlTable> GetTables();
         List<SqlView> GetViews();
-        void SetVersions(ITypeMapper mainTypeMapper, ITypeMapper[] secondaryTypeMappers = null);
     }
 }

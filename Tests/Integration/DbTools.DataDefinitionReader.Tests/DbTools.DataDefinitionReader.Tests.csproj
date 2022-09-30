@@ -32,7 +32,6 @@
     <ProjectReference Include="..\..\..\DbTools.Configuration\DbTools.Configuration.csproj" />
     <ProjectReference Include="..\..\..\DbTools.SqlExecuter\DbTools.SqlExecuter.csproj" />
     <ProjectReference Include="..\..\..\DbTools.DataDefinitionReader\DbTools.DataDefinitionReader.csproj" />
-    <ProjectReference Include="..\..\..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
     <ProjectReference Include="..\..\DbTools.DataDefinition.Tests\DbTools.DataDefinition.Tests.csproj" />
   </ItemGroup>
 

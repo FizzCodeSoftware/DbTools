@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinitionDocumenter;
 
     public class Oracle12cCSharpTypedWriter : AbstractCSharpTypedWriter

@@ -6,7 +6,6 @@
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.SqlGenerator;
     using FizzCode.DbTools.DataDefinitionReader;
     using FizzCode.LightWeight.AdoNet;
     using FizzCode.DbTools.SqlExecuter.MsSql;
@@ -20,7 +19,7 @@
 
         public override DatabaseDefinition GetDatabaseDefinition()
         {
-            var dd = new DatabaseDefinition(new MsSql2016TypeMapper(), new[] { GenericVersion.Generic1.GetTypeMapper() });
+            var dd = new DatabaseDefinition(MsSqlVersion.MsSql2016, GenericVersion.Generic1);
 
             Log(LogSeverity.Debug, "Reading table definitions from database.");
 

@@ -3,7 +3,7 @@
     using System.IO;
     using System.Linq;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.Checker;
 
     public class SchemaCheckerDocumenter : DocumenterWriterBase
@@ -18,7 +18,7 @@
         {
         }
 
-        public void Document(DatabaseDefinition dd)
+        public void Document(IDatabaseDefinition dd)
         {
             Log(LogSeverity.Information, "Starting on {DatabaseName}.", "SchemaCheckerDocumenter", DatabaseName);
 

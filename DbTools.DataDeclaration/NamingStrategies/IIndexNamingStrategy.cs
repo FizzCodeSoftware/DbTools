@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDeclaration
 {
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public interface IIndexNamingStrategy : INamingStrategy
     {

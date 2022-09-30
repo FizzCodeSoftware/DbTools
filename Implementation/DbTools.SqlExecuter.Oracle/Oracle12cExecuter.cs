@@ -4,11 +4,11 @@
     using System.Collections.Generic;
     using System.Data.Common;
     using System.Linq;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.SqlExecuter;
-    using FizzCode.DbTools.DataDefinition.SqlGenerator;
     using FizzCode.LightWeight.AdoNet;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Interfaces;
 
     public class Oracle12cExecuter : SqlStatementExecuter
     {

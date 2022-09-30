@@ -4,11 +4,10 @@
     using System.Data.SQLite;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.SqlExecuter;
-    using FizzCode.DbTools.DataDefinition.SqlGenerator;
     using FizzCode.LightWeight.AdoNet;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.Interfaces;
 
 #pragma warning disable CA1001 // Types that own disposable fields should be disposable
     public class SqLite3Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDatabase

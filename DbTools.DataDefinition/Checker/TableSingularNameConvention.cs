@@ -1,5 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Checker
 {
+    using FizzCode.DbTools.DataDefinition.Base;
+
     public abstract class Convention : SchemaCheck
     {
         public override string Type => "Convention";

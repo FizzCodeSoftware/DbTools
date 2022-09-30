@@ -32,10 +32,8 @@
         protected static DatabaseDefinitions Table_Add_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddWithNewTable = new TestDatabaseSimple();
-            ddWithNewTable.SetVersions(_typeMappers[version]);
             AddTable(ddWithNewTable);
 
             return new DatabaseDefinitions(ddOriginal, ddWithNewTable, "TestDatabaseSimple", "TestDatabaseSimple_Table_Add");
@@ -60,11 +58,9 @@
         protected static DatabaseDefinitions Table_Remove_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(_typeMappers[version]);
             AddTable(ddOriginal);
 
             var ddWithoutNewTable = new TestDatabaseSimple();
-            ddWithoutNewTable.SetVersions(_typeMappers[version]);
 
             return new DatabaseDefinitions(ddOriginal, ddWithoutNewTable, "TestDatabaseSimple", "TestDatabaseSimple_Table_Remove");
         }
@@ -76,10 +72,8 @@
             ddOriginal.GetTable("Foreign").Properties.Remove(
                 ddOriginal.GetTable("Foreign").Properties.OfType<ForeignKey>().First()
                 );
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddWithFK = new TestDatabaseFk();
-            ddWithFK.SetVersions(_typeMappers[version]);
 
             return new DatabaseDefinitions(ddOriginal, ddWithFK, "TestDatabaseFk", "TestDatabaseFk_Fk_Add");
         }
@@ -88,13 +82,11 @@
         protected static DatabaseDefinitions Fk_Remove_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseFk();
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddFKRemoved = new TestDatabaseFk();
             ddFKRemoved.GetTable("Foreign").Properties.Remove(
                 ddFKRemoved.GetTable("Foreign").Properties.OfType<ForeignKey>().First()
                 );
-            ddFKRemoved.SetVersions(_typeMappers[version]);
 
             return new DatabaseDefinitions(ddOriginal, ddFKRemoved, "TestDatabaseFk", "TestDatabaseFk_Fk_Remove");
         }
@@ -103,14 +95,12 @@
         protected static DatabaseDefinitions Fk_Change_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseFkChange();
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddFkChanged = new TestDatabaseFkChange();
             ddFkChanged.GetTable("Foreign").Properties.Remove(
                 ddFkChanged.GetTable("Foreign").Properties.OfType<ForeignKey>().First()
                 );
             ddFkChanged.GetTable("Foreign").Columns["PrimaryId"].SetForeignKeyToTable("Primary2", "FkChange");
-            ddFkChanged.SetVersions(_typeMappers[version]);
 
             return new DatabaseDefinitions(ddOriginal, ddFkChanged, "TestDatabaseFkChange", "TestDatabaseFkChange_Fk_Change");
         }
@@ -122,10 +112,8 @@
             ddOriginal.GetTable("Order").AddInt32("LineNumber2");
             ddOriginal.GetTable("Order").AddUniqueConstraintWithName("UQ_Order_OrderHeaderId_LineNumber_LineNumber2", "OrderHeaderId", "LineNumber", "LineNumber2");
             ddOriginal.GetTable("TopOrdersPerCompany").AddInt32("Top2C");
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddFkChanged = new ForeignKeyComposite2();
-            ddFkChanged.SetVersions(_typeMappers[version]);
 
             return new DatabaseDefinitions(ddOriginal, ddFkChanged, "ForeignKeyComposite", "ForeignKeyComposite2_Fk_Change_Composite_NameChange");
         }
@@ -137,7 +125,6 @@
             ddOriginal.GetTable("Order").AddInt32("LineNumber2");
             ddOriginal.GetTable("Order").AddUniqueConstraintWithName("UQ_Order_OrderHeaderId_LineNumber_LineNumber2", "OrderHeaderId", "LineNumber", "LineNumber2");
             ddOriginal.GetTable("TopOrdersPerCompany").AddInt32("Top2C");
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var fkOriginal = ddOriginal
                 .GetTable("TopOrdersPerCompany").Properties
@@ -147,7 +134,6 @@
             fkOriginal.Name = "FK_TopOrdersPerCompany_2";
 
             var ddFkChanged = new ForeignKeyComposite2();
-            ddFkChanged.SetVersions(_typeMappers[version]);
 
             return new DatabaseDefinitions(ddOriginal, ddFkChanged, "ForeignKeyComposite", "ForeignKeyComposite2_Fk_Change_Composite_NoNameChange");
         }
@@ -156,10 +142,8 @@
         protected static DatabaseDefinitions Column_Change_NotNullableToNullable_WithFk_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseFk();
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddFkChanged = new TestDatabaseFk();
-            ddFkChanged.SetVersions(_typeMappers[version]);
             ddFkChanged.GetTable("Foreign")["PrimaryId"].Type.IsNullable = true;
 
             return new DatabaseDefinitions(ddOriginal, ddFkChanged, "ForeignKeyComposite", "ForeignKeyComposite2_Column_Change_NotNullableToNullable_WithFk");
@@ -169,10 +153,8 @@
         protected static DatabaseDefinitions Column_Add_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddWithNewColumn = new TestDatabaseSimple();
-            ddWithNewColumn.SetVersions(_typeMappers[version]);
 
             ddWithNewColumn.GetTable("Company").AddVarChar("Name2", 100);
 
@@ -183,10 +165,8 @@
         protected static DatabaseDefinitions Column_Add2_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddWithNewColumn = new TestDatabaseSimple();
-            ddWithNewColumn.SetVersions(_typeMappers[version]);
 
             ddWithNewColumn.GetTable("Company").AddVarChar("Name2", 100);
             ddWithNewColumn.GetTable("Company").AddVarChar("Name3", 100, true);
@@ -198,10 +178,7 @@
         protected static DatabaseDefinitions Column_Remove_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(_typeMappers[version]);
-
             var ddColumnRemoved = new TestDatabaseSimple();
-            ddColumnRemoved.SetVersions(_typeMappers[version]);
 
             ddColumnRemoved.GetTable("Company").Columns.Remove("Name");
 
@@ -212,11 +189,9 @@
         protected static DatabaseDefinitions Column_Remove2_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(_typeMappers[version]);
             ddOriginal.GetTable("Company").AddNVarChar("Name2", 100);
 
             var ddColumnsRemoved = new TestDatabaseSimple();
-            ddColumnsRemoved.SetVersions(_typeMappers[version]);
 
             ddColumnsRemoved.GetTable("Company").Columns.Remove("Name");
             ddColumnsRemoved.GetTable("Company").Columns.Remove("Name2");
@@ -234,10 +209,8 @@
             ddOriginal.GetTable("Company").Properties.Remove(
                 ddOriginal.GetTable("Company").Properties.OfType<PrimaryKey>().First()
                 );
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddWithPk = new TestDatabaseSimple();
-            ddWithPk.SetVersions(_typeMappers[version]);
             ddWithPk.GetTable("Company").Columns["Id"].Properties.Remove(
                 ddWithPk.GetTable("Company").Columns["Id"].Properties.OfType<Identity>().First()
                 );
@@ -249,10 +222,8 @@
         protected static DatabaseDefinitions Identity_Change_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddIdentityChanged = new TestDatabaseSimple();
-            ddIdentityChanged.SetVersions(_typeMappers[version]);
             var identity = ddIdentityChanged.Company.Columns["Id"].Properties.OfType<Identity>().First();
             identity.Increment = 2;
 
@@ -263,10 +234,7 @@
         protected static DatabaseDefinitions Column_Change_Length_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(_typeMappers[version]);
-
             var ddColumnLengthChanged = new TestDatabaseSimple();
-            ddColumnLengthChanged.SetVersions(_typeMappers[version]);
             ddColumnLengthChanged.GetTable("Company")["Name"].Type.Length += 1;
 
             return new DatabaseDefinitions(ddOriginal, ddColumnLengthChanged, "TestDatabaseSimple", "TestDatabaseSimple_Column_Change_Length");
@@ -276,11 +244,9 @@
         protected static DatabaseDefinitions Column_Change2_Length_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(_typeMappers[version]);
             ddOriginal.GetTable("Company").AddNVarChar("Name2", 100);
 
             var ddColumnLengthsChanged = new TestDatabaseSimple();
-            ddColumnLengthsChanged.SetVersions(_typeMappers[version]);
             ddColumnLengthsChanged.GetTable("Company").AddNVarChar("Name2", 100);
             ddColumnLengthsChanged.GetTable("Company")["Name"].Type.Length += 1;
             ddColumnLengthsChanged.GetTable("Company")["Name2"].Type.Length += 1;
@@ -292,10 +258,8 @@
         protected static DatabaseDefinitions Column_Change_Nullable_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddNullableChanged = new TestDatabaseSimple();
-            ddNullableChanged.SetVersions(_typeMappers[version]);
             ddNullableChanged.GetTable("Company")["Name"].Type.IsNullable = !ddOriginal.GetTable("Company")["Name"].Type.IsNullable;
 
             return new DatabaseDefinitions(ddOriginal, ddNullableChanged, "TestDatabaseSimple", "TestDatabaseSimple_Column_Change_Nullable");
@@ -305,10 +269,8 @@
         protected static DatabaseDefinitions Column_Change_DbType_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddDbTypeChanged = new TestDatabaseSimple();
-            ddDbTypeChanged.SetVersions(_typeMappers[version]);
 
             if (version == MsSqlVersion.MsSql2016)
                 ddDbTypeChanged.GetTable("Company")["Name"].Type.SqlTypeInfo = MsSqlType2016.NChar;
@@ -322,10 +284,8 @@
         protected static DatabaseDefinitions Column_Change_DbTypeAndLengthAndIsNullable_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddddDbTypeAndLengthChanged = new TestDatabaseSimple();
-            ddddDbTypeAndLengthChanged.SetVersions(_typeMappers[version]);
 
             if (version == MsSqlVersion.MsSql2016)
                 ddddDbTypeAndLengthChanged.GetTable("Company")["Name"].Type.SqlTypeInfo = MsSqlType2016.NChar;
@@ -342,10 +302,8 @@
         protected static DatabaseDefinitions Index_Add_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseSimple();
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddWithNewIndex = new TestDatabaseIndex();
-            ddWithNewIndex.SetVersions(_typeMappers[version]);
 
             return new DatabaseDefinitions(ddOriginal, ddWithNewIndex, "TestDatabaseSimple", "TestDatabaseIndex_Index_Add");
         }
@@ -354,14 +312,12 @@
         protected static DatabaseDefinitions Index_Change_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseIndexMultiColumn();
-            ddOriginal.SetVersions(_typeMappers[version]);
             ddOriginal.GetTable("Company").Properties.Remove(
                 ddOriginal.GetTable("Company").Properties.OfType<Index>().First()
             );
             ddOriginal.GetTable("Company").AddIndexWithName(false, "IX_Company_Name", "Name1");
 
             var ddWithChangedIndex = new TestDatabaseIndexMultiColumn();
-            ddWithChangedIndex.SetVersions(_typeMappers[version]);
             ddWithChangedIndex.GetTable("Company").Properties.OfType<Index>().First().Name = "IX_Company_Name";
 
             return new DatabaseDefinitions(ddOriginal, ddWithChangedIndex, "TestDatabaseIndexMultiColumn", "TestDatabaseIndexMultiColum_Index_Change");
@@ -372,12 +328,10 @@
         protected static DatabaseDefinitions UniqueConstraint_Change_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseUniqueConstraint();
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             ddOriginal.GetTable("Company").AddNVarChar("Name2", 100);
 
             var ddNew = new TestDatabaseUniqueConstraint2();
-            ddNew.SetVersions(_typeMappers[version]);
 
             return new DatabaseDefinitions(ddOriginal, ddNew, "TestDatabaseUniqueConstraint_Column_Add", "TestDatabaseUniqueConstraint2");
         }
@@ -387,10 +341,8 @@
         protected static DatabaseDefinitions UniqueConstraint_Change_NewColumn_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseUniqueConstraint();
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddNew = new TestDatabaseUniqueConstraint2();
-            ddNew.SetVersions(_typeMappers[version]);
 
             return new DatabaseDefinitions(ddOriginal, ddNew, "TestDatabaseUniqueConstraint", "TestDatabaseUniqueConstraint2");
         }
@@ -400,11 +352,9 @@
         protected static DatabaseDefinitions UniqueConstraint_Change_NewColumn_UcName_Dds(SqlEngineVersion version)
         {
             var ddOriginal = new TestDatabaseUniqueConstraint();
-            ddOriginal.SetVersions(_typeMappers[version]);
             ddOriginal.GetTable("Company").Properties.OfType<UniqueConstraint>().First().Name = "UC_1";
 
             var ddUcChanged = new TestDatabaseUniqueConstraint2();
-            ddUcChanged.SetVersions(_typeMappers[version]);
             ddUcChanged.GetTable("Company").Properties.OfType<UniqueConstraint>().First().Name = "UC_1";
 
             return new DatabaseDefinitions(ddOriginal, ddUcChanged, "TestDatabaseUniqueConstraint", "TestDatabaseUniqueConstraint2_Change_NewColumn_UcName_Dds");

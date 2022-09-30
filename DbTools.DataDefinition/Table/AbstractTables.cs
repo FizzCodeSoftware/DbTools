@@ -3,6 +3,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public abstract class AbstractTables<T> : ICollection<T> where T: SqlTableOrView
     {

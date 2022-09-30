@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.SqlGenerator.Base
 {
     using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Interfaces;
 
     public abstract class AbstractSqlGeneratorBase : ISqlGeneratorBase
     {

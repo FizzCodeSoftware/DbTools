@@ -2,7 +2,7 @@
 {
     using FizzCode.DbTools;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition.SqlGenerator;
+    using FizzCode.DbTools.Interfaces;
 
     public interface ISqlGeneratorFactory
     {

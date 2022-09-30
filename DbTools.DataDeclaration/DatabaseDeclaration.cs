@@ -5,7 +5,7 @@
     using System.Reflection;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+    using FizzCode.DbTools.Factory.Interfaces;
     using FizzCode.DbTools.QueryBuilder.Interface;
 
     public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
@@ -13,8 +13,8 @@
         public NamingStrategies NamingStrategies { get; }
         public string? DefaultSchema { get; }
 
-        protected DatabaseDeclaration(IQueryBuilderConnector queryBuilderConnector, ITypeMapper mainTypeMapper, ITypeMapper[]? secondaryTypeMappers = null, string? defaultSchema = null, NamingStrategies? namingStrategies = null)
-            : base(mainTypeMapper, secondaryTypeMappers)
+        protected DatabaseDeclaration(IFactoryContainer factoryContainer, IQueryBuilderConnector queryBuilderConnector, SqlEngineVersion mainVersion, SqlEngineVersion[]? secondaryVersions = null, string? defaultSchema = null, NamingStrategies? namingStrategies = null)
+            : base(mainVersion, secondaryVersions)
         {
             DefaultSchema = defaultSchema;
             NamingStrategies = namingStrategies ?? new NamingStrategies();
@@ -29,8 +29,8 @@
             CircularFKDetector.DectectCircularFKs(GetTables());
         }
 
-        protected DatabaseDeclaration(ITypeMapper mainTypeMapper, ITypeMapper[]? secondaryTypeMappers = null, string? defaultSchema = null, NamingStrategies? namingStrategies = null)
-            : base(mainTypeMapper, secondaryTypeMappers)
+        protected DatabaseDeclaration(IFactoryContainer factoryContainer, SqlEngineVersion mainVersion, SqlEngineVersion[]? secondaryVersions = null, string? defaultSchema = null, NamingStrategies? namingStrategies = null)
+            : base(factoryContainer, mainVersion, secondaryVersions)
         {
             DefaultSchema = defaultSchema;
             NamingStrategies = namingStrategies ?? new NamingStrategies();

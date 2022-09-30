@@ -2,6 +2,7 @@
 {
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Factory.Interfaces;
+    using FizzCode.DbTools.Interfaces;
     using FizzCode.DbTools.SqlExecuter;
     using FizzCode.LightWeight.AdoNet;
 
@@ -15,7 +16,7 @@
             _sqlExecuterFactory = sqlExecuterFactory;
         }
 
-        public DatabaseMigrator FromConnectionStringSettings(NamedConnectionString connectionString, Context context)
+        public IDatabaseMigrator FromConnectionStringSettings(NamedConnectionString connectionString, Context context)
         {
             var sqlEngineVersion = connectionString.GetSqlEngineVersion();
 

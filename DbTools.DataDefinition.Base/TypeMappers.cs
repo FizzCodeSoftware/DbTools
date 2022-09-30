@@ -15,5 +15,10 @@
         {
             return _factory.GetTypeMapper(version);
         }
+
+        public void Add(ITypeMapper typeMapper)
+        {
+            Add(typeMapper.SqlVersion, typeMapper);
+        }
     }
 }

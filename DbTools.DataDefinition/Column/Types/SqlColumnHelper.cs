@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
+    using System.Linq;
     using FizzCode.DbTools.DataDefinition.Base;
 
     public static class SqlColumnHelper
@@ -39,10 +40,16 @@
             if (!column.Types.ContainsKey(GenericVersion.Generic1))
                 return;
 
-            foreach (var typeMapper in column.SqlTableOrView.DatabaseDefinition.TypeMappers.Values)
+
+            SqlEngineVersion[] versions = (new[] { column.SqlTableOrView.DatabaseDefinition.MainVersion })
+                .Concat(column.SqlTableOrView.DatabaseDefinition.SecondaryVersions).ToArray();
+            
+
+            foreach (var version in versions)
             {
-                if (!column.Types.ContainsKey(typeMapper.SqlVersion))
+                if (!column.Types.ContainsKey(version))
                 {
+                    var typeMapper = column.SqlTableOrView.DatabaseDefinition.TypeMappers[version];
                     var othertype = typeMapper.MapFromGeneric1(column.Types[GenericVersion.Generic1]);
                     column.Types.Add(typeMapper.SqlVersion, (SqlType)othertype);
                 }

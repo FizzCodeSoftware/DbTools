@@ -10,7 +10,6 @@
     using System.Text.Json;
     using System.Text.RegularExpressions;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinitionDocumenter.BimDTO;
     using FizzCode.DbTools.Tabular;
@@ -24,7 +23,7 @@
         {
         }
 
-        public void Generate(DatabaseDefinition databaseDefinition)
+        public void Generate(IDatabaseDefinition databaseDefinition)
         {
             Log(LogSeverity.Information, "Starting on {DatabaseName}.", "BimGenerator", DatabaseName);
 

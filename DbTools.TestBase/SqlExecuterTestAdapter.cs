@@ -7,7 +7,7 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.Factory.Interfaces;
-    using FizzCode.DbTools.SqlExecuter;
+    using FizzCode.DbTools.Interfaces;
     using FizzCode.LightWeight.AdoNet;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.SqlExecuter;
 
@@ -17,7 +16,7 @@
         public abstract List<SchemaAndTableName> GetSchemaAndTableNames();
         public abstract SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition);
 
-        public abstract DatabaseDefinition GetDatabaseDefinition();
+        public abstract IDatabaseDefinition GetDatabaseDefinition();
 
         protected void Log(LogSeverity severity, string text, params object[] args)
         {

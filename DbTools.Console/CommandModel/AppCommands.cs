@@ -22,6 +22,8 @@ namespace FizzCode.DbTools.Console
         public AppCommands()
         {
             var root = new Root();
+            root.Register<SqlGeneratorFactory>(typeof(ISqlGeneratorFactory));
+            root.Register<SqlExecuterFactory>(typeof(ISqlExecuterFactory));
             _sqlExecuterFactory = root.Get<ISqlExecuterFactory>();
         }
 

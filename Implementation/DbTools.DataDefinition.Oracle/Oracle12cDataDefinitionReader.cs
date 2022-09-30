@@ -18,7 +18,7 @@
 
         public override DatabaseDefinition GetDatabaseDefinition()
         {
-            var dd = new DatabaseDefinition(new Oracle12cTypeMapper(), new[] { GenericVersion.Generic1.GetTypeMapper() });
+            var dd = new DatabaseDefinition(OracleVersion.Oracle12c, GenericVersion.Generic1);
 
             Log(LogSeverity.Debug, "Reading table definitions from database.");
 

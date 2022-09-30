@@ -1,12 +1,11 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
     using System.Collections.Generic;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
 
     public interface IDataDefinitionReader
     {
-        DatabaseDefinition GetDatabaseDefinition();
+        IDatabaseDefinition GetDatabaseDefinition();
         List<SchemaAndTableName> GetSchemaAndTableNames();
         SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition = true);
         List<SchemaAndTableName> GetViews();

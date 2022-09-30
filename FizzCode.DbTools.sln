@@ -95,11 +95,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.Factory", "DbTools.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.Factory.Interfaces", "DbTools.Factory.Interfaces\DbTools.Factory.Interfaces.csproj", "{DA13B110-4341-4DA8-A352-6AF9CA6C8914}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTools.Factory.Collections", "DbTools.Factory.Collections\DbTools.Factory.Collections.csproj", "{F73C3B5C-14C7-4CE0-A126-AA0293226C7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.Factory.Collections", "DbTools.Factory.Collections\DbTools.Factory.Collections.csproj", "{F73C3B5C-14C7-4CE0-A126-AA0293226C7C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTools.DataDefinition.Factory.Interfaces", "DbTools.DataDefinition.Factory.Interfaces\DbTools.DataDefinition.Factory.Interfaces.csproj", "{7BCA9862-4B37-4A0E-8610-AEA04233FE71}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.Factory.Interfaces", "DbTools.DataDefinition.Factory.Interfaces\DbTools.DataDefinition.Factory.Interfaces.csproj", "{7BCA9862-4B37-4A0E-8610-AEA04233FE71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTools.DataDefinition.Base.Interfaces", "DbTools.DataDefinition.Base.Interfaces\DbTools.DataDefinition.Base.Interfaces.csproj", "{21BFC844-13C4-4D86-90E4-3F9DF6AF74C6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTools.DataDefinition.Base.Interfaces", "DbTools.DataDefinition.Base.Interfaces\DbTools.DataDefinition.Base.Interfaces.csproj", "{21BFC844-13C4-4D86-90E4-3F9DF6AF74C6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbTools.Interfaces", "DbTools.Interfaces\DbTools.Interfaces.csproj", "{72D75FBF-4C23-48E5-9DB1-B201CB43ED87}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -271,6 +273,10 @@ Global
 		{21BFC844-13C4-4D86-90E4-3F9DF6AF74C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{21BFC844-13C4-4D86-90E4-3F9DF6AF74C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{21BFC844-13C4-4D86-90E4-3F9DF6AF74C6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72D75FBF-4C23-48E5-9DB1-B201CB43ED87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72D75FBF-4C23-48E5-9DB1-B201CB43ED87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72D75FBF-4C23-48E5-9DB1-B201CB43ED87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72D75FBF-4C23-48E5-9DB1-B201CB43ED87}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

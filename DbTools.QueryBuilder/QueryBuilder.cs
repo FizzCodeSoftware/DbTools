@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.QueryBuilder.Interface;
 

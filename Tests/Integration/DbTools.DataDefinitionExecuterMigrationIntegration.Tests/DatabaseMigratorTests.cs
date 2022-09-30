@@ -7,9 +7,9 @@
     using FizzCode.DbTools.DataDeclaration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Migration;
     using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.DataDefinition.Generic1;
-    using FizzCode.DbTools.DataDefinition.Migration;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.Factory.Interfaces;
     using FizzCode.DbTools.SqlExecuter;
@@ -101,7 +101,6 @@
             var version = MsSqlVersion.MsSql2016;
 
             var dd = new TestDatabaseFk();
-            dd.SetVersions(TypeMapperGetter.GetTypeMapper(version));
             Init(version, dd);
 
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(

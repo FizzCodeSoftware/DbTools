@@ -25,7 +25,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\DbTools.Common\DbTools.Common.csproj" />
     <ProjectReference Include="..\..\DbTools.Configuration\DbTools.Configuration.csproj" />
-    <ProjectReference Include="..\..\DbTools.DataDefinition.SqlGenerator\DbTools.DataDefinition.SqlGenerator.csproj" />
     <ProjectReference Include="..\..\DbTools.SqlExecuter\DbTools.SqlExecuter.csproj" />
   </ItemGroup>
 

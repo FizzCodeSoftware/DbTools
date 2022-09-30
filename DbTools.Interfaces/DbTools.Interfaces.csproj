@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+	  <PackageId>FizzCode.DbTools.Interfaces</PackageId>
+	  <Authors>FizzCode Ltd.</Authors>
+	  <Product>FizzCode DbTools</Product>
+	  <Description>Interfaces for Fizzcode DbTools project</Description>
+	  <Copyright>Copyright © 2019-2022 FizzCode Ltd.</Copyright>
+	  <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
+	  <Platforms>AnyCPU</Platforms>
+	  <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
+	  <AssemblyName>FizzCode.DbTools.Interfaces</AssemblyName>
+	  <RootNamespace>FizzCode.DbToolsInterfaces</RootNamespace>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FizzCode.LightWeight.AdoNet.DbConnection" Version="2.0.31.6671" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj" />
+    <ProjectReference Include="..\DbTools.DataDefinition.Base\DbTools.DataDefinition.Base.csproj" />
+  </ItemGroup>
+
+</Project>

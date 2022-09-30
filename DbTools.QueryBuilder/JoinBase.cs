@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.QueryBuilder
 {
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public abstract class JoinBase : QueryElement
     {

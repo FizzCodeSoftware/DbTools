@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj" />
+    <ProjectReference Include="..\DbTools.Interfaces\DbTools.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

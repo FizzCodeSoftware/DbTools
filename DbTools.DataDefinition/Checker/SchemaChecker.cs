@@ -6,7 +6,7 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Migration;
+    using FizzCode.DbTools.DataDefinition.Base.Migration;
 
     // TODO - pattern/skip
     // TODO - move base doc. functions to doc.wr. base
@@ -51,7 +51,7 @@
             Context = context;
         }
 
-        public List<SchemaCheck> Check(DatabaseDefinition dd)
+        public List<SchemaCheck> Check(IDatabaseDefinition dd)
         {
             var schemaChecks = new List<SchemaCheck>();
 

@@ -4,9 +4,8 @@
     using System.Data.Common;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.SqlGenerator;
+    using FizzCode.DbTools.Interfaces;
     using FizzCode.LightWeight.AdoNet;
 
     public abstract class SqlStatementExecuter : ISqlStatementExecuter

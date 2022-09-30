@@ -8,7 +8,7 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.Base.Interfaces;
-    using FizzCode.DbTools.SqlGenerator.Base;
+    using FizzCode.DbTools.Interfaces;
 
     public abstract class AbstractSqlGenerator : ISqlGenerator
     {

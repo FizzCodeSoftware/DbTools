@@ -21,14 +21,11 @@
     <ProjectReference Include="..\DbTools.DataDefinition.Base.Interfaces\DbTools.DataDefinition.Base.Interfaces.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition.Base\DbTools.DataDefinition.Base.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition.Factory.Interfaces\DbTools.DataDefinition.Factory.Interfaces.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
     <ProjectReference Include="..\DbTools.Factory.Interfaces\DbTools.Factory.Interfaces.csproj" />
     <ProjectReference Include="..\Implementation\DbTools.DataDefinition.MsSql\DbTools.DataDefinition.MsSql.csproj" />
     <ProjectReference Include="..\Implementation\DbTools.DataDefinition.Oracle\DbTools.DataDefinition.Oracle.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinition.SqlGenerator\DbTools.DataDefinition.SqlGenerator.csproj" />
     <ProjectReference Include="..\Implementation\DbTools.DataDefinition.SqLite\DbTools.DataDefinition.SqLite.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinitionDocumenter\DbTools.DataDefinitionDocumenter.csproj" />
-    <ProjectReference Include="..\DbTools.SqlExecuter\DbTools.SqlExecuter.csproj" />
     <ProjectReference Include="..\Implementation\DbTools.SqlExecuter.MsSql\DbTools.SqlExecuter.MsSql.csproj" />
     <ProjectReference Include="..\Implementation\DbTools.SqlExecuter.Oracle\DbTools.SqlExecuter.Oracle.csproj" />
     <ProjectReference Include="..\Implementation\DbTools.SqlExecuter.SqLite\DbTools.SqlExecuter.SqLite.csproj" />

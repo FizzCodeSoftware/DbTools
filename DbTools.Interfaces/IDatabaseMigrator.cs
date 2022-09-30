@@ -1,0 +1,15 @@
+﻿namespace FizzCode.DbTools.Interfaces
+{
+    using FizzCode.DbTools.DataDefinition.Base.Migration;
+
+    public interface IDatabaseMigrator
+    {
+        void ChangeColumns(params ColumnChange[] columnChanges);
+        void CreateColumns(params ColumnNew[] columnNews);
+        void DeleteColumns(params ColumnDelete[] columnDeletes);
+        void DeleteTable(TableDelete tableDelete);
+        void NewForeignKey(ForeignKeyNew foreignKeyNew);
+        void NewPrimaryKey(PrimaryKeyNew primaryKeyNew);
+        void NewTable(TableNew tableNew);
+    }
+}

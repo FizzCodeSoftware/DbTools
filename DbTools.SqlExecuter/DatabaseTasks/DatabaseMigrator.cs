@@ -1,9 +1,9 @@
 ﻿namespace FizzCode.DbTools.SqlExecuter
 {
-    using FizzCode.DbTools.DataDefinition.Migration;
-    using FizzCode.DbTools.DataDefinition.SqlGenerator;
+    using FizzCode.DbTools.DataDefinition.Base.Migration;
+    using FizzCode.DbTools.Interfaces;
 
-    public class DatabaseMigrator : DatabaseTask
+    public class DatabaseMigrator : DatabaseTask, IDatabaseMigrator
     {
         public DatabaseMigrator(ISqlStatementExecuter sqlExecuter, ISqlMigrationGenerator migrationGenerator)
             : base(sqlExecuter)

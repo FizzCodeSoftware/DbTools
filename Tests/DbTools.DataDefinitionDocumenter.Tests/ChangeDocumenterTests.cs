@@ -164,10 +164,8 @@
             var version = MsSqlVersion.MsSql2016;
 
             var ddOriginal = new TestDatabaseFk();
-            ddOriginal.SetVersions(_typeMappers[version]);
 
             var ddFkChanged = new TestDatabaseFk();
-            ddFkChanged.SetVersions(_typeMappers[version]);
 
             var fk = ddFkChanged.GetTable("Foreign").Properties.OfType<ForeignKey>().First();
             fk.SqlEngineVersionSpecificProperties[version, "Nocheck"] = "false";

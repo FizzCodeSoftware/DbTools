@@ -27,7 +27,7 @@
         private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategory = new();
 
         private ITableCustomizer Customizer { get; }
-        public void Document(DatabaseDefinition databaseDefinition)
+        public void Document(IDatabaseDefinition databaseDefinition)
         {
             Log(LogSeverity.Information, "Starting on {DatabaseName}.", "Documenter", DatabaseName);
 

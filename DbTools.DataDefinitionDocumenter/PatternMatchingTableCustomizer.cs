@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public class PatternMatchingTableCustomizer : ITableCustomizer
     {

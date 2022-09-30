@@ -1,4 +1,4 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition.Base
 {
     using System;
     using System.Collections.Generic;

@@ -30,7 +30,7 @@
             SqlExecuterTestAdapter.Check(version);
             SqlExecuterTestAdapter.InitializeAndCreate(version.UniqueName);
 
-            var dd = new DatabaseDefinition(null, TypeMapperGetter.GetTypeMappers(MsSqlVersion.MsSql2016, OracleVersion.Oracle12c, SqLiteVersion.SqLite3));
+            var dd = new DatabaseDefinition(new TestFactoryContainer(), version);
 
             var table = new SqlTable("HierarchyFromCsvToSqlTests");
             var column = table.AddInt32("Id");

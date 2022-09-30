@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using System.Collections.Generic;
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public class PatternMatchingTableCustomizerWithTablesAndItems : ITableCustomizer
     {

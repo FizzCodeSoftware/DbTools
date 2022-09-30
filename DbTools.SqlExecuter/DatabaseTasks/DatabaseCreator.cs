@@ -1,13 +1,14 @@
 ﻿namespace FizzCode.DbTools.SqlExecuter
 {
     using System.Linq;
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.Interfaces;
 
     public class DatabaseCreator : DatabaseTask
     {
-        public DatabaseDefinition DatabaseDefinition { get; }
+        public IDatabaseDefinition DatabaseDefinition { get; }
 
-        public DatabaseCreator(DatabaseDefinition databaseDefinition, ISqlStatementExecuter sqlExecuter)
+        public DatabaseCreator(IDatabaseDefinition databaseDefinition, ISqlStatementExecuter sqlExecuter)
             : base(sqlExecuter)
         {
             DatabaseDefinition = databaseDefinition;
@@ -47,7 +48,7 @@
                 CreateDbDescriptions(sqlTable);
         }
 
-        private void CreateSchemas(DatabaseDefinition databaseDefinition)
+        private void CreateSchemas(IDatabaseDefinition databaseDefinition)
         {
             foreach (var schemaName in databaseDefinition.GetSchemaNames())
             {

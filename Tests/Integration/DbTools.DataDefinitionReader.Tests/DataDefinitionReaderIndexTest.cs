@@ -1,12 +1,12 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader.Tests
 {
     using System.Linq;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.SqlExecuter;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using FizzCode.DbTools.DataDefinition.Factory;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     [TestClass]
     public class DataDefinitionReaderIndexTest : DataDefinitionReaderTests

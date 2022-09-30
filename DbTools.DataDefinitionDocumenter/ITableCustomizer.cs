@@ -1,6 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public interface ITableCustomizer
     {

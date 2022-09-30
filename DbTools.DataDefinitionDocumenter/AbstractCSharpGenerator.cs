@@ -8,6 +8,7 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public abstract class AbstractCSharpGenerator : DocumenterBase
     {
@@ -29,7 +30,7 @@
             Writer = writer;
         }
 
-        public void GenerateMultiFile(DatabaseDefinition databaseDefinition)
+        public void GenerateMultiFile(IDatabaseDefinition databaseDefinition)
         {
             Log(LogSeverity.Information, "Starting on {DatabaseName}.", "CsGenerator", DatabaseName);
 
@@ -82,7 +83,7 @@
             }
         }
 
-        public void GenerateSingleFile(DatabaseDefinition databaseDefinition, string fileName, bool partialClass = false)
+        public void GenerateSingleFile(IDatabaseDefinition databaseDefinition, string fileName, bool partialClass = false)
         {
             Log(LogSeverity.Information, "Starting on {DatabaseName}.", "CsGenerator", DatabaseName);
 
@@ -222,7 +223,7 @@
         {
             if (!Context.GeneratorSettings.NoIndexes)
             {
-                var indexes = table.Properties.OfType<DataDefinition.Index>().ToList();
+                var indexes = table.Properties.OfType<DataDefinition.Base.Index>().ToList();
                 foreach (var index in indexes)
                     GenerateIndex(sb, index);
             }
@@ -239,7 +240,7 @@
                 GenerateCustomTableProperties(sb, customProperty);
         }
 
-        protected abstract void GenerateIndex(StringBuilder sb, DataDefinition.Index index);
+        protected abstract void GenerateIndex(StringBuilder sb, DataDefinition.Base.Index index);
         protected abstract void GenerateUniqueConstraint(StringBuilder sb, UniqueConstraint uniqueConstraint);
 
         protected abstract void GenerateCustomTableProperties(StringBuilder sb, SqlTableCustomProperty customProperty);

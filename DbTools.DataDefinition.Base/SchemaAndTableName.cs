@@ -1,8 +1,7 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition.Base
 {
     using System;
     using System.Diagnostics;
-    using FizzCode.DbTools.DataDefinition.Base;
 
     /// <summary>
     /// Represents the Schema and Table name of SQL tables.

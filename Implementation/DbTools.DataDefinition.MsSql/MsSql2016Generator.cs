@@ -9,6 +9,7 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.SqlGenerator;
+    using FizzCode.DbTools.Interfaces;
 
     public class MsSql2016Generator : AbstractSqlGenerator, ISqlGeneratorDropAndCreateDatabase
     {

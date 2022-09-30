@@ -1,6 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System.Linq;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public class Tables : AbstractTables<SqlTable>
     {

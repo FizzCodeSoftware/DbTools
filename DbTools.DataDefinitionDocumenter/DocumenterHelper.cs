@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
 {
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
 
     public class DocumenterHelper
     {

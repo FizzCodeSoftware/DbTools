@@ -1,8 +1,7 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition.Base
 {
     using System.Collections.Generic;
     using System.Linq;
-    using FizzCode.DbTools.DataDefinition.Base;
 
     public class SqlViewColumn : SqlColumnBase
     {

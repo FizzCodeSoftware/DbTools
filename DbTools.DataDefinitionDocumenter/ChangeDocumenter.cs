@@ -7,7 +7,7 @@
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Migration;
+    using FizzCode.DbTools.DataDefinition.Base.Migration;
 
     public class ChangeDocumenter : DocumenterWriterBase
     {
@@ -35,7 +35,7 @@
         //private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategoryNew = new List<KeyValuePair<string, SqlTable>>();
         //private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategoryNew = new List<KeyValuePair<string, SqlTable>>();
 
-        public void Document(DatabaseDefinition originalDd, DatabaseDefinition newDd)
+        public void Document(IDatabaseDefinition originalDd, IDatabaseDefinition newDd)
         {
             Log(LogSeverity.Information, "Starting on {OriginalDatabaseName} vs. {NewDatabaseName}", "ChangeDocumenter", OriginalDatabaseName, NewDatabaseName);
 

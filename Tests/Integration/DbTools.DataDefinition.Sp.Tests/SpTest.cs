@@ -1,11 +1,10 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Sp.Tests
 {
     using FizzCode.DbTools;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDeclaration;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.MsSql2016;
-    using FizzCode.DbTools.DataDefinition.SqlGenerator;
     using FizzCode.DbTools.QueryBuilder;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -26,7 +25,7 @@
         public class DbWithSp : DatabaseDeclaration
         {
             public DbWithSp()
-                : base(TypeMapperGetter.GetTypeMapper(MsSqlVersion.MsSql2016), TypeMapperGetter.GetTypeMappers(OracleVersion.Oracle12c))
+                : base(new TestFactoryContainer(), MsSqlVersion.MsSql2016, new SqlEngineVersion[] { OracleVersion.Oracle12c })
             {
             }
 
@@ -57,7 +56,7 @@
         public class DbWithSpQueryBuilder : DatabaseDeclaration
         {
             public DbWithSpQueryBuilder()
-                : base(new QueryBuilder(), TypeMapperGetter.GetTypeMapper(MsSqlVersion.MsSql2016), TypeMapperGetter.GetTypeMappers(OracleVersion.Oracle12c))
+                : base(new TestFactoryContainer(), new QueryBuilder(), null, new SqlEngineVersion[] { MsSqlVersion.MsSql2016, OracleVersion.Oracle12c })
             {
             }
 

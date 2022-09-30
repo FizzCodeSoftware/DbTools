@@ -1,7 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿namespace FizzCode.DbTools.DataDefinition.Base
 {
     using System.Diagnostics;
-    using FizzCode.DbTools.DataDefinition.Base;
 
     [DebuggerDisplay("{ToString(),nq}")]
     public abstract class SqlTableOrView

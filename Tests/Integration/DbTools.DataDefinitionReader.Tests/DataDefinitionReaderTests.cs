@@ -4,6 +4,7 @@
 namespace FizzCode.DbTools.DataDefinitionReader.Tests
 {
     using FizzCode.DbTools.DataDefinition;
+    using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -32,7 +33,7 @@ namespace FizzCode.DbTools.DataDefinitionReader.Tests
             SqlExecuterTestAdapter.Cleanup();
         }
 
-        protected DatabaseDefinition ReadDd(SqlEngineVersion version, SchemaNamesToRead schemaNames)
+        protected IDatabaseDefinition ReadDd(SqlEngineVersion version, SchemaNamesToRead schemaNames)
         {
             var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], SqlExecuterTestAdapter.GetContext(version), schemaNames);
             var db = ddlReader.GetDatabaseDefinition();
