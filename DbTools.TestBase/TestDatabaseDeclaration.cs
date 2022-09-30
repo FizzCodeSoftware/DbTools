@@ -2,8 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using FizzCode.DbTools.DataDeclaration;
-    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.DataDefinition.Factory.Interfaces;
     using FizzCode.DbTools.Factory.Interfaces;
@@ -13,6 +13,12 @@
         protected TestDatabaseDeclaration()
             : base(new TestFactoryContainer(), MsSqlVersion.MsSql2016, new SqlEngineVersion[] { OracleVersion.Oracle12c, SqLiteVersion.SqLite3 })
         {
+        }
+
+        public void SetVersions(SqlEngineVersion mainVersion, SqlEngineVersion[] secondaryVersions = null)
+        {
+            MainVersion = mainVersion;
+            SecondaryVersions = secondaryVersions?.ToList();
         }
     }
 

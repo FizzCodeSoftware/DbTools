@@ -14,7 +14,7 @@
         public string? DefaultSchema { get; }
 
         protected DatabaseDeclaration(IFactoryContainer factoryContainer, IQueryBuilderConnector queryBuilderConnector, SqlEngineVersion mainVersion, SqlEngineVersion[]? secondaryVersions = null, string? defaultSchema = null, NamingStrategies? namingStrategies = null)
-            : base(mainVersion, secondaryVersions)
+            : base(factoryContainer, mainVersion, secondaryVersions)
         {
             DefaultSchema = defaultSchema;
             NamingStrategies = namingStrategies ?? new NamingStrategies();

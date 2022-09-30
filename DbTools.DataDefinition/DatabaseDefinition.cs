@@ -13,8 +13,8 @@
     public class DatabaseDefinition : IDatabaseDefinition
     {
         public TypeMappers TypeMappers { get; }
-        public SqlEngineVersion MainVersion { get; private set; }
-        public List<SqlEngineVersion> SecondaryVersions { get; private set; }
+        public SqlEngineVersion MainVersion { get; protected set; }
+        public List<SqlEngineVersion> SecondaryVersions { get; protected set; }
         public Tables Tables { get; } = new Tables();
         protected Views Views { get; } = new Views();
 
