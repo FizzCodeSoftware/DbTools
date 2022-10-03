@@ -6,7 +6,6 @@
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using FizzCode.DbTools.DataDefinition.Factory;
 
     [TestClass]
     public class DataDefinitionReaderForeignKeyCompositeTests : DataDefinitionReaderTests
@@ -32,7 +31,7 @@
 
             var dd = new ForeignKeyComposite();
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
+            var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], SchemaNamesToRead.ToSchemaNames(dd.GetSchemaNames()));
             var db = ddlReader.GetDatabaseDefinition();
 
             var company = db.GetTable("Company");

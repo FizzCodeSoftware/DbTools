@@ -14,8 +14,8 @@
     {
         public object Oracle12cGenerator { get; private set; }
 
-        public Oracle12cExecuter(NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
-            : base(connectionString, sqlGenerator)
+        public Oracle12cExecuter(ContextWithLogger context, NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
+            : base(context, connectionString, sqlGenerator)
         {
         }
 
@@ -26,13 +26,13 @@
 
         public override string GetDatabase()
         {
-            var oracleDatabaseName = Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("OracleDatabaseName");
+            var oracleDatabaseName = Context.Settings.SqlVersionSpecificSettings.GetAs<string>("OracleDatabaseName");
             return oracleDatabaseName;
         }
 
         public override void InitializeDatabase(bool dropIfExists, params IDatabaseDefinition[] dds)
         {
-            var defaultSchema = Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
 
             if (dropIfExists)
             {
@@ -92,7 +92,7 @@ WHERE {column} = @{column}", value);
                 ExecuteNonQuery(sql);
             }
 
-            var defaultSchema = Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
             var currentUser = ExecuteQuery("select user from dual").Rows[0].GetAs<string>("USER");
 
             ExecuteNonQuery($"ALTER SESSION SET current_schema = {currentUser}");

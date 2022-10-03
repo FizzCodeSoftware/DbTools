@@ -3,6 +3,7 @@
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.DataDefinition.Oracle12c;
     using FizzCode.DbTools.SqlExecuter;
 
@@ -12,7 +13,7 @@
 
         protected Oracle12cTypeMapper TypeMapper { get; } = new Oracle12cTypeMapper();
 
-        public OracleTableReader12c(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
+        public OracleTableReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
             var sqlStatement = GetStatement();

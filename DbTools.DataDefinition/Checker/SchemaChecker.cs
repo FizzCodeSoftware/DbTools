@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.Base.Migration;
 
@@ -44,9 +43,9 @@
 
     public class SchemaChecker
     {
-        public Context Context { get; }
+        public ContextWithLogger Context { get; }
 
-        public SchemaChecker(Context context)
+        public SchemaChecker(ContextWithLogger context)
         {
             Context = context;
         }

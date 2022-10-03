@@ -5,6 +5,7 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.SqlExecuter;
 
     public class MsSqlIndexReader2016 : GenericDataDefinitionElementReader
@@ -17,7 +18,7 @@
                         .ThenBy(row => row.GetAs<int>("index_column_id"))
                         .ToList();
 
-        public MsSqlIndexReader2016(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
+        public MsSqlIndexReader2016(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
         }

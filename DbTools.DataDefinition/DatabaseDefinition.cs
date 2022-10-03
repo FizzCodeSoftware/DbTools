@@ -3,12 +3,10 @@
     using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Factory.Interfaces;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.DataDefinition.View;
     using FizzCode.DbTools.Factory;
     using FizzCode.DbTools.Factory.Interfaces;
-
-    // using FizzCode.DbTools.Factory;
 
     public class DatabaseDefinition : IDatabaseDefinition
     {
@@ -25,9 +23,6 @@
         public DatabaseDefinition(SqlEngineVersion mainVersion, params SqlEngineVersion[] secondaryVersions)
             : this(new Root(), mainVersion, secondaryVersions)
         {
-            /*var root = new Root();
-            foreach (var version in secondaryVersions)
-                TypeMappers.Add(root.Get<ITypeMapperFactory>().GetTypeMapper(version));*/
         }
 
         public DatabaseDefinition(IFactoryContainer factoryContainer, SqlEngineVersion mainVersion, params SqlEngineVersion[] secondaryVersions)
@@ -37,7 +32,7 @@
             MainVersion = mainVersion;
             SecondaryVersions = secondaryVersions?.ToList();
 
-            factoryContainer.TryGet(out ITypeMapperFactory typeMapperFactory);
+            FactoryContainer.TryGet(out ITypeMapperFactory typeMapperFactory);
             TypeMappers = new TypeMappers(typeMapperFactory);
         }
 

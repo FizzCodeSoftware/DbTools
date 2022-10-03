@@ -5,7 +5,6 @@
     using System.IO;
     using System.Linq;
     using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.Base.Migration;
 
@@ -71,7 +70,7 @@
             WriteLine("Database", "Number of skipped tables", noOfTablesOriginal - noOfNotSkippedTablesOriginal, noOfTablesNew - noOfNotSkippedTablesNew);
             WriteLine("Database", "Number of tables", noOfTablesOriginal, noOfTablesNew);
 
-            var comparer = new Comparer(Context);
+            var comparer = new Comparer();
             var changes = comparer.Compare(originalDd, newDd);
 
             WriteLine("Tables", "Schema", "Table Name", "Event");

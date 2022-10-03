@@ -3,7 +3,6 @@
     using System.Collections.Generic;
     using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.DataDefinition.Factory;
-    using FizzCode.DbTools.DataDefinition.Factory.Interfaces;
 
     public static class TypeMapperGetter
     {

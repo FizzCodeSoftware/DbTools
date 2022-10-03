@@ -28,8 +28,6 @@ namespace FizzCode.DbTools.DataDefinitionExecuterMigrationIntegration.Tests
             SqlExecuterTestAdapter.Initialize(version.UniqueName, dd);
             TestHelper.CheckFeature(version, "ReadDdl");
 
-            SqlExecuterTestAdapter.GetContext(version).Settings.Options.ShouldUseDefaultSchema = true;
-
             var databaseCreator = new DatabaseCreator(dd, SqlExecuterTestAdapter.GetExecuter(version.UniqueName));
 
             databaseCreator.ReCreateDatabase(true);

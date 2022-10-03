@@ -41,7 +41,7 @@
     <ProjectReference Include="..\DbTools.DataDefinition.Base\DbTools.DataDefinition.Base.csproj" />
     <ProjectReference Include="..\DbTools.Factory.Interfaces\DbTools.Factory.Interfaces.csproj" />
     <ProjectReference Include="..\DbTools.Factory\DbTools.Factory.csproj" />
-    <ProjectReference Include="..\DbTools.QueryBuilder.Interface\DbTools.QueryBuilder.Interface.csproj" />
+    <ProjectReference Include="..\DbTools.QueryBuilder.Interface\DbTools.QueryBuilder.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

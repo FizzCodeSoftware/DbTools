@@ -1,33 +1,20 @@
 ﻿namespace FizzCode.DbTools.QueryBuilder
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.QueryBuilder.Interface;
+    using Microsoft.Extensions.Primitives;
 
-    public class QueryBuilder : IQueryBuilderConnector
+    public class QueryBuilderSqlGeneratorBase : QueryBuilderBase
     {
-        public void ProcessStoredProcedureFromQuery(IStoredProcedureFromQuery storedProcedureFromQuery)
+        protected int _level;
+
+        protected QueryBuilderSqlGeneratorBase CreateNewQueryBuilderSqlGenerator()
         {
-            var sp = storedProcedureFromQuery as StoredProcedureFromQuery;
-
-            foreach (var p in GetParametersFromFilters(sp.Query))
-                sp.SpParameters.Add(p);
-
-            sp.SqlStatementBody = Build(sp.Query);
+            return new QueryBuilderSqlGeneratorBase();
         }
-
-        public void ProcessViewFromQuery(IViewFromQuery viewFromQuery)
-        {
-            var view = viewFromQuery as ViewFromQuery;
-            view.SqlStatementBody = Build(view.Query);
-        }
-
-        private Query _query;
-        private int _level;
 
         public string Build(Query query)
         {
@@ -63,13 +50,16 @@
             {
                 sb.AppendLine();
                 sb.AppendLine(_level, "UNION");
-                sb.Append(Build(union));
+
+                var unionQ = CreateNewQueryBuilderSqlGenerator();
+
+                sb.Append(unionQ.Build(union));
             }
 
             return sb.ToString();
         }
 
-        private string AddQueryElementColumns(QueryElement queryElement, bool useAlias = false)
+        protected override string AddQueryElementColumns(QueryElement queryElement, bool useAlias = false)
         {
             var columns = queryElement.GetColumns();
 
@@ -166,82 +156,7 @@
             return sb.ToString();
         }
 
-        private bool HasColumnWithSameName(QueryElement queryElement, QueryColumn queryColumn)
-        {
-            var columns = queryElement.GetColumns();
-            if (columns == null)
-                return false;
-
-            return columns.Any(c => c.Value == queryColumn.Value);
-        }
-
-        private string AddJoinColumns()
-        {
-            var sb = new StringBuilder();
-
-            for (var i = 0; i < _query.Joins.Count; i++)
-            {
-                if (i == 0 && _query.QueryColumns.Count == 1 && _query.QueryColumns[0] is None)
-                    sb.Append(AddQueryElementColumns(_query.Joins[i], true));
-                else
-                    sb.AppendComma(AddQueryElementColumns(_query.Joins[i], true));
-            }
-
-            return sb.ToString();
-        }
-
-        private string AddJoins()
-        {
-            var sb = new StringBuilder();
-
-            foreach (var join in _query.Joins)
-                sb.Append(AddJoin(join));
-
-            return sb.ToString();
-        }
-
-        private string AddJoin(JoinBase join)
-        {
-            var sb = new StringBuilder();
-
-            var joinType = join.JoinType.ToString().ToUpperInvariant();
-            sb.AppendLine()
-                .Append(_level, joinType)
-                .Append(" JOIN");
-
-            if (join is JoinSubQueryOn joinSubQueryOn)
-            {
-                var subQb = new QueryBuilder();
-                sb.AppendLine()
-                    .Append(_level + 1, "(")
-                    .Append(subQb.Build(joinSubQueryOn.SubQuery, _level + 1))
-                    .Append(") ")
-                    .Append(joinSubQueryOn.Alias);
-            }
-            else
-            {
-                sb.Append(' ')
-                    .Append(QueryHelper.GetSimplifiedSchemaAndTableName(join.Table.SchemaAndTableName))
-                    .Append(' ')
-                    .Append(join.Table.GetAlias());
-            }
-            sb.Append(" ON ");
-
-            if (join is Join join2)
-                sb.Append(AddJoin(join2));
-
-            if (join is JoinOn joinOn)
-                sb.Append(AddJoinOn(joinOn));
-
-            return sb.ToString();
-        }
-
-        private string AddJoinOn(JoinOn joinOn)
-        {
-            return Expression.GetExpression(joinOn.OnExpression, _query.QueryElements, joinOn);
-        }
-
-        private string AddJoin(Join join)
+        protected string AddJoin(Join join)
         {
             var sb = new StringBuilder();
 
@@ -315,7 +230,7 @@
             return sb.ToString();
         }
 
-        private string AddWhere()
+        protected string AddWhere()
         {
             if (!string.IsNullOrEmpty(_query.WhereExpression))
                 return "\r\n" + StringBuilderExtensions.Spaces(_level) + "WHERE " + _query.WhereExpression;
@@ -323,7 +238,7 @@
             return null;
         }
 
-        private string AddGroupBy(QueryElement queryElement)
+        protected string AddGroupBy(QueryElement queryElement)
         {
             if (_query.GroupByColumns.Count == 0)
                 return null;
@@ -387,34 +302,40 @@
             return sb.ToString();
         }
 
-        public List<SqlParameter> GetParametersFromFilters(Query query)
+        protected override string AddJoin(JoinBase join)
         {
-            var parameters = new List<SqlParameter>();
+            var sb = new StringBuilder();
 
-            foreach (var filter in query.Filters)
+            var joinType = join.JoinType.ToString().ToUpperInvariant();
+            sb.AppendLine()
+                .Append(_level, joinType)
+                .Append(" JOIN");
+
+            if (join is JoinSubQueryOn joinSubQueryOn)
             {
-                switch (filter.Type)
-                {
-                    case FilterType.Between:
-                        {
-                            parameters.Add(filter.Parameter.Copy("min" + filter.Column.Value));
-                            parameters.Add(filter.Parameter.Copy("max" + filter.Column.Value));
-                            break;
-                        }
-
-                    case FilterType.Equal:
-                    case FilterType.Greater:
-                    case FilterType.Lesser:
-                        parameters.Add(filter.Parameter);
-                        break;
-                    default:
-#pragma warning disable IDE0071 // Simplify interpolation
-                        throw new NotImplementedException($"Filtering for {filter.Type.ToString()} is not implemented.");
-#pragma warning restore IDE0071 // Simplify interpolation
-                }
+                var subQb = CreateNewQueryBuilderSqlGenerator();
+                sb.AppendLine()
+                    .Append(_level + 1, "(")
+                    .Append(subQb.Build(joinSubQueryOn.SubQuery, _level + 1))
+                    .Append(") ")
+                    .Append(joinSubQueryOn.Alias);
             }
+            else
+            {
+                sb.Append(' ')
+                    .Append(QueryHelper.GetSimplifiedSchemaAndTableName(join.Table.SchemaAndTableName))
+                    .Append(' ')
+                    .Append(join.Table.GetAlias());
+            }
+            sb.Append(" ON ");
 
-            return parameters;
+            if (join is Join join2)
+                sb.Append(AddJoin(join2));
+
+            if (join is JoinOn joinOn)
+                sb.Append(AddJoinOn(joinOn));
+
+            return sb.ToString();
         }
     }
 }

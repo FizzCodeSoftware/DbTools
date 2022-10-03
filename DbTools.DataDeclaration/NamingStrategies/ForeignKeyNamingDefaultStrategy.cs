@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDeclaration
 {
     using System.Linq;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
 
     public class ForeignKeyNamingDefaultStrategy : IForeignKeyNamingStrategy

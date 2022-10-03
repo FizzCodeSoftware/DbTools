@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Factory
 {
     using System;
-    using FizzCode.DbTools.Common;
     using FizzCode.LightWeight.AdoNet;
     using FizzCode.DbTools.SqlExecuter.MsSql;
     using FizzCode.DbTools.SqlExecuter.Oracle;
@@ -12,32 +11,36 @@
     public class SqlExecuterFactory : ISqlExecuterFactory
     {
         private readonly ISqlGeneratorFactory _sqlGeneratorFactory;
-        public SqlExecuterFactory(ISqlGeneratorFactory sqlGeneratorFactory)
+        private readonly IContextFactory _contextFactory;
+
+        public SqlExecuterFactory(IContextFactory contextFactory, ISqlGeneratorFactory sqlGeneratorFactory)
         {
+            _contextFactory = contextFactory;
             _sqlGeneratorFactory = sqlGeneratorFactory;
         }
 
         protected ISqlStatementExecuter CreateSqlExecuter(NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
         {
             var sqlEngineVersion = connectionString.GetSqlEngineVersion();
+            var context = _contextFactory.CreateContextWithLogger(sqlEngineVersion);
 
             if (sqlEngineVersion == SqLiteVersion.SqLite3)
-                return new SqLite3Executer(connectionString, sqlGenerator);
+                return new SqLite3Executer(context, connectionString, sqlGenerator);
 
             if (sqlEngineVersion == OracleVersion.Oracle12c)
-                return new Oracle12cExecuter(connectionString, sqlGenerator);
+                return new Oracle12cExecuter(context, connectionString, sqlGenerator);
 
             if (sqlEngineVersion == MsSqlVersion.MsSql2016)
-                return new MsSql2016Executer(connectionString, sqlGenerator);
+                return new MsSql2016Executer(context, connectionString, sqlGenerator);
 
             throw new NotImplementedException($"Not implemented {sqlEngineVersion}.");
         }
 
-        public ISqlStatementExecuter CreateSqlExecuter(NamedConnectionString connectionString, Context context)
+        public ISqlStatementExecuter CreateSqlExecuter(NamedConnectionString connectionString)
         {
             var sqlEngineVersion = connectionString.GetSqlEngineVersion();
 
-            var generator =_sqlGeneratorFactory.CreateSqlGenerator(sqlEngineVersion, context);
+            var generator =_sqlGeneratorFactory.CreateSqlGenerator(sqlEngineVersion);
 
             return CreateSqlExecuter(connectionString, generator);
         }

@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.QueryBuilder
 {
     using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.QueryBuilder.Interface;
+    using FizzCode.DbTools.QueryBuilder.Interfaces;
 
     public class ViewFromQuery : SqlView, IViewFromQuery
     {

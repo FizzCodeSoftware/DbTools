@@ -1,4 +1,4 @@
-﻿namespace FizzCode.DbTools.QueryBuilder.Interface
+﻿namespace FizzCode.DbTools.QueryBuilder.Interfaces
 {
     public interface IStoredProcedureFromQuery
     {

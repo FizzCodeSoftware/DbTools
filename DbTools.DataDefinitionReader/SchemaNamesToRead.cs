@@ -1,8 +1,10 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
     using System.Collections.Generic;
+    using System.Linq;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 
-    public class SchemaNamesToRead
+    public class SchemaNamesToRead : ISchemaNamesToRead
     {
         public SchemaNamesToRead(List<string> schemaNames)
         {
@@ -33,5 +35,14 @@
         public static SchemaNamesToRead AllSchemas => new(false, false, true);
         public static SchemaNamesToRead AllNotSystemSchemas => new(false, true);
         public static SchemaNamesToRead AllDefaultSchemas => new(true);
+
+        public static ISchemaNamesToRead ToSchemaNames(IEnumerable<string> schemaNames)
+        {
+            var schemaNamesList = schemaNames.ToList();
+            if (schemaNamesList.Count == 0)
+                return new SchemaNamesToRead(true);
+
+            return new SchemaNamesToRead(schemaNamesList);
+        }
     }
 }

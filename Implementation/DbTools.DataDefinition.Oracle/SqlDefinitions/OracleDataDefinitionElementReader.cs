@@ -1,11 +1,12 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
     using System.Collections.Generic;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.SqlExecuter;
 
     public abstract class OracleDataDefinitionElementReader : GenericDataDefinitionElementReader
     {
-        protected OracleDataDefinitionElementReader(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
+        protected OracleDataDefinitionElementReader(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
         }
@@ -15,7 +16,7 @@
             var schemaNames = new List<string>();
             if (SchemaNames?.AllDefault != false)
             {
-                if (Executer.Generator.Context.Settings.Options.ShouldUseDefaultSchema)
+                if (Executer.Context.Settings.Options.ShouldUseDefaultSchema)
                     schemaNames.Add(Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
             }
             else

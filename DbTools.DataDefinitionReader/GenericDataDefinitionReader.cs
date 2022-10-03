@@ -4,11 +4,12 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.SqlExecuter;
 
     public abstract class GenericDataDefinitionReader : GenericDataDefinitionElementReader, IDataDefinitionReader
     {
-        protected GenericDataDefinitionReader(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
+        protected GenericDataDefinitionReader(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
         }
@@ -24,7 +25,7 @@
             Logger.Log(severity, text, module, args);
         }
 
-        public static SchemaAndTableName GetSchemaAndTableNameAsToStore(SchemaAndTableName original, Context context)
+        public static SchemaAndTableName GetSchemaAndTableNameAsToStore(SchemaAndTableName original, ContextWithLogger context)
         {
             var defaultSchema = context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
 

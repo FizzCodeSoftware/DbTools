@@ -1,7 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinitionReader
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Interfaces
 {
     using System.Collections.Generic;
-    using FizzCode.DbTools.DataDefinition.Base;
 
     public interface IDataDefinitionReader
     {

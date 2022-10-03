@@ -1,7 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Base
 {
-    using FizzCode.DbTools.DataDefinition;
-
     public abstract class ForeignKeyRegistrationBase : ForeignKey
     {
         public SchemaAndTableName ReferredTableName { get; }

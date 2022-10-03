@@ -56,7 +56,7 @@
         public class DbWithSpQueryBuilder : DatabaseDeclaration
         {
             public DbWithSpQueryBuilder()
-                : base(new TestFactoryContainer(), new QueryBuilder(), null, new SqlEngineVersion[] { MsSqlVersion.MsSql2016, OracleVersion.Oracle12c })
+                : base(new TestFactoryContainer(), null, new SqlEngineVersion[] { MsSqlVersion.MsSql2016, OracleVersion.Oracle12c })
             {
             }
 

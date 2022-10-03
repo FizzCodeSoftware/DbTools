@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Base
 {
     using FizzCode.DbTools.DataDefinition.Base.Interfaces;
-    using FizzCode.DbTools.DataDefinition.Factory.Interfaces;
     using FizzCode.DbTools.Factory.Collections;
 
     public class TypeMappers : SqlEngineVersionFactoryDictionary<ITypeMapper, ITypeMapperFactory>

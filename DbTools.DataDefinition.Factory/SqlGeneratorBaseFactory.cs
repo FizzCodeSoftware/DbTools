@@ -10,16 +10,22 @@
 
     public class SqlGeneratorBaseFactory : ISqlGeneratorBaseFactory
     {
-        public ISqlGeneratorBase CreateGenerator(SqlEngineVersion version, Context context)
+        protected Context Context { get; }
+        public SqlGeneratorBaseFactory(Context context)
+        {
+            Context = context;
+        }
+
+        public ISqlGeneratorBase CreateGenerator(SqlEngineVersion version)
         {
             if (version == SqLiteVersion.SqLite3)
-                return new SqLiteGenerator(context);
+                return new SqLiteGenerator(Context);
 
             if (version == MsSqlVersion.MsSql2016)
-                return new MsSqlGenerator(context);
+                return new MsSqlGenerator(Context);
 
             if (version == OracleVersion.Oracle12c)
-                return new OracleGenerator(context);
+                return new OracleGenerator(Context);
 
             throw new NotImplementedException($"Not implemented {version}.");
         }

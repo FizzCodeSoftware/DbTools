@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDeclaration;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.Base.Migration;
@@ -13,17 +12,6 @@
     [TestClass]
     public class MigrationComparerTests : ComparerTestsBase
     {
-        private static Context GetContext(SqlEngineVersion version)
-        {
-            var context = new Context
-            {
-                Settings = TestHelper.GetDefaultTestSettings(version),
-                Logger = TestHelper.CreateLogger()
-            };
-
-            return context;
-        }
-
         [TestMethod]
         [LatestSqlVersions(true)]
         public override void Table_Add(SqlEngineVersion version)
@@ -295,7 +283,7 @@
 
         private static List<IMigration> Compare(SqlEngineVersion version, DatabaseDefinitions dds)
         {
-            var comparer = new Comparer(GetContext(version));
+            var comparer = new Comparer();
             var changes = comparer.Compare(dds.Original, dds.New);
 
             return changes;

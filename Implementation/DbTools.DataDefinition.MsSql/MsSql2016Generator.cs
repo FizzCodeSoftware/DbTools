@@ -14,7 +14,7 @@
     public class MsSql2016Generator : AbstractSqlGenerator, ISqlGeneratorDropAndCreateDatabase
     {
         public MsSql2016Generator(Context context)
-            : base(context, new MsSqlGenerator(context))
+            : base(new MsSqlGenerator(context))
         {
             Version = MsSqlVersion.MsSql2016;
         }

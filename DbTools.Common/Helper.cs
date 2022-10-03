@@ -9,7 +9,7 @@
             var settings = new Settings();
 
             var sqlVersionSpecificSettings = new SqlVersionSpecificSettings();
-
+            
             if (version is MsSqlVersion)
             {
                 sqlVersionSpecificSettings["DefaultSchema"] = "dbo";

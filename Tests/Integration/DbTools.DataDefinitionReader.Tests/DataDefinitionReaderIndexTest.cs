@@ -5,7 +5,6 @@
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.DataDefinition.Base;
 
     [TestClass]
@@ -29,9 +28,9 @@
 
             Init(version, null);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
-                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName],
-                SqlExecuterTestAdapter.GetContext(version), null);
+            var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(
+                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
+                , null);
             var dd = ddlReader.GetDatabaseDefinition();
 
             var _ = dd.GetTable("Company").Properties.OfType<Index>().First();

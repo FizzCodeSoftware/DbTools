@@ -13,8 +13,8 @@
     public class SqLite3Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDatabase
 #pragma warning restore CA1001 // Types that own disposable fields should be disposable
     {
-        public SqLite3Executer(NamedConnectionString connectionString, ISqlGenerator sqlGenerator = null)
-            : base(connectionString, sqlGenerator)
+        public SqLite3Executer(ContextWithLogger context, NamedConnectionString connectionString, ISqlGenerator sqlGenerator = null)
+            : base(context, connectionString, sqlGenerator)
         {
         }
 

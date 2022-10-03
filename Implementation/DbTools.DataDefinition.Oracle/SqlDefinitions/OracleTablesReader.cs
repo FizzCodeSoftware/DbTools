@@ -2,11 +2,12 @@
 {
     using System.Collections.Generic;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.DataDefinitionReader;
 
     public class OracleTablesReader : OracleDataDefinitionElementReader
     {
-        public OracleTablesReader(SqlExecuter.SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
+        public OracleTablesReader(SqlExecuter.SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
         }

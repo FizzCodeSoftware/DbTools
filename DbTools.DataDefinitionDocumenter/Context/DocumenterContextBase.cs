@@ -2,7 +2,7 @@
 {
     using FizzCode.DbTools.Common;
 
-    public abstract class DocumenterContextBase : Context
+    public abstract class DocumenterContextBase : ContextWithLogger
     {
         public ITableCustomizer Customizer { get; set; }
 

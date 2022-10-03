@@ -12,7 +12,7 @@
     public class Oracle12cGenerator : AbstractSqlGenerator
     {
         public Oracle12cGenerator(Context context)
-            : base(context, new OracleGenerator(context))
+            : base(new OracleGenerator(context))
         {
             Version = OracleVersion.Oracle12c;
         }

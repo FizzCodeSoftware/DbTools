@@ -17,15 +17,13 @@ namespace FizzCode.DbTools.DataDefinition.Sp.Tests
         [AssemblyCleanup]
         public static void Cleanup()
         {
-            // SqlExecuterTestAdapter.Cleanup();
+            SqlExecuterTestAdapter.Cleanup();
         }
 
         protected static void Init(SqlEngineVersion version, DatabaseDefinition dd)
         {
             SqlExecuterTestAdapter.Check(version);
             SqlExecuterTestAdapter.Initialize(version.UniqueName, dd);
-
-            SqlExecuterTestAdapter.GetContext(version).Settings.Options.ShouldUseDefaultSchema = true;
 
             var databaseCreator = new DatabaseCreator(dd, SqlExecuterTestAdapter.GetExecuter(version.UniqueName));
 

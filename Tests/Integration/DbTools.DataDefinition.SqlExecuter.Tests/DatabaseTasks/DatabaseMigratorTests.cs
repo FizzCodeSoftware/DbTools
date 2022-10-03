@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.SqlExecuter.Tests
 {
     using System.Linq;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDeclaration;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.Base.Migration;
@@ -15,11 +14,12 @@
     [TestClass]
     public class DatabaseMigratorTests : SqlExecuterTestsBase
     {
-        private readonly ISqlGeneratorFactory _sqlGeneratorFactory;
+        private readonly ISqlMigrationGeneratorFactory _sqlMigrationGeneratorFactory;
 
         public DatabaseMigratorTests()
         {
-            _sqlGeneratorFactory = new SqlGeneratorFactory();
+            var contextFactory = new ContextFactory(TestHelper.CreateLogger());
+            _sqlMigrationGeneratorFactory = new SqlMigrationGeneratorFactory(contextFactory);
         }
 
         [TestMethod]
@@ -30,13 +30,7 @@
             var dd = new TestDatabaseSimple();
             SqlExecuterTestAdapter.InitializeAndCreate(version.UniqueName, dd);
 
-            var context = new Context
-            {
-                Settings = TestHelper.GetDefaultTestSettings(version),
-                Logger = TestHelper.CreateLogger()
-            };
-
-            var migrationGenerator = _sqlGeneratorFactory.CreateMigrationGenerator(version, context);
+            var migrationGenerator = _sqlMigrationGeneratorFactory.CreateMigrationGenerator(version);
 
             var executer = SqlExecuterTestAdapter.GetExecuter(version.UniqueName);
 

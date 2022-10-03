@@ -5,14 +5,15 @@
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.DataDefinitionReader;
     using FizzCode.DbTools.SqlExecuter.Oracle;
     using FizzCode.LightWeight.AdoNet;
 
     public class Oracle12cDataDefinitionReader : GenericDataDefinitionReader
     {
-        public Oracle12cDataDefinitionReader(NamedConnectionString connectionString, Context context, SchemaNamesToRead schemaNames)
-            : base(new Oracle12cExecuter(connectionString, new Oracle12cGenerator(context)), schemaNames)
+        public Oracle12cDataDefinitionReader(NamedConnectionString connectionString, ContextWithLogger context, ISchemaNamesToRead schemaNames)
+            : base(new Oracle12cExecuter(context, connectionString, new Oracle12cGenerator(context)), schemaNames)
         {
         }
 
@@ -61,7 +62,7 @@
             // TODO 
             // ColumnDocumentationReader.GetColumnDocumentation(sqlTable);
 
-            sqlTable.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlTable.SchemaAndTableName, Executer.Generator.Context);
+            sqlTable.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlTable.SchemaAndTableName, Executer.Context);
 
             return sqlTable;
         }

@@ -23,7 +23,8 @@
 
         public SqlExecuterTestAdapter()
         {
-            _sqlExecuterFactory = new SqlExecuterFactory(new SqlGeneratorFactory());
+            var contextFactory = new TestContextFactory(null);
+            _sqlExecuterFactory = new SqlExecuterFactory(contextFactory, new SqlGeneratorFactory(contextFactory));
         }
 
         public void Check(SqlEngineVersion version)
@@ -63,7 +64,7 @@
             if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
             {
                 //var generator = _sqlGeneratorFactory.CreateSqlGenerator(sqlEngineVersion, GetContext(sqlEngineVersion));
-                var executer = _sqlExecuterFactory.CreateSqlExecuter(connectionString, GetContext(sqlEngineVersion));
+                var executer = _sqlExecuterFactory.CreateSqlExecuter(connectionString);
                 sqlExecutersAndDialects.Add(connectionStringKey, (executer, sqlEngineVersion));
 
                 if (shouldCreate && TestHelper.ShouldRunIntegrationTest(sqlEngineVersion))
@@ -75,15 +76,15 @@
             return connectionString;
         }
 
-        private readonly Dictionary<SqlEngineVersion, Context> _contextPerSqlVersion = new();
+        /*private readonly Dictionary<SqlEngineVersion, ContextWithLogger> _contextPerSqlVersion = new();
 
-        public Context GetContext(SqlEngineVersion version)
+        public ContextWithLogger GetContext(SqlEngineVersion version)
         {
             if (!_contextPerSqlVersion.ContainsKey(version))
             {
                 var existingContext = _contextPerSqlVersion.Values.FirstOrDefault();
                 var existingLogger = existingContext?.Logger;
-                var _context = new Context
+                var _context = new ContextWithLogger
                 {
                     Logger = existingLogger ?? TestHelper.CreateLogger(),
                     Settings = TestHelper.GetDefaultTestSettings(version)
@@ -93,13 +94,13 @@
             }
 
             return _contextPerSqlVersion[version];
-        }
+        }*/
 
         public void Cleanup()
         {
-            var existingContext = _contextPerSqlVersion.Values.FirstOrDefault();
+            /*var existingContext = _contextPerSqlVersion.Values.FirstOrDefault();
             var existingLogger = existingContext?.Logger;
-            existingLogger?.Log(Common.Logger.LogSeverity.Debug, "Cleanup is called.", "SqlExecuterTestAdapter");
+            existingLogger?.Log(Common.Logger.LogSeverity.Debug, "Cleanup is called.", "SqlExecuterTestAdapter");*/
 
             var exceptions = new List<Exception>();
             foreach (var sqlExecuterAndDialect in sqlExecutersAndDialects.Values)

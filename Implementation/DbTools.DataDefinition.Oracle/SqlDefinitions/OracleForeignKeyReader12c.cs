@@ -5,13 +5,14 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.SqlExecuter;
 
     public class OracleForeignKeyReader12c : OracleDataDefinitionElementReader
     {
         private readonly List<Row> _queryResult;
 
-        public OracleForeignKeyReader12c(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
+        public OracleForeignKeyReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
             var sqlStatement = GetStatement();
@@ -97,7 +98,7 @@ SELECT
                 var referencedColumn = row.GetAs<string>("REF_COLUMN_NAME");
                 var fkName = row.GetAs<string>("CONSTRAINT_NAME");
 
-                var referencedSqlTableSchemaAndTableNameAsToStore = GenericDataDefinitionReader.GetSchemaAndTableNameAsToStore(referencedSchemaAndTableName, Executer.Generator.Context);
+                var referencedSqlTableSchemaAndTableNameAsToStore = GenericDataDefinitionReader.GetSchemaAndTableNameAsToStore(referencedSchemaAndTableName, Executer.Context);
 
                 var referencedSqlTable = table.DatabaseDefinition.GetTable(referencedSqlTableSchemaAndTableNameAsToStore);
 

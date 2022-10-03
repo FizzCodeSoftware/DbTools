@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.Factory
 {
+    using System;
     using Autofac;
     using Autofac.Configuration;
     using FizzCode.DbTools.Factory.Interfaces;
@@ -9,6 +10,7 @@
     {
         protected static IContainer Container { get; set; }
         protected static List<(Type, Type)> RegisteredTypes { get; set; } = new();
+        protected static List<(Type, object)> RegisteredInstances { get; set; } = new();
         private static bool _isInitialized;
 
         protected void Build()
@@ -33,7 +35,13 @@
                 var miAs = result.GetType().GetMethods().Where(m => m.Name == "As" && m.IsGenericMethod).First();
                 var asRef = miAs.MakeGenericMethod(type2);
                 asRef.Invoke(result, null);
+            }
 
+            var miRegisterInstance = typeof(RegistrationExtensions).GetMethods().Where(m => m.Name == "RegisterInstance" && m.IsGenericMethod).First();
+            foreach (var (type, instance) in RegisteredInstances)
+            {
+                var registerTypeRef = miRegisterInstance.MakeGenericMethod(type);
+                var result = registerTypeRef.Invoke(builder, new object[] { builder, instance });
             }
 
             Container = builder.Build();
@@ -68,5 +76,12 @@
         {
             RegisteredTypes.Add((typeof(TFactory), implementationType));
         }
-    }
+        public void RegisterInstance<T>(T instance)
+        {
+            if (instance == null)
+                throw new ArgumentNullException(nameof(instance));
+
+            RegisteredInstances.Add((typeof(T), instance));
+        }
+}
 }

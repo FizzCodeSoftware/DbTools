@@ -18,7 +18,7 @@
 
         private readonly ISqlGeneratorBase _sqlGeneratorBase;
 
-        protected AbstractSqlGenerator(Context context, ISqlGeneratorBase sqlGeneratorBase)
+        protected AbstractSqlGenerator(ISqlGeneratorBase sqlGeneratorBase)
         {
             _sqlGeneratorBase = sqlGeneratorBase;
         }

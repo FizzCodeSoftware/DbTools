@@ -2,8 +2,8 @@
 {
     using System.Linq;
     using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.DataDefinition.MsSql2016;
     using FizzCode.DbTools.SqlExecuter;
 
@@ -14,7 +14,7 @@
 
         protected MsSql2016TypeMapper TypeMapper { get; } = new MsSql2016TypeMapper();
 
-        public MsSqlTableReader2016(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
+        public MsSqlTableReader2016(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
         }

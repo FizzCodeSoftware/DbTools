@@ -2,18 +2,10 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition.Base;
 
     public class Comparer
     {
-        public Context Context { get; }
-
-        public Comparer(Context context)
-        {
-            Context = context;
-        }
-
         public List<IMigration> Compare(IDatabaseDefinition originalDd, IDatabaseDefinition newDd)
         {
             // TODO needs to be ordered

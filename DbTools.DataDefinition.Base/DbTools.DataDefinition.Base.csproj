@@ -19,8 +19,6 @@
   <ItemGroup>
     <ProjectReference Include="..\DbTools.Common\DbTools.Common.csproj" />
     <ProjectReference Include="..\DbTools.Configuration\DbTools.Configuration.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinition.Base.Interfaces\DbTools.DataDefinition.Base.Interfaces.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinition.Factory.Interfaces\DbTools.DataDefinition.Factory.Interfaces.csproj" />
     <ProjectReference Include="..\DbTools.Factory.Collections\DbTools.Factory.Collections.csproj" />
   </ItemGroup>
 

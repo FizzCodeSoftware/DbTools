@@ -2,29 +2,33 @@
 {
     using System.Collections.Generic;
     using FizzCode.DbTools.Common.Logger;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.SqlExecuter;
 
     public abstract class GenericDataDefinitionElementReader
     {
-        protected GenericDataDefinitionElementReader(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
+        protected GenericDataDefinitionElementReader(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
         {
             Executer = executer;
+            
+            schemaNames ??= new SchemaNamesToRead(true);
+
             SchemaNames = schemaNames;
         }
 
-        protected SchemaNamesToRead SchemaNames { get; }
+        protected ISchemaNamesToRead SchemaNames { get; }
 
         protected SqlStatementExecuter Executer { get; }
 
-        protected Logger Logger => Executer.Generator.Context.Logger;
+        protected Logger Logger => Executer.Context.Logger;
 
         protected virtual void AddSchemaNamesFilter(ref string sqlStatement, string schemaColumnName)
         {
             var schemaNames = new List<string>();
             if (SchemaNames?.AllDefault != false)
             {
-                if (Executer.Generator.Context.Settings.Options.ShouldUseDefaultSchema)
-                    schemaNames.Add(Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
+                if (Executer.Context.Settings.Options.ShouldUseDefaultSchema)
+                    schemaNames.Add(Executer.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
             }
             else if (!SchemaNames.All && SchemaNames.SchemaNames != null)
             {

@@ -10,13 +10,14 @@
 
     public abstract class SqlStatementExecuter : ISqlStatementExecuter
     {
+        public ContextWithLogger Context { get; }
+
         public NamedConnectionString ConnectionString { get; }
         public ISqlGenerator Generator { get; }
 
-        protected Logger Logger => Generator.Context.Logger;
-
-        protected SqlStatementExecuter(NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
+        protected SqlStatementExecuter(ContextWithLogger context, NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
         {
+            Context = context;
             Generator = sqlGenerator;
             ConnectionString = connectionString;
         }
@@ -187,13 +188,13 @@
         protected void Log(LogSeverity severity, string text, params object[] args)
         {
             var module = "Executer/" + Generator.Version.UniqueName;
-            Logger.Log(severity, text, module, args);
+            Context.Logger.Log(severity, text, module, args);
         }
 
         protected LogTimer LogTimer(LogSeverity severity, string text, params object[] args)
         {
             var module = "Executer/" + Generator.Version.UniqueName;
-            var logTimer = new LogTimer(Logger, severity, text, module, args);
+            var logTimer = new LogTimer(Context.Logger, severity, text, module, args);
             return logTimer;
         }
 

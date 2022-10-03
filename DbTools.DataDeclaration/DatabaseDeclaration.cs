@@ -6,28 +6,12 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.Factory.Interfaces;
-    using FizzCode.DbTools.QueryBuilder.Interface;
+    using FizzCode.DbTools.QueryBuilder.Interfaces;
 
     public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
     {
         public NamingStrategies NamingStrategies { get; }
         public string? DefaultSchema { get; }
-
-        protected DatabaseDeclaration(IFactoryContainer factoryContainer, IQueryBuilderConnector queryBuilderConnector, SqlEngineVersion mainVersion, SqlEngineVersion[]? secondaryVersions = null, string? defaultSchema = null, NamingStrategies? namingStrategies = null)
-            : base(factoryContainer, mainVersion, secondaryVersions)
-        {
-            DefaultSchema = defaultSchema;
-            NamingStrategies = namingStrategies ?? new NamingStrategies();
-
-            QueryBuilderConnector = queryBuilderConnector;
-
-            AddDeclaredTables();
-            CreateRegisteredForeignKeys();
-            AddAutoNaming(GetTables());
-            AddDeclaredStoredProcedures();
-            AddDeclaredViews();
-            CircularFKDetector.DectectCircularFKs(GetTables());
-        }
 
         protected DatabaseDeclaration(IFactoryContainer factoryContainer, SqlEngineVersion mainVersion, SqlEngineVersion[]? secondaryVersions = null, string? defaultSchema = null, NamingStrategies? namingStrategies = null)
             : base(factoryContainer, mainVersion, secondaryVersions)
@@ -43,7 +27,20 @@
             CircularFKDetector.DectectCircularFKs(GetTables());
         }
 
-        public IQueryBuilderConnector? QueryBuilderConnector { get; }
+        private IQueryBuilderFactory? _queryBuilderFactory;
+        private IQueryBuilderConnector? _queryBuilderConnector;
+        protected IQueryBuilderConnector? QueryBuilderConnector
+        {
+            get
+            {
+                if (_queryBuilderFactory == null)
+                    _queryBuilderFactory = FactoryContainer.Get<IQueryBuilderFactory>();
+                if (_queryBuilderConnector == null)
+                    _queryBuilderConnector = _queryBuilderFactory.CreateQueryBuilderFactory();
+
+                return _queryBuilderConnector;
+            }
+        }
 
         private static IEnumerable<T> GetProperties<T>(SqlTable sqlTable)
         {

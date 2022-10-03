@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.Tabular
 {
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
 
     /// <summary>

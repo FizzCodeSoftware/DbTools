@@ -11,7 +11,7 @@
 
     public class Oracle12cMigrationGenerator : AbstractSqlMigrationGenerator
     {
-        public Oracle12cMigrationGenerator(Context context)
+        public Oracle12cMigrationGenerator(ContextWithLogger context)
             : base(context, new Oracle12cGenerator(context))
         {
         }

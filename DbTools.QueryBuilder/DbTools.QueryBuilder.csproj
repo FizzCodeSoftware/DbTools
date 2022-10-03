@@ -30,7 +30,8 @@
   <ItemGroup>
     <ProjectReference Include="..\DbTools.DataDefinition.Base\DbTools.DataDefinition.Base.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />
-    <ProjectReference Include="..\DbTools.QueryBuilder.Interface\DbTools.QueryBuilder.Interface.csproj" />
+    <ProjectReference Include="..\DbTools.QueryBuilder.Interfaces\DbTools.QueryBuilder.Interfaces.csproj" />
+    <ProjectReference Include="..\DbTools.SqlGenerator.Base\DbTools.SqlGenerator.Base.csproj" />
   </ItemGroup>
 
 

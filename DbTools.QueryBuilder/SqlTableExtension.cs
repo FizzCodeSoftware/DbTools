@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.QueryBuilder
 {
-    using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
 
     public static class SqlTableExtension

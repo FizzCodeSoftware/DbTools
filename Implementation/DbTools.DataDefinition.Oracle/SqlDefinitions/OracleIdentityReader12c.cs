@@ -5,13 +5,14 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.SqlExecuter;
 
     public class OracleIdentityReader12c : OracleDataDefinitionElementReader
     {
         private readonly List<Row> _queryResult;
 
-        public OracleIdentityReader12c(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
+        public OracleIdentityReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
             var sqlStatement = GetStatement();

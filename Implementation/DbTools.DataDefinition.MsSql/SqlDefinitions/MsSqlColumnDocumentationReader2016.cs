@@ -19,7 +19,7 @@
 
         public void GetColumnDocumentation(SqlTable table)
         {
-            var defaultSchema = Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
+            var defaultSchema = Executer.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
             var schemaAndTableName = (table.SchemaAndTableName.Schema ?? defaultSchema) + "." + table.SchemaAndTableName.TableName;
             var rows = QueryResult[schemaAndTableName];
 

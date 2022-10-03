@@ -5,6 +5,7 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.SqlExecuter;
 
     public class MsSqlIdentityReader2016 : GenericDataDefinitionElementReader
@@ -12,7 +13,7 @@
         private List<Row> _queryResult;
         private List<Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement()).Rows;
 
-        public MsSqlIdentityReader2016(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
+        public MsSqlIdentityReader2016(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
         }

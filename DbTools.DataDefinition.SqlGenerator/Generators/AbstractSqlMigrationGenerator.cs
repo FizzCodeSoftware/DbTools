@@ -10,10 +10,10 @@
 
     public abstract class AbstractSqlMigrationGenerator : ISqlMigrationGenerator
     {
-        public Context Context { get; }
+        public ContextWithLogger Context { get; }
         public ISqlGenerator Generator { get; }
 
-        protected AbstractSqlMigrationGenerator(Context context, ISqlGenerator generator)
+        protected AbstractSqlMigrationGenerator(ContextWithLogger context, ISqlGenerator generator)
         {
             Context = context;
             Generator = generator;

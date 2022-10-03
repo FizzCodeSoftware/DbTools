@@ -14,9 +14,9 @@
 
         }
 
-        public DatabaseCreator FromConnectionStringSettings(DatabaseDefinition databaseDefinition, NamedConnectionString connectionString, Context context)
+        public DatabaseCreator FromConnectionStringSettings(DatabaseDefinition databaseDefinition, NamedConnectionString connectionString, ContextWithLogger context)
         {
-            var executer = _sqlExecuterFactory.CreateSqlExecuter(connectionString, context);
+            var executer = _sqlExecuterFactory.CreateSqlExecuter(connectionString);
             return new DatabaseCreator(databaseDefinition, executer);
         }
     }

@@ -13,18 +13,26 @@ namespace FizzCode.DbTools.Console
     using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.Factory.Interfaces;
     using FizzCode.DbTools.Factory;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 
     [Command(">")]
     internal class AppCommands
     {
         private readonly ISqlExecuterFactory _sqlExecuterFactory;
+        private readonly IDataDefinitionReaderFactory _dataDefinitionReaderFactory;
 
         public AppCommands()
         {
             var root = new Root();
+            root.RegisterInstance<Logger>(CreateLogger());
+
+            root.Register<ContextFactory>(typeof(IContextFactory));
             root.Register<SqlGeneratorFactory>(typeof(ISqlGeneratorFactory));
             root.Register<SqlExecuterFactory>(typeof(ISqlExecuterFactory));
+            root.Register<DataDefinitionReaderFactory>(typeof(IDataDefinitionReaderFactory));
+
             _sqlExecuterFactory = root.Get<ISqlExecuterFactory>();
+            _dataDefinitionReaderFactory = root.Get<IDataDefinitionReaderFactory>();
         }
 
         [Command("exit", Description = "Exit from the command-line utility.")]
@@ -54,10 +62,10 @@ namespace FizzCode.DbTools.Console
 
             var context = CreateContext(version);
 
-            var sqlExecuter = _sqlExecuterFactory.CreateSqlExecuter(connString, context);
+            var sqlExecuter = _sqlExecuterFactory.CreateSqlExecuter(connString);
             var databaseName = sqlExecuter.GetDatabase();
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connString, context, null);
+            var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(connString, null);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -97,7 +105,7 @@ namespace FizzCode.DbTools.Console
 
             var context = CreateContext(version);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connString, context, null);
+            var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(connString, null);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -141,7 +149,7 @@ namespace FizzCode.DbTools.Console
 
             var context = CreateContext(version);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connString, context, null);
+            var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(connString, null);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -222,7 +230,7 @@ namespace FizzCode.DbTools.Console
 
             var context = CreateContext(version);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connString, context, null);
+            var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(connString, null);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -254,10 +262,10 @@ namespace FizzCode.DbTools.Console
 
             var context = CreateContext(version);
 
-            var sqlExecuter = _sqlExecuterFactory.CreateSqlExecuter(connString, context);
+            var sqlExecuter = _sqlExecuterFactory.CreateSqlExecuter(connString);
             var databaseName = sqlExecuter.GetDatabase();
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(connString, context, null);
+            var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(connString, null);
 
             var dd = ddlReader.GetDatabaseDefinition();
 
@@ -287,9 +295,9 @@ namespace FizzCode.DbTools.Console
             return logger;
         }
 
-        private static Context CreateContext(SqlEngineVersion version)
+        private static ContextWithLogger CreateContext(SqlEngineVersion version)
         {
-            var context = new Context
+            var context = new ContextWithLogger
             {
                 Logger = CreateLogger(),
                 Settings = Helper.GetDefaultSettings(version, Program.Configuration)
@@ -298,7 +306,7 @@ namespace FizzCode.DbTools.Console
             return context;
         }
 
-        private static DocumenterContext CreateDocumenterContext(Context context, string patternFileName)
+        private static DocumenterContext CreateDocumenterContext(ContextWithLogger context, string patternFileName)
         {
             var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
 
@@ -319,7 +327,7 @@ namespace FizzCode.DbTools.Console
             return documenterContext;
         }
 
-        private static GeneratorContext CreateGeneratorContext(Context context, string patternFileName)
+        private static GeneratorContext CreateGeneratorContext(ContextWithLogger context, string patternFileName)
         {
             var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
 
@@ -342,7 +350,7 @@ namespace FizzCode.DbTools.Console
             return generatorContext;
         }
 
-        private static ChangeDocumenterContext CreateChangeDocumenterContext(Context context, string patternFileNameOriginal, string patternFileNameNew)
+        private static ChangeDocumenterContext CreateChangeDocumenterContext(ContextWithLogger context, string patternFileNameOriginal, string patternFileNameNew)
         {
             var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
 
@@ -381,9 +389,7 @@ namespace FizzCode.DbTools.Console
 
             var connString = new NamedConnectionString("", version.ProviderName, connectionString, version.VersionString);
 
-            var context = CreateContext(version);
-
-            var executer = _sqlExecuterFactory.CreateSqlExecuter(connString, context);
+            var executer = _sqlExecuterFactory.CreateSqlExecuter(connString);
             var dc = new DatabaseCreator(null, executer);
 
             dc.DropAllViews();
@@ -422,10 +428,10 @@ namespace FizzCode.DbTools.Console
                 connectionStringOriginal,
                 versionOriginal.VersionString);
 
-            var sqlExecuterOriginal = _sqlExecuterFactory.CreateSqlExecuter(connString, contextOriginal);
+            var sqlExecuterOriginal = _sqlExecuterFactory.CreateSqlExecuter(connString);
             var databaseNameOriginal = sqlExecuterOriginal.GetDatabase();
 
-            var ddlReaderOriginal = DataDefinitionReaderFactory.CreateDataDefinitionReader(connString, contextOriginal, null);
+            var ddlReaderOriginal = _dataDefinitionReaderFactory.CreateDataDefinitionReader(connString, null);
 
             //var ddOriginal = ddlReaderOriginal.GetDatabaseDefinition();
             var ddOriginalTask = Task.Run(() => ddlReaderOriginal.GetDatabaseDefinition());
@@ -448,10 +454,10 @@ namespace FizzCode.DbTools.Console
                 connectionStringNew,
                 versionNew.VersionString);
 
-            var sqlExecuterNew = _sqlExecuterFactory.CreateSqlExecuter(connStringNew, contextNew);
+            var sqlExecuterNew = _sqlExecuterFactory.CreateSqlExecuter(connStringNew);
             var databaseNameNew = sqlExecuterNew.GetDatabase();
 
-            var ddlReaderNew = DataDefinitionReaderFactory.CreateDataDefinitionReader(connStringNew, contextNew, null);
+            var ddlReaderNew = _dataDefinitionReaderFactory.CreateDataDefinitionReader(connStringNew, null);
 
             //var ddNew = ddlReaderNew.GetDatabaseDefinition();
             var ddNewTask = Task.Run(() => ddlReaderNew.GetDatabaseDefinition());

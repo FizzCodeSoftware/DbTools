@@ -5,7 +5,7 @@
 
     public class SqLite3MigrationGenerator : AbstractSqlMigrationGenerator
     {
-        public SqLite3MigrationGenerator(Context context)
+        public SqLite3MigrationGenerator(ContextWithLogger context)
             : base(context, new SqLite3Generator(context))
         {
         }

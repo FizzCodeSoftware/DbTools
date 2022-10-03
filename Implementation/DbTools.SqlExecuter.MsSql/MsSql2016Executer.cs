@@ -12,8 +12,8 @@
 
     public class MsSql2016Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDatabase
     {
-        public MsSql2016Executer(NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
-            : base(connectionString, sqlGenerator)
+        public MsSql2016Executer(ContextWithLogger context, NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
+            : base(context, connectionString, sqlGenerator)
         {
         }
 

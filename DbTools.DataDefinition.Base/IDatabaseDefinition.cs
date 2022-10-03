@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using FizzCode.DbTools;
-    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 
     public interface IDatabaseDeclaration
     {

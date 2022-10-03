@@ -9,11 +9,12 @@
     using FizzCode.DbTools.DataDefinitionReader;
     using FizzCode.LightWeight.AdoNet;
     using FizzCode.DbTools.SqlExecuter.MsSql;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 
     public class MsSql2016DataDefinitionReader : GenericDataDefinitionReader
     {
-        public MsSql2016DataDefinitionReader(NamedConnectionString connectionString, Context context, SchemaNamesToRead schemaNames)
-            : base(new MsSql2016Executer(connectionString, new MsSql2016Generator(context)), schemaNames)
+        public MsSql2016DataDefinitionReader(NamedConnectionString connectionString, ContextWithLogger context, ISchemaNamesToRead schemaNames)
+            : base(new MsSql2016Executer(context, connectionString, new MsSql2016Generator(context)), schemaNames)
         {
         }
 
@@ -99,7 +100,7 @@ WHERE type = '{typeFilter}'";
             // TODO
             // ColumnDocumentationReader.GetColumnDocumentation(sqlView);
 
-            sqlView.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlView.SchemaAndTableName, Executer.Generator.Context);
+            sqlView.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlView.SchemaAndTableName, Executer.Context);
             return sqlView;
         }
 
@@ -116,7 +117,7 @@ WHERE type = '{typeFilter}'";
 
             ColumnDocumentationReader.GetColumnDocumentation(sqlTable);
 
-            sqlTable.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlTable.SchemaAndTableName, Executer.Generator.Context);
+            sqlTable.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlTable.SchemaAndTableName, Executer.Context);
             return (SqlTable)sqlTable;
         }
 

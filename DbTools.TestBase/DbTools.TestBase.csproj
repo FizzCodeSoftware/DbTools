@@ -40,9 +40,9 @@
     <ProjectReference Include="..\DbTools.Configuration\DbTools.Configuration.csproj" />
     <ProjectReference Include="..\DbTools.DataDeclaration\DbTools.DataDeclaration.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition.Base\DbTools.DataDefinition.Base.csproj" />
-    <ProjectReference Include="..\DbTools.DataDefinition.Factory.Interfaces\DbTools.DataDefinition.Factory.Interfaces.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition.Factory\DbTools.DataDefinition.Factory.csproj" />
     <ProjectReference Include="..\DbTools.Factory.Interfaces\DbTools.Factory.Interfaces.csproj" />
+    <ProjectReference Include="..\DbTools.QueryBuilder\DbTools.QueryBuilder.csproj" />
     <ProjectReference Include="..\DbTools.SqlExecuter\DbTools.SqlExecuter.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition.SqlGenerator\DbTools.DataDefinition.SqlGenerator.csproj" />
     <ProjectReference Include="..\DbTools.DataDefinition\DbTools.DataDefinition.csproj" />

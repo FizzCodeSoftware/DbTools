@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Factory
 {
     using FizzCode.DbTools.DataDefinition.Base.Interfaces;
-    using FizzCode.DbTools.DataDefinition.Factory.Interfaces;
     using FizzCode.DbTools.DataDefinition.MsSql2016;
     using FizzCode.DbTools.DataDefinition.Oracle12c;
     using FizzCode.DbTools.DataDefinition.SqLite3;

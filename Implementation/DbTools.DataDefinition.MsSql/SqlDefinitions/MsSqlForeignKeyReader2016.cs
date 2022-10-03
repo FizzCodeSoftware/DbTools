@@ -5,6 +5,7 @@
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.SqlExecuter;
 
     public class MsSqlForeignKeyReader2016 : GenericDataDefinitionElementReader
@@ -12,7 +13,7 @@
         private List<Row> _queryResult;
         private List<Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement()).Rows;
 
-        public MsSqlForeignKeyReader2016(SqlStatementExecuter executer, SchemaNamesToRead schemaNames)
+        public MsSqlForeignKeyReader2016(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
         }
@@ -73,7 +74,7 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
                 var referencedColumn = row.GetAs<string>("REFERENCED_COLUMN_NAME");
                 var fkName = row.GetAs<string>("FK_CONSTRAINT_NAME");
 
-                var referencedSqlTableSchemaAndTableNameAsToStore = GenericDataDefinitionReader.GetSchemaAndTableNameAsToStore(referencedSchemaAndTableName, Executer.Generator.Context);
+                var referencedSqlTableSchemaAndTableNameAsToStore = GenericDataDefinitionReader.GetSchemaAndTableNameAsToStore(referencedSchemaAndTableName, Executer.Context);
 
                 var referencedSqlTable = table.DatabaseDefinition.GetTable(referencedSqlTableSchemaAndTableNameAsToStore);
 

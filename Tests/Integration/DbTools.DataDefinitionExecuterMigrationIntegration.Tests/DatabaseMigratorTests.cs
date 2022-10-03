@@ -7,10 +7,12 @@
     using FizzCode.DbTools.DataDeclaration;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.DataDefinition.Base.Migration;
     using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.DataDefinition.Tests;
+    using FizzCode.DbTools.DataDefinitionReader;
     using FizzCode.DbTools.Factory.Interfaces;
     using FizzCode.DbTools.SqlExecuter;
     using FizzCode.DbTools.TestBase;
@@ -19,11 +21,15 @@
     [TestClass]
     public class DatabaseMigratorTests : DatabaseMigratorTestsBase
     {
-        private readonly ISqlGeneratorFactory _sqlGeneratorFactory;
+        private readonly IContextFactory _contextFactory;
+        private readonly ISqlMigrationGeneratorFactory _sqlMigrationGeneratorFactory;
+        private readonly IDataDefinitionReaderFactory _dataDefinitionReaderFactory;
 
         public DatabaseMigratorTests()
         {
-            _sqlGeneratorFactory = new SqlGeneratorFactory();
+            _contextFactory = new TestContextFactory(s => s.Options.ShouldUseDefaultSchema = true);
+            _sqlMigrationGeneratorFactory = new SqlMigrationGeneratorFactory(_contextFactory);
+            _dataDefinitionReaderFactory = new DataDefinitionReaderFactory(_contextFactory);
         }
 
         [TestMethod]
@@ -103,9 +109,9 @@
             var dd = new TestDatabaseFk();
             Init(version, dd);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(
+            var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(
                 SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
-                , SqlExecuterTestAdapter.GetContext(version), dd.GetSchemaNames().ToList());
+                , SchemaNamesToRead.ToSchemaNames(dd.GetSchemaNames()));
             var ddInDatabase = ddlReader.GetDatabaseDefinition();
 
             var fk = dd.GetTable("Foreign").Properties.OfType<ForeignKey>().First();
@@ -114,12 +120,12 @@
 
             fk.SqlEngineVersionSpecificProperties[version, "Nocheck"] = "false";
 
-            var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
+            var comparer = new Comparer();
             var changes = comparer.Compare(ddInDatabase, dd);
 
             _ = changes[0] as ForeignKeyChange;
 
-            _ = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), _sqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
+            _ = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), _sqlMigrationGeneratorFactory.CreateMigrationGenerator(version));
 
             // TODO change FK
             // databaseMigrator.
@@ -156,7 +162,7 @@
             var primaryKeyNew = changes[0] as PrimaryKeyNew;
             databaseMigrator.NewPrimaryKey(primaryKeyNew);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], SqlExecuterTestAdapter.GetContext(version), dds.Original.GetSchemaNames().ToList());
+            var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], SchemaNamesToRead.ToSchemaNames(dds.Original.GetSchemaNames()));
             var ddInDatabase = ddlReader.GetDatabaseDefinition();
 
             var newPk = ddInDatabase.GetTable("Company").Properties.OfType<PrimaryKey>().First();
@@ -182,13 +188,13 @@
         {
             Init(version, dds.Original);
 
-            var ddlReader = DataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], SqlExecuterTestAdapter.GetContext(version), dds.Original.GetSchemaNames().ToList());
+            var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], SchemaNamesToRead.ToSchemaNames(dds.Original.GetSchemaNames()));
             var ddInDatabase = ddlReader.GetDatabaseDefinition();
 
-            var comparer = new Comparer(SqlExecuterTestAdapter.GetContext(version));
+            var comparer = new Comparer();
             changes = comparer.Compare(ddInDatabase, dds.New);
 
-            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), _sqlGeneratorFactory.CreateMigrationGenerator(version, SqlExecuterTestAdapter.GetContext(version)));
+            var databaseMigrator = new DatabaseMigrator(SqlExecuterTestAdapter.GetExecuter(version.UniqueName), _sqlMigrationGeneratorFactory.CreateMigrationGenerator(version));
 
             return databaseMigrator;
         }
