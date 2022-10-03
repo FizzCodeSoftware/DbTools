@@ -24,7 +24,7 @@
 
             Log(LogSeverity.Debug, "Reading table definitions from database.");
 
-            var module = "Reader/" + Executer.Generator.Version.UniqueName;
+            var module = "Reader/" + Executer.Generator.SqlVersion.UniqueName;
             var logTimer = new LogTimer(Logger, LogSeverity.Debug, "Reading definitions from database.", module);
 
             foreach (var schemaAndTableName in GetSchemaAndTableNames())

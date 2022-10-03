@@ -15,7 +15,7 @@
         public void ViewSimple(SqlEngineVersion version)
         {
             Init(version, new TestDatabaseSimpleWithView());
-            var result = SqlExecuterTestAdapter.GetExecuter(version.UniqueName).ExecuteQuery("SELECT * FROM CompanyView");
+            var result = SqlExecuterTestAdapter.GetExecuter(version.UniqueName).ExecuteQuery("SELECT * FROM \"CompanyView\"");
 
             // TODO test view
             // - is it created

@@ -6,8 +6,6 @@
 
     public interface ISqlGenerator : ISqlGeneratorBase
     {
-        SqlEngineVersion Version { get; }
-
         SqlStatementWithParameters CreateSchema(string schemaName);
 
         string CreateTable(SqlTable table);

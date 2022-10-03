@@ -187,13 +187,13 @@
 
         protected void Log(LogSeverity severity, string text, params object[] args)
         {
-            var module = "Executer/" + Generator.Version.UniqueName;
+            var module = "Executer/" + Generator.SqlVersion.UniqueName;
             Context.Logger.Log(severity, text, module, args);
         }
 
         protected LogTimer LogTimer(LogSeverity severity, string text, params object[] args)
         {
-            var module = "Executer/" + Generator.Version.UniqueName;
+            var module = "Executer/" + Generator.SqlVersion.UniqueName;
             var logTimer = new LogTimer(Context.Logger, severity, text, module, args);
             return logTimer;
         }

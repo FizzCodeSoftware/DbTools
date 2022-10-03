@@ -11,7 +11,7 @@
         public SqLite3Generator(Context context)
             : base(new SqLiteGenerator(context))
         {
-            Version = SqLiteVersion.SqLite3;
+            SqlVersion = SqLiteVersion.SqLite3;
         }
 
         public override string DropAllForeignKeys()

@@ -9,9 +9,19 @@
 
     public class QueryBuilderConnector : AbstractSqlGeneratorBase, IQueryBuilderConnector
     {
-        public QueryBuilderConnector(Context context)
+        protected IQueryBuilder QueryBuilder { get; }
+        public QueryBuilderConnector(Context context, IQueryBuilder queryBuilder)
             : base(context)
         {
+            QueryBuilder = queryBuilder;
+        }
+
+        public override SqlEngineVersion SqlVersion
+        {
+            get
+            {
+                return QueryBuilder.SqlVersion;
+            }
         }
 
         public void ProcessStoredProcedureFromQuery(IStoredProcedureFromQuery storedProcedureFromQuery)
@@ -21,20 +31,18 @@
             foreach (var p in GetParametersFromFilters(sp.Query))
                 sp.SpParameters.Add(p);
 
-            sp.SqlStatementBody = Build(sp.Query);
+            sp.StoredProcedureBodies.Add(SqlVersion, Build(sp.Query));
         }
 
         public void ProcessViewFromQuery(IViewFromQuery viewFromQuery)
         {
             var view = viewFromQuery as ViewFromQuery;
-            view.SqlStatementBody = Build(view.Query);
+            view.SqlViewBodies.Add(SqlVersion, Build(view.Query));
         }
 
         public string Build(Query query)
         {
-            // TODO use factory
-            var queryBuilder = new QueryBuilderSqlGeneratorBase();
-            return queryBuilder.Build(query);
+            return QueryBuilder.Build(query);
         }
 
         public List<SqlParameter> GetParametersFromFilters(Query query)

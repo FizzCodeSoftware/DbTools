@@ -7,11 +7,17 @@
     {
         public StoredProcedure(string sqlStatementBody, params SqlParameter[] sqlParameters)
         {
-            SqlStatementBody = sqlStatementBody;
+            StoredProcedureBodies.Add(GenericVersion.Generic1, sqlStatementBody);
             SpParameters = sqlParameters.ToList();
         }
 
-        public string SqlStatementBody { get; set; }
+        public StoredProcedure(SqlEngineVersion version, string sqlStatementBody, params SqlParameter[] sqlParameters)
+        {
+            StoredProcedureBodies.Add(version, sqlStatementBody);
+            SpParameters = sqlParameters.ToList();
+        }
+
+        public StoredProcedureBodies StoredProcedureBodies { get; } = new();
 
         public IDatabaseDefinition? DatabaseDefinition { get; set; }
         public SchemaAndTableName? SchemaAndSpName { get; set; }

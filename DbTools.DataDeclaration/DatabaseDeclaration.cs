@@ -12,6 +12,7 @@
     {
         public NamingStrategies NamingStrategies { get; }
         public string? DefaultSchema { get; }
+        public QueryBuilderConnectors QueryBuilderConnectors { get; }
 
         protected DatabaseDeclaration(IFactoryContainer factoryContainer, SqlEngineVersion mainVersion, SqlEngineVersion[]? secondaryVersions = null, string? defaultSchema = null, NamingStrategies? namingStrategies = null)
             : base(factoryContainer, mainVersion, secondaryVersions)
@@ -19,27 +20,15 @@
             DefaultSchema = defaultSchema;
             NamingStrategies = namingStrategies ?? new NamingStrategies();
 
+            var queryBuilderFactory = FactoryContainer.Get<IQueryBuilderFactory>();
+            QueryBuilderConnectors = new QueryBuilderConnectors(queryBuilderFactory);
+
             AddDeclaredTables();
             AddDeclaredStoredProcedures();
             AddDeclaredViews();
             CreateRegisteredForeignKeys();
             AddAutoNaming(GetTables());
             CircularFKDetector.DectectCircularFKs(GetTables());
-        }
-
-        private IQueryBuilderFactory? _queryBuilderFactory;
-        private IQueryBuilderConnector? _queryBuilderConnector;
-        protected IQueryBuilderConnector? QueryBuilderConnector
-        {
-            get
-            {
-                if (_queryBuilderFactory == null)
-                    _queryBuilderFactory = FactoryContainer.Get<IQueryBuilderFactory>();
-                if (_queryBuilderConnector == null)
-                    _queryBuilderConnector = _queryBuilderFactory.CreateQueryBuilderFactory();
-
-                return _queryBuilderConnector;
-            }
         }
 
         private static IEnumerable<T> GetProperties<T>(SqlTable sqlTable)
@@ -215,9 +204,13 @@
             {
                 var sp = (StoredProcedure)property.GetValue(this);
 
-                if (sp is IStoredProcedureFromQuery spq && QueryBuilderConnector != null)
+                if (sp is IStoredProcedureFromQuery spq)
                 {
-                    QueryBuilderConnector.ProcessStoredProcedureFromQuery(spq);
+                    var versions = this.GetVersions();
+                    foreach (var version in versions)
+                    {
+                        QueryBuilderConnectors[version].ProcessStoredProcedureFromQuery(spq);
+                    }
                 }
 
                 if (sp.SchemaAndSpName == null)
@@ -245,9 +238,13 @@
             {
                 var view = (SqlView)property.GetValue(this);
 
-                if (view is IViewFromQuery vq && QueryBuilderConnector != null)
+                if (view is IViewFromQuery vq)
                 {
-                    QueryBuilderConnector.ProcessViewFromQuery(vq);
+                    var versions = this.GetVersions();
+                    foreach (var version in versions)
+                    {
+                        QueryBuilderConnectors[version].ProcessViewFromQuery(vq);
+                    }
                 }
 
                 if (view.SchemaAndTableName == null)

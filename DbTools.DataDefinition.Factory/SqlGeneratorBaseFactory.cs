@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Factory
 {
     using System;
-    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Factory.Interfaces;
     using FizzCode.DbTools.Interfaces;
     using FizzCode.DbTools.SqlGenerator.MsSql;
@@ -10,22 +9,24 @@
 
     public class SqlGeneratorBaseFactory : ISqlGeneratorBaseFactory
     {
-        protected Context Context { get; }
-        public SqlGeneratorBaseFactory(Context context)
+        protected IContextFactory ContextFactory { get; }
+        public SqlGeneratorBaseFactory(IContextFactory contextFactory)
         {
-            Context = context;
+            ContextFactory = contextFactory;
         }
 
         public ISqlGeneratorBase CreateGenerator(SqlEngineVersion version)
         {
+            var context = ContextFactory.CreateContext(version);
+
             if (version == SqLiteVersion.SqLite3)
-                return new SqLiteGenerator(Context);
+                return new SqLiteGenerator(context);
 
             if (version == MsSqlVersion.MsSql2016)
-                return new MsSqlGenerator(Context);
+                return new MsSqlGenerator(context);
 
             if (version == OracleVersion.Oracle12c)
-                return new OracleGenerator(Context);
+                return new OracleGenerator(context);
 
             throw new NotImplementedException($"Not implemented {version}.");
         }

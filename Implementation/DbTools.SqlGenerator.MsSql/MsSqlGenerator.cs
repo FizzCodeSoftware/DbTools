@@ -5,6 +5,8 @@
 
     public class MsSqlGenerator : AbstractSqlGeneratorBase
     {
+        public override SqlEngineVersion SqlVersion => MsSqlVersion.MsSql2016;
+
         public MsSqlGenerator(Context context)
             : base(context)
         {

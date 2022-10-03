@@ -10,20 +10,21 @@
     public class TestFactoryContainer : IFactoryContainer
     {
         protected Dictionary<Type, Func<object>> RegisteredCreators { get; set; } = new();
-
         protected Dictionary<Type, Type> RegisteredTypes { get; set; } = new();
         protected Dictionary<Type, object> RegisteredInstances { get; set; } = new();
 
         public TestFactoryContainer()
         {
             RegisterInstance(TestHelper.CreateLogger());
-            //Register<IContextFactory>(typeof(TestContextFactory));
             RegisterCreator<IContextFactory>(() => new TestContextFactory(null));
             Register<ITypeMapperFactory>(typeof(TypeMapperFactory));
             Register<ISqlGeneratorFactory>(typeof(SqlGeneratorFactory));
             Register<ISqlExecuterFactory>(typeof(SqlExecuterFactory));
-            //Register<IQueryBuilderFactory>(typeof(QueryBuilderFactory));
-            RegisterCreator<IQueryBuilderFactory>(() => new QueryBuilderFactory(Get<IContextFactory>()));
+            Register<ISqlGeneratorBaseFactory>(typeof(SqlGeneratorBaseFactory));
+            RegisterCreator<ISqlGeneratorBaseFactory>(() => new SqlGeneratorBaseFactory(Get<IContextFactory>()));
+            RegisterCreator<IQueryBuilderFactory>(() =>
+                new QueryBuilderFactory(Get<IContextFactory>(), Get<ISqlGeneratorBaseFactory>())
+            );
         }
 
         public T Get<T>() where T : notnull

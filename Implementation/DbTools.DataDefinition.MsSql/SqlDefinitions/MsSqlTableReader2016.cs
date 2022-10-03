@@ -34,7 +34,7 @@
                 {
                     SqlTableOrView = sqlView
                 };
-                column.Types.Add(Executer.Generator.Version, sqlType);
+                column.Types.Add(Executer.Generator.SqlVersion, sqlType);
                 column.Name = row.GetAs<string>("COLUMN_NAME");
 
                 sqlView.Columns.Add(column.Name, column);
@@ -58,7 +58,7 @@
                 {
                     Table = sqlTable
                 };
-                column.Types.Add(Executer.Generator.Version, sqlType);
+                column.Types.Add(Executer.Generator.SqlVersion, sqlType);
                 column.Name = row.GetAs<string>("COLUMN_NAME");
 
                 sqlTable.Columns.Add(column.Name, column);

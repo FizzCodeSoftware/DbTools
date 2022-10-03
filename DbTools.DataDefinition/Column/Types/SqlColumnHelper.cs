@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinition
 {
-    using System.Collections.Generic;
     using FizzCode.DbTools.DataDefinition.Base;
 
     public static class SqlColumnHelper
@@ -40,13 +39,7 @@
             if (!column.Types.ContainsKey(GenericVersion.Generic1))
                 return;
 
-
-            var versions = new List<SqlEngineVersion>();
-            if (column.SqlTableOrView.DatabaseDefinition.MainVersion != null)
-                versions.Add(column.SqlTableOrView.DatabaseDefinition.MainVersion);
-
-            if (column.SqlTableOrView.DatabaseDefinition.SecondaryVersions != null)
-                versions.AddRange(column.SqlTableOrView.DatabaseDefinition.SecondaryVersions);
+            var versions = column.SqlTableOrView.DatabaseDefinition.GetVersions();
 
             foreach (var version in versions)
             {

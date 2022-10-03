@@ -14,7 +14,7 @@
         public Oracle12cGenerator(Context context)
             : base(new OracleGenerator(context))
         {
-            Version = OracleVersion.Oracle12c;
+            SqlVersion = OracleVersion.Oracle12c;
         }
 
         public override SqlStatementWithParameters CreateSchema(string schemaName)

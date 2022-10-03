@@ -27,7 +27,7 @@
         {
         }
 
-        public string? SqlStatementBody { get; set; }
+        public SqlViewBodies SqlViewBodies { get; } = new();
 
         protected static SqlViewColumn AddColumn(Action<SqlViewColumn> configurator)
         {

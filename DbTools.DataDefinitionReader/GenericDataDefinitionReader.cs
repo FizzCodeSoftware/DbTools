@@ -21,7 +21,7 @@
 
         protected void Log(LogSeverity severity, string text, params object[] args)
         {
-            var module = "Reader/" + Executer.Generator.Version.UniqueName;
+            var module = "Reader/" + Executer.Generator.SqlVersion.UniqueName;
             Logger.Log(severity, text, module, args);
         }
 

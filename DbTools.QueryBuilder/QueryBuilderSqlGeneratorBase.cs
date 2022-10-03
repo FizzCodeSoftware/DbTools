@@ -5,20 +5,36 @@
     using System.Text;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition.Base;
+    using FizzCode.DbTools.Interfaces;
+    using FizzCode.DbTools.QueryBuilder.Interfaces;
     using Microsoft.Extensions.Primitives;
 
-    public class QueryBuilderSqlGeneratorBase : QueryBuilderBase
+    public class QueryBuilderSqlGeneratorBase : QueryBuilderBase, IQueryBuilder
     {
         protected int _level;
+        protected ISqlGeneratorBase SqlGeneratorBase { get; }
+
+        public QueryBuilderSqlGeneratorBase(ISqlGeneratorBase sqlGeneratorBase)
+        {
+            SqlGeneratorBase = sqlGeneratorBase;
+        }
 
         protected QueryBuilderSqlGeneratorBase CreateNewQueryBuilderSqlGenerator()
         {
-            return new QueryBuilderSqlGeneratorBase();
+            return new QueryBuilderSqlGeneratorBase(SqlGeneratorBase);
         }
 
-        public string Build(Query query)
+        public SqlEngineVersion SqlVersion
         {
-            return Build(query, 0);
+            get
+            {
+                return SqlGeneratorBase.SqlVersion;
+            }
+        }
+
+        public string Build(IQuery query)
+        {
+            return Build((Query)query, 0);
         }
 
         protected string Build(Query query, int level)
@@ -36,7 +52,7 @@
             sb.Append(AddJoinColumns());
             sb.AppendLine();
             sb.Append(_level, "FROM ");
-            sb.Append(QueryHelper.GetSimplifiedSchemaAndTableName(_query.Table.SchemaAndTableName));
+            sb.Append(SqlGeneratorBase.GetSimplifiedSchemaAndTableName(_query.Table.SchemaAndTableName));
             sb.Append(' ');
             sb.Append(_query.Table.GetAlias());
 
@@ -82,7 +98,7 @@
                     sb.Append('.');
                 }
 
-                sb.Append(column.Value);
+                sb.Append(SqlGeneratorBase.GuardKeywords(column.Value));
 
                 if (column.As != null)
                 {
@@ -121,7 +137,7 @@
                                 sb.Append(" AS '");
                                 if (_query.QueryColumnAliasStrategy == QueryColumnAliasStrategy.PrefixTableNameIfNeeded)
                                 {
-                                    sb.Append(QueryHelper.GetSimplifiedSchemaAndTableName(queryElement.Table.SchemaAndTableName));
+                                    sb.Append(SqlGeneratorBase.GetSimplifiedSchemaAndTableName(queryElement.Table.SchemaAndTableName));
                                 }
                                 else // PrefixTableAliasIfNeeded
                                 {
@@ -136,7 +152,7 @@
                         else if (_query.QueryColumnAliasStrategy == QueryColumnAliasStrategy.PrefixTableNameAlways)
                         {
                             sb.Append(" AS '");
-                            sb.Append(QueryHelper.GetSimplifiedSchemaAndTableName(queryElement.Table.SchemaAndTableName));
+                            sb.Append(SqlGeneratorBase.GetSimplifiedSchemaAndTableName(queryElement.Table.SchemaAndTableName));
                             sb.Append(column.Value);
                             sb.Append('\'');
                         }
@@ -323,7 +339,7 @@
             else
             {
                 sb.Append(' ')
-                    .Append(QueryHelper.GetSimplifiedSchemaAndTableName(join.Table.SchemaAndTableName))
+                    .Append(SqlGeneratorBase.GetSimplifiedSchemaAndTableName(join.Table.SchemaAndTableName))
                     .Append(' ')
                     .Append(join.Table.GetAlias());
             }

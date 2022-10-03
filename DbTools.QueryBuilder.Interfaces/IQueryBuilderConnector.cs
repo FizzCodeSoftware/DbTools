@@ -4,5 +4,6 @@
     {
         void ProcessStoredProcedureFromQuery(IStoredProcedureFromQuery storedProcedureFromQuery);
         void ProcessViewFromQuery(IViewFromQuery viewFromQuery);
+        SqlEngineVersion SqlVersion { get; }
     }
 }

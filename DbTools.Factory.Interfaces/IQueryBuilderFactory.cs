@@ -4,6 +4,7 @@
 
     public interface IQueryBuilderFactory
     {
-        IQueryBuilderConnector CreateQueryBuilderFactory();
+        IQueryBuilderConnector CreateQueryBuilderConnector(SqlEngineVersion version);
+        IQueryBuilder CreateQueryBuilder(SqlEngineVersion version);
     }
 }

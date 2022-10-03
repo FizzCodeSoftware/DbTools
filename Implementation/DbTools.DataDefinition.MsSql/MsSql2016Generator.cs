@@ -16,7 +16,7 @@
         public MsSql2016Generator(Context context)
             : base(new MsSqlGenerator(context))
         {
-            Version = MsSqlVersion.MsSql2016;
+            SqlVersion = MsSqlVersion.MsSql2016;
         }
 
         public SqlStatementWithParameters CreateDatabase(string databaseName)
@@ -148,7 +148,7 @@ EXEC sp_executesql @sql";
 
             sb.Append("ALTER TABLE ")
                 .Append(GetSimplifiedSchemaAndTableName(fk.SqlTable.SchemaAndTableName));
-            if (fk.SqlEngineVersionSpecificProperties.Contains(Version, "Nocheck") && fk.SqlEngineVersionSpecificProperties[Version, "Nocheck"] == "true")
+            if (fk.SqlEngineVersionSpecificProperties.Contains(SqlVersion, "Nocheck") && fk.SqlEngineVersionSpecificProperties[SqlVersion, "Nocheck"] == "true")
                 sb.Append(" WITH NOCHECK ADD ");
             else
                 sb.Append(" WITH CHECK ADD ");
@@ -156,7 +156,7 @@ EXEC sp_executesql @sql";
             sb.AppendLine(FKConstraint(fk))
             .Append("ALTER TABLE ")
             .Append(GetSimplifiedSchemaAndTableName(fk.SqlTable.SchemaAndTableName));
-            if (fk.SqlEngineVersionSpecificProperties.Contains(Version, "Nocheck") && fk.SqlEngineVersionSpecificProperties[Version, "Nocheck"] == "true")
+            if (fk.SqlEngineVersionSpecificProperties.Contains(SqlVersion, "Nocheck") && fk.SqlEngineVersionSpecificProperties[SqlVersion, "Nocheck"] == "true")
                 sb.Append(" NOCHECK CONSTRAINT ");
             else
                 sb.Append(" CHECK CONSTRAINT ");

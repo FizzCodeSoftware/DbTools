@@ -7,11 +7,11 @@
         public Feature(string name)
         {
             Name = name;
-            Support = new Dictionary<SqlEngineVersion, FeatureSupport>();
+            Support = new FeatureSupports();
         }
 
         public string Name { get; set; }
-        public Dictionary<SqlEngineVersion, FeatureSupport> Support { get; set; }
+        public FeatureSupports Support { get; set; }
 
         public void Add(SqlEngineVersion version, Support support, string description = null)
         {

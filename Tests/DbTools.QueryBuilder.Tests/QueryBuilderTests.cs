@@ -1,22 +1,30 @@
 ﻿namespace FizzCode.DbTools.QueryBuilder.Tests
 {
+    using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.DataDefinition.Tests;
+    using FizzCode.DbTools.Factory.Interfaces;
     using FizzCode.DbTools.QueryBuilder;
+    using FizzCode.DbTools.TestBase;
     using FizzCode.LightWeight.MsTest;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class QueryBuilderTests
     {
+        private readonly IQueryBuilderFactory _queryBuilderFactory;
+
         public QueryBuilderTests()
         {
+            var contextFactory = new TestContextFactory(null);
+            var sqlGeneratorBaseFactory = new SqlGeneratorBaseFactory(contextFactory);
+            _queryBuilderFactory = new QueryBuilderFactory(contextFactory, sqlGeneratorBaseFactory);
         }
 
         [TestMethod]
         public void SimpleTable()
         {
             var db = new TestDatabaseFksTyped();
-            var qb = new QueryBuilderSqlGeneratorBase();
+            var qb = _queryBuilderFactory.CreateQueryBuilder(MsSqlVersion.MsSql2016);
             var q = new Query(db.Parent);
 
             var result = qb.Build(q);
@@ -28,7 +36,7 @@
         public void JoinWithAlias()
         {
             var db = new TestDatabaseFksTyped();
-            var qb = new QueryBuilderSqlGeneratorBase();
+            var qb = _queryBuilderFactory.CreateQueryBuilder(MsSqlVersion.MsSql2016);
             var q = new Query(db.Child, QueryColumnAliasStrategy.PrefixTableAliasAlways)
                 .LeftJoinAlias(db.Parent, "ppp");
 
@@ -43,7 +51,7 @@
         public void JoinColumnsNone()
         {
             var db = new TestDatabaseFksTyped();
-            var qb = new QueryBuilderSqlGeneratorBase();
+            var qb = _queryBuilderFactory.CreateQueryBuilder(MsSqlVersion.MsSql2016);
             var q = new Query(db.Child)
                 .InnerJoin(db.Parent, new None());
 
@@ -58,7 +66,7 @@
         public void JoinColumnsParentNone()
         {
             var db = new TestDatabaseFksTyped();
-            var qb = new QueryBuilderSqlGeneratorBase();
+            var qb = _queryBuilderFactory.CreateQueryBuilder(MsSqlVersion.MsSql2016);
             var q = new Query(db.Child, new None())
                 .InnerJoin(db.Parent);
 
@@ -73,7 +81,7 @@
         public void JoinColumnsParentNone_PrefixTableAliasAlways()
         {
             var db = new TestDatabaseFksTyped();
-            var qb = new QueryBuilderSqlGeneratorBase();
+            var qb = _queryBuilderFactory.CreateQueryBuilder(MsSqlVersion.MsSql2016);
             var q = new Query(db.Child, QueryColumnAliasStrategy.PrefixTableAliasAlways, new None())
                 .InnerJoin(db.Parent);
 
@@ -88,7 +96,7 @@
         public void ParentFieldWithChild()
         {
             var db = new TestDatabaseFksTyped();
-            var qb = new QueryBuilderSqlGeneratorBase();
+            var qb = _queryBuilderFactory.CreateQueryBuilder(MsSqlVersion.MsSql2016);
             var q = new Query(db.Child)
                 .LeftJoin(db.Parent, db.Parent.Name);
 
@@ -102,7 +110,7 @@
         public void SimpleTableColumns()
         {
             var db = new TestDatabaseFksTyped();
-            var qb = new QueryBuilderSqlGeneratorBase();
+            var qb = _queryBuilderFactory.CreateQueryBuilder(MsSqlVersion.MsSql2016);
             var q = new Query(db.Child, db.Child.Name, db.Child.ParentId);
 
             var result = qb.Build(q);
@@ -114,7 +122,7 @@
         public void SimpleTableColumnExpression()
         {
             var db = new TestDatabaseFksTyped();
-            var qb = new QueryBuilderSqlGeneratorBase();
+            var qb = _queryBuilderFactory.CreateQueryBuilder(MsSqlVersion.MsSql2016);
             var q = new Query(db.Child, db.Child.Name, db.Child.ParentId).AddColumn("now", "GetDate()");
 
             var result = qb.Build(q);
@@ -126,7 +134,7 @@
         public void SimpleTableColumnCase()
         {
             var db = new TestDatabaseFksTyped();
-            var qb = new QueryBuilderSqlGeneratorBase();
+            var qb = _queryBuilderFactory.CreateQueryBuilder(MsSqlVersion.MsSql2016);
 
             var q = new Query(db.Child, db.Child.Name, db.Child.ParentId).AddColumn("IsParentId1", "CASE WHEN", db.Child.ParentId, "= 1 THEN", db.Child.ParentId, "ELSE 0 END");
 
@@ -139,7 +147,7 @@
         public void JoinSameTable()
         {
             var db = new TestDatabaseFksTyped();
-            var qb = new QueryBuilderSqlGeneratorBase();
+            var qb = _queryBuilderFactory.CreateQueryBuilder(MsSqlVersion.MsSql2016);
             var q = new Query(db.Child)
                 .LeftJoinAlias(db.Parent, "p1")
                 .LeftJoinAlias(db.Parent, "p2");
@@ -156,7 +164,7 @@
         public void WhereSimple()
         {
             var db = new TestDatabaseFksTyped();
-            var qb = new QueryBuilderSqlGeneratorBase();
+            var qb = _queryBuilderFactory.CreateQueryBuilder(MsSqlVersion.MsSql2016);
             var q = new Query(db.Parent)
                 .Where("1 = 1");
 
@@ -169,7 +177,7 @@
         public void WhereExpression()
         {
             var db = new TestDatabaseFksTyped();
-            var qb = new QueryBuilderSqlGeneratorBase();
+            var qb = _queryBuilderFactory.CreateQueryBuilder(MsSqlVersion.MsSql2016);
             var q = new Query(db.Parent)
                 .Where(db.Parent.Name, "LIKE 'a%'");
 
@@ -182,7 +190,7 @@
         public void JoinSameTableAndWhere()
         {
             var db = new TestDatabaseFksTyped();
-            var qb = new QueryBuilderSqlGeneratorBase();
+            var qb = _queryBuilderFactory.CreateQueryBuilder(MsSqlVersion.MsSql2016);
             var q = new Query(db.Child, QueryColumnAliasStrategy.PrefixTableAliasIfNeeded)
                 .LeftJoinAlias(db.Parent, "p1")
                 .LeftJoinAlias(db.Parent, "p2")
@@ -202,7 +210,7 @@
         public void Union()
         {
             var db = new TestDatabaseFksTyped();
-            var qb = new QueryBuilderSqlGeneratorBase();
+            var qb = _queryBuilderFactory.CreateQueryBuilder(MsSqlVersion.MsSql2016);
             var q = new Query(db.Parent)
                 .Union(new Query(db.Parent));
 
@@ -215,7 +223,7 @@
         public void TableAliases()
         {
             var db = new TestDatabaseFksTyped();
-            var qb = new QueryBuilderSqlGeneratorBase();
+            var qb = _queryBuilderFactory.CreateQueryBuilder(MsSqlVersion.MsSql2016);
 
             var p1 = db.Parent.Alias("p1");
             var p2 = db.Parent.Alias("p2");

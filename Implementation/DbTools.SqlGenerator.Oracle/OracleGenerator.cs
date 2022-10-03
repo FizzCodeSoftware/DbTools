@@ -5,6 +5,8 @@
 
     public class OracleGenerator : AbstractSqlGeneratorBase
     {
+        public override SqlEngineVersion SqlVersion => OracleVersion.Oracle12c;
+
         public OracleGenerator(Context context)
             : base(context)
         {

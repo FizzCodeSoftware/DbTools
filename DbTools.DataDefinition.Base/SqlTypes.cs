@@ -1,9 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Base
 {
-    using System.Collections.Generic;
     using System.Linq;
+    using FizzCode.DbTools.Common;
 
-    public class SqlTypes : Dictionary<SqlEngineVersion, SqlType>
+    public class SqlTypes : SqlEngineVersionDictionary<SqlType>
     {
         public void SetAllNullable(bool isNullable)
         {

@@ -76,26 +76,6 @@
             return connectionString;
         }
 
-        /*private readonly Dictionary<SqlEngineVersion, ContextWithLogger> _contextPerSqlVersion = new();
-
-        public ContextWithLogger GetContext(SqlEngineVersion version)
-        {
-            if (!_contextPerSqlVersion.ContainsKey(version))
-            {
-                var existingContext = _contextPerSqlVersion.Values.FirstOrDefault();
-                var existingLogger = existingContext?.Logger;
-                var _context = new ContextWithLogger
-                {
-                    Logger = existingLogger ?? TestHelper.CreateLogger(),
-                    Settings = TestHelper.GetDefaultTestSettings(version)
-                };
-
-                _contextPerSqlVersion.Add(version, _context);
-            }
-
-            return _contextPerSqlVersion[version];
-        }*/
-
         public void Cleanup()
         {
             /*var existingContext = _contextPerSqlVersion.Values.FirstOrDefault();

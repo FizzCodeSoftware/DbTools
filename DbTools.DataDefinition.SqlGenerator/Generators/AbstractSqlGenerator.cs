@@ -12,15 +12,15 @@
 
     public abstract class AbstractSqlGenerator : ISqlGenerator
     {
-        public Context Context { get => _sqlGeneratorBase.Context; }
+        public Context Context { get => SqlGeneratorBase.Context; }
 
-        public SqlEngineVersion Version { get; protected set; }
+        public SqlEngineVersion SqlVersion { get; protected set; }
 
-        private readonly ISqlGeneratorBase _sqlGeneratorBase;
+        protected ISqlGeneratorBase SqlGeneratorBase { get; }
 
         protected AbstractSqlGenerator(ISqlGeneratorBase sqlGeneratorBase)
         {
-            _sqlGeneratorBase = sqlGeneratorBase;
+            SqlGeneratorBase = sqlGeneratorBase;
         }
 
         public virtual string CreateTable(SqlTable table)
@@ -243,7 +243,7 @@
 
         public string GenerateCreateColumn(SqlColumn column)
         {
-            var type = column.Types[Version];
+            var type = column.Types[SqlVersion];
 
             var sb = new StringBuilder();
             sb.Append(GuardKeywords(column.Name))
@@ -340,7 +340,7 @@
             sb.AppendLine();
             sb.AppendLine("AS");
 
-            sb.Append(sp.SqlStatementBody);
+            sb.Append(sp.StoredProcedureBodies[SqlVersion]);
 
             return sb.ToString();
         }
@@ -354,7 +354,7 @@
             sb.AppendLine();
             sb.AppendLine("AS");
 
-            sb.Append(view.SqlStatementBody);
+            sb.Append(view.SqlViewBodies[SqlVersion]);
 
             return sb.ToString();
         }
@@ -398,37 +398,22 @@ SELECT
 
         public string GetSimplifiedSchemaAndTableName(SchemaAndTableName schemaAndTableName)
         {
-            var schema = GetSchema(schemaAndTableName.Schema);
-            var tableName = schemaAndTableName.TableName;
-
-            var defaultSchema = Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema", null);
-
-            if (!string.IsNullOrEmpty(defaultSchema) && Context.Settings.Options.ShouldUseDefaultSchema && string.IsNullOrEmpty(schema))
-            {
-                return GuardKeywords(defaultSchema) + "." + GuardKeywords(tableName);
-            }
-
-            if (!string.IsNullOrEmpty(schema) && (string.IsNullOrEmpty(defaultSchema) || !string.Equals(schema, defaultSchema, System.StringComparison.InvariantCultureIgnoreCase)))
-            {
-                return GuardKeywords(schema) + "." + GuardKeywords(tableName);
-            }
-
-            return GuardKeywords(tableName);
+            return SqlGeneratorBase.GetSimplifiedSchemaAndTableName(schemaAndTableName);
         }
 
-        protected string GetSchema(SqlTable table)
+        public string GetSchema(SqlTable table)
         {
-            return GetSchema(table.SchemaAndTableName.Schema);
+            return SqlGeneratorBase.GetSchema(table.SchemaAndTableName.Schema);
         }
 
         public virtual string GetSchema(string schema)
         {
-            return schema;
+            return SqlGeneratorBase.GetSchema(schema);
         }
 
         public string GuardKeywords(string name)
         {
-            return _sqlGeneratorBase.GuardKeywords(name);
+            return SqlGeneratorBase.GuardKeywords(name);
         }
     }
 }
