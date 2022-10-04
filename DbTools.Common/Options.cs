@@ -4,5 +4,6 @@
     {
         public bool ShouldUseDefaultSchema { get; set; }
         public bool ShouldMigrateColumnChangesAllAtOnce { get; set; }
+        public bool ShouldNotGuardKeywords { get; set; }
     }
 }

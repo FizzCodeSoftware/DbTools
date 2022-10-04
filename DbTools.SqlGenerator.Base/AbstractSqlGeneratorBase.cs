@@ -16,7 +16,14 @@
             Context = context;
         }
 
-        public abstract string GuardKeywords(string name);
+        public abstract string GuardKeywordsImplementation(string name);
+        public string GuardKeywords(string name)
+        {
+            if (Context.Settings.Options.ShouldNotGuardKeywords)
+                return name;
+
+            return GuardKeywordsImplementation(name);
+        }
 
         public string GetSimplifiedSchemaAndTableName(SchemaAndTableName schemaAndTableName)
         {

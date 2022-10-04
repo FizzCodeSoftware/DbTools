@@ -74,8 +74,7 @@
 
             return parameters;
         }
-
-        public override string GuardKeywords(string name)
+        public override string GuardKeywordsImplementation(string name)
         {
             throw new NotImplementedException();
         }

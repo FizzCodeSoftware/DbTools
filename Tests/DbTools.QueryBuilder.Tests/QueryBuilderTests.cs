@@ -8,18 +8,38 @@
     using FizzCode.LightWeight.MsTest;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-    [TestClass]
-    public class QueryBuilderTests
-    {
-        private readonly IQueryBuilderFactory _queryBuilderFactory;
 
-        public QueryBuilderTests()
+    public abstract class QueryBuilderTestBase
+    {
+        protected readonly IQueryBuilderFactory _queryBuilderFactory;
+
+        public QueryBuilderTestBase()
         {
-            var contextFactory = new TestContextFactory(null);
+            var contextFactory = new TestContextFactory(s => s.Options.ShouldNotGuardKeywords = true);
             var sqlGeneratorBaseFactory = new SqlGeneratorBaseFactory(contextFactory);
             _queryBuilderFactory = new QueryBuilderFactory(contextFactory, sqlGeneratorBaseFactory);
         }
+    }
 
+    [TestClass]
+    public class QueryBuilderKeywordTests : QueryBuilderTestBase
+    {
+        [TestMethod]
+        public void SimpleTable()
+        {
+            var db = new TestDatabaseFksTyped();
+            var qb = _queryBuilderFactory.CreateQueryBuilder(MsSqlVersion.MsSql2016);
+            var q = new Query(db.Parent);
+
+            var result = qb.Build(q);
+
+            AssertCustom.AreEqual("SELECT p.Id, p.Name\r\nFROM Parent p", result);
+        }
+    }
+
+    [TestClass]
+    public class QueryBuilderTests : QueryBuilderTestBase
+    {
         [TestMethod]
         public void SimpleTable()
         {

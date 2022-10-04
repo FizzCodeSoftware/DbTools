@@ -12,7 +12,7 @@
         {
         }
 
-        public override string GuardKeywords(string name)
+        public override string GuardKeywordsImplementation(string name)
         {
             var shouldUpperCaseEscapedNames = Context.Settings.SqlVersionSpecificSettings["UpperCaseEscapedNames"].ToString() == "true";
 

@@ -7,6 +7,7 @@
     {
         SqlEngineVersion SqlVersion { get; }
         string GuardKeywords(string name);
+        string GuardKeywordsImplementation(string name);
         Context Context { get; }
         string GetSimplifiedSchemaAndTableName(SchemaAndTableName schemaAndTableName);
         string GetSchema(SqlTable table);

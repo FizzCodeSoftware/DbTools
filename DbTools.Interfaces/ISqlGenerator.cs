@@ -35,6 +35,5 @@
         string TableNotEmpty(SqlTable table);
 
         string GenerateCreateColumn(SqlColumn column);
-        string GetSimplifiedSchemaAndTableName(SchemaAndTableName schemaAndTableName);
     }
 }

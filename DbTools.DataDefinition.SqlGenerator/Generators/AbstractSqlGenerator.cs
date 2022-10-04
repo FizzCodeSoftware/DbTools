@@ -359,8 +359,6 @@
             return sb.ToString();
         }
 
-        // public abstract string GuardKeywords(string name);
-
         public abstract string DropAllForeignKeys();
 
         public abstract string DropAllViews();
@@ -414,6 +412,11 @@ SELECT
         public string GuardKeywords(string name)
         {
             return SqlGeneratorBase.GuardKeywords(name);
+        }
+
+        public string GuardKeywordsImplementation(string name)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
