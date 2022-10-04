@@ -27,11 +27,6 @@
 
     public class TestDatabaseSimpleWithView : DatabaseDeclaration
     {
-        /*protected TestDatabaseSimpleWithView()
-            : base(new QueryBuilder(), MsSqlVersion.MsSql2016.GetTypeMapper(), new[] { OracleVersion.Oracle12c.GetTypeMapper() })
-        {
-        }*/
-
         public TestDatabaseSimpleWithView()
             : base(new TestFactoryContainer(), null, new SqlEngineVersion[] { MsSqlVersion.MsSql2016, OracleVersion.Oracle12c, SqLiteVersion.SqLite3 })
         {

@@ -24,7 +24,7 @@
             QueryBuilderConnectors = new QueryBuilderConnectors(queryBuilderFactory);
 
             AddDeclaredTables();
-            AddDeclaredStoredProcedures();
+            DeclaredStoredProcedures.AddDeclaredStoredProcedures(this);
             AddDeclaredViews();
             CreateRegisteredForeignKeys();
             AddAutoNaming(GetTables());
@@ -191,40 +191,6 @@
             else
             {
                 table.Properties.Add(tablePlaceHolderProperty);
-            }
-        }
-
-        private void AddDeclaredStoredProcedures()
-        {
-            var properties = GetType()
-                .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                .Where(pi => typeof(StoredProcedure).IsAssignableFrom(pi.PropertyType));
-
-            foreach (var property in properties)
-            {
-                var sp = (StoredProcedure)property.GetValue(this);
-
-                if (sp is IStoredProcedureFromQuery spq)
-                {
-                    var versions = this.GetVersions();
-                    foreach (var version in versions)
-                    {
-                        QueryBuilderConnectors[version].ProcessStoredProcedureFromQuery(spq);
-                    }
-                }
-
-                if (sp.SchemaAndSpName == null)
-                {
-                    var schemaAndTableName = new SchemaAndTableName(property.Name);
-                    if (string.IsNullOrEmpty(schemaAndTableName.Schema) && !string.IsNullOrEmpty(DefaultSchema))
-                        schemaAndTableName.Schema = DefaultSchema;
-
-                    sp.SchemaAndSpName = schemaAndTableName;
-                }
-
-                sp.DatabaseDefinition = this;
-
-                StoredProcedures.Add(sp);
             }
         }
 
