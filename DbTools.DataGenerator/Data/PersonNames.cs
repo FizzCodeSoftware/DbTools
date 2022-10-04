@@ -55,7 +55,7 @@ namespace FizzCode.DbTools.DataGenerator
             "Dichloroaceticacid",
             "Diethylether",
             "Dimethylglyoxime",
-            "EDTA,disodiumsalt",
+            "Disodiumsalt",
             "Ethanol",
             "Ethyleneglycol",
             "Formaldehyde",
