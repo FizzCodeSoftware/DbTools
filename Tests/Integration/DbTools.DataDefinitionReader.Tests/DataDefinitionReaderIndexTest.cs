@@ -28,10 +28,7 @@
 
             Init(version, null);
 
-            var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(
-                SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
-                , null);
-            var dd = ddlReader.GetDatabaseDefinition();
+            var dd = ReadDd(version, null);
 
             var _ = dd.GetTable("Company").Properties.OfType<Index>().First();
         }

@@ -5,9 +5,9 @@
     using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.SqlExecuter;
 
-    public class OracleTableReader12c : OracleTableOrViewReader12c
+    public class OracleViewReader12c : OracleTableOrViewReader12c
     {
-        public OracleTableReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
+        public OracleViewReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
         {
             var sqlStatement = GetStatement();
@@ -15,10 +15,9 @@
             QueryResult = Executer.ExecuteQuery(sqlStatement).Rows.ToLookup(x => x.GetAs<string>("SCHEMAANDTABLENAME"));
         }
 
-        public SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName)
+        public SqlView GetViewDefinition(SchemaAndTableName schemaAndTableName)
         {
-            var sqlTable = new SqlTable(schemaAndTableName);
-
+            var sqlView = new SqlView(schemaAndTableName);
             var rows = QueryResult[schemaAndTableName.SchemaAndName]
                 .OrderBy(r => r.GetAs<decimal>("COLUMN_ID"));
 
@@ -26,27 +25,35 @@
             {
                 var sqlType = GetSqlTypeFromRow(row);
 
-                var column = new SqlColumn
+                var column = new SqlViewColumn
                 {
-                    Table = sqlTable
+                    SqlTableOrView = sqlView
                 };
                 column.Types.Add(Executer.Generator.SqlVersion, sqlType);
                 column.Name = row.GetAs<string>("COLUMN_NAME");
 
-                sqlTable.Columns.Add(column.Name, column);
+                sqlView.Columns.Add(column.Name, column);
             }
 
-            return sqlTable;
+            return sqlView;
         }
 
         private static string GetStatement()
         {
             return @"
-SELECT CONCAT(CONCAT(owner, '.'), table_name) SchemaAndTableName,
-  column_id, column_name, data_type
-  /*, char_length*/, char_col_decl_length, data_precision, data_scale, nullable
-  FROM all_tab_columns, dba_users u
- WHERE all_tab_columns.owner = u.username";
+SELECT all_tab_columns.column_id, 
+  CONCAT(CONCAT(all_tab_columns.owner, '.'), all_tab_columns.table_name) AS SchemaAndTableName,
+  all_tab_columns.column_name, 
+  all_tab_columns.data_type, 
+  all_tab_columns.char_col_decl_length,
+  all_tab_columns.data_length, 
+  all_tab_columns.data_precision, 
+  all_tab_columns.data_scale, 
+  all_tab_columns.nullable
+FROM sys.all_tab_columns
+INNER JOIN sys.all_views v ON v.owner = all_tab_columns.owner
+AND all_tab_columns.table_name = v.view_name";
         }
+
     }
 }

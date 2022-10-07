@@ -38,6 +38,9 @@
 
         public static ISchemaNamesToRead ToSchemaNames(IEnumerable<string> schemaNames)
         {
+            if (schemaNames == null)
+                return new SchemaNamesToRead(true);
+
             var schemaNamesList = schemaNames.ToList();
             if (schemaNamesList.Count == 0)
                 return new SchemaNamesToRead(true);

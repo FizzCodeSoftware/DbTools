@@ -29,19 +29,16 @@
 
             TestHelper.CheckFeature(version, "ReadDdl");
 
-            var dd = new ForeignKeyComposite();
+            var dd = ReadDd(version, new ForeignKeyComposite().GetSchemaNames());
 
-            var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], SchemaNamesToRead.ToSchemaNames(dd.GetSchemaNames()));
-            var db = ddlReader.GetDatabaseDefinition();
-
-            var company = db.GetTable("Company");
+            var company = dd.GetTable("Company");
 
             var pkCompany = company.Properties.OfType<PrimaryKey>().FirstOrDefault();
             Assert.IsNotNull(pkCompany);
             Assert.AreEqual(1, pkCompany.SqlColumns.Count);
             Assert.AreEqual("Id", pkCompany.SqlColumns[0].SqlColumn.Name);
 
-            var topOrdersPerCompany = db.GetTable("TopOrdersPerCompany");
+            var topOrdersPerCompany = dd.GetTable("TopOrdersPerCompany");
 
             var fks = topOrdersPerCompany.Properties.OfType<ForeignKey>().ToList();
             Assert.AreEqual(2, fks.Count);
@@ -52,7 +49,7 @@
             Assert.AreEqual(2, fk1.ForeignKeyColumns.Count);
             Assert.AreEqual(2, fk2.ForeignKeyColumns.Count);
 
-            var order = db.GetTable("Order");
+            var order = dd.GetTable("Order");
 
             Assert.AreEqual(topOrdersPerCompany.Columns["Top1A"], fk1.ForeignKeyColumns[0].ForeignKeyColumn);
             Assert.AreEqual(topOrdersPerCompany.Columns["Top1B"], fk1.ForeignKeyColumns[1].ForeignKeyColumn);

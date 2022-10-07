@@ -35,6 +35,10 @@
             Log(LogSeverity.Debug, "Reading indexes from database.");
             new OracleIndexReader12c(Executer, SchemaNames).GetIndexes(dd);
 
+            Log(LogSeverity.Debug, "Reading views from database.");
+            foreach (var schemaAndTableName in GetViews())
+                dd.AddView(GetViewDefinition(schemaAndTableName, false));
+
             return dd;
         }
 
@@ -69,12 +73,19 @@
 
         public override List<SchemaAndTableName> GetViews()
         {
-            throw new System.NotImplementedException();
+            return new OracleViewsReader(Executer, SchemaNames).GetSchemaAndTableNames();
         }
+
+        private OracleViewReader12c _viewReader;
+
+        private OracleViewReader12c ViewReader => _viewReader ??= new OracleViewReader12c(Executer, SchemaNames);
 
         public override SqlView GetViewDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition)
         {
-            throw new System.NotImplementedException();
+            var sqlView = ViewReader.GetViewDefinition(schemaAndTableName);
+
+            sqlView.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlView.SchemaAndTableName, Executer.Context);
+            return sqlView;
         }
     }
 }
