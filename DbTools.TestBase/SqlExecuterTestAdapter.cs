@@ -3,9 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using FizzCode.DbTools.Common;
+    using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.Factory;
     using FizzCode.DbTools.Factory.Interfaces;
     using FizzCode.DbTools.Interfaces;
     using FizzCode.LightWeight.AdoNet;
@@ -20,12 +19,13 @@
         public override string ConfigurationFileName => "testconfig";
 
         private readonly ISqlExecuterFactory _sqlExecuterFactory;
+        private readonly IFactoryContainer _root;
 
         public SqlExecuterTestAdapter()
         {
-            var contextFactory = new TestContextFactory(null);
-            _sqlExecuterFactory = new SqlExecuterFactory(contextFactory, new SqlGeneratorFactory(contextFactory));
-        }
+            _root = new TestFactoryContainer();
+            _sqlExecuterFactory = _root.Get<ISqlExecuterFactory>();
+    }
 
         public void Check(SqlEngineVersion version)
         {
@@ -78,13 +78,13 @@
 
         public void Cleanup()
         {
-            /*var existingContext = _contextPerSqlVersion.Values.FirstOrDefault();
-            var existingLogger = existingContext?.Logger;
-            existingLogger?.Log(Common.Logger.LogSeverity.Debug, "Cleanup is called.", "SqlExecuterTestAdapter");*/
+            var logger = _root.Get<Logger>();
+            logger.Log(LogSeverity.Debug, "Cleanup is called.", "SqlExecuterTestAdapter");
 
             var exceptions = new List<Exception>();
             foreach (var sqlExecuterAndDialect in sqlExecutersAndDialects.Values)
             {
+                logger.Log(LogSeverity.Debug, $"Cleanup is called for {sqlExecuterAndDialect.Version}", "SqlExecuterTestAdapter");
                 try
                 {
                     var shouldDrop = TestHelper.ShouldRunIntegrationTest(sqlExecuterAndDialect.Version);

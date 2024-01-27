@@ -74,7 +74,7 @@
             return new SqlStatementWithParameters($@"
 SELECT CASE WHEN MAX({column}) IS NULL THEN 1 ELSE 0 END
 FROM {table}
-WHERE {column} = @{column}", value);
+WHERE {column} = @value", value);
         }
 
         public bool CheckIfUserExists(string userName)
@@ -96,7 +96,9 @@ WHERE {column} = @{column}", value);
             var currentUser = ExecuteQuery("select user from dual").Rows[0].GetAs<string>("USER");
 
             ExecuteNonQuery($"ALTER SESSION SET current_schema = {currentUser}");
-            ExecuteNonQuery($"DROP USER \"{defaultSchema}\" CASCADE");
+
+            if (CheckIfUserExists(defaultSchema))
+                ExecuteNonQuery($"DROP USER \"{defaultSchema}\" CASCADE");
         }
 
         public override DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)

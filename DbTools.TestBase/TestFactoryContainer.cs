@@ -18,8 +18,12 @@
             RegisterInstance(TestHelper.CreateLogger());
             RegisterCreator<IContextFactory>(() => new TestContextFactory(null));
             Register<ITypeMapperFactory>(typeof(TypeMapperFactory));
-            Register<ISqlGeneratorFactory>(typeof(SqlGeneratorFactory));
-            Register<ISqlExecuterFactory>(typeof(SqlExecuterFactory));
+            //Register<ISqlGeneratorFactory>(typeof(SqlGeneratorFactory));
+            RegisterCreator<ISqlGeneratorFactory>(() => new SqlGeneratorFactory(Get<IContextFactory>()));
+            //Register<ISqlExecuterFactory>(typeof(SqlExecuterFactory));
+            RegisterCreator<ISqlExecuterFactory>(() =>
+                new SqlExecuterFactory(Get<IContextFactory>(), Get<ISqlGeneratorFactory>())
+            );
             Register<ISqlGeneratorBaseFactory>(typeof(SqlGeneratorBaseFactory));
             RegisterCreator<ISqlGeneratorBaseFactory>(() => new SqlGeneratorBaseFactory(Get<IContextFactory>()));
             RegisterCreator<IQueryBuilderFactory>(() =>
@@ -35,7 +39,10 @@
                 return (T)creator.Invoke();
             }
 
-            var factoryType = RegisteredTypes[typeof(T)];
+            Type factoryType = null;
+            if (RegisteredTypes.ContainsKey(typeof(T)))
+                factoryType = RegisteredTypes[typeof(T)];
+            
             if (factoryType == null)
                 return (T)RegisteredInstances[typeof(T)];
 
