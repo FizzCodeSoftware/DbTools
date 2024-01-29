@@ -27,7 +27,8 @@
         public void GetIdentity(SqlTable table)
         {
             var rows = QueryResult
-                .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table));
+                .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table))
+                .ToList();
 
             foreach (var row in rows)
             {

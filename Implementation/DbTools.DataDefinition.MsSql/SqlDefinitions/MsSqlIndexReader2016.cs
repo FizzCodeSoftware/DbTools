@@ -10,12 +10,17 @@
 
     public class MsSqlIndexReader2016 : GenericDataDefinitionElementReader
     {
+        private const string Is_primary_key = "is_primary_key";
+        private const string Is_unique_constraint = "is_unique_constraint";
+        private const string Index_name = "index_name";
+        private const string Index_column_id = "index_column_id";
+
         private List<Row> _queryResult;
 
         private List<Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetKeySql()).Rows
                         .OrderBy(row => row.GetAs<string>("schema_name"))
-                        .ThenBy(row => row.GetAs<string>("index_name"))
-                        .ThenBy(row => row.GetAs<int>("index_column_id"))
+                        .ThenBy(row => row.GetAs<string>(Index_name))
+                        .ThenBy(row => row.GetAs<int>(Index_column_id))
                         .ToList();
 
         public MsSqlIndexReader2016(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
@@ -38,13 +43,17 @@
             PrimaryKey pk = null;
 
             var rows = QueryResult
-                .Where(row => row.GetAs<bool>("is_primary_key") && DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table)).OrderBy(row => row.GetAs<int>("index_column_id"));
+                .Where(row => row.GetAs<bool>(Is_primary_key)
+                    && DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table)
+                    )
+                .OrderBy(row => row.GetAs<int>(Index_column_id))
+                .ToList();
 
             foreach (var row in rows)
             {
-                if (row.GetAs<int>("index_column_id") == 1)
+                if (row.GetAs<int>(Index_column_id) == 1)
                 {
-                    pk = new PrimaryKey(table, row.GetAs<string>("index_name"))
+                    pk = new PrimaryKey(table, row.GetAs<string>(Index_name))
                     {
                         Clustered = row.GetAs<byte>("type") == 1,
                     };
@@ -65,14 +74,20 @@
         public void GetUniqueConstraints(SqlTable table)
         {
             UniqueConstraint uniqueConstraint = null;
+
             var rows = QueryResult
-                .Where(row => row.GetAs<bool>("is_unique_constraint") && DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table)).OrderBy(row => row.GetAs<int>("index_column_id"));
+                .Where(row =>
+                {
+                    return row.GetAs<bool>(Is_unique_constraint) && DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table);
+                })
+                .OrderBy(row => row.GetAs<int>(Index_column_id))
+                .ToList();
 
             foreach (var row in rows)
             {
-                if (row.GetAs<int>("index_column_id") == 1)
+                if (row.GetAs<int>(Index_column_id) == 1)
                 {
-                    uniqueConstraint = new UniqueConstraint(table, row.GetAs<string>("index_name"))
+                    uniqueConstraint = new UniqueConstraint(table, row.GetAs<string>(Index_name))
                     {
                         Clustered = row.GetAs<byte>("type") == 1 // in MsSql, UCs are also Indexes
                     };
@@ -93,17 +108,17 @@
         public void GetIndexes(SqlTable table)
         {
             Index index = null;
-            /*var rowsX = QueryResult
-                .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table, "schema_name", "view_name")).OrderBy(row => row.GetAs<string>("index_name")).ThenBy(row => row.GetAs<int>("index_column_id"));*/
 
             var rows = QueryResult
-                .Where(row => !row.GetAs<bool>("is_primary_key") && !row.GetAs<bool>("is_unique_constraint") && DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table)).OrderBy(row => row.GetAs<string>("index_name")).ThenBy(row => row.GetAs<int>("index_column_id"));
+                .Where(row => !row.GetAs<bool>(Is_primary_key) && !row.GetAs<bool>(Is_unique_constraint) && DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table))
+                .OrderBy(row => row.GetAs<string>(Index_name)).ThenBy(row => row.GetAs<int>(Index_column_id))
+                .ToList();
 
             foreach (var row in rows)
             {
-                if (row.GetAs<int>("index_column_id") == 1)
+                if (row.GetAs<int>(Index_column_id) == 1)
                 {
-                    index = new Index(table, row.GetAs<string>("index_name"))
+                    index = new Index(table, row.GetAs<string>(Index_name))
                     {
                         Unique = row.GetAs<bool>("is_unique"),
                         Clustered = row.GetAs<byte>("type") == 1,

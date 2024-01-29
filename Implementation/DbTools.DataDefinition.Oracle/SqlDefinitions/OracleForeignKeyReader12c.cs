@@ -67,7 +67,8 @@ SELECT
         {
             UniqueConstraint uniqueConstraint = null;
             var rows = _queryResult
-                .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "OWNER", "TABLE_NAME") && r.GetAs<string>("CONSTRAINT_TYPE") == "U");
+                .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "OWNER", "TABLE_NAME") && r.GetAs<string>("CONSTRAINT_TYPE") == "U")
+                .ToList();
 
             foreach (var row in rows)
             {
@@ -85,7 +86,8 @@ SELECT
         public void GetForeignKeys(SqlTable table)
         {
             var rows = _queryResult
-                .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "OWNER", "TABLE_NAME") && r.GetAs<string>("CONSTRAINT_TYPE") == "R");
+                .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "OWNER", "TABLE_NAME") && r.GetAs<string>("CONSTRAINT_TYPE") == "R")
+                .ToList();
 
             foreach (var row in rows)
             {

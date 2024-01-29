@@ -30,7 +30,8 @@
         {
             Index index = null;
             var rows = _queryResult
-                .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table, "TABLE_OWNER", "TABLE_NAME")).OrderBy(row => row.GetAs<string>("INDEX_NAME")).ThenBy(row => row.GetAs<decimal>("COLUMN_POSITION"));
+                .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table, "TABLE_OWNER", "TABLE_NAME")).OrderBy(row => row.GetAs<string>("INDEX_NAME")).ThenBy(row => row.GetAs<decimal>("COLUMN_POSITION"))
+                .ToList();
 
             foreach (var row in rows)
             {

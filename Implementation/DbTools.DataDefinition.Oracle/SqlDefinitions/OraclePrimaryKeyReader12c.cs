@@ -32,7 +32,8 @@
             PrimaryKey pk = null;
 
             var rows = _queryResult
-                .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table, "SCHEMA_NAME", "TABLE_NAME"));
+                .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table, "SCHEMA_NAME", "TABLE_NAME"))
+                .ToList();
 
             foreach (var row in rows)
             {

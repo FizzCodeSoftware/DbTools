@@ -62,7 +62,8 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
             var rows = QueryResult
                 .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "FK_CONSTRAINT_SCHEMA", "FK_TABLE_NAME"))
                 .OrderBy(row => row.GetAs<string>("FK_CONSTRAINT_NAME"))
-                .ThenBy(row => row.GetAs<int>("FK_ORDINAL_POSITION"));
+                .ThenBy(row => row.GetAs<int>("FK_ORDINAL_POSITION"))
+                .ToList();
 
             foreach (var row in rows)
             {
