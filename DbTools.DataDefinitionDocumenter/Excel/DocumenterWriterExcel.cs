@@ -3,25 +3,24 @@
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using FizzCode.DbTools.DataDefinitionDocumenter.Excel;
     using OfficeOpenXml;
     using OfficeOpenXml.Style;
 
     public class DocumenterWriterExcel : IDocumenterWriter
     {
         private ExcelPackage ExcelPackage { get; }
-        private readonly UniqueName _uniqueName;
 
         public DocumenterWriterExcel()
         {
             ExcelPackage = new ExcelPackage();
-            _uniqueName = new UniqueName();
         }
 
         private readonly Dictionary<string, Sheet> _sheets = new();
 
         protected string GetSheetName(string name)
         {
-            return _uniqueName.GetUniqueName(name);
+            return NamingHelper.GetUniqueName(name);
         }
 
         public Sheet Sheet(string name)
@@ -115,16 +114,12 @@
                 {
                     var hasValue = false;
                     for (var col = start.Column; col <= end.Column && !hasValue; col++)
-                    {
                         if (!string.IsNullOrEmpty(sheet.Cells[row, col].Text))
                             hasValue = true;
-                    }
 
                     if (hasValue)
-                    {
                         foreach (var cell in sheet.Cells[row, 1, row, end.Column])
                             cell.Style.Border.BorderAround(ExcelBorderStyle.Thin);
-                    }
                 }
 
                 foreach (var mergeAddress in sheet.MergedCells)
@@ -139,16 +134,12 @@
 
                     var mergedRangeWidth = 0.0d;
                     for (var col = mergedRange.Start.Column; col <= mergedRange.End.Column; col++)
-                    {
                         mergedRangeWidth += sheet.Column(col).Width;
-                    }
 
                     var renderedTextHeight = GetRenderedTextHeight(value, mergedRange.Style.Font, mergedRangeWidth);
                     var row = sheet.Row(mergedRange.Start.Row);
                     if (renderedTextHeight > row.Height)
-                    {
                         row.Height = renderedTextHeight;
-                    }
                 }
             }
 
@@ -158,6 +149,7 @@
         public void WriteLink(string sheetName, string text, string targetSheetName, Color? backgroundColor = null)
         {
             targetSheetName = GetSheetName(targetSheetName);
+            targetSheetName = NamingHelper.QuoteSheetNameIfNeedeed(targetSheetName);
 
             Sheet(sheetName, backgroundColor).SetLink(text, targetSheetName, backgroundColor);
             Sheet(sheetName, backgroundColor).LastColumn++;
