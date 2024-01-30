@@ -1,4 +1,4 @@
-﻿namespace FizzCode.DbTools.DataDefinition.View
+﻿namespace FizzCode.DbTools.DataDefinition
 {
     using System.Linq;
     using FizzCode.DbTools.DataDefinition.Base;
