@@ -13,10 +13,13 @@
         {
             Init(version, new TestDatabaseSimpleWithView());
 
-            SqlExecuterTestAdapter.GetExecuter(version.UniqueName).ExecuteNonQuery("INSERT INTO [Company] (Name) VALUES ('FirstCompanyName')");
-            SqlExecuterTestAdapter.GetExecuter(version.UniqueName).ExecuteNonQuery("INSERT INTO [Company] (Name) VALUES ('SecondCompanyName')");
+            /*SqlExecuterTestAdapter.ExecuteWithPrepareNonQuery(version.UniqueName, "INSERT INTO [DbTools_DataDefinition_View_Tests].[Company] ([Name]) VALUES ('FirstCompanyName')");
+            SqlExecuterTestAdapter.ExecuteWithPrepareNonQuery(version.UniqueName, "INSERT INTO [DbTools_DataDefinition_View_Tests].[Company] ([Name]) VALUES ('SecondCompanyName')");*/
 
-            var result = SqlExecuterTestAdapter.GetExecuter(version.UniqueName).ExecuteQuery("SELECT * FROM \"CompanyView\"");
+            SqlExecuterTestAdapter.ExecuteWithPrepareNonQuery(version.UniqueName, "INSERT INTO [Company] ([Name]) VALUES ('FirstCompanyName')");
+            SqlExecuterTestAdapter.ExecuteWithPrepareNonQuery(version.UniqueName, "INSERT INTO [Company] ([Name]) VALUES ('SecondCompanyName')");
+
+            var result = SqlExecuterTestAdapter.ExecuteWithPrepareQuery(version.UniqueName, "SELECT * FROM [CompanyView]");
 
             // TODO test view
             // - is it created

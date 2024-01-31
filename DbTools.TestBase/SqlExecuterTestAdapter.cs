@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.Common.Logger;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.Factory.Interfaces;
@@ -115,6 +116,28 @@
 
             sqlExecutersAndDialects[connectionStringKey].SqlExecuter.ExecuteNonQuery(query);
             return null;
+        }
+
+        public string ExecuteWithPrepareNonQuery(string connectionStringKey, string query)
+        {
+            sqlExecutersAndDialects[connectionStringKey].SqlExecuter.ExecuteNonQuery(PrepareSql(connectionStringKey, query));
+            return null;
+        }
+
+        public RowSet ExecuteWithPrepareQuery(string connectionStringKey, string query)
+        {
+            return sqlExecutersAndDialects[connectionStringKey].SqlExecuter.ExecuteQuery(PrepareSql(connectionStringKey, query));
+        }
+
+        public string PrepareSql(string connectionStringKey, string query)
+        {
+            var version = sqlExecutersAndDialects[connectionStringKey].Version;
+
+            var preparedQuery = query;
+            if (version is OracleVersion)
+                preparedQuery = query.Replace('[', '"').Replace(']', '"');
+
+            return preparedQuery;
         }
 
         public ISqlStatementExecuter GetExecuter(string connectionStringKey)
