@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
-    using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
@@ -10,7 +9,7 @@
 
     public class OracleForeignKeyReader12c : OracleDataDefinitionElementReader
     {
-        private readonly List<Row> _queryResult;
+        private readonly RowSet _queryResult;
 
         public OracleForeignKeyReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
             : base(executer, schemaNames)
@@ -18,7 +17,7 @@
             var sqlStatement = GetStatement();
             AddSchemaNamesFilter(ref sqlStatement, "cons.owner");
             sqlStatement += "\r\nORDER BY owner, table_name, position";
-            _queryResult = Executer.ExecuteQuery(sqlStatement).Rows.ToList();
+            _queryResult = Executer.ExecuteQuery(sqlStatement);
         }
 
         public void GetForeignKeysAndUniqueConstrainsts(DatabaseDefinition dd)

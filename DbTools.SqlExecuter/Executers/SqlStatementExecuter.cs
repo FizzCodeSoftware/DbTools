@@ -130,7 +130,7 @@
                             row.Add(sqlReader.GetName(i), sqlReader[i]);
                         }
 
-                        rowSet.Rows.Add(row);
+                        rowSet.Add(row);
                     }
 
                     logTimer.Done();

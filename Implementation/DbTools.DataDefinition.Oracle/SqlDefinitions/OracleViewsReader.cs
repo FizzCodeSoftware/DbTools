@@ -21,7 +21,7 @@ WHERE 1 = 1";
 
             AddSchemaNamesFilter(ref sqlStatement, "t.owner");
 
-            return Executer.ExecuteQuery(sqlStatement).Rows
+            return Executer.ExecuteQuery(sqlStatement)
                 .ConvertAll(row => new SchemaAndTableName(row.GetAs<string>("SCHEMANAME"), row.GetAs<string>("TABLENAME")));
         }
     }

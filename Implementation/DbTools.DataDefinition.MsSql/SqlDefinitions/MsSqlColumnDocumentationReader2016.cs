@@ -10,7 +10,7 @@
     public class MsSqlColumnDocumentationReader2016 : GenericDataDefinitionElementReader
     {
         private ILookup<string, Row> _queryResult;
-        private ILookup<string, Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement()).Rows.ToLookup(x => x.GetAs<string>("SchemaAndTableName"));
+        private ILookup<string, Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement()).ToLookup(x => x.GetAs<string>("SchemaAndTableName"));
 
         public MsSqlColumnDocumentationReader2016(SqlStatementExecuter executer, SchemaNamesToRead schemaNames = null)
             : base(executer, schemaNames)

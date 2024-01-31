@@ -65,8 +65,7 @@ WHERE type = '{typeFilter}'";
 
             AddSchemaNamesFilter(ref sqlStatement, "ss.name");
 
-            return Executer.ExecuteQuery(sqlStatement).Rows
-                .ConvertAll(row => new SchemaAndTableName(row.GetAs<string>("schemaName"), row.GetAs<string>("tableName")))
+            return Executer.ExecuteQuery(sqlStatement).ConvertAll(row => new SchemaAndTableName(row.GetAs<string>("schemaName"), row.GetAs<string>("tableName")))
 ;
         }
 
@@ -76,7 +75,7 @@ WHERE type = '{typeFilter}'";
 
             AddSchemaNamesFilter(ref sqlStatement, "ss.name");
 
-            return Executer.ExecuteQuery(sqlStatement).Rows
+            return Executer.ExecuteQuery(sqlStatement)
                 .ConvertAll(row => new SchemaAndTableName(row.GetAs<string>("schemaName"), row.GetAs<string>("tableName")))
 ;
         }
@@ -132,10 +131,10 @@ FROM
 
         public void AddTableDocumentation(SqlTable table)
         {
-            var reader = Executer.ExecuteQuery(new SqlStatementWithParameters(
+            var rowSet = Executer.ExecuteQuery(new SqlStatementWithParameters(
             SqlGetTableDocumentation + " AND SCHEMA_NAME(t.schema_id) = @SchemaName AND t.name = @TableName", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName));
 
-            foreach (var row in reader.Rows)
+            foreach (var row in rowSet)
             {
                 var description = row.GetAs<string>("Property");
                 if (!string.IsNullOrEmpty(description))
@@ -149,7 +148,7 @@ FROM
 
         public void AddTableDocumentation(DatabaseDefinition dd)
         {
-            var reader = Executer.ExecuteQuery(@"
+            var rowSet = Executer.ExecuteQuery(@"
 SELECT
     SCHEMA_NAME(t.schema_id) as SchemaName,
     t.name AS TableName, 
@@ -161,7 +160,7 @@ FROM
 
             var tables = dd.GetTables();
 
-            foreach (var row in reader.Rows)
+            foreach (var row in rowSet)
             {
                 // TODO SchemaAndTableName.Schema might be null on default schema?
                 var table = tables.Find(t => t.SchemaAndTableName.Schema == row.GetAs<string>("SchemaName") && t.SchemaAndTableName.TableName == row.GetAs<string>("TableName"));

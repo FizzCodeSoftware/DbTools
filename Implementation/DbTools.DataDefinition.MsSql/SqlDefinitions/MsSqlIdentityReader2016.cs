@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
-    using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
@@ -10,8 +9,8 @@
 
     public class MsSqlIdentityReader2016 : GenericDataDefinitionElementReader
     {
-        private List<Row> _queryResult;
-        private List<Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement()).Rows;
+        private RowSet _queryResult;
+        private RowSet QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement());
 
         public MsSqlIdentityReader2016(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
             : base(executer, schemaNames)

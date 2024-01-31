@@ -13,8 +13,8 @@
         {
             Init(version, new TestDatabaseSimpleWithView());
 
-            SqlExecuterTestAdapter.GetExecuter(version.UniqueName).ExecuteNonQuery("INSERT INTO Company (Name) VALUES ('FirstCompanyName')");
-            SqlExecuterTestAdapter.GetExecuter(version.UniqueName).ExecuteNonQuery("INSERT INTO Company (Name) VALUES ('SecondCompanyName')");
+            SqlExecuterTestAdapter.GetExecuter(version.UniqueName).ExecuteNonQuery("INSERT INTO [Company] (Name) VALUES ('FirstCompanyName')");
+            SqlExecuterTestAdapter.GetExecuter(version.UniqueName).ExecuteNonQuery("INSERT INTO [Company] (Name) VALUES ('SecondCompanyName')");
 
             var result = SqlExecuterTestAdapter.GetExecuter(version.UniqueName).ExecuteQuery("SELECT * FROM \"CompanyView\"");
 

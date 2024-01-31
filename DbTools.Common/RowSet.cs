@@ -2,8 +2,12 @@
 {
     using System.Collections.Generic;
 
-    public class RowSet
+    public class RowSet : List<Row>
     {
-        public List<Row> Rows { get; } = new List<Row>();
+        public RowSet()
+        { }
+
+        public RowSet(IEnumerable<Row> collection) : base(collection)
+        { }
     }
 }

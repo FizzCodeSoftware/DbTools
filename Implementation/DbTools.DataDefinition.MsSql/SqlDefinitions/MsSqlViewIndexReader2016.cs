@@ -1,6 +1,5 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionReader
 {
-    using System.Collections.Generic;
     using System.Linq;
     using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition;
@@ -15,13 +14,13 @@
         private const string Index_name = "index_name";
         private const string Index_column_id = "index_column_id";
 
-        private List<Row> _queryResult;
+        private RowSet _queryResult;
 
-        private List<Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetKeySql()).Rows
+        private RowSet QueryResult => _queryResult ??= Executer.ExecuteQuery(GetKeySql())
                         .OrderBy(row => row.GetAs<string>("schema_name"))
                         .ThenBy(row => row.GetAs<string>(Index_name))
                         .ThenBy(row => row.GetAs<int>(Index_column_id))
-                        .ToList();
+                        .ToRowSet();
 
         public MsSqlViewIndexReader2016(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
             : base(executer, schemaNames)

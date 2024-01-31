@@ -93,7 +93,7 @@ WHERE {column} = @value", value);
             }
 
             var defaultSchema = Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
-            var currentUser = ExecuteQuery("select user from dual").Rows[0].GetAs<string>("USER");
+            var currentUser = ExecuteQuery("select user from dual")[0].GetAs<string>("USER");
 
             ExecuteNonQuery($"ALTER SESSION SET current_schema = {currentUser}");
 

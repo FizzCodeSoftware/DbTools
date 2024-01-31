@@ -12,7 +12,7 @@
         {
             var sqlStatement = GetStatement();
             AddSchemaNamesFilter(ref sqlStatement, "all_tab_columns.owner");
-            QueryResult = Executer.ExecuteQuery(sqlStatement).Rows.ToLookup(x => x.GetAs<string>("SCHEMAANDTABLENAME"));
+            QueryResult = Executer.ExecuteQuery(sqlStatement).ToLookup(x => x.GetAs<string>("SCHEMAANDTABLENAME"));
         }
 
         public SqlView GetViewDefinition(SchemaAndTableName schemaAndTableName)
