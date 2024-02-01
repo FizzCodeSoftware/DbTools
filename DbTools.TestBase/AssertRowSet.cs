@@ -4,8 +4,11 @@ using FizzCode.DbTools.Common;
 
 public static class AssertRowSet
 {
-    public static void AreEqual(RowSet expected, RowSet actual)
+    public static void AreEqual(RowSet expected, RowSet actual, SqlEngineVersion version)
     {
-        // expected.Count
+        for (var i = 0; i < expected.Count; i++)
+        {
+            AssertRow.AreEqual(expected[i], actual[i], version);
+        }
     }
 }

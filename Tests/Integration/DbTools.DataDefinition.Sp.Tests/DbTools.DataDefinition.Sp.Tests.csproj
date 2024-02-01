@@ -11,7 +11,7 @@
     <Description>Tests for FizzCode.DbTools.DataDefinition Stored Procedure generation</Description>
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>
-    <Copyright>Copyright © 2019-2022 FizzCode Ltd.</Copyright>  </PropertyGroup>
+    <Copyright>Copyright © 2019-2024 FizzCode Ltd.</Copyright>  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0">

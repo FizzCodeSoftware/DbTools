@@ -7,7 +7,7 @@
     <AssemblyName>FizzCode.DbTools.DataDefinitionReader.Tests</AssemblyName>
     <RootNamespace>FizzCode.DbTools.DataDefinitionReader.Tests</RootNamespace>
     <Description>Tests for FizzCode.DbTools.DataDefinitionReader</Description>
-    <Copyright>Copyright © 2019-2022 FizzCode Ltd.</Copyright>
+    <Copyright>Copyright © 2019-2024 FizzCode Ltd.</Copyright>
     <Authors>FizzCode Ltd.</Authors>
     <Company>FizzCode Ltd.</Company>
     <Product>FizzCode DbTools</Product>

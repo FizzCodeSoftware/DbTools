@@ -8,6 +8,7 @@
         ISqlTypeInfo SqlTypeInfo { get; set; }
 
         ISqlType Clone(ISqlTypeInfo sqlTypeInfo);
+        ISqlType Clone(ISqlTypeInfo sqlTypeInfo, int? length, int? scale);
         ISqlType Copy();
         string ToString();
     }

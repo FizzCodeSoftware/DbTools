@@ -13,12 +13,17 @@
 
         public ISqlType Clone(ISqlTypeInfo sqlTypeInfo)
         {
+            return Clone(sqlTypeInfo, Length, Scale);
+        }
+
+        public ISqlType Clone(ISqlTypeInfo sqlTypeInfo, int? length, int? scale)
+        {
             var sqlType = new SqlType
             {
                 SqlTypeInfo = sqlTypeInfo,
                 IsNullable = IsNullable,
-                Length = Length,
-                Scale = Scale
+                Length = length,
+                Scale = scale
             };
 
             return sqlType;
@@ -47,7 +52,10 @@
                 sb.Append(" (")
                     .Append(Length?.ToString("D", CultureInfo.InvariantCulture));
                 if (Scale != null)
+                {
+                    sb.Append(',');
                     sb.Append(Scale?.ToString("D", CultureInfo.InvariantCulture));
+                }
 
                 sb.Append(')');
             }

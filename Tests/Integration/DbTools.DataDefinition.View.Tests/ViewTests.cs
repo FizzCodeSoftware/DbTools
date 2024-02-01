@@ -1,5 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.View.Tests
 {
+    using FizzCode.DbTools.Common;
     using FizzCode.DbTools.DataDefinition.Tests;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,19 +14,21 @@
         {
             Init(version, new TestDatabaseSimpleWithView());
 
-            /*SqlExecuterTestAdapter.ExecuteWithPrepareNonQuery(version.UniqueName, "INSERT INTO [DbTools_DataDefinition_View_Tests].[Company] ([Name]) VALUES ('FirstCompanyName')");
-            SqlExecuterTestAdapter.ExecuteWithPrepareNonQuery(version.UniqueName, "INSERT INTO [DbTools_DataDefinition_View_Tests].[Company] ([Name]) VALUES ('SecondCompanyName')");*/
+            // TODO TEST IDENTITY (Creation, Insert, Check inserted values)
 
             SqlExecuterTestAdapter.ExecuteWithPrepareNonQuery(version.UniqueName, "INSERT INTO [Company] ([Name]) VALUES ('FirstCompanyName')");
             SqlExecuterTestAdapter.ExecuteWithPrepareNonQuery(version.UniqueName, "INSERT INTO [Company] ([Name]) VALUES ('SecondCompanyName')");
 
             var result = SqlExecuterTestAdapter.ExecuteWithPrepareQuery(version.UniqueName, "SELECT * FROM [CompanyView]");
 
-            // TODO test view
-            // - is it created
-            // - is it runnable
-            // - is it returning the expected result
+            Assert.AreEqual(2, result.Count);
 
+            var expected = new RowSet() { 
+                new Row() { { "Id", 1 }, { "Name", "FirstCompanyName" } },
+                new Row() { { "Id", 2 }, { "Name", "SecondCompanyName" } },
+                };
+
+            AssertRowSet.AreEqual(expected, result, version);
         }
     }
 }

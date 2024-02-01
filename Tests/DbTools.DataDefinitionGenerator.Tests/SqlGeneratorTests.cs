@@ -38,8 +38,6 @@
 
             dd.AddTable(table);
 
-
-
             var generator = _sqlGeneratorFactory.CreateSqlGenerator(version);
 
             var sql = generator.CreateTable(table);

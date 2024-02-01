@@ -2,7 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Text;
 
+    [DebuggerDisplay("{ToString(),nq}")]
     public class Row : Dictionary<string, object>
     {
         public T GetAs<T>(string name)
@@ -48,6 +51,26 @@
             {
                 throw new InvalidCastException($"Invalid cast, from: {this[name].GetType().Name} to {typeof(T).Name}, column name: {name}", ex);
             }
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            foreach (var kvp in this)
+            {
+                sb.Append(kvp.Key);
+                sb.Append('(');
+                sb.Append(kvp.Value.GetType().Name);
+                sb.Append("): ");
+                sb.Append(kvp.Value);
+                sb.Append(", ");
+            }
+            var result = sb.ToString();
+            
+            if (result != "")
+                result = result.Substring(0, result.Length - 2);
+            
+            return result;
         }
     }
 }

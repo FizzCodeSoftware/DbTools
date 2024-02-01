@@ -1,19 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <PackageId>FizzCode.DbTools.QueryBuilder.Interfaces</PackageId>
+    <IsPackable>false</IsPackable>
+    <CodeAnalysisRuleSet>..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
+    <AssemblyName>FizzCode.DbTools.TestBase.Tests</AssemblyName>
+    <RootNamespace>FizzCode.DbTools.TestBase.Tests</RootNamespace>
+    <Description>Tests for FizzCode.TestBase.DataDefinition</Description>
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>
-    <Description>Query Builder Interfaces for Fizzcode DbTools project</Description>
     <Copyright>Copyright © 2019-2024 FizzCode Ltd.</Copyright>
-    <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
-    <Platforms>AnyCPU</Platforms>
-    <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
-    <AssemblyName>FizzCode.DbTools.QueryBuilder.Interfaces</AssemblyName>
-    <RootNamespace>FizzCode.DbTools.QueryBuilder.Interfaces</RootNamespace>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -21,6 +17,9 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="3.2.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="3.2.0" />
     <PackageReference Include="Roslynator.Formatting.Analyzers" Version="4.10.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -28,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DbTools.Configuration\DbTools.Configuration.csproj" />
+    <ProjectReference Include="..\..\DbTools.TestBase\DbTools.TestBase.csproj" />
   </ItemGroup>
-
 </Project>

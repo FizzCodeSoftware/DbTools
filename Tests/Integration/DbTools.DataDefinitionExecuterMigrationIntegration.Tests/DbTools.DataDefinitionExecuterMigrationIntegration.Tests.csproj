@@ -6,7 +6,7 @@
     <CodeAnalysisRuleSet>..\..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>FizzCode.DbTools.DataDefinitionExecuterMigrationIntegrationTests</AssemblyName>
     <RootNamespace>FizzCode.DbTools.DataDefinitionExecuterMigrationIntegrationTests</RootNamespace>
-    <Copyright>Copyright © 2019-2022 FizzCode Ltd.</Copyright>
+    <Copyright>Copyright © 2019-2024 FizzCode Ltd.</Copyright>
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>
     <Description>Tests for FizzCode.DbTools.DataDefinitionExecuter and Migration</Description>

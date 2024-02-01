@@ -9,7 +9,7 @@
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>
     <Description>Tests for FizzCode.DbTools.DataDefinition.SqlGenerator</Description>
-    <Copyright>Copyright © 2019-2022 FizzCode Ltd.</Copyright>
+    <Copyright>Copyright © 2019-2024 FizzCode Ltd.</Copyright>
   </PropertyGroup>
 
   <ItemGroup>

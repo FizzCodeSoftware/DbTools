@@ -3,12 +3,6 @@
     using System.Collections.Generic;
     using FizzCode.DbTools;
 
-    public interface IDatabaseDeclaration
-    {
-        void CreateRegisteredForeignKeys(SqlTable sqlTable);
-        void AddAutoNaming(List<SqlTable> tables);
-    }
-
     public interface IDatabaseDefinition
     {
         SqlEngineVersion MainVersion { get; }

@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <CodeAnalysisRuleSet>..\..\..\FizzCode.ruleset</CodeAnalysisRuleSet>
-    <Copyright>Copyright © 2019-2022 FizzCode Ltd.</Copyright>
+    <Copyright>Copyright © 2019-2024 FizzCode Ltd.</Copyright>
     <Authors>FizzCode Ltd.</Authors>
     <Product>FizzCode DbTools</Product>
     <Description>Tests for FizzCode.DbTools.SqlExecuter</Description>

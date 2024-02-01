@@ -66,6 +66,11 @@
         {
             var settings = Helper.GetDefaultSettings(version, _configuration);
 
+            if (version is SqLiteVersion)
+            {
+                settings.SqlVersionSpecificSettings["ShouldCreateAutoincrementAsPrimaryKey"] = true;
+            }
+
             if (version is OracleVersion)
             {
                 var executingAssembly = Assembly.GetExecutingAssembly();
