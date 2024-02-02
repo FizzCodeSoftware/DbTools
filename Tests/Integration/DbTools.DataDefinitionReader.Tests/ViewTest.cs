@@ -8,17 +8,6 @@
     [TestClass]
     public class ViewTest : DataDefinitionReaderTests
     {
-        /*[DataTestMethod]
-        [LatestSqlVersions]
-        public void CreateTables(SqlEngineVersion version)
-        {
-            var dd = new TestDatabaseSimpleWithView();
-            Init(version, dd);
-
-            var creator = new DatabaseCreator(dd, SqlExecuterTestAdapter.GetExecuter(version.UniqueName));
-            creator.ReCreateDatabase(true);
-        }*/
-
         [TestMethod]
         [LatestSqlVersions]
         public void ViewSimple(SqlEngineVersion version)
