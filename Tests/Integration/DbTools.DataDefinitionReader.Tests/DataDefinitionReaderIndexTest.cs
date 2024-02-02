@@ -10,7 +10,7 @@
     [TestClass]
     public class DataDefinitionReaderIndexTest : DataDefinitionReaderTests
     {
-        [DataTestMethod]
+        /*[DataTestMethod]
         [LatestSqlVersions]
         public void CreateTables(SqlEngineVersion version)
         {
@@ -18,7 +18,7 @@
             Init(version, dd);
             var creator = new DatabaseCreator(dd, SqlExecuterTestAdapter.GetExecuter(version.UniqueName));
             creator.ReCreateDatabase(true);
-        }
+        }*/
 
         [DataTestMethod]
         [LatestSqlVersions]
@@ -26,7 +26,7 @@
         {
             TestHelper.CheckFeature(version, "ReadDdl");
 
-            Init(version, null);
+            Init(version, new TestDatabaseIndex());
 
             var dd = ReadDd(version, null);
 

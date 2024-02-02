@@ -8,6 +8,7 @@ namespace FizzCode.DbTools.DataDefinitionReader.Tests
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.Base.Interfaces;
     using FizzCode.DbTools.DataDefinition.Factory;
+    using FizzCode.DbTools.SqlExecuter;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -26,12 +27,12 @@ namespace FizzCode.DbTools.DataDefinitionReader.Tests
         protected static void Init(SqlEngineVersion version, DatabaseDefinition dd)
         {
             SqlExecuterTestAdapter.Check(version);
-            if (dd == null)
-                SqlExecuterTestAdapter.Initialize(version.UniqueName);
-            else
-                SqlExecuterTestAdapter.Initialize(version.UniqueName, dd);
-
+            SqlExecuterTestAdapter.Initialize(version.UniqueName, dd);
             TestHelper.CheckFeature(version, "ReadDdl");
+
+            var databaseCreator = new DatabaseCreator(dd, SqlExecuterTestAdapter.GetExecuter(version.UniqueName));
+
+            databaseCreator.ReCreateDatabase(true);
         }
 
         [AssemblyCleanup]

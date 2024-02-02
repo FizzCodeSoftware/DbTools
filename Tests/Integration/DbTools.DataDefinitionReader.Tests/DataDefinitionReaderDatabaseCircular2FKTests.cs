@@ -8,7 +8,7 @@
     [TestClass]
     public class DataDefinitionReaderDatabaseCircular2FKTests : DataDefinitionReaderTests
     {
-        [DataTestMethod]
+        /*[DataTestMethod]
         [LatestSqlVersions]
         public void CreateTables(SqlEngineVersion version)
         {
@@ -16,13 +16,13 @@
             Init(version, dd);
             var creator = new DatabaseCreator(dd, SqlExecuterTestAdapter.GetExecuter(version.UniqueName));
             creator.ReCreateDatabase(true);
-        }
+        }*/
 
         [DataTestMethod]
         [LatestSqlVersions]
         public void ReadTables(SqlEngineVersion version)
         {
-            Init(version, null);
+            Init(version, new TestDatabaseCircular2FK());
 
             _ = ReadDd(version, null);
         }

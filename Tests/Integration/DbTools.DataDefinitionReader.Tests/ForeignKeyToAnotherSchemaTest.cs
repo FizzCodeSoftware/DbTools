@@ -10,7 +10,7 @@
     [TestClass]
     public class ForeignKeyToAnotherSchemaTest : DataDefinitionReaderTests
     {
-        [DataTestMethod]
+        /*[DataTestMethod]
         [LatestSqlVersions]
         public void CreateTables(SqlEngineVersion version)
         {
@@ -19,13 +19,13 @@
 
             var creator = new DatabaseCreator(dd, SqlExecuterTestAdapter.GetExecuter(version.UniqueName));
             creator.ReCreateDatabase(true);
-        }
+        }*/
 
         [DataTestMethod]
         [LatestSqlVersions]
         public void ReadTables(SqlEngineVersion version)
         {
-            Init(version, null);
+            Init(version, new ForeignKeyToAnotherSchema());
 
             TestHelper.CheckFeature(version, "ReadDdl");
 

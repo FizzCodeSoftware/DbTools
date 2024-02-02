@@ -11,7 +11,7 @@ namespace FizzCode.DbTools.DataDefinitionReader.Tests
     [TestClass]
     public class DataDefinitionReaderUniqueConstraintTest : DataDefinitionReaderTests
     {
-        [TestMethod]
+        /*[TestMethod]
         // [SqlVersions(typeof(MsSql2016))]
         //public void CreateTables(SqlVersion version)
         public void CreateTables()
@@ -21,7 +21,7 @@ namespace FizzCode.DbTools.DataDefinitionReader.Tests
             Init(version, dd);
             var creator = new DatabaseCreator(dd, SqlExecuterTestAdapter.GetExecuter(version.UniqueName));
             creator.ReCreateDatabase(true);
-        }
+        }*/
 
         [TestMethod]
         //[SqlVersions(typeof(MsSql2016))]
@@ -30,7 +30,7 @@ namespace FizzCode.DbTools.DataDefinitionReader.Tests
         {
             var version = MsSqlVersion.MsSql2016;
 
-            Init(version, null);
+            Init(version, new TestDatabaseUniqueConstraint());
 
             var dd = ReadDd(version, null);
 

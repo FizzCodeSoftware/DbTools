@@ -8,7 +8,7 @@
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
 
-    public abstract class DocumenterWriterBase : DocumenterBase
+    public abstract partial class DocumenterWriterBase : DocumenterBase
     {
         protected new DocumenterContext Context => (DocumenterContext)base.Context;
 
@@ -85,47 +85,7 @@
             return ColorTranslator.FromHtml(hexColor);
         }
 
-        protected void AddTableHeader(bool hasCategories, string category, SqlTableOrView table, string firstColumn = null)
-        {
-            var mergeAmount = !Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11;
-            mergeAmount += firstColumn == null ? 0 : 1;
-
-            WriteColor(table.SchemaAndTableName, "Schema");
-            WriteAndMerge(table.SchemaAndTableName, mergeAmount, table.SchemaAndTableName.Schema);
-            WriteLine(table.SchemaAndTableName);
-
-            WriteColor(table.SchemaAndTableName, "Table name");
-            WriteAndMerge(table.SchemaAndTableName, mergeAmount, table.SchemaAndTableName.TableName);
-            WriteLine(table.SchemaAndTableName);
-
-            var tableDescription = table switch
-            {
-                 SqlTable sqlTable => sqlTable.Properties.OfType<SqlTableDescription>().FirstOrDefault(),
-                 SqlView sqlView => sqlView.Properties.OfType<SqlTableDescription>().FirstOrDefault(),
-                _ => throw new System.ArgumentException("Unknown SqlTableOrView Type.")
-            };
-
-
-            WriteColor(table.SchemaAndTableName, "Description");
-            WriteAndMerge(table.SchemaAndTableName, mergeAmount, tableDescription?.Description);
-            WriteLine(table.SchemaAndTableName);
-
-            if (hasCategories && !string.IsNullOrEmpty(category))
-            {
-                WriteColor(table.SchemaAndTableName, "Category");
-                WriteAndMerge(table.SchemaAndTableName, mergeAmount, category);
-                WriteLine(table.SchemaAndTableName);
-            }
-
-            WriteLine(table.SchemaAndTableName);
-            if (firstColumn != null)
-                Write(table.SchemaAndTableName, firstColumn);
-
-            if (!Context.DocumenterSettings.NoInternalDataTypes)
-                WriteLine(table.SchemaAndTableName, "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Scale", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key Name", "Referenced Table", "Link", "Referenced Column");
-            else
-                WriteLine(table.SchemaAndTableName, "Column Name", "Data Type", "Column Length", "Column Scale", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key Name", "Referenced Table", "Link", "Referenced Column");
-        }
+        
 
         protected void AddColumnsToTableSheet(SqlColumn column, ColumnDocumentInfo columnDocumentInfo, string firstColumn = null)
         {
