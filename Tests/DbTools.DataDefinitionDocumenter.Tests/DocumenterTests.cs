@@ -6,16 +6,13 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class DocumenterTests
+    public class DocumenterTests : DocumenterTestsBase
     {
         [TestMethod]
         [LatestSqlVersions]
         public void DocumentTest(SqlEngineVersion version)
         {
-            var db = new TestDatabaseFks();
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "TestDatabaseFks");
-
-            documenter.Document(db);
+            Document(new TestDatabaseFks(), version);
         }
 
         [TestMethod]
@@ -23,7 +20,8 @@
         public void TableCustomizerTest(SqlEngineVersion version)
         {
             var db = new TestDatabaseFks();
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version, new TableCustomizer()), version, "TestDatabaseFks");
+            db.SetVersions(version);
+            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version, new TableCustomizer()), version, "TestDatabaseFksWithTableCustomizer", "TestDatabaseFksWithTableCustomizer" + "_" + version + ".xlsx");
             documenter.Document(db);
         }
 
@@ -31,36 +29,28 @@
         [LatestSqlVersions]
         public void DocumentTestForeignKeyComposite(SqlEngineVersion version)
         {
-            var db = new ForeignKeyComposite();
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "ForeignKeyComposite");
-            documenter.Document(db);
+            Document(new ForeignKeyComposite(), version);
         }
 
         [TestMethod]
         [LatestSqlVersions]
         public void DocumentTestIndexMultiColumn(SqlEngineVersion version)
         {
-            var db = new TestDatabaseIndexMultiColumn();
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "TestDatabaseIndexMultiColumn");
-            documenter.Document(db);
+            Document(new TestDatabaseIndexMultiColumn(), version);
         }
 
         [TestMethod]
         [LatestSqlVersions]
         public void DocumentTestIndexMultiColumnAndInclude(SqlEngineVersion version)
         {
-            var db = new TestDatabaseIndexMultiColumnAndInclude();
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "TestDatabaseIndexMultiColumnAndInclude");
-            documenter.Document(db);
+            Document(new TestDatabaseIndexMultiColumnAndInclude(), version);
         }
 
         [TestMethod]
         [LatestSqlVersions]
         public void DocumentTestUniqueConstraint(SqlEngineVersion version)
         {
-            var db = new TestDatabaseUniqueConstraint();
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "TestDatabaseUniqueConstraint");
-            documenter.Document(db);
+            Document(new TestDatabaseUniqueConstraint(), version);
         }
 
         internal class TableCustomizer : ITableCustomizer

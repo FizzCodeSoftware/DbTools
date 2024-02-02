@@ -2,14 +2,13 @@
 {
     using System.Linq;
     using FizzCode.DbTools.DataDefinition.Tests;
-    using FizzCode.DbTools.SqlExecuter;
     using FizzCode.DbTools.TestBase;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
     public class ViewTest : DataDefinitionReaderTests
     {
-        [DataTestMethod]
+        /*[DataTestMethod]
         [LatestSqlVersions]
         public void CreateTables(SqlEngineVersion version)
         {
@@ -18,13 +17,13 @@
 
             var creator = new DatabaseCreator(dd, SqlExecuterTestAdapter.GetExecuter(version.UniqueName));
             creator.ReCreateDatabase(true);
-        }
+        }*/
 
         [TestMethod]
         [LatestSqlVersions]
         public void ViewSimple(SqlEngineVersion version)
         {
-            Init(version, null);
+            Init(version, new TestDatabaseSimpleWithView());
 
             TestHelper.CheckFeature(version, "ReadDdl");
 

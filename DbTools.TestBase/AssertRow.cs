@@ -14,7 +14,7 @@ public static class AssertRow
     {
         if (!Compare(expected, actual, version, out var message))
         { 
-            throw new AssertFailedException("Assert.AreEqual failed. " + message.ToString());
+            throw new AssertFailedException("AssertRow.AreEqual failed. " + message.ToString());
         }
     }
 

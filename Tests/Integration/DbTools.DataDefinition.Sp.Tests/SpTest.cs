@@ -53,13 +53,8 @@
             SqlExecuterTestAdapter.GetExecuter(version.UniqueName).ExecuteQuery(sqlStatementWithParameters);
         }
 
-        public class DbWithSpQueryBuilder : DatabaseDeclaration
+        public class DbWithSpQueryBuilder : TestDatabaseDeclaration
         {
-            public DbWithSpQueryBuilder()
-                : base(new TestFactoryContainer(), null, new SqlEngineVersion[] { MsSqlVersion.MsSql2016, OracleVersion.Oracle12c })
-            {
-            }
-
             public CompanyTable Company { get; } = new CompanyTable();
 
             public StoredProcedure GetCompanies => new StoredProcedureFromQuery(new Query(Company));

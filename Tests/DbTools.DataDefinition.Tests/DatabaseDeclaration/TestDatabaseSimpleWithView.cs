@@ -1,15 +1,15 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Tests
 {
-    using FizzCode.DbTools.DataDeclaration;
     using FizzCode.DbTools.DataDefinition.Base;
     using FizzCode.DbTools.DataDefinition.Generic1;
     using FizzCode.DbTools.QueryBuilder;
     using FizzCode.DbTools.TestBase;
 
-    public class TestDatabaseSimpleWithView : DatabaseDeclaration
+    public class TestDatabaseSimpleWithView : TestDatabaseDeclaration
     {
         public TestDatabaseSimpleWithView()
-            : base(new TestFactoryContainer(), null, new SqlEngineVersion[] { MsSqlVersion.MsSql2016, OracleVersion.Oracle12c, SqLiteVersion.SqLite3 })
+            : base()
+            //: base(new TestFactoryContainer(), null, new SqlEngineVersion[] { MsSqlVersion.MsSql2016, OracleVersion.Oracle12c, SqLiteVersion.SqLite3 })
         {
         }
 
