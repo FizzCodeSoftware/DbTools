@@ -2,9 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Drawing;
-    using System.Globalization;
     using System.Linq;
-    using System.Text;
     using FizzCode.DbTools.DataDefinition;
     using FizzCode.DbTools.DataDefinition.Base;
 
@@ -85,53 +83,6 @@
             return ColorTranslator.FromHtml(hexColor);
         }
 
-        
-
-        protected void AddColumnsToTableSheet(SqlColumn column, ColumnDocumentInfo columnDocumentInfo, string firstColumn = null)
-        {
-            var table = column.Table;
-            var sqlType = column.Type;
-
-            if (firstColumn != null)
-                Write(table.SchemaAndTableName, firstColumn);
-
-            if (!Context.DocumenterSettings.NoInternalDataTypes)
-                Write(table.SchemaAndTableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
-            else
-                Write(table.SchemaAndTableName, column.Name, sqlType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
-
-            if (columnDocumentInfo.IsPk)
-                Write(table.SchemaAndTableName, true);
-            else
-                Write(table.SchemaAndTableName, "");
-
-            if (columnDocumentInfo.Identity != null)
-                Write(table.SchemaAndTableName, $"IDENTITY ({columnDocumentInfo.Identity.Seed.ToString("D", CultureInfo.InvariantCulture)}, {columnDocumentInfo.Identity.Increment.ToString("D", CultureInfo.InvariantCulture)})");
-            else
-                Write(table.SchemaAndTableName, "");
-
-            if (columnDocumentInfo.DefaultValue != null)
-                Write(table.SchemaAndTableName, columnDocumentInfo.DefaultValue);
-            else
-                Write(table.SchemaAndTableName, "");
-
-            Write(table.SchemaAndTableName, columnDocumentInfo.Description.Trim());
-
-            // "Foreign Key Name", "Referenced Table", "Link", "Referenced Column"
-            var fkOnColumn = table.Properties.OfType<ForeignKey>().FirstOrDefault(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn.Name == column.Name));
-
-            if (fkOnColumn != null)
-            {
-                Write(table.SchemaAndTableName, fkOnColumn.Name);
-                Write(table.SchemaAndTableName,
-                    Helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName));
-                WriteLink(table.SchemaAndTableName, "link", fkOnColumn.ReferredTable.SchemaAndTableName);
-                Write(table.SchemaAndTableName, fkOnColumn.ForeignKeyColumns.First(fkc => fkc.ForeignKeyColumn.Name == column.Name).ReferredColumn.Name);
-            }
-
-            WriteLine(table.SchemaAndTableName);
-        }
-
         protected static ColumnDocumentInfo GetColumnDocumentInfo(List<PrimaryKey> pks, SqlColumn column)
         {
             var info = new ColumnDocumentInfo();
@@ -151,101 +102,6 @@
         protected static List<SqlTable> RemoveKnownTechnicalTables(List<SqlTable> list)
         {
             return list.Where(x => !ShouldSkipKnownTechnicalTable(x.SchemaAndTableName)).ToList();
-        }
-
-        protected void AddForeignKey(ForeignKey fk, string firstColumn = null)
-        {
-            var countToMerge = 0;
-            var table = fk.SqlTable;
-
-            foreach (var fkColumn in fk.ForeignKeyColumns)
-            {
-                if (firstColumn != null)
-                    Write(table.SchemaAndTableName, firstColumn);
-
-                Write(table.SchemaAndTableName, fk.Name, fkColumn.ForeignKeyColumn.Name, Helper.GetSimplifiedSchemaAndTableName(fk.ReferredTable.SchemaAndTableName));
-                WriteLink(table.SchemaAndTableName, "link", Helper.GetSimplifiedSchemaAndTableName(fk.ReferredTable.SchemaAndTableName), GetColor(fk.ReferredTable.SchemaAndTableName));
-                Write(table.SchemaAndTableName, fkColumn.ReferredColumn.Name);
-
-                if (fk.SqlEngineVersionSpecificProperties.Any())
-                {
-                    var propertySb = new StringBuilder();
-                    foreach (var sqlEngineVersionSpecificProperty in fk.SqlEngineVersionSpecificProperties)
-                    {
-                        propertySb.Append(sqlEngineVersionSpecificProperty.Version)
-                            .Append('/')
-                            .Append(sqlEngineVersionSpecificProperty.Name)
-                            .Append(" = ")
-                            .AppendLine(sqlEngineVersionSpecificProperty.Value);
-                    }
-
-                    WriteLine(table.SchemaAndTableName, propertySb.ToString());
-                }
-                else
-                {
-                    WriteLine(table.SchemaAndTableName);
-                }
-
-                countToMerge++;
-            }
-
-            if (countToMerge > 1)
-            {
-                MergeUpFromPreviousRow(table.SchemaAndTableName, countToMerge - 1);
-            }
-        }
-
-        protected void AddIndex(Index index, string firstColumn = null)
-        {
-            var countToMerge = 0;
-            var table = index.SqlTable;
-
-            foreach (var indexColumn in index.SqlColumns)
-            {
-                if (firstColumn != null)
-                    Write(table.SchemaAndTableName, firstColumn);
-
-                Write(table.SchemaAndTableName, index.Name);
-                Write(table.SchemaAndTableName, indexColumn.SqlColumn.Name);
-                WriteLine(table.SchemaAndTableName, indexColumn.OrderAsKeyword);
-
-                countToMerge++;
-            }
-
-            foreach (var includeColumn in index.Includes)
-            {
-                Write(table.SchemaAndTableName, index.Name, includeColumn.Name, "");
-                WriteLine(table.SchemaAndTableName, "YES");
-
-                countToMerge++;
-            }
-
-            if (countToMerge > 1)
-            {
-                MergeUpFromPreviousRow(table.SchemaAndTableName, countToMerge - 1);
-            }
-        }
-
-        protected void AddUniqueConstraint(UniqueConstraint uniqueConstraint, string firstColumn = null)
-        {
-            var countToMerge = 0;
-            var table = uniqueConstraint.SqlTableOrView;
-
-            foreach (var indexColumn in uniqueConstraint.SqlColumns)
-            {
-                if (firstColumn != null)
-                    Write(table.SchemaAndTableName, firstColumn);
-
-                Write(table.SchemaAndTableName, uniqueConstraint.Name);
-                WriteLine(table.SchemaAndTableName, indexColumn.SqlColumn.Name);
-
-                countToMerge++;
-            }
-
-            if (countToMerge > 1)
-            {
-                MergeUpFromPreviousRow(table.SchemaAndTableName, countToMerge - 1);
-            }
         }
 
         private static object[] FormatBoolContent(params object[] content)

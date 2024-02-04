@@ -21,7 +21,7 @@
         {
             var db = new TestDatabaseFks();
             db.SetVersions(version);
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version, new TableCustomizer()), version, "TestDatabaseFksWithTableCustomizer", "TestDatabaseFksWithTableCustomizer" + "_" + version + ".xlsx");
+            var documenter = new Documenter(DocumenterTestsHelper.CreateTestDocumenterContext(version, new TableCustomizer()), version, "TestDatabaseFksWithTableCustomizer", "TestDatabaseFksWithTableCustomizer" + "_" + version + ".xlsx");
             documenter.Document(db);
         }
 

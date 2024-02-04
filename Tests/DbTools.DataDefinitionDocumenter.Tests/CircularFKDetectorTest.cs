@@ -111,7 +111,7 @@
         {
             var dd = new CircularDdABC_X();
 
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "CircularDdABC_X");
+            var documenter = new Documenter(DocumenterTestsHelper.CreateTestDocumenterContext(version), version, "CircularDdABC_X");
 
             documenter.Document(dd);
 
@@ -126,7 +126,7 @@
         {
             var dd = new CircularDdAB_CD();
 
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "CircularFKDetectorAB_CD");
+            var documenter = new Documenter(DocumenterTestsHelper.CreateTestDocumenterContext(version), version, "CircularFKDetectorAB_CD");
 
             documenter.Document(dd);
         }
@@ -137,7 +137,7 @@
         {
             var dd = new CircularDdA0B1C1_B2C2();
 
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(version), version, "CircularDdA0B1C1_B2C2");
+            var documenter = new Documenter(DocumenterTestsHelper.CreateTestDocumenterContext(version), version, "CircularDdA0B1C1_B2C2");
 
             documenter.Document(dd);
         }

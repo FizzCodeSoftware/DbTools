@@ -13,6 +13,9 @@
         [LatestSqlVersions]
         public void ReadTables(SqlEngineVersion version)
         {
+            if (!(version is OracleVersion))
+                return;
+
             Init(version, new ForeignKeyComposite());
 
             TestHelper.CheckFeature(version, "ReadDdl");

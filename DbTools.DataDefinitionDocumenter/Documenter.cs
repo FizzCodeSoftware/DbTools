@@ -1,7 +1,6 @@
 ﻿namespace FizzCode.DbTools.DataDefinitionDocumenter;
 
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using FizzCode.DbTools.Common.Logger;
@@ -23,15 +22,19 @@ public partial class Documenter : DocumenterWriterBase
             : context.Customizer;
     }
 
-    private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory = new();
-    private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategory = new();
-
     private ITableCustomizer Customizer { get; }
     public void Document(IDatabaseDefinition databaseDefinition)
     {
         Log(LogSeverity.Information, "Starting on {DatabaseName}.", "Documenter", DatabaseName);
 
         var tables = RemoveKnownTechnicalTables(databaseDefinition.GetTables());
+        var views = databaseDefinition.GetViews();
+
+        var _sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
+        var _skippedSqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
+
+        var _sqlViewsByCategory = new List<KeyValuePair<string, SqlView>>();
+        var _skippedSqlViewsByCategory = new List<KeyValuePair<string, SqlView>>();
 
         foreach (var table in tables)
         {
@@ -39,6 +42,14 @@ public partial class Documenter : DocumenterWriterBase
                 _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(Customizer.Category(table.SchemaAndTableName), table));
             else
                 _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(Customizer.Category(table.SchemaAndTableName), table));
+        }
+
+        foreach (var view in views)
+        {
+            if (!Customizer.ShouldSkip(view.SchemaAndTableName))
+                _sqlViewsByCategory.Add(new KeyValuePair<string, SqlView>(Customizer.Category(view.SchemaAndTableName), view));
+            else
+                _skippedSqlViewsByCategory.Add(new KeyValuePair<string, SqlView>(Customizer.Category(view.SchemaAndTableName), view));
         }
 
         var hasCategories = _sqlTablesByCategory.Any(x => !string.IsNullOrEmpty(x.Key));
@@ -49,7 +60,7 @@ public partial class Documenter : DocumenterWriterBase
 
         WriteLine("Database", "Database name", DatabaseName);
         WriteLine("Database", "Number of documented tables", noOfNotSkippedTables);
-        WriteLine("Database", "Number of documented tables", noOfNotSkippedViews);
+        WriteLine("Database", "Number of documented views", noOfNotSkippedViews);
         WriteLine("Database", "Number of skipped tables", noOfTables - noOfNotSkippedTables);
         WriteLine("Database", "Number of tables", noOfTables);
 
@@ -78,6 +89,8 @@ public partial class Documenter : DocumenterWriterBase
         }
         WriteTablesAndAllColumnsHeaderLine(hasCategories);
 
+        WriteViewsAndAllColumnsHeaderLine(hasCategories);
+
         // Ensure sheet order
         if (Customizer is PatternMatchingTableCustomizer)
         {
@@ -87,30 +100,9 @@ public partial class Documenter : DocumenterWriterBase
             Write("Patt.ma.-no matches (unused)");
         }
 
-        foreach (var tableKvp in _sqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName.Schema).ThenBy(t => t.Value.SchemaAndTableName.TableName))
-        {
-            Context.Logger.Log(LogSeverity.Verbose, "Generating {TableName}.", "Documenter", tableKvp.Value.SchemaAndTableName);
-            var category = tableKvp.Key;
-            var table = tableKvp.Value;
-            AddTableToTableList(category, table, hasCategories);
+        AddTables(_sqlTablesByCategory, _skippedSqlTablesByCategory, hasCategories);
 
-            var sheetColor = GetColor(table.SchemaAndTableName);
-            if (sheetColor != null)
-                DocumenterWriter.SetSheetColor(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName), sheetColor.Value);
-
-            AddTableHeader(hasCategories, category, table);
-
-            AddTableDetails(category, table, hasCategories);
-        }
-
-        WriteLine("Tables");
-
-        foreach (var tableKvp in _skippedSqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName.Schema).ThenBy(t => t.Value.SchemaAndTableName.TableName))
-        {
-            var category = tableKvp.Key;
-            var table = tableKvp.Value;
-            AddTableToTableList(category, table, hasCategories);
-        }
+        AddViews(_sqlViewsByCategory, _skippedSqlViewsByCategory, hasCategories);
 
         Context.Logger.Log(LogSeverity.Verbose, "Generating pattern matching info.", "Documenter");
         AddPatternMatching();
@@ -131,71 +123,6 @@ public partial class Documenter : DocumenterWriterBase
         }
 
         File.WriteAllBytes(fileName, content);
-    }
-
-    private void AddPatternMatching()
-    {
-        if (Customizer is not PatternMatchingTableCustomizerWithTablesAndItems)
-            return;
-
-        var customizer = (PatternMatchingTableCustomizerWithTablesAndItems)Customizer;
-
-        WriteLine("Patt.ma.-tables", "Table schema", "Table name", "Pattern", "Pattern except", "Should skip if match", "Category if match", "Background color if match");
-        foreach (var tableAndPattern in customizer.TableMatches)
-        {
-            var schemaAndTableName = tableAndPattern.Key;
-            var items = tableAndPattern.Value;
-
-            foreach (var item in items)
-            {
-                WriteLine("Patt.ma.-tables", schemaAndTableName.Schema, schemaAndTableName.TableName, item.Pattern.ToString(), item.PatternExcept.ToString(), item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);
-            }
-        }
-
-        WriteLine("Patt.ma.-patterns", "Pattern", "Pattern except", "Table schema", "Table name", "Should skip if match", "Category if match", "Background color if match");
-        foreach (var patternAndTable in customizer.MatchTables)
-        {
-            var item = patternAndTable.Key;
-            var schemaAndTableNames = patternAndTable.Value;
-
-            foreach (var schemaAndTableName in schemaAndTableNames)
-            {
-                WriteLine("Patt.ma.-patterns", item.Pattern.ToString(), item.PatternExcept.ToString(), schemaAndTableName.Schema, schemaAndTableName.TableName, item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);
-            }
-        }
-
-        WriteLine("Patt.ma.-ma.s w exceptions", "Pattern", "Pattern except", "Table schema", "Table name", "Should skip if match", "Category if match", "Background color if match");
-        foreach (var patternAndTable in customizer.MatchTablesWithException)
-        {
-            var item = patternAndTable.Key;
-            var schemaAndTableNames = patternAndTable.Value;
-
-            foreach (var schemaAndTableName in schemaAndTableNames)
-            {
-                WriteLine("Patt.ma.-ma.s w exceptions", item.Pattern.ToString(), item.PatternExcept.ToString(), schemaAndTableName.Schema, schemaAndTableName.TableName, item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);
-            }
-        }
-    }
-
-    private void AddPatternMatchingNoMatch()
-    {
-        if (Customizer is not PatternMatchingTableCustomizerWithTablesAndItems)
-            return;
-
-        var customizer = (PatternMatchingTableCustomizerWithTablesAndItems)Customizer;
-
-        WriteLine("Patt.ma.-no matches (unused)", "Pattern", "Pattern except", "Should skip if match", "Category if match", "Background color if match");
-
-        foreach (var item in customizer.PatternMatchingTableCustomizer.Patterns)
-        {
-            if (customizer.MatchTables.ContainsKey(item))
-                continue;
-
-            if (customizer.MatchTablesWithException.ContainsKey(item))
-                continue;
-
-            WriteLine("Patt.ma.-no matches (unused)", item.Pattern.ToString(), item.PatternExcept.ToString(), item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);
-        }
     }
 
     protected void AddTableToTableList(string category, SqlTable table, bool hasCategories)
@@ -222,130 +149,27 @@ public partial class Documenter : DocumenterWriterBase
         DocumenterWriter.WriteLine("Tables");
     }
 
-    protected void AddTableDetails(string category, SqlTable table, bool hasCategories)
+    protected void AddViewToViewList(string category, SqlView view, bool hasCategories)
     {
-        var pks = table.Properties.OfType<PrimaryKey>().ToList();
-
-        foreach (var column in table.Columns)
+        if (hasCategories)
         {
-            // TODO Create ISqlTypeMapper according to SqlDialect
-            var sqlType = column.Type;
-
-            var columnDocumentInfo = GetColumnDocumentInfo(pks, column);
-
-            // TODO internal data types are not OK this way
-
-            AddColumnsToTableSheet(column, columnDocumentInfo);
-
-            if (hasCategories)
-            {
-                if (!Context.DocumenterSettings.NoInternalDataTypes)
-                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
-                else
-                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
-            }
-            else if (!Context.DocumenterSettings.NoInternalDataTypes)
-            {
-                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
-            }
-            else
-            {
-                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
-            }
-
-            if (columnDocumentInfo.IsPk)
-                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", true);
-            else
-                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", "");
-
-            if (columnDocumentInfo.Identity != null)
-                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", $"IDENTITY ({columnDocumentInfo.Identity.Seed.ToString("D", CultureInfo.InvariantCulture)}, {columnDocumentInfo.Identity.Increment.ToString("D", CultureInfo.InvariantCulture)})");
-            else
-                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", "");
-
-            DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", columnDocumentInfo.DefaultValue);
-            DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), "All columns", columnDocumentInfo.Description);
+            DocumenterWriter.Write(GetColor(view.SchemaAndTableName), "Views", category);
         }
 
-        AddForeignKeysToTableSheet(table);
+        DocumenterWriter.Write(GetColor(view.SchemaAndTableName), "Views", view.SchemaAndTableName.Schema);
+        DocumenterWriter.Write(GetColor(view.SchemaAndTableName), "Views", view.SchemaAndTableName.TableName);
 
-        AdIndexesToTableSheet(table);
+        if (!Customizer.ShouldSkip(view.SchemaAndTableName))
+            DocumenterWriter.WriteLink("Views", "link", Helper.GetSimplifiedSchemaAndTableName(view.SchemaAndTableName), GetColor(view.SchemaAndTableName));
+        else
+            DocumenterWriter.Write(GetColor(view.SchemaAndTableName), "Views", "");
 
-        AddUniqueConstraintsToTableSheet(table);
-    }
+        DocumenterWriter.Write(GetColor(view.SchemaAndTableName), "Views", view.Columns.Count);
 
-    private void AddUniqueConstraintsToTableSheet(SqlTable table)
-    {
-        if (!Context.DocumenterSettings.NoUniqueConstraints)
-        {
-            WriteLine(table.SchemaAndTableName);
+        var tableDescription = view.Properties.OfType<SqlTableDescription>().FirstOrDefault();
+        if (tableDescription != null)
+            DocumenterWriter.Write(GetColor(view.SchemaAndTableName), "Views", tableDescription.Description);
 
-            var mergeAmount = 1 + (!Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11);
-
-            WriteAndMerge(table.SchemaAndTableName, mergeAmount, "Unique constraints");
-            WriteLine(table.SchemaAndTableName);
-
-            var uniqueConstraints = table.Properties.OfType<UniqueConstraint>().ToList();
-
-            if (uniqueConstraints.Count > 0)
-                WriteLine(table.SchemaAndTableName, "Unique constraint name", "Column");
-
-            foreach (var uniqueConstraint in uniqueConstraints)
-            {
-                AddUniqueConstraint(uniqueConstraint);
-            }
-        }
-    }
-
-    private void AdIndexesToTableSheet(SqlTable table)
-    {
-        if (!Context.DocumenterSettings.NoIndexes)
-        {
-            WriteLine(table.SchemaAndTableName);
-
-            var mergeAmount = 1 + (!Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11);
-
-            WriteAndMerge(table.SchemaAndTableName, mergeAmount, "Indexes");
-            WriteLine(table.SchemaAndTableName);
-
-            var indexes = table.Properties.OfType<Index>().ToList();
-
-            if (indexes.Count > 0)
-                WriteLine(table.SchemaAndTableName, "Index name", "Column", "Order", "Include");
-
-            foreach (var index in indexes)
-            {
-                AddIndex(index);
-            }
-        }
-    }
-
-    private void AddForeignKeysToTableSheet(SqlTable table)
-    {
-        var mergeAmount = 1 + (!Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11);
-
-        if (!Context.DocumenterSettings.NoForeignKeys)
-        {
-            WriteLine(table.SchemaAndTableName);
-
-            WriteAndMerge(table.SchemaAndTableName, mergeAmount, "Foreign keys");
-            WriteLine(table.SchemaAndTableName);
-
-            var fks = table.Properties.OfType<ForeignKey>().ToList();
-
-            if (fks.Count > 0)
-            {
-                // TODO allow nulls. Check / other properties?
-                WriteLine(table.SchemaAndTableName, "Foreign key name", "Column", "Referenced Table", "link", "Referenced Column", "Properties");
-            }
-
-            foreach (var fk in fks)
-            {
-                AddForeignKey(fk);
-            }
-
-            if (fks.Count > 0)
-                WriteLine(table.SchemaAndTableName);
-        }
+        DocumenterWriter.WriteLine("Views");
     }
 }

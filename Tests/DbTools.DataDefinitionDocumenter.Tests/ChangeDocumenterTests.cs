@@ -13,7 +13,7 @@
     {
         private static void Document(SqlEngineVersion version, DatabaseDefinitions dds)
         {
-            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, dds.DbNameOriginal, dds.DbNameNew);
+            var changeDocumenter = new ChangeDocumenter(DocumenterTestsHelper.CreateTestChangeContext(version), version, dds.DbNameOriginal, dds.DbNameNew);
 
             changeDocumenter.Document(dds.Original, dds.New);
         }
@@ -170,7 +170,7 @@
             var fk = ddFkChanged.GetTable("Foreign").Properties.OfType<ForeignKey>().First();
             fk.SqlEngineVersionSpecificProperties[version, "Nocheck"] = "false";
 
-            var changeDocumenter = new ChangeDocumenter(DataDefinitionDocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseFk", "TestDatabaseFk_FkCheckNoCheckTest");
+            var changeDocumenter = new ChangeDocumenter(DocumenterTestsHelper.CreateTestChangeContext(version), version, "TestDatabaseFk", "TestDatabaseFk_FkCheckNoCheckTest");
 
             changeDocumenter.Document(ddOriginal, ddFkChanged);
         }

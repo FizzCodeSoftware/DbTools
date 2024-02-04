@@ -331,7 +331,7 @@
             AddColumnsToTableSheet(column, columnDocumentInfo, firstColumn);
         }
 
-        private void ProcessTable(List<SchemaAndTableName> processedTables, SqlTableOrView table)
+        private void ProcessTable(List<SchemaAndTableName> processedTables, SqlTable table)
         {
             // TODO SqlTable and SqlView
             if (!processedTables.Contains(table.SchemaAndTableName))

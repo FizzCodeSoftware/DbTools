@@ -162,7 +162,7 @@
 
             var db = new TestDatabaseFks();
             var patternMatching = PatternMatchingTableCustomizerFromPatterns.FromCsv("TestDatabaseFks", null);
-            var documenter = new Documenter(DataDefinitionDocumenterTestsHelper.CreateTestDocumenterContext(GenericVersion.Generic1, patternMatching), GenericVersion.Generic1, "TestDatabaseFks");
+            var documenter = new Documenter(DocumenterTestsHelper.CreateTestDocumenterContext(GenericVersion.Generic1, patternMatching), GenericVersion.Generic1, "TestDatabaseFks");
             documenter.Document(db);
         }
 

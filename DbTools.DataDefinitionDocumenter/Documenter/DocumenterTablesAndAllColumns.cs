@@ -9,9 +9,9 @@ public partial class Documenter
         var tablesColumns = new List<string>();
         if (hasCategories)
             tablesColumns.Add("Category");
-        tablesColumns.AddRange(new [] { "Schema", "Table Name", "Link", "Number of columns", "Description" });
+        tablesColumns.AddRange(new[] { "Schema", "Table Name", "Link", "Number of columns", "Description" });
 
-        WriteLine("Tables", tablesColumns);
+        WriteLine("Tables", tablesColumns.ToArray());
 
         var allColumns = new List<string>();
         if (hasCategories)
@@ -22,6 +22,6 @@ public partial class Documenter
         if (Context.DocumenterSettings.NoInternalDataTypes)
             allColumns.Remove("Data Type (DbTools)");
 
-        WriteLine("All columns", allColumns);
+        WriteLine("All columns", allColumns.ToArray());
     }
 }
