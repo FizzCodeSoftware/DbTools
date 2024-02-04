@@ -11,6 +11,9 @@ public class DocumenterViewTests : DocumenterTestsBase
     [LatestSqlVersions]
     public void DocumentViewTest(SqlEngineVersion version)
     {
+        // Note that columns of views are not generated from DatabaseDefinition
+        // (like 'new ViewFromQuery(new Query(Company))'.
+        // Columns of views are read only from Database engines.
         Document(new TestDatabaseSimpleWithView(), version);
     }
 }
