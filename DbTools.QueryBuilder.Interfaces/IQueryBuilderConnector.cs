@@ -1,9 +1,8 @@
-﻿namespace FizzCode.DbTools.QueryBuilder.Interfaces
+﻿namespace FizzCode.DbTools.QueryBuilder.Interfaces;
+
+public interface IQueryBuilderConnector
 {
-    public interface IQueryBuilderConnector
-    {
-        void ProcessStoredProcedureFromQuery(IStoredProcedureFromQuery storedProcedureFromQuery);
-        void ProcessViewFromQuery(IViewFromQuery viewFromQuery);
-        SqlEngineVersion SqlVersion { get; }
-    }
+    void ProcessStoredProcedureFromQuery(IStoredProcedureFromQuery storedProcedureFromQuery);
+    void ProcessViewFromQuery(IViewFromQuery viewFromQuery);
+    SqlEngineVersion SqlVersion { get; }
 }

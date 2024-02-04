@@ -1,34 +1,32 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
+﻿using FizzCode.DbTools.Common;
+using FizzCode.DbTools.DataDefinition.Base;
+
+namespace FizzCode.DbTools.DataDefinitionDocumenter;
+public class DocumenterHelper
 {
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition.Base;
+    protected Settings Settings { get; set; }
 
-    public class DocumenterHelper
+    public DocumenterHelper(Settings settings)
     {
-        protected Settings Settings { get; set; }
+        Settings = settings;
+    }
 
-        public DocumenterHelper(Settings settings)
-        {
-            Settings = settings;
-        }
+    public string GetSimplifiedSchemaAndTableName(SchemaAndTableName schemaAndTableName, string separator = ".")
+    {
+        var schema = schemaAndTableName.Schema;
+        var tableName = schemaAndTableName.TableName;
 
-        public string GetSimplifiedSchemaAndTableName(SchemaAndTableName schemaAndTableName, string separator = ".")
-        {
-            var schema = schemaAndTableName.Schema;
-            var tableName = schemaAndTableName.TableName;
+        var defaultSchema = Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema", null);
 
-            var defaultSchema = Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema", null);
+        if (Settings.Options.ShouldUseDefaultSchema && schema == null)
+            return defaultSchema + separator + tableName;
 
-            if (Settings.Options.ShouldUseDefaultSchema && schema == null)
-                return defaultSchema + separator + tableName;
-
-            if (!Settings.Options.ShouldUseDefaultSchema && schema == defaultSchema)
-                return tableName;
-
-            if (schema != null)
-                return schema + separator + tableName;
-
+        if (!Settings.Options.ShouldUseDefaultSchema && schema == defaultSchema)
             return tableName;
-        }
+
+        if (schema != null)
+            return schema + separator + tableName;
+
+        return tableName;
     }
 }

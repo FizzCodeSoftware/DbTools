@@ -1,32 +1,29 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
+﻿using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+
+namespace FizzCode.DbTools.DataDefinition.Base;
+public abstract class SqlTypeInfo : ISqlTypeInfo
 {
-    using System;
-    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+    public abstract bool HasLength { get; }
+    public abstract bool HasScale { get; }
 
-    public abstract class SqlTypeInfo : ISqlTypeInfo
+    public virtual bool Deprecated => false;
+
+    public virtual string SqlDataType
     {
-        public abstract bool HasLength { get; }
-        public abstract bool HasScale { get; }
-
-        public virtual bool Deprecated => false;
-
-        public virtual string SqlDataType
+        get
         {
-            get
-            {
-                var fullTypeName = GetType().Name;
+            var fullTypeName = GetType().Name;
 
-                var typeName = fullTypeName.StartsWith("Sql", StringComparison.InvariantCulture)
-                    ? fullTypeName.Remove(0, 3)
-                    : fullTypeName;
+            var typeName = fullTypeName.StartsWith("Sql", StringComparison.InvariantCulture)
+                ? fullTypeName.Remove(0, 3)
+                : fullTypeName;
 
-                return typeName;
-            }
+            return typeName;
         }
+    }
 
-        public override string ToString()
-        {
-            return GetType().Name;
-        }
+    public override string ToString()
+    {
+        return GetType().Name;
     }
 }

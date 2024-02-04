@@ -1,23 +1,21 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
+﻿using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+using FizzCode.DbTools.Factory.Collections;
+
+namespace FizzCode.DbTools.DataDefinition.Base;
+public class TypeMappers : SqlEngineVersionFactoryDictionary<ITypeMapper, ITypeMapperFactory>
 {
-    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
-    using FizzCode.DbTools.Factory.Collections;
-
-    public class TypeMappers : SqlEngineVersionFactoryDictionary<ITypeMapper, ITypeMapperFactory>
+    public TypeMappers(ITypeMapperFactory factory)
+        : base(factory)
     {
-        public TypeMappers(ITypeMapperFactory factory)
-            : base(factory)
-        {
-        }
+    }
 
-        protected override ITypeMapper Create(SqlEngineVersion version)
-        {
-            return _factory.GetTypeMapper(version);
-        }
+    protected override ITypeMapper Create(SqlEngineVersion version)
+    {
+        return _factory.GetTypeMapper(version);
+    }
 
-        public void Add(ITypeMapper typeMapper)
-        {
-            Add(typeMapper.SqlVersion, typeMapper);
-        }
+    public void Add(ITypeMapper typeMapper)
+    {
+        Add(typeMapper.SqlVersion, typeMapper);
     }
 }

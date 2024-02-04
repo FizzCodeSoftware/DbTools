@@ -1,29 +1,27 @@
-﻿namespace FizzCode.DbTools.DataGenerator
+﻿using System;
+
+namespace FizzCode.DbTools.DataGenerator;
+public class RandomBasic : IRandom
 {
-    using System;
+    private readonly Random Random;
 
-    public class RandomBasic : IRandom
+    public RandomBasic(int seed)
     {
-        private readonly Random Random;
+        Random = new Random(seed);
+    }
 
-        public RandomBasic(int seed)
-        {
-            Random = new Random(seed);
-        }
+    public int Next()
+    {
+        return Random.Next();
+    }
 
-        public int Next()
-        {
-            return Random.Next();
-        }
+    public int Next(int maxValue = int.MaxValue)
+    {
+        return Random.Next(maxValue);
+    }
 
-        public int Next(int maxValue = int.MaxValue)
-        {
-            return Random.Next(maxValue);
-        }
-
-        public int Next(int minValue, int maxValue)
-        {
-            return Random.Next(minValue, maxValue);
-        }
+    public int Next(int minValue, int maxValue)
+    {
+        return Random.Next(minValue, maxValue);
     }
 }

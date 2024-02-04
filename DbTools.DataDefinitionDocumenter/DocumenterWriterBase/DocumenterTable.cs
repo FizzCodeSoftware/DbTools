@@ -1,11 +1,10 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter;
-
-using FizzCode.DbTools.DataDefinition.Base;
+﻿using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.DataDefinition;
 using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
 
+namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public abstract partial class DocumenterWriterBase
 {
     protected void AddTableHeader(bool hasCategories, string category, SqlTable table, string firstColumn = null)

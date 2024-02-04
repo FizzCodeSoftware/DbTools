@@ -1,6 +1,5 @@
-﻿namespace FizzCode.DbTools.DataDeclaration
+﻿namespace FizzCode.DbTools.DataDeclaration;
+
+public interface INamingStrategy
 {
-    public interface INamingStrategy
-    {
-    }
 }

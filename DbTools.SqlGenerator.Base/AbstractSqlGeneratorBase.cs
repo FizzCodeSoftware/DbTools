@@ -1,58 +1,55 @@
-﻿namespace FizzCode.DbTools.SqlGenerator.Base
+﻿using FizzCode.DbTools.Common;
+using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.Interfaces;
+
+namespace FizzCode.DbTools.SqlGenerator.Base;
+public abstract class AbstractSqlGeneratorBase : ISqlGeneratorBase
 {
-    using FizzCode.DbTools;
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.Interfaces;
+    public Context Context { get; }
 
-    public abstract class AbstractSqlGeneratorBase : ISqlGeneratorBase
+    public abstract SqlEngineVersion SqlVersion { get; }
+
+    protected AbstractSqlGeneratorBase(Context context)
     {
-        public Context Context { get; }
+        Context = context;
+    }
 
-        public abstract SqlEngineVersion SqlVersion { get; }
+    public abstract string GuardKeywordsImplementation(string name);
+    public string GuardKeywords(string name)
+    {
+        if (Context.Settings.Options.ShouldNotGuardKeywords)
+            return name;
 
-        protected AbstractSqlGeneratorBase(Context context)
+        return GuardKeywordsImplementation(name);
+    }
+
+    public string GetSimplifiedSchemaAndTableName(SchemaAndTableName schemaAndTableName)
+    {
+        var schema = GetSchema(schemaAndTableName.Schema);
+        var tableName = schemaAndTableName.TableName;
+
+        var defaultSchema = Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema", null);
+
+        if (!string.IsNullOrEmpty(defaultSchema) && Context.Settings.Options.ShouldUseDefaultSchema && string.IsNullOrEmpty(schema))
         {
-            Context = context;
+            return GuardKeywords(defaultSchema) + "." + GuardKeywords(tableName);
         }
 
-        public abstract string GuardKeywordsImplementation(string name);
-        public string GuardKeywords(string name)
+        if (!string.IsNullOrEmpty(schema) && (string.IsNullOrEmpty(defaultSchema) || !string.Equals(schema, defaultSchema, StringComparison.InvariantCultureIgnoreCase)))
         {
-            if (Context.Settings.Options.ShouldNotGuardKeywords)
-                return name;
-
-            return GuardKeywordsImplementation(name);
+            return GuardKeywords(schema) + "." + GuardKeywords(tableName);
         }
 
-        public string GetSimplifiedSchemaAndTableName(SchemaAndTableName schemaAndTableName)
-        {
-            var schema = GetSchema(schemaAndTableName.Schema);
-            var tableName = schemaAndTableName.TableName;
+        return GuardKeywords(tableName);
+    }
 
-            var defaultSchema = Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema", null);
+    public string GetSchema(SqlTable table)
+    {
+        return GetSchema(table.SchemaAndTableName.Schema);
+    }
 
-            if (!string.IsNullOrEmpty(defaultSchema) && Context.Settings.Options.ShouldUseDefaultSchema && string.IsNullOrEmpty(schema))
-            {
-                return GuardKeywords(defaultSchema) + "." + GuardKeywords(tableName);
-            }
-
-            if (!string.IsNullOrEmpty(schema) && (string.IsNullOrEmpty(defaultSchema) || !string.Equals(schema, defaultSchema, StringComparison.InvariantCultureIgnoreCase)))
-            {
-                return GuardKeywords(schema) + "." + GuardKeywords(tableName);
-            }
-
-            return GuardKeywords(tableName);
-        }
-
-        public string GetSchema(SqlTable table)
-        {
-            return GetSchema(table.SchemaAndTableName.Schema);
-        }
-
-        public virtual string GetSchema(string schema)
-        {
-            return schema;
-        }
+    public virtual string GetSchema(string schema)
+    {
+        return schema;
     }
 }

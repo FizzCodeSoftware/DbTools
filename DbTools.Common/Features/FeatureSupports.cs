@@ -1,6 +1,5 @@
-﻿namespace FizzCode.DbTools.Common
+﻿namespace FizzCode.DbTools.Common;
+
+public class FeatureSupports : SqlEngineVersionDictionary<FeatureSupport>
 {
-    public class FeatureSupports : SqlEngineVersionDictionary<FeatureSupport>
-    {
-    }
 }

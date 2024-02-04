@@ -1,12 +1,11 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
-{
-    public class TableRename : TableMigration
-    {
-        public string NewName { get; set; }
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 
-        public override string ToString()
-        {
-            return $"(Rename:){NewName} from {base.ToString()}";
-        }
+public class TableRename : TableMigration
+{
+    public string NewName { get; set; }
+
+    public override string ToString()
+    {
+        return $"(Rename:){NewName} from {base.ToString()}";
     }
 }

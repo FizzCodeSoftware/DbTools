@@ -1,87 +1,84 @@
-﻿namespace FizzCode.DbTools.Factory
+﻿using Autofac;
+using Autofac.Configuration;
+using FizzCode.DbTools.Factory.Interfaces;
+using Microsoft.Extensions.Configuration;
+
+namespace FizzCode.DbTools.Factory;
+public class Root : IFactoryContainer
 {
-    using System;
-    using Autofac;
-    using Autofac.Configuration;
-    using FizzCode.DbTools.Factory.Interfaces;
-    using Microsoft.Extensions.Configuration;
+    protected static IContainer Container { get; set; }
+    protected static List<(Type, Type)> RegisteredTypes { get; set; } = new();
+    protected static List<(Type, object)> RegisteredInstances { get; set; } = new();
+    private static bool _isInitialized;
 
-    public class Root : IFactoryContainer
+    protected void Build()
     {
-        protected static IContainer Container { get; set; }
-        protected static List<(Type, Type)> RegisteredTypes { get; set; } = new();
-        protected static List<(Type, object)> RegisteredInstances { get; set; } = new();
-        private static bool _isInitialized;
+        var builder = new ContainerBuilder();
 
-        protected void Build()
+        if (File.Exists("config.json"))
         {
-            var builder = new ContainerBuilder();
+            var config = new ConfigurationBuilder();
 
-            if (File.Exists("config.json"))
-            {
-                var config = new ConfigurationBuilder();
+            config.AddJsonFile("config.json");
+            var module = new ConfigurationModule(config.Build());
 
-                config.AddJsonFile("config.json");
-                var module = new ConfigurationModule(config.Build());
-
-                builder.RegisterModule(module);
-            }
-
-            var miRegisterType = typeof(RegistrationExtensions).GetMethods().Where(m => m.Name == "RegisterType" && m.IsGenericMethod).First();
-            foreach (var (type1, type2) in RegisteredTypes)
-            {
-                var registerTypeRef = miRegisterType.MakeGenericMethod(type1);
-                var result = registerTypeRef.Invoke(builder, new object[] { builder });
-                var miAs = result.GetType().GetMethods().Where(m => m.Name == "As" && m.IsGenericMethod).First();
-                var asRef = miAs.MakeGenericMethod(type2);
-                asRef.Invoke(result, null);
-            }
-
-            var miRegisterInstance = typeof(RegistrationExtensions).GetMethods().Where(m => m.Name == "RegisterInstance" && m.IsGenericMethod).First();
-            foreach (var (type, instance) in RegisteredInstances)
-            {
-                var registerTypeRef = miRegisterInstance.MakeGenericMethod(type);
-                var result = registerTypeRef.Invoke(builder, new object[] { builder, instance });
-            }
-
-            Container = builder.Build();
+            builder.RegisterModule(module);
         }
 
-        public TFactory Get<TFactory>() where TFactory : notnull
+        var miRegisterType = typeof(RegistrationExtensions).GetMethods().Where(m => m.Name == "RegisterType" && m.IsGenericMethod).First();
+        foreach (var (type1, type2) in RegisteredTypes)
         {
-            if (!_isInitialized)
-            {
-                Build();
-                _isInitialized = true;
-            }
-            var scope = Container.BeginLifetimeScope();
-            return scope.Resolve<TFactory>();
+            var registerTypeRef = miRegisterType.MakeGenericMethod(type1);
+            var result = registerTypeRef.Invoke(builder, new object[] { builder });
+            var miAs = result.GetType().GetMethods().Where(m => m.Name == "As" && m.IsGenericMethod).First();
+            var asRef = miAs.MakeGenericMethod(type2);
+            asRef.Invoke(result, null);
         }
 
-        public bool TryGet<TFactory>(out TFactory? factory) where TFactory : class
+        var miRegisterInstance = typeof(RegistrationExtensions).GetMethods().Where(m => m.Name == "RegisterInstance" && m.IsGenericMethod).First();
+        foreach (var (type, instance) in RegisteredInstances)
         {
-            if (!_isInitialized)
-            {
-                Build();
-                _isInitialized = true;
-            }
-            var scope = Container.BeginLifetimeScope();
-            var succeed = scope.TryResolve(typeof(TFactory), out var factoryObj);
-            factory = factoryObj as TFactory;
-            return succeed;
-
+            var registerTypeRef = miRegisterInstance.MakeGenericMethod(type);
+            var result = registerTypeRef.Invoke(builder, new object[] { builder, instance });
         }
 
-        public void Register<TFactory>(Type implementationType) where TFactory : notnull
-        {
-            RegisteredTypes.Add((typeof(TFactory), implementationType));
-        }
-        public void RegisterInstance<T>(T instance)
-        {
-            if (instance == null)
-                throw new ArgumentNullException(nameof(instance));
+        Container = builder.Build();
+    }
 
-            RegisteredInstances.Add((typeof(T), instance));
+    public TFactory Get<TFactory>() where TFactory : notnull
+    {
+        if (!_isInitialized)
+        {
+            Build();
+            _isInitialized = true;
         }
-}
+        var scope = Container.BeginLifetimeScope();
+        return scope.Resolve<TFactory>();
+    }
+
+    public bool TryGet<TFactory>(out TFactory? factory) where TFactory : class
+    {
+        if (!_isInitialized)
+        {
+            Build();
+            _isInitialized = true;
+        }
+        var scope = Container.BeginLifetimeScope();
+        var succeed = scope.TryResolve(typeof(TFactory), out var factoryObj);
+        factory = factoryObj as TFactory;
+        return succeed;
+
+    }
+
+    public void Register<TFactory>(Type implementationType) where TFactory : notnull
+    {
+        RegisteredTypes.Add((typeof(TFactory), implementationType));
+    }
+    public void RegisterInstance<T>(T instance)
+    {
+        if (instance == null)
+            throw new ArgumentNullException(nameof(instance));
+
+        RegisteredInstances.Add((typeof(T), instance));
+    }
 }

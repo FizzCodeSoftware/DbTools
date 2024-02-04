@@ -1,17 +1,16 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
+﻿namespace FizzCode.DbTools.DataDefinition.Base;
+
+public class PrimaryKey : IndexBase<SqlTable>
 {
-    public class PrimaryKey : IndexBase<SqlTable>
+    public SqlTable SqlTable { get => SqlTableOrView; }
+
+    public PrimaryKey(SqlTable sqlTable, string name)
+        : base(sqlTable, name)
     {
-        public SqlTable SqlTable { get => SqlTableOrView; }
+    }
 
-        public PrimaryKey(SqlTable sqlTable, string name)
-            : base(sqlTable, name)
-        {
-        }
-
-        public override string ToString()
-        {
-            return $"{GetColumnsInString()} on {SqlTableOrView.SchemaAndTableName}";
-        }
+    public override string ToString()
+    {
+        return $"{GetColumnsInString()} on {SqlTableOrView.SchemaAndTableName}";
     }
 }

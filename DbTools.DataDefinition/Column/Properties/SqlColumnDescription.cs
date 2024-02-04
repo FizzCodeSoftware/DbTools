@@ -1,18 +1,16 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿using FizzCode.DbTools.DataDefinition.Base;
+
+namespace FizzCode.DbTools.DataDefinition;
+/// <summary>
+/// Contains the <see cref="Description"/>, to document the given column.
+/// </summary>
+public class SqlColumnDescription : SqlColumnProperty
 {
-    using FizzCode.DbTools.DataDefinition.Base;
-
-    /// <summary>
-    /// Contains the <see cref="Description"/>, to document the given column.
-    /// </summary>
-    public class SqlColumnDescription : SqlColumnProperty
+    public SqlColumnDescription(SqlColumnBase sqlColumn, string description)
+        : base(sqlColumn)
     {
-        public SqlColumnDescription(SqlColumnBase sqlColumn, string description)
-            : base(sqlColumn)
-        {
-            Description = description;
-        }
-
-        public string Description { get; set; }
+        Description = description;
     }
+
+    public string Description { get; set; }
 }

@@ -1,6 +1,4 @@
-﻿namespace FizzCode.DbTools.TestBase;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -8,6 +6,7 @@ using System.Text;
 using FizzCode.DbTools.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+namespace FizzCode.DbTools.TestBase;
 public static class AssertRow
 {
     public static void AreEqual(Row expected, Row actual, SqlEngineVersion version)

@@ -1,6 +1,5 @@
-﻿namespace FizzCode.DbTools.Common
+﻿namespace FizzCode.DbTools.Common;
+
+public class SqlVersionSpecificSettings : Row
 {
-    public class SqlVersionSpecificSettings : Row
-    {
-    }
 }

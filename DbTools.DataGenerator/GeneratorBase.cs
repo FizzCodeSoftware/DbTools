@@ -1,25 +1,24 @@
-﻿namespace FizzCode.DbTools.DataGenerator
+﻿namespace FizzCode.DbTools.DataGenerator;
+
+public abstract class GeneratorBase<TResult> : GeneratorBase
 {
-    public abstract class GeneratorBase<TResult> : GeneratorBase
+    protected GeneratorBase()
     {
-        protected GeneratorBase()
-        {
-        }
+    }
+}
+
+public abstract class GeneratorBase
+{
+    protected GeneratorBase()
+    {
     }
 
-    public abstract class GeneratorBase
+    public GeneratorContext Context { get; protected set; }
+
+    public void SetContext(GeneratorContext context)
     {
-        protected GeneratorBase()
-        {
-        }
-
-        public GeneratorContext Context { get; protected set; }
-
-        public void SetContext(GeneratorContext context)
-        {
-            Context = context;
-        }
-
-        public abstract object Get();
+        Context = context;
     }
+
+    public abstract object Get();
 }

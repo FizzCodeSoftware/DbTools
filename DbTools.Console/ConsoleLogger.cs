@@ -1,84 +1,82 @@
-﻿namespace FizzCode.DbTools.Console
+﻿using System;
+using System.Collections.Generic;
+using FizzCode.DbTools.Common.Logger;
+using Serilog;
+using Serilog.Events;
+
+namespace FizzCode.DbTools.Console;
+public class ConsoleLogger
 {
-    using System;
-    using System.Collections.Generic;
-    using FizzCode.DbTools.Common.Logger;
-    using Serilog;
-    using Serilog.Events;
+    private ILogger _logger;
+    private ILogger _opsLogger;
 
-    public class ConsoleLogger
+    public void Init(ILogger logger, ILogger opsLogger)
     {
-        private ILogger _logger;
-        private ILogger _opsLogger;
+        _logger = logger;
+        _opsLogger = opsLogger;
+    }
 
-        public void Init(ILogger logger, ILogger opsLogger)
+    public void OnLog(object sender, LogEventArgs args)
+    {
+        if (args.Exception != null)
+            OnException(sender, args);
+
+        var logger = args.ForOps
+            ? _opsLogger
+            : _logger;
+
+        var values = new List<object>();
+        values.AddRange(args.Arguments);
+
+        logger.Write(
+            (LogEventLevel)args.Severity,
+            "[{Module}] " + args.Text,
+            values.ToArray()
+            );
+    }
+
+    private void OnException(object sender, LogEventArgs args)
+    {
+        var opsErrors = new List<string>();
+        GetOpsMessages(args.Exception, opsErrors);
+        foreach (var opsError in opsErrors)
         {
-            _logger = logger;
-            _opsLogger = opsLogger;
+            OnLog(sender, new LogEventArgs()
+            {
+                Severity = LogSeverity.Fatal,
+                Text = opsError,
+                ForOps = true,
+            });
         }
 
-        public void OnLog(object sender, LogEventArgs args)
+        var lvl = 0;
+        var msg = "EXCEPTION: ";
+
+        var ex = args.Exception;
+        while (ex != null)
         {
-            if (args.Exception != null)
-                OnException(sender, args);
+            if (lvl > 0)
+                msg += "\nINNER EXCEPTION: ";
 
-            var logger = args.ForOps
-                ? _opsLogger
-                : _logger;
+            msg += ex.Message;
 
-            var values = new List<object>();
-            values.AddRange(args.Arguments);
-
-            logger.Write(
-                (LogEventLevel)args.Severity,
-                "[{Module}] " + args.Text,
-                values.ToArray()
-                );
+            ex = ex.InnerException;
+            lvl++;
         }
 
-        private void OnException(object sender, LogEventArgs args)
+        _logger.Fatal("[{Module}], {Message}", msg);
+    }
+
+    private void GetOpsMessages(Exception ex, List<string> messages)
+    {
+        if (ex.InnerException != null)
+            GetOpsMessages(ex.InnerException, messages);
+
+        if (ex is AggregateException aex)
         {
-            var opsErrors = new List<string>();
-            GetOpsMessages(args.Exception, opsErrors);
-            foreach (var opsError in opsErrors)
+            foreach (var iex in aex.InnerExceptions)
             {
-                OnLog(sender, new LogEventArgs()
-                {
-                    Severity = LogSeverity.Fatal,
-                    Text = opsError,
-                    ForOps = true,
-                });
-            }
-
-            var lvl = 0;
-            var msg = "EXCEPTION: ";
-
-            var ex = args.Exception;
-            while (ex != null)
-            {
-                if (lvl > 0)
-                    msg += "\nINNER EXCEPTION: ";
-
-                msg += ex.Message;
-
-                ex = ex.InnerException;
-                lvl++;
-            }
-
-            _logger.Fatal("[{Module}], {Message}", msg);
-        }
-
-        private void GetOpsMessages(Exception ex, List<string> messages)
-        {
-            if (ex.InnerException != null)
-                GetOpsMessages(ex.InnerException, messages);
-
-            if (ex is AggregateException aex)
-            {
-                foreach (var iex in aex.InnerExceptions)
-                {
-                    GetOpsMessages(iex, messages);
-                }
+                GetOpsMessages(iex, messages);
             }
         }
     }

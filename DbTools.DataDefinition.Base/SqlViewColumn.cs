@@ -1,7 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
+﻿namespace FizzCode.DbTools.DataDefinition.Base;
+
+public class SqlViewColumn : SqlColumnBase
 {
-    public class SqlViewColumn : SqlColumnBase
-    {
-        public SqlView View { get => (SqlView)SqlTableOrView; set => SqlTableOrView = value; }
-    }
+    public SqlView View { get => (SqlView)SqlTableOrView; set => SqlTableOrView = value; }
 }

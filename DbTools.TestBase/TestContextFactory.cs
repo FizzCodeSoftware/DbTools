@@ -1,39 +1,36 @@
-﻿namespace FizzCode.DbTools.TestBase
+﻿using System;
+using FizzCode.DbTools.Common;
+using FizzCode.DbTools.Factory.Interfaces;
+
+namespace FizzCode.DbTools.TestBase;
+public class TestContextFactory : IContextFactory
 {
-    using System;
-    using FizzCode.DbTools;
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.Factory.Interfaces;
-
-    public class TestContextFactory : IContextFactory
+    private readonly Action<Settings> _settingsSetter;
+    public TestContextFactory(Action<Settings> settingsSetter)
     {
-        private readonly Action<Settings> _settingsSetter;
-        public TestContextFactory(Action<Settings> settingsSetter)
-        {
-            _settingsSetter = settingsSetter;
-        }
+        _settingsSetter = settingsSetter;
+    }
 
-        public Context CreateContext(SqlEngineVersion version)
+    public Context CreateContext(SqlEngineVersion version)
+    {
+        var settings = TestHelper.GetDefaultTestSettings(version);
+        _settingsSetter?.Invoke(settings);
+        var context = new Context
         {
-            var settings = TestHelper.GetDefaultTestSettings(version);
-            _settingsSetter?.Invoke(settings);
-            var context = new Context
-            {
-                Settings = settings
-            };
-            return context;
-        }
+            Settings = settings
+        };
+        return context;
+    }
 
-        public ContextWithLogger CreateContextWithLogger(SqlEngineVersion version)
+    public ContextWithLogger CreateContextWithLogger(SqlEngineVersion version)
+    {
+        var settings = TestHelper.GetDefaultTestSettings(version);
+        _settingsSetter?.Invoke(settings);
+        var contextWithLogger = new ContextWithLogger
         {
-            var settings = TestHelper.GetDefaultTestSettings(version);
-            _settingsSetter?.Invoke(settings);
-            var contextWithLogger = new ContextWithLogger
-            {
-                Settings = settings,
-                Logger = TestHelper.CreateLogger()
-            };
-            return contextWithLogger;
-        }
+            Settings = settings,
+            Logger = TestHelper.CreateLogger()
+        };
+        return contextWithLogger;
     }
 }

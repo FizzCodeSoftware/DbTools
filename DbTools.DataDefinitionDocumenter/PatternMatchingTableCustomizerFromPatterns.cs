@@ -1,72 +1,70 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
+﻿using System;
+using System.IO;
+
+namespace FizzCode.DbTools.DataDefinitionDocumenter;
+public static class PatternMatchingTableCustomizerFromPatterns
 {
-    using System;
-    using System.IO;
-
-    public static class PatternMatchingTableCustomizerFromPatterns
+    public static PatternMatchingTableCustomizer FromCsv(string fileName, DocumenterSettings documenterSettings)
     {
-        public static PatternMatchingTableCustomizer FromCsv(string fileName, DocumenterSettings documenterSettings)
+        var customizer = new PatternMatchingTableCustomizer();
+
+        var path = documenterSettings?.WorkingDirectory ?? "";
+
+        // default name <dbname>.DbTools.Patterns.csv
+        if (!fileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+            fileName += ".DbTools.Patterns.csv";
+
+        fileName = Path.Combine(path, fileName);
+
+        if (!File.Exists(fileName))
+            return null;
+
+        using (var reader = new StreamReader(fileName))
         {
-            var customizer = new PatternMatchingTableCustomizer();
-
-            var path = documenterSettings?.WorkingDirectory ?? "";
-
-            // default name <dbname>.DbTools.Patterns.csv
-            if (!fileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
-                fileName += ".DbTools.Patterns.csv";
-
-            fileName = Path.Combine(path, fileName);
-
-            if (!File.Exists(fileName))
-                return null;
-
-            using (var reader = new StreamReader(fileName))
+            reader.ReadLine(); // skip header row
+            while (!reader.EndOfStream)
             {
-                reader.ReadLine(); // skip header row
-                while (!reader.EndOfStream)
-                {
-                    var line = reader.ReadLine();
-                    ProcessPatternContentLine(customizer, line);
-                }
+                var line = reader.ReadLine();
+                ProcessPatternContentLine(customizer, line);
             }
-
-            return customizer;
         }
 
-        private static string EmptyStringAsNull(string value)
-        {
-            return value.Length == 0 ? null : value;
-        }
+        return customizer;
+    }
 
-        private static void ProcessPatternContentLine(PatternMatchingTableCustomizer customizer, string line)
-        {
-            var values = line.Split(';');
+    private static string EmptyStringAsNull(string value)
+    {
+        return value.Length == 0 ? null : value;
+    }
 
-            var patternSchema = EmptyStringAsNull(values[0]);
-            var patternTableName = EmptyStringAsNull(values[1]);
-            var patternExceptSchema = EmptyStringAsNull(values[2]);
-            var patternExceptTableName = EmptyStringAsNull(values[3]);
-            var shouldSkip = values[4] != "0";
-            string category = null;
-            string backgroundColor = null;
+    private static void ProcessPatternContentLine(PatternMatchingTableCustomizer customizer, string line)
+    {
+        var values = line.Split(';');
 
-            if (values.Length >= 6)
-                category = values[5];
+        var patternSchema = EmptyStringAsNull(values[0]);
+        var patternTableName = EmptyStringAsNull(values[1]);
+        var patternExceptSchema = EmptyStringAsNull(values[2]);
+        var patternExceptTableName = EmptyStringAsNull(values[3]);
+        var shouldSkip = values[4] != "0";
+        string category = null;
+        string backgroundColor = null;
 
-            if (values.Length >= 7 && values[6].Length > 0)
-                backgroundColor = values[6];
+        if (values.Length >= 6)
+            category = values[5];
 
-            customizer.AddPattern(patternSchema, patternTableName, patternExceptSchema, patternExceptTableName, shouldSkip, category, backgroundColor);
-        }
+        if (values.Length >= 7 && values[6].Length > 0)
+            backgroundColor = values[6];
 
-        public static PatternMatchingTableCustomizer FromString(string patternMatchingContent)
-        {
-            var customizer = new PatternMatchingTableCustomizer();
+        customizer.AddPattern(patternSchema, patternTableName, patternExceptSchema, patternExceptTableName, shouldSkip, category, backgroundColor);
+    }
 
-            foreach (var patternContentLine in patternMatchingContent.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-                ProcessPatternContentLine(customizer, patternContentLine);
+    public static PatternMatchingTableCustomizer FromString(string patternMatchingContent)
+    {
+        var customizer = new PatternMatchingTableCustomizer();
 
-            return customizer;
-        }
+        foreach (var patternContentLine in patternMatchingContent.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
+            ProcessPatternContentLine(customizer, patternContentLine);
+
+        return customizer;
     }
 }

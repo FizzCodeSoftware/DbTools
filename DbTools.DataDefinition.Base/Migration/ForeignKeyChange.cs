@@ -1,35 +1,30 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+public class ForeignKeyChange : ForeignKeyMigration
 {
-    using System.Collections.Generic;
-    using FizzCode.DbTools.DataDefinition.Base;
+    public ForeignKey NewForeignKey { get; set; }
 
-    public class ForeignKeyChange : ForeignKeyMigration
-    {
-        public ForeignKey NewForeignKey { get; set; }
+    public ForeignKeyInternalColumnChanges ForeignKeyInternalColumnChanges { get; set; }
+    public List<SqlEngineVersionSpecificPropertyMigration> SqlEngineVersionSpecificPropertyChanges { get; } = new List<SqlEngineVersionSpecificPropertyMigration>();
+}
 
-        public ForeignKeyInternalColumnChanges ForeignKeyInternalColumnChanges { get; set; }
-        public List<SqlEngineVersionSpecificPropertyMigration> SqlEngineVersionSpecificPropertyChanges { get; } = new List<SqlEngineVersionSpecificPropertyMigration>();
-    }
+public class ForeignKeyInternalColumnChanges : IMigration
+{
+}
 
-    public class ForeignKeyInternalColumnChanges : IMigration
-    {
-    }
+public abstract class SqlEngineVersionSpecificPropertyMigration : IMigration
+{
+    public SqlEngineVersionSpecificProperty SqlEngineVersionSpecificProperty { get; set; }
+}
 
-    public abstract class SqlEngineVersionSpecificPropertyMigration : IMigration
-    {
-        public SqlEngineVersionSpecificProperty SqlEngineVersionSpecificProperty { get; set; }
-    }
+public class SqlEngineVersionSpecificPropertyNew : SqlEngineVersionSpecificPropertyMigration
+{
+}
 
-    public class SqlEngineVersionSpecificPropertyNew : SqlEngineVersionSpecificPropertyMigration
-    {
-    }
+public class SqlEngineVersionSpecificPropertyDelete : SqlEngineVersionSpecificPropertyMigration
+{
+}
 
-    public class SqlEngineVersionSpecificPropertyDelete : SqlEngineVersionSpecificPropertyMigration
-    {
-    }
-
-    public class SqlEngineVersionSpecificPropertyChange : SqlEngineVersionSpecificPropertyMigration
-    {
-        public SqlEngineVersionSpecificProperty NewSqlEngineVersionSpecificProperty { get; set; }
-    }
+public class SqlEngineVersionSpecificPropertyChange : SqlEngineVersionSpecificPropertyMigration
+{
+    public SqlEngineVersionSpecificProperty NewSqlEngineVersionSpecificProperty { get; set; }
 }

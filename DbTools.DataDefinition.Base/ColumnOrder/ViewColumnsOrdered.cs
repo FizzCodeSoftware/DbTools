@@ -1,10 +1,9 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
+﻿namespace FizzCode.DbTools.DataDefinition.Base;
+
+public class ViewColumnsOrdered : OrderedDictionaryWithInsert<string, SqlViewColumn>
 {
-    public class ViewColumnsOrdered : OrderedDictionaryWithInsert<string, SqlViewColumn>
+    public override void Add(SqlViewColumn item)
     {
-        public override void Add(SqlViewColumn item)
-        {
-            Add(item.Name, item);
-        }
+        Add(item.Name, item);
     }
 }

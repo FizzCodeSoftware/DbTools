@@ -1,7 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
+﻿namespace FizzCode.DbTools.DataDefinitionDocumenter;
+
+public class DocumenterSettings : DocumenterSettingsBase
 {
-    public class DocumenterSettings : DocumenterSettingsBase
-    {
-        public bool NoInternalDataTypes { get; set; }
-    }
+    public bool NoInternalDataTypes { get; set; }
 }

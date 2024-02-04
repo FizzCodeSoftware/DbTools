@@ -1,15 +1,13 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿using FizzCode.DbTools.DataDefinition.Base;
+
+namespace FizzCode.DbTools.DataDefinition;
+public static class TypeMapperExtensions
 {
-    using FizzCode.DbTools.DataDefinition.Base;
-
-    public static class TypeMapperExtensions
+    public static AbstractTypeMapper GetTypeMapper(this GenericVersion version)
     {
-        public static AbstractTypeMapper GetTypeMapper(this GenericVersion version)
-        {
-            if (version == GenericVersion.Generic1)
-                return new Generic1TypeMapper();
+        if (version == GenericVersion.Generic1)
+            return new Generic1TypeMapper();
 
-            return null;
-        }
+        return null;
     }
 }

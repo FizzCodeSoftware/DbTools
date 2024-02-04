@@ -1,13 +1,12 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
+﻿namespace FizzCode.DbTools.DataDefinitionDocumenter;
+
+public abstract class DocumenterSettingsBase
 {
-    public abstract class DocumenterSettingsBase
-    {
-        public string WorkingDirectory { get; set; }
+    public string WorkingDirectory { get; set; }
 
-        public bool NoForeignKeys { get; set; }
+    public bool NoForeignKeys { get; set; }
 
-        public bool NoIndexes { get; set; }
+    public bool NoIndexes { get; set; }
 
-        public bool NoUniqueConstraints { get; set; }
-    }
+    public bool NoUniqueConstraints { get; set; }
 }

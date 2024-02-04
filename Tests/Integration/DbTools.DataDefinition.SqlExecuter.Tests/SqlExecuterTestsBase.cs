@@ -1,20 +1,17 @@
-﻿// Ensure no in-assembly parallel execution of tests (“IAP”) is happening
-[assembly: Microsoft.VisualStudio.TestTools.UnitTesting.Parallelize(Workers = 1, Scope = Microsoft.VisualStudio.TestTools.UnitTesting.ExecutionScope.ClassLevel)]
+﻿using FizzCode.DbTools.TestBase;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FizzCode.DbTools.SqlExecuter.Tests
+// Ensure no in-assembly parallel execution of tests (“IAP”) is happening
+[assembly: Parallelize(Workers = 1, Scope = ExecutionScope.ClassLevel)]
+namespace FizzCode.DbTools.SqlExecuter.Tests;
+[TestClass]
+public abstract class SqlExecuterTestsBase
 {
-    using FizzCode.DbTools.TestBase;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    protected static SqlExecuterTestAdapter SqlExecuterTestAdapter { get; } = new();
 
-    [TestClass]
-    public abstract class SqlExecuterTestsBase
+    [AssemblyCleanup]
+    public static void Cleanup()
     {
-        protected static SqlExecuterTestAdapter SqlExecuterTestAdapter { get; } = new();
-
-        [AssemblyCleanup]
-        public static void Cleanup()
-        {
-            SqlExecuterTestAdapter.Cleanup();
-        }
+        SqlExecuterTestAdapter.Cleanup();
     }
 }

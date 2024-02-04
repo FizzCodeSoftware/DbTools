@@ -1,9 +1,8 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests;
-
-using FizzCode.DbTools.DataDefinition.Tests;
+﻿using FizzCode.DbTools.DataDefinition.Tests;
 using FizzCode.DbTools.TestBase;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests;
 [TestClass]
 public class DocumenterViewTests : DocumenterTestsBase
 {

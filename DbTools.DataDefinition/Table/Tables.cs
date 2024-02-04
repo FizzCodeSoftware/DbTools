@@ -1,16 +1,14 @@
-﻿namespace FizzCode.DbTools.DataDefinition
-{
-    using System.Linq;
-    using FizzCode.DbTools.DataDefinition.Base;
+﻿using System.Linq;
+using FizzCode.DbTools.DataDefinition.Base;
 
-    public class Tables : AbstractTables<SqlTable>
+namespace FizzCode.DbTools.DataDefinition;
+public class Tables : AbstractTables<SqlTable>
+{
+    protected override void EnsureSorted()
     {
-        protected override void EnsureSorted()
+        if (_sorted.Count != byName.Count)
         {
-            if (_sorted.Count != byName.Count)
-            {
-                _sorted = TableSorter.GetSortedTables(byName.Values.ToList());
-            }
+            _sorted = TableSorter.GetSortedTables(byName.Values.ToList());
         }
     }
 }

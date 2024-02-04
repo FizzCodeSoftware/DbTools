@@ -1,44 +1,41 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
+﻿using FizzCode.DbTools.Common;
+
+namespace FizzCode.DbTools.DataDefinition.Base;
+public class SqlTypes : SqlEngineVersionDictionary<SqlType>
 {
-    using System.Linq;
-    using FizzCode.DbTools.Common;
-
-    public class SqlTypes : SqlEngineVersionDictionary<SqlType>
+    public void SetAllNullable(bool isNullable)
     {
-        public void SetAllNullable(bool isNullable)
+        foreach (var sqlType in Values)
         {
-            foreach (var sqlType in Values)
-            {
-                sqlType.IsNullable = isNullable;
-            }
+            sqlType.IsNullable = isNullable;
+        }
+    }
+
+    private SqlEngineVersion GetVersion()
+    {
+        if (Keys.Any(k => SqlEngineVersions.GetAllVersions<GenericVersion>().Contains(k)))
+        {
+            return SqlEngineVersions.GetLatestVersionOfDialect<GenericVersion>();
         }
 
-        private SqlEngineVersion GetVersion()
-        {
-            if (Keys.Any(k => SqlEngineVersions.GetAllVersions<GenericVersion>().Contains(k)))
-            {
-                return SqlEngineVersions.GetLatestVersionOfDialect<GenericVersion>();
-            }
+        return Keys.Last();
+    }
 
-            return Keys.Last();
+    public string Describe(SqlEngineVersion? preferredVersion = null)
+    {
+        var version = preferredVersion;
+        version ??= GetVersion();
+
+        return this[version].ToString();
+    }
+
+    public SqlTypes CopyTo(SqlTypes sqlTypes)
+    {
+        foreach (var kvp in this)
+        {
+            sqlTypes.Add(kvp.Key, (SqlType)kvp.Value.Copy());
         }
 
-        public string Describe(SqlEngineVersion? preferredVersion = null)
-        {
-            var version = preferredVersion;
-            version ??= GetVersion();
-
-            return this[version].ToString();
-        }
-
-        public SqlTypes CopyTo(SqlTypes sqlTypes)
-        {
-            foreach (var kvp in this)
-            {
-                sqlTypes.Add(kvp.Key, (SqlType)kvp.Value.Copy());
-            }
-
-            return sqlTypes;
-        }
+        return sqlTypes;
     }
 }

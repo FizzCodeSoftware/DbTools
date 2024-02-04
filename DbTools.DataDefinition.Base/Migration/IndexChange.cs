@@ -1,21 +1,19 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
+﻿using System.Text;
+
+namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+public class IndexChange : IndexMigration
 {
-    using System.Text;
+    public Index NewIndex { get; set; }
 
-    public class IndexChange : IndexMigration
+    public override string ToString()
     {
-        public Index NewIndex { get; set; }
+        var sb = new StringBuilder();
 
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
+        sb.AppendLine("IC: New: ");
+        sb.AppendLine(NewIndex.ToString());
+        sb.AppendLine(", Orig: ");
+        sb.AppendLine(base.ToString());
 
-            sb.AppendLine("IC: New: ");
-            sb.AppendLine(NewIndex.ToString());
-            sb.AppendLine(", Orig: ");
-            sb.AppendLine(base.ToString());
-
-            return sb.ToString();
-        }
+        return sb.ToString();
     }
 }

@@ -1,21 +1,19 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
+﻿using System.Text;
+
+namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+public class UniqueConstraintChange : UniqueConstraintMigration
 {
-    using System.Text;
+    public UniqueConstraint NewUniqueConstraint { get; set; }
 
-    public class UniqueConstraintChange : UniqueConstraintMigration
+    public override string ToString()
     {
-        public UniqueConstraint NewUniqueConstraint { get; set; }
+        var sb = new StringBuilder();
 
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
+        sb.AppendLine("UC: New: ");
+        sb.AppendLine(NewUniqueConstraint.ToString());
+        sb.AppendLine(", Orig: ");
+        sb.AppendLine(base.ToString());
 
-            sb.AppendLine("UC: New: ");
-            sb.AppendLine(NewUniqueConstraint.ToString());
-            sb.AppendLine(", Orig: ");
-            sb.AppendLine(base.ToString());
-
-            return sb.ToString();
-        }
+        return sb.ToString();
     }
 }

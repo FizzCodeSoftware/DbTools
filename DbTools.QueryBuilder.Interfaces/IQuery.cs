@@ -1,6 +1,5 @@
-﻿namespace FizzCode.DbTools.QueryBuilder.Interfaces
+﻿namespace FizzCode.DbTools.QueryBuilder.Interfaces;
+
+public interface IQuery
 {
-    public interface IQuery
-    {
-    }
 }

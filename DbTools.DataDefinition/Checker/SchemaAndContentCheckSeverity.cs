@@ -1,10 +1,9 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Checker
+﻿namespace FizzCode.DbTools.DataDefinition.Checker;
+
+public enum SchemaAndContentCheckSeverity
 {
-    public enum SchemaAndContentCheckSeverity
-    {
-        Info,
-        Check,
-        Warning,
-        Error
-    }
+    Info,
+    Check,
+    Warning,
+    Error
 }

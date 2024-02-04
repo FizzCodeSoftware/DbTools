@@ -1,59 +1,58 @@
-﻿namespace FizzCode.DbTools.DataDefinitionReader
+﻿using System.Linq;
+using FizzCode.DbTools.Common;
+using FizzCode.DbTools.DataDefinition;
+using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+using FizzCode.DbTools.SqlExecuter;
+
+namespace FizzCode.DbTools.DataDefinitionReader;
+public class OraclePrimaryKeyReader12c : OracleDataDefinitionElementReader
 {
-    using System.Linq;
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
-    using FizzCode.DbTools.SqlExecuter;
+    private readonly RowSet _queryResult;
 
-    public class OraclePrimaryKeyReader12c : OracleDataDefinitionElementReader
+    public OraclePrimaryKeyReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
+        : base(executer, schemaNames)
     {
-        private readonly RowSet _queryResult;
+        var sqlStatement = GetKeySql();
+        AddSchemaNamesFilter(ref sqlStatement, "cons.owner");
+        sqlStatement += "\r\nORDER BY cols.table_name, cols.POSITION";
+        _queryResult = Executer.ExecuteQuery(sqlStatement);
+    }
 
-        public OraclePrimaryKeyReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
-            : base(executer, schemaNames)
+    public void GetPrimaryKey(DatabaseDefinition dd)
+    {
+        foreach (var table in dd.GetTables())
+            GetPrimaryKey(table);
+    }
+
+    public void GetPrimaryKey(SqlTable table)
+    {
+        PrimaryKey pk = null;
+
+        var rows = _queryResult
+            .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table, "SCHEMA_NAME", "TABLE_NAME"))
+            .ToList();
+
+        foreach (var row in rows)
         {
-            var sqlStatement = GetKeySql();
-            AddSchemaNamesFilter(ref sqlStatement, "cons.owner");
-            sqlStatement += "\r\nORDER BY cols.table_name, cols.POSITION";
-            _queryResult = Executer.ExecuteQuery(sqlStatement);
-        }
-
-        public void GetPrimaryKey(DatabaseDefinition dd)
-        {
-            foreach (var table in dd.GetTables())
-                GetPrimaryKey(table);
-        }
-
-        public void GetPrimaryKey(SqlTable table)
-        {
-            PrimaryKey pk = null;
-
-            var rows = _queryResult
-                .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table, "SCHEMA_NAME", "TABLE_NAME"))
-                .ToList();
-
-            foreach (var row in rows)
+            if (row.GetAs<decimal>("POSITION") == 1)
             {
-                if (row.GetAs<decimal>("POSITION") == 1)
-                {
-                    pk = new PrimaryKey(table, row.GetAs<string>("CONSTRAINT_NAME"));
+                pk = new PrimaryKey(table, row.GetAs<string>("CONSTRAINT_NAME"));
 
-                    table.Properties.Add(pk);
-                }
-
-                var column = table.Columns[row.GetAs<string>("COLUMN_NAME")];
-
-                var ascDesc = AscDesc.Asc;
-
-                pk.SqlColumns.Add(new ColumnAndOrder(column, ascDesc));
+                table.Properties.Add(pk);
             }
-        }
 
-        private static string GetKeySql()
-        {
-            return @"
+            var column = table.Columns[row.GetAs<string>("COLUMN_NAME")];
+
+            var ascDesc = AscDesc.Asc;
+
+            pk.SqlColumns.Add(new ColumnAndOrder(column, ascDesc));
+        }
+    }
+
+    private static string GetKeySql()
+    {
+        return @"
 SELECT cols.owner AS schema_name, cols.table_name AS table_name, cols.column_name, cols.position, cons.status, cons.owner
 /*, cons.constraint_type*/
 , cons.constraint_name
@@ -62,6 +61,5 @@ WHERE cons.constraint_type = 'P'
 AND cons.owner = cols.owner
 AND cons.constraint_name = cols.constraint_name
 AND cons.owner = u.username";
-        }
     }
 }

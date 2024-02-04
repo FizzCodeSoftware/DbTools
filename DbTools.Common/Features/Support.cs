@@ -1,11 +1,10 @@
-﻿namespace FizzCode.DbTools.Common
+﻿namespace FizzCode.DbTools.Common;
+
+public enum Support
 {
-    public enum Support
-    {
-        Unknown,
-        Fully,
-        Partially,
-        NotImplementedYet,
-        NotSupported
-    }
+    Unknown,
+    Fully,
+    Partially,
+    NotImplementedYet,
+    NotSupported
 }

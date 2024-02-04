@@ -1,8 +1,7 @@
-﻿namespace FizzCode.DbTools.TestBase.Tests;
-
-using FizzCode.DbTools.Common;
+﻿using FizzCode.DbTools.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+namespace FizzCode.DbTools.TestBase.Tests;
 [TestClass]
 public class AssertRowTests
 {
@@ -47,7 +46,7 @@ Name: SeYondCompanyName
 ";
 
     [TestMethod]
-    [ExpectedExceptionMessageStartsWithAttribute(typeof(AssertFailedException), AssertRowSetTestNotEqualExpectedMessage)]
+    [ExpectedExceptionMessageStartsWith(typeof(AssertFailedException), AssertRowSetTestNotEqualExpectedMessage)]
     public void AssertRowSetTestNotEqual()
     {
         var expected = new RowSet() {

@@ -1,9 +1,8 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter;
-
-using FizzCode.DbTools.DataDefinition.Base;
+﻿using FizzCode.DbTools.DataDefinition.Base;
 using System.Linq;
 using System.Text;
 
+namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public abstract partial class DocumenterWriterBase
 {
     protected void AddForeignKey(ForeignKey fk, string firstColumn = null)

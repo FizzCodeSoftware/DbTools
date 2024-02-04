@@ -1,48 +1,42 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
+﻿namespace FizzCode.DbTools.DataDefinition.Base;
+public class SqlView : SqlTableOrView
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    public List<SqlTableOrViewPropertyBase<SqlView>> Properties { get; } = new();
 
-    public class SqlView : SqlTableOrView
+    public SqlView()
     {
-        public List<SqlTableOrViewPropertyBase<SqlView>> Properties { get; } = new();
-
-        public SqlView()
-        {
-        }
-
-        public SqlView(string schema, string tableName)
-            : base(schema, tableName)
-        {
-        }
-
-        public SqlView(string tableName)
-            : base(tableName)
-        {
-        }
-
-        public SqlView(SchemaAndTableName schemaAndTableName)
-            : base(schemaAndTableName)
-        {
-        }
-
-        public SqlViewBodies SqlViewBodies { get; } = new();
-
-        protected static SqlViewColumn AddColumn(Action<SqlViewColumn> configurator)
-        {
-            var sqlColumn = new SqlViewColumn();
-            configurator.Invoke(sqlColumn);
-            return sqlColumn;
-        }
-
-        public bool HasProperty<TProperty>()
-            where TProperty : SqlTableOrViewPropertyBase<SqlView>
-        {
-            return Properties.Any(x => x is TProperty);
-        }
-
-        public SqlViewColumn this[string columnName] => Columns[columnName];
-        public ViewColumnsOrdered Columns { get; } = new();
     }
+
+    public SqlView(string schema, string tableName)
+        : base(schema, tableName)
+    {
+    }
+
+    public SqlView(string tableName)
+        : base(tableName)
+    {
+    }
+
+    public SqlView(SchemaAndTableName schemaAndTableName)
+        : base(schemaAndTableName)
+    {
+    }
+
+    public SqlViewBodies SqlViewBodies { get; } = new();
+
+    protected static SqlViewColumn AddColumn(Action<SqlViewColumn> configurator)
+    {
+        var sqlColumn = new SqlViewColumn();
+        configurator.Invoke(sqlColumn);
+        return sqlColumn;
+    }
+
+    public bool HasProperty<TProperty>()
+        where TProperty : SqlTableOrViewPropertyBase<SqlView>
+    {
+        return Properties.Any(x => x is TProperty);
+    }
+
+    public SqlViewColumn this[string columnName] => Columns[columnName];
+    public ViewColumnsOrdered Columns { get; } = new();
 }

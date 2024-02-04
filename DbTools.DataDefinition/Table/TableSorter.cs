@@ -1,73 +1,71 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿using System.Collections.Generic;
+using System.Linq;
+using FizzCode.DbTools.DataDefinition.Base;
+
+namespace FizzCode.DbTools.DataDefinition;
+internal static class TableSorter
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using FizzCode.DbTools.DataDefinition.Base;
-
-    internal static class TableSorter
+    private class SqlTableDependency
     {
-        private class SqlTableDependency
-        {
-            public SqlTable SqlTable;
-            public List<SqlTable> Parents;
+        public SqlTable SqlTable;
+        public List<SqlTable> Parents;
 
-            public override string ToString()
-            {
-                return SqlTable.SchemaAndTableName.SchemaAndName;
-            }
+        public override string ToString()
+        {
+            return SqlTable.SchemaAndTableName.SchemaAndName;
+        }
+    }
+
+    internal static SortedList<int, SqlTable> GetSortedTables(List<SqlTable> tables)
+    {
+        var tablesWithDependencies = GetTablesWithDependencies(tables);
+        var sortedTables = SortTables(tablesWithDependencies);
+
+        return sortedTables;
+    }
+
+    private static List<SqlTableDependency> GetTablesWithDependencies(List<SqlTable> sqlTables)
+    {
+        var sqlTableDependencies = new List<SqlTableDependency>();
+
+        foreach (var sqlTable in sqlTables)
+        {
+            var parents = sqlTable.Properties.OfType<ForeignKey>().Select(fk => fk.ReferredTable).Where(t => t != null).Distinct().ToList();
+
+            sqlTableDependencies.Add(new SqlTableDependency() { SqlTable = sqlTable, Parents = parents });
         }
 
-        internal static SortedList<int, SqlTable> GetSortedTables(List<SqlTable> tables)
+        return sqlTableDependencies;
+    }
+
+    private static SortedList<int, SqlTable> SortTables(List<SqlTableDependency> sqlTables)
+    {
+        var sorted = new SortedList<int, SqlTable>();
+        var visited = new HashSet<SqlTable>();
+
+        foreach (var table in sqlTables)
+            Visit(table, visited, sorted);
+
+        return sorted;
+    }
+
+    private static void Visit(SqlTableDependency current, HashSet<SqlTable> visited, SortedList<int, SqlTable> sorted)
+    {
+        if (!visited.Contains(current.SqlTable))
         {
-            var tablesWithDependencies = GetTablesWithDependencies(tables);
-            var sortedTables = SortTables(tablesWithDependencies);
+            visited.Add(current.SqlTable);
 
-            return sortedTables;
-        }
-
-        private static List<SqlTableDependency> GetTablesWithDependencies(List<SqlTable> sqlTables)
-        {
-            var sqlTableDependencies = new List<SqlTableDependency>();
-
-            foreach (var sqlTable in sqlTables)
+            foreach (var parent in current.Parents)
             {
-                var parents = sqlTable.Properties.OfType<ForeignKey>().Select(fk => fk.ReferredTable).Where(t => t != null).Distinct().ToList();
-
-                sqlTableDependencies.Add(new SqlTableDependency() { SqlTable = sqlTable, Parents = parents });
+                var parentWithDependencies = GetTablesWithDependencies(new List<SqlTable>() { parent })[0];
+                Visit(parentWithDependencies, visited, sorted);
             }
 
-            return sqlTableDependencies;
+            sorted.Add(sorted.Count, current.SqlTable);
         }
-
-        private static SortedList<int, SqlTable> SortTables(List<SqlTableDependency> sqlTables)
+        else if (!sorted.ContainsValue(current.SqlTable))
         {
-            var sorted = new SortedList<int, SqlTable>();
-            var visited = new HashSet<SqlTable>();
-
-            foreach (var table in sqlTables)
-                Visit(table, visited, sorted);
-
-            return sorted;
-        }
-
-        private static void Visit(SqlTableDependency current, HashSet<SqlTable> visited, SortedList<int, SqlTable> sorted)
-        {
-            if (!visited.Contains(current.SqlTable))
-            {
-                visited.Add(current.SqlTable);
-
-                foreach (var parent in current.Parents)
-                {
-                    var parentWithDependencies = GetTablesWithDependencies(new List<SqlTable>() { parent })[0];
-                    Visit(parentWithDependencies, visited, sorted);
-                }
-
-                sorted.Add(sorted.Count, current.SqlTable);
-            }
-            else if (!sorted.ContainsValue(current.SqlTable))
-            {
-                // circular dependency
-            }
+            // circular dependency
         }
     }
 }

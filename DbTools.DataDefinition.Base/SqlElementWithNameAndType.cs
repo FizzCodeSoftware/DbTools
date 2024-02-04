@@ -1,27 +1,24 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
+﻿using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+
+namespace FizzCode.DbTools.DataDefinition.Base;
+public abstract class SqlElementWithNameAndType
 {
-    using System.Linq;
-    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+    public string Name { get; set; }
+    public SqlTypes Types { get; } = new SqlTypes();
 
-    public abstract class SqlElementWithNameAndType
+    protected abstract IDatabaseDefinition DatabaseDefinition { get; }
+
+    public ISqlType? Type
     {
-        public string Name { get; set; }
-        public SqlTypes Types { get; } = new SqlTypes();
-
-        protected abstract IDatabaseDefinition DatabaseDefinition { get; }
-
-        public ISqlType? Type
+        get
         {
-            get
-            {
-                if (DatabaseDefinition?.MainVersion != null)
-                    return Types[DatabaseDefinition.MainVersion];
+            if (DatabaseDefinition?.MainVersion != null)
+                return Types[DatabaseDefinition.MainVersion];
 
-                if (Types.Count == 1)
-                    return Types.First().Value;
+            if (Types.Count == 1)
+                return Types.First().Value;
 
-                return null;
-            }
+            return null;
         }
     }
 }

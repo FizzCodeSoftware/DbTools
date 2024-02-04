@@ -1,37 +1,35 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
+﻿using System.Diagnostics;
+
+namespace FizzCode.DbTools.DataDefinition.Base;
+[DebuggerDisplay("{ToString(),nq}")]
+public abstract class SqlTableOrView
 {
-    using System.Diagnostics;
+    public IDatabaseDefinition DatabaseDefinition { get; set; }
+    public SchemaAndTableName SchemaAndTableName { get; set; }
 
-    [DebuggerDisplay("{ToString(),nq}")]
-    public abstract class SqlTableOrView
+    //public List<SqlTableOrViewPropertyBase<SqlTableOrView>> Properties { get; } = new();
+
+    public SqlTableOrView()
     {
-        public IDatabaseDefinition DatabaseDefinition { get; set; }
-        public SchemaAndTableName SchemaAndTableName { get; set; }
+    }
 
-        //public List<SqlTableOrViewPropertyBase<SqlTableOrView>> Properties { get; } = new();
+    public SqlTableOrView(string schema, string tableName)
+    {
+        SchemaAndTableName = new SchemaAndTableName(schema, tableName);
+    }
 
-        public SqlTableOrView()
-        {
-        }
+    public SqlTableOrView(string tableName)
+    {
+        SchemaAndTableName = new SchemaAndTableName(tableName);
+    }
 
-        public SqlTableOrView(string schema, string tableName)
-        {
-            SchemaAndTableName = new SchemaAndTableName(schema, tableName);
-        }
+    public SqlTableOrView(SchemaAndTableName schemaAndTableName)
+    {
+        SchemaAndTableName = schemaAndTableName;
+    }
 
-        public SqlTableOrView(string tableName)
-        {
-            SchemaAndTableName = new SchemaAndTableName(tableName);
-        }
-
-        public SqlTableOrView(SchemaAndTableName schemaAndTableName)
-        {
-            SchemaAndTableName = schemaAndTableName;
-        }
-
-        public override string ToString()
-        {
-            return SchemaAndTableName?.SchemaAndName ?? "";
-        }
+    public override string ToString()
+    {
+        return SchemaAndTableName?.SchemaAndName ?? "";
     }
 }

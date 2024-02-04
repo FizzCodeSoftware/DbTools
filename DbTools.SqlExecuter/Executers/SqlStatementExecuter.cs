@@ -1,206 +1,204 @@
-﻿namespace FizzCode.DbTools.SqlExecuter
+﻿using System;
+using System.Data.Common;
+using FizzCode.DbTools.Common;
+using FizzCode.DbTools.Common.Logger;
+using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.Interfaces;
+using FizzCode.LightWeight.AdoNet;
+
+namespace FizzCode.DbTools.SqlExecuter;
+public abstract class SqlStatementExecuter : ISqlStatementExecuter
 {
-    using System;
-    using System.Data.Common;
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.Interfaces;
-    using FizzCode.LightWeight.AdoNet;
+    public ContextWithLogger Context { get; }
 
-    public abstract class SqlStatementExecuter : ISqlStatementExecuter
+    public NamedConnectionString ConnectionString { get; }
+    public ISqlGenerator Generator { get; }
+
+    protected SqlStatementExecuter(ContextWithLogger context, NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
     {
-        public ContextWithLogger Context { get; }
+        Context = context;
+        Generator = sqlGenerator;
+        ConnectionString = connectionString;
+    }
 
-        public NamedConnectionString ConnectionString { get; }
-        public ISqlGenerator Generator { get; }
+    protected abstract void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters);
 
-        protected SqlStatementExecuter(ContextWithLogger context, NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
-        {
-            Context = context;
-            Generator = sqlGenerator;
-            ConnectionString = connectionString;
-        }
+    public DbConnection OpenConnection()
+    {
+        // TODO log conn string without password?
+        Log(LogSeverity.Verbose, "Opening connection to {Database}.", GetDatabase());
+        var dbf = DbProviderFactories.GetFactory(ConnectionString.ProviderName);
 
-        protected abstract void ExecuteNonQueryMaster(SqlStatementWithParameters sqlStatementWithParameters);
+        var connection = dbf.CreateConnection();
+        connection.ConnectionString = ConnectionString.ConnectionString;
+        connection.Open();
 
-        public DbConnection OpenConnection()
-        {
-            // TODO log conn string without password?
-            Log(LogSeverity.Verbose, "Opening connection to {Database}.", GetDatabase());
-            var dbf = DbProviderFactories.GetFactory(ConnectionString.ProviderName);
+        return connection;
+    }
 
-            var connection = dbf.CreateConnection();
-            connection.ConnectionString = ConnectionString.ConnectionString;
-            connection.Open();
+    public virtual DbConnection OpenConnectionMaster()
+    {
+        var dbf = DbProviderFactories.GetFactory(ConnectionString.ProviderName);
 
-            return connection;
-        }
+        var connection = dbf.CreateConnection();
+        connection.Open();
 
-        public virtual DbConnection OpenConnectionMaster()
-        {
-            var dbf = DbProviderFactories.GetFactory(ConnectionString.ProviderName);
+        return connection;
+    }
 
-            var connection = dbf.CreateConnection();
-            connection.Open();
+    public virtual DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
+    {
+        var dbf = DbProviderFactories.GetFactory(ConnectionString.ProviderName);
 
-            return connection;
-        }
-
-        public virtual DbCommand PrepareSqlCommand(SqlStatementWithParameters sqlStatementWithParameters)
-        {
-            var dbf = DbProviderFactories.GetFactory(ConnectionString.ProviderName);
-
-            var command = dbf.CreateCommand();
+        var command = dbf.CreateCommand();
 #pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
-            command.CommandText = sqlStatementWithParameters.Statement;
+        command.CommandText = sqlStatementWithParameters.Statement;
 #pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
 
-            foreach (var parameter in sqlStatementWithParameters.Parameters)
-            {
-                var dbParameter = command.CreateParameter();
-                dbParameter.ParameterName = parameter.Key;
-                dbParameter.Value = parameter.Value;
-                command.Parameters.Add(dbParameter);
-            }
-
-            return command;
+        foreach (var parameter in sqlStatementWithParameters.Parameters)
+        {
+            var dbParameter = command.CreateParameter();
+            dbParameter.ParameterName = parameter.Key;
+            dbParameter.Value = parameter.Value;
+            command.Parameters.Add(dbParameter);
         }
 
-        public DbConnectionStringBuilder GetConnectionStringBuilder()
+        return command;
+    }
+
+    public DbConnectionStringBuilder GetConnectionStringBuilder()
+    {
+        var dbf = DbProviderFactories.GetFactory(ConnectionString.ProviderName);
+        return dbf.CreateConnectionStringBuilder();
+    }
+
+    public abstract string GetDatabase();
+
+    public abstract void InitializeDatabase(bool dropIfExists, params IDatabaseDefinition[] dds);
+
+    public abstract void CleanupDatabase(bool hard = false, params IDatabaseDefinition[] dds);
+
+    public virtual void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
+    {
+        var connection = OpenConnection();
+
+        var logTimer = LogTimer("Executing non query {Query}.", sqlStatementWithParameters.Statement);
+
+        var command = PrepareSqlCommand(sqlStatementWithParameters);
+        command.Connection = connection;
+        command.CommandTimeout = 60 * 60;
+        try
         {
-            var dbf = DbProviderFactories.GetFactory(ConnectionString.ProviderName);
-            return dbf.CreateConnectionStringBuilder();
+            command.ExecuteNonQuery();
+            logTimer.Done();
         }
-
-        public abstract string GetDatabase();
-
-        public abstract void InitializeDatabase(bool dropIfExists, params IDatabaseDefinition[] dds);
-
-        public abstract void CleanupDatabase(bool hard = false, params IDatabaseDefinition[] dds);
-
-        public virtual void ExecuteNonQuery(SqlStatementWithParameters sqlStatementWithParameters)
+        catch (DbException ex)
         {
-            var connection = OpenConnection();
-
-            var logTimer = LogTimer("Executing non query {Query}.", sqlStatementWithParameters.Statement);
-
-            var command = PrepareSqlCommand(sqlStatementWithParameters);
-            command.Connection = connection;
-            command.CommandTimeout = 60 * 60;
-            try
-            {
-                command.ExecuteNonQuery();
-                logTimer.Done();
-            }
-            catch (DbException ex)
-            {
-                var newEx = new Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
-                throw newEx;
-            }
-            finally
-            {
-                connection.Close();
-                connection.Dispose();
-            }
+            var newEx = new Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
+            throw newEx;
         }
-
-        public virtual RowSet ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters)
+        finally
         {
-            var connection = OpenConnection();
+            connection.Close();
+            connection.Dispose();
+        }
+    }
 
-            //Log(LogSeverity.Verbose, "Executing query {Query}.", sqlStatementWithParameters.Statement);
-            var logTimer = LogTimer("Executing query {Query}.", sqlStatementWithParameters.Statement);
+    public virtual RowSet ExecuteQuery(SqlStatementWithParameters sqlStatementWithParameters)
+    {
+        var connection = OpenConnection();
 
-            var command = PrepareSqlCommand(sqlStatementWithParameters);
-            command.Connection = connection;
+        //Log(LogSeverity.Verbose, "Executing query {Query}.", sqlStatementWithParameters.Statement);
+        var logTimer = LogTimer("Executing query {Query}.", sqlStatementWithParameters.Statement);
 
-            try
+        var command = PrepareSqlCommand(sqlStatementWithParameters);
+        command.Connection = connection;
+
+        try
+        {
+            var rowSet = new RowSet();
+            using (var sqlReader = command.ExecuteReader())
             {
-                var rowSet = new RowSet();
-                using (var sqlReader = command.ExecuteReader())
+                var rowCount = 0;
+                while (sqlReader.Read())
                 {
-                    var rowCount = 0;
-                    while (sqlReader.Read())
+                    rowCount++;
+                    var row = new Row();
+                    for (var i = 0; i < sqlReader.FieldCount; i++)
                     {
-                        rowCount++;
-                        var row = new Row();
-                        for (var i = 0; i < sqlReader.FieldCount; i++)
-                        {
-                            row.Add(sqlReader.GetName(i), sqlReader[i]);
-                        }
-
-                        rowSet.Add(row);
+                        row.Add(sqlReader.GetName(i), sqlReader[i]);
                     }
 
-                    logTimer.Done();
-                    Log(LogSeverity.Verbose, "{rowCount} rows returned", rowCount);
+                    rowSet.Add(row);
                 }
 
                 logTimer.Done();
-
-                return rowSet;
-            }
-            catch (DbException ex)
-            {
-                var newEx = new Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
-                throw newEx;
-            }
-            finally
-            {
-                connection.Close();
-                connection.Dispose();
-            }
-        }
-
-        public virtual object ExecuteScalar(SqlStatementWithParameters sqlStatementWithParameters)
-        {
-            object result;
-
-            var connection = OpenConnection();
-
-            // Log(LogSeverity.Verbose, "Executing scalar {Query}.", sqlStatementWithParameters.Statement);
-            var logTimer = LogTimer("Executing scalar {Query}.", sqlStatementWithParameters.Statement);
-
-            var command = PrepareSqlCommand(sqlStatementWithParameters);
-            command.Connection = connection;
-
-            try
-            {
-                result = command.ExecuteScalar();
-            }
-            catch (DbException ex)
-            {
-                var newEx = new Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
-                throw newEx;
-            }
-            finally
-            {
-                connection.Close();
-                connection.Dispose();
+                Log(LogSeverity.Verbose, "{rowCount} rows returned", rowCount);
             }
 
             logTimer.Done();
 
-            return result;
+            return rowSet;
+        }
+        catch (DbException ex)
+        {
+            var newEx = new Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
+            throw newEx;
+        }
+        finally
+        {
+            connection.Close();
+            connection.Dispose();
+        }
+    }
+
+    public virtual object ExecuteScalar(SqlStatementWithParameters sqlStatementWithParameters)
+    {
+        object result;
+
+        var connection = OpenConnection();
+
+        // Log(LogSeverity.Verbose, "Executing scalar {Query}.", sqlStatementWithParameters.Statement);
+        var logTimer = LogTimer("Executing scalar {Query}.", sqlStatementWithParameters.Statement);
+
+        var command = PrepareSqlCommand(sqlStatementWithParameters);
+        command.Connection = connection;
+
+        try
+        {
+            result = command.ExecuteScalar();
+        }
+        catch (DbException ex)
+        {
+            var newEx = new Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
+            throw newEx;
+        }
+        finally
+        {
+            connection.Close();
+            connection.Dispose();
         }
 
-        protected void Log(LogSeverity severity, string text, params object[] args)
-        {
-            var module = "Executer/" + Generator.SqlVersion.UniqueName;
-            Context.Logger.Log(severity, text, module, args);
-        }
+        logTimer.Done();
 
-        protected LogTimer LogTimer(LogSeverity severity, string text, params object[] args)
-        {
-            var module = "Executer/" + Generator.SqlVersion.UniqueName;
-            var logTimer = new LogTimer(Context.Logger, severity, text, module, args);
-            return logTimer;
-        }
+        return result;
+    }
 
-        protected LogTimer LogTimer(string text, params object[] args)
-        {
-            return LogTimer(LogSeverity.Verbose, text, args);
-        }
+    protected void Log(LogSeverity severity, string text, params object[] args)
+    {
+        var module = "Executer/" + Generator.SqlVersion.UniqueName;
+        Context.Logger.Log(severity, text, module, args);
+    }
+
+    protected LogTimer LogTimer(LogSeverity severity, string text, params object[] args)
+    {
+        var module = "Executer/" + Generator.SqlVersion.UniqueName;
+        var logTimer = new LogTimer(Context.Logger, severity, text, module, args);
+        return logTimer;
+    }
+
+    protected LogTimer LogTimer(string text, params object[] args)
+    {
+        return LogTimer(LogSeverity.Verbose, text, args);
     }
 }

@@ -1,9 +1,8 @@
-﻿namespace FizzCode.DbTools.TestBase;
-
-using System.Text;
+﻿using System.Text;
 using FizzCode.DbTools.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+namespace FizzCode.DbTools.TestBase;
 public static class AssertRowSet
 {
     public static void AreEqual(RowSet expected, RowSet actual, SqlEngineVersion version)

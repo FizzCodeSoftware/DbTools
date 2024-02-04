@@ -1,42 +1,40 @@
-﻿namespace FizzCode.DbTools.DataDefinition.MsSql2016
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using FizzCode.DbTools.SqlGenerator.MsSql;
+using FizzCode.DbTools.Common;
+using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.DataDefinition.SqlGenerator;
+using FizzCode.DbTools.Interfaces;
+
+namespace FizzCode.DbTools.DataDefinition.MsSql2016;
+public class MsSql2016Generator : AbstractSqlGenerator, ISqlGeneratorDropAndCreateDatabase
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using FizzCode.DbTools.SqlGenerator.MsSql;
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.SqlGenerator;
-    using FizzCode.DbTools.Interfaces;
-
-    public class MsSql2016Generator : AbstractSqlGenerator, ISqlGeneratorDropAndCreateDatabase
+    public MsSql2016Generator(Context context)
+        : base(new MsSqlGenerator(context))
     {
-        public MsSql2016Generator(Context context)
-            : base(new MsSqlGenerator(context))
-        {
-            SqlVersion = MsSqlVersion.MsSql2016;
-        }
+        SqlVersion = MsSqlVersion.MsSql2016;
+    }
 
-        public SqlStatementWithParameters CreateDatabase(string databaseName)
-        {
-            return $"CREATE DATABASE {GuardKeywords(databaseName)}";
-        }
+    public SqlStatementWithParameters CreateDatabase(string databaseName)
+    {
+        return $"CREATE DATABASE {GuardKeywords(databaseName)}";
+    }
 
-        public string DropDatabase(string databaseName)
-        {
-            return $"DROP DATABASE {GuardKeywords(databaseName)}";
-        }
+    public string DropDatabase(string databaseName)
+    {
+        return $"DROP DATABASE {GuardKeywords(databaseName)}";
+    }
 
-        public SqlStatementWithParameters DropDatabaseIfExists(string databaseName)
-        {
-            return new SqlStatementWithParameters($"IF EXISTS(select * from sys.databases where name = @DatabaseName)\r\n\t{DropDatabase(databaseName)}", databaseName);
-        }
+    public SqlStatementWithParameters DropDatabaseIfExists(string databaseName)
+    {
+        return new SqlStatementWithParameters($"IF EXISTS(select * from sys.databases where name = @DatabaseName)\r\n\t{DropDatabase(databaseName)}", databaseName);
+    }
 
-        public override string DropAllForeignKeys()
-        {
-            return @"DECLARE @sql nvarchar(2000)
+    public override string DropAllForeignKeys()
+    {
+        return @"DECLARE @sql nvarchar(2000)
 -- DROP FKs
 WHILE(EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS where CONSTRAINT_TYPE='FOREIGN KEY'))
 BEGIN
@@ -45,11 +43,11 @@ BEGIN
     WHERE CONSTRAINT_TYPE = 'FOREIGN KEY'
     EXEC (@sql)
 END";
-        }
+    }
 
-        public override string DropAllTables()
-        {
-            return @"DECLARE @sql nvarchar(2000)
+    public override string DropAllTables()
+    {
+        return @"DECLARE @sql nvarchar(2000)
 -- DROP Tables
 WHILE(EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.TABLES where TABLE_TYPE = 'BASE TABLE'))
 BEGIN
@@ -58,21 +56,21 @@ BEGIN
     WHERE TABLE_TYPE = 'BASE TABLE'
     EXEC (@sql)
 END";
-            // Azure misses sp_MSforeachtable and sp_MSdropconstraints, thus the above
-            /* return @"
+        // Azure misses sp_MSforeachtable and sp_MSdropconstraints, thus the above
+        /* return @"
 exec sp_MSforeachtable ""declare @name nvarchar(max); set @name = parsename('?', 1); exec sp_MSdropconstraints @name"";
 exec sp_MSforeachtable ""drop table ?"";";
-            */
-        }
+        */
+    }
 
-        public override SqlStatementWithParameters DropSchemas(List<string> schemaNames, bool hard = false)
-        {
-            return string.Join(Environment.NewLine, schemaNames.Select(x => "DROP SCHEMA IF EXISTS " + GuardKeywords(x) + ";"));
-        }
+    public override SqlStatementWithParameters DropSchemas(List<string> schemaNames, bool hard = false)
+    {
+        return string.Join(Environment.NewLine, schemaNames.Select(x => "DROP SCHEMA IF EXISTS " + GuardKeywords(x) + ";"));
+    }
 
-        public override string DropAllViews()
-        {
-            return @"DECLARE @sql nvarchar(2000)
+    public override string DropAllViews()
+    {
+        return @"DECLARE @sql nvarchar(2000)
 
 -- DROP Views
 WHILE(EXISTS(SELECT 1 FROM INFORMATION_SCHEMA.VIEWS))
@@ -81,11 +79,11 @@ BEGIN
     FROM INFORMATION_SCHEMA.VIEWS
     EXEC (@sql)
 END";
-        }
+    }
 
-        public override string DropAllIndexes()
-        {
-            return @"
+    public override string DropAllIndexes()
+    {
+        return @"
 DECLARE @sql NVARCHAR(MAX);
 SELECT @sql = (
     SELECT 'IF EXISTS(SELECT * FROM sys.indexes WHERE name='''+ i.name +''' AND object_id = OBJECT_ID(''['+s.name+'].['+o.name+']''))\
@@ -98,72 +96,71 @@ SELECT @sql = (
 FOR XML path(''));
 
 EXEC sp_executesql @sql";
+    }
+
+    public override SqlStatementWithParameters CreateDbTableDescription(SqlTable table)
+    {
+        var sqlTableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
+        if (sqlTableDescription == null)
+        {
+            return null;
         }
 
-        public override SqlStatementWithParameters CreateDbTableDescription(SqlTable table)
-        {
-            var sqlTableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
-            if (sqlTableDescription == null)
-            {
-                return null;
-            }
+        var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name = @SchemaName, @level1type=N'TABLE', @level1name = @TableName");
 
-            var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name = @SchemaName, @level1type=N'TABLE', @level1name = @TableName");
+        sqlStatementWithParameters.Parameters.Add("@Description", sqlTableDescription.Description);
 
-            sqlStatementWithParameters.Parameters.Add("@Description", sqlTableDescription.Description);
+        sqlStatementWithParameters.Parameters.Add("@SchemaName", table.SchemaAndTableName.Schema ?? Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
+        sqlStatementWithParameters.Parameters.Add("@TableName", table.SchemaAndTableName.TableName);
 
-            sqlStatementWithParameters.Parameters.Add("@SchemaName", table.SchemaAndTableName.Schema ?? Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
-            sqlStatementWithParameters.Parameters.Add("@TableName", table.SchemaAndTableName.TableName);
+        return sqlStatementWithParameters;
+    }
 
-            return sqlStatementWithParameters;
-        }
+    public override SqlStatementWithParameters CreateDbColumnDescription(SqlColumn column)
+    {
+        var sqlColumnDescription = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
+        if (sqlColumnDescription == null)
+            return null;
 
-        public override SqlStatementWithParameters CreateDbColumnDescription(SqlColumn column)
-        {
-            var sqlColumnDescription = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
-            if (sqlColumnDescription == null)
-                return null;
+        var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=@SchemaName, @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
 
-            var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=@SchemaName, @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
+        var defaultSchema = Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
 
-            var defaultSchema = Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
+        sqlStatementWithParameters.Parameters.Add("@Description", sqlColumnDescription.Description);
+        sqlStatementWithParameters.Parameters.Add("@SchemaName", column.Table.SchemaAndTableName.Schema ?? defaultSchema);
+        sqlStatementWithParameters.Parameters.Add("@TableName", column.Table.SchemaAndTableName.TableName);
+        sqlStatementWithParameters.Parameters.Add("@ColumnName", column.Name);
 
-            sqlStatementWithParameters.Parameters.Add("@Description", sqlColumnDescription.Description);
-            sqlStatementWithParameters.Parameters.Add("@SchemaName", column.Table.SchemaAndTableName.Schema ?? defaultSchema);
-            sqlStatementWithParameters.Parameters.Add("@TableName", column.Table.SchemaAndTableName.TableName);
-            sqlStatementWithParameters.Parameters.Add("@ColumnName", column.Name);
+        return sqlStatementWithParameters;
+    }
 
-            return sqlStatementWithParameters;
-        }
+    public override string CreateForeignKey(ForeignKey fk)
+    {
+        /* example: ALTER TABLE [dbo].[Dim_Currency]  WITH CHECK ADD  CONSTRAINT [FK_Dim_Currency_Dim_CurrencyGroup] FOREIGN KEY([Dim_CurrencyGroupId])
+        REFERENCES[dbo].[Dim_CurrencyGroup]([Dim_CurrencyGroupId])
+        
+        ALTER TABLE [dbo].[Dim_Currency] CHECK CONSTRAINT [FK_Dim_Currency_Dim_CurrencyGroup]
+        */
 
-        public override string CreateForeignKey(ForeignKey fk)
-        {
-            /* example: ALTER TABLE [dbo].[Dim_Currency]  WITH CHECK ADD  CONSTRAINT [FK_Dim_Currency_Dim_CurrencyGroup] FOREIGN KEY([Dim_CurrencyGroupId])
-            REFERENCES[dbo].[Dim_CurrencyGroup]([Dim_CurrencyGroupId])
-            
-            ALTER TABLE [dbo].[Dim_Currency] CHECK CONSTRAINT [FK_Dim_Currency_Dim_CurrencyGroup]
-            */
+        var sb = new StringBuilder();
 
-            var sb = new StringBuilder();
-
-            sb.Append("ALTER TABLE ")
-                .Append(GetSimplifiedSchemaAndTableName(fk.SqlTable.SchemaAndTableName));
-            if (fk.SqlEngineVersionSpecificProperties.Contains(SqlVersion, "Nocheck") && fk.SqlEngineVersionSpecificProperties[SqlVersion, "Nocheck"] == "true")
-                sb.Append(" WITH NOCHECK ADD ");
-            else
-                sb.Append(" WITH CHECK ADD ");
-
-            sb.AppendLine(FKConstraint(fk))
-            .Append("ALTER TABLE ")
+        sb.Append("ALTER TABLE ")
             .Append(GetSimplifiedSchemaAndTableName(fk.SqlTable.SchemaAndTableName));
-            if (fk.SqlEngineVersionSpecificProperties.Contains(SqlVersion, "Nocheck") && fk.SqlEngineVersionSpecificProperties[SqlVersion, "Nocheck"] == "true")
-                sb.Append(" NOCHECK CONSTRAINT ");
-            else
-                sb.Append(" CHECK CONSTRAINT ");
+        if (fk.SqlEngineVersionSpecificProperties.Contains(SqlVersion, "Nocheck") && fk.SqlEngineVersionSpecificProperties[SqlVersion, "Nocheck"] == "true")
+            sb.Append(" WITH NOCHECK ADD ");
+        else
+            sb.Append(" WITH CHECK ADD ");
 
-            sb.AppendLine(GuardKeywords(fk.Name));
+        sb.AppendLine(FKConstraint(fk))
+        .Append("ALTER TABLE ")
+        .Append(GetSimplifiedSchemaAndTableName(fk.SqlTable.SchemaAndTableName));
+        if (fk.SqlEngineVersionSpecificProperties.Contains(SqlVersion, "Nocheck") && fk.SqlEngineVersionSpecificProperties[SqlVersion, "Nocheck"] == "true")
+            sb.Append(" NOCHECK CONSTRAINT ");
+        else
+            sb.Append(" CHECK CONSTRAINT ");
 
-            return sb.ToString();
-        }
+        sb.AppendLine(GuardKeywords(fk.Name));
+
+        return sb.ToString();
     }
 }

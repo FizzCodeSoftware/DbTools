@@ -1,9 +1,7 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Interfaces
-{
-    using FizzCode.LightWeight.AdoNet;
+﻿using FizzCode.LightWeight.AdoNet;
 
-    public interface IDataDefinitionReaderFactory
-    {
-        IDataDefinitionReader CreateDataDefinitionReader(NamedConnectionString connectionString, ISchemaNamesToRead schemaNames);
-    }
+namespace FizzCode.DbTools.DataDefinition.Base.Interfaces;
+public interface IDataDefinitionReaderFactory
+{
+    IDataDefinitionReader CreateDataDefinitionReader(NamedConnectionString connectionString, ISchemaNamesToRead schemaNames);
 }

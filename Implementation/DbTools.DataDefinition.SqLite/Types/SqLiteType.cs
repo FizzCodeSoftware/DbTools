@@ -1,10 +1,8 @@
-﻿#pragma warning disable CA1720 // Identifier contains type name
+﻿using FizzCode.DbTools.DataDefinition.Base;
 
-namespace FizzCode.DbTools.DataDefinition.SqLite3
+#pragma warning disable CA1720 // Identifier contains type name
+
+namespace FizzCode.DbTools.DataDefinition.SqLite3;
+public abstract class SqLiteType : SqlTypeInfo
 {
-    using FizzCode.DbTools.DataDefinition.Base;
-
-    public abstract class SqLiteType : SqlTypeInfo
-    {
-    }
 }

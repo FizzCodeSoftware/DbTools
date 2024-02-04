@@ -1,9 +1,8 @@
-﻿namespace FizzCode.DbTools.Interfaces
+﻿namespace FizzCode.DbTools.Interfaces;
+
+public interface ISqlExecuterDropAndCreateDatabase : ISqlStatementExecuter
 {
-    public interface ISqlExecuterDropAndCreateDatabase : ISqlStatementExecuter
-    {
-        void CreateDatabase();
-        void DropDatabaseIfExists();
-        void DropDatabase();
-    }
+    void CreateDatabase();
+    void DropDatabaseIfExists();
+    void DropDatabase();
 }

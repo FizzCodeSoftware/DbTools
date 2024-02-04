@@ -1,9 +1,8 @@
-﻿namespace FizzCode.DbTools.Common
+﻿namespace FizzCode.DbTools.Common;
+
+public class Options
 {
-    public class Options
-    {
-        public bool ShouldUseDefaultSchema { get; set; }
-        public bool ShouldMigrateColumnChangesAllAtOnce { get; set; }
-        public bool ShouldNotGuardKeywords { get; set; }
-    }
+    public bool ShouldUseDefaultSchema { get; set; }
+    public bool ShouldMigrateColumnChangesAllAtOnce { get; set; }
+    public bool ShouldNotGuardKeywords { get; set; }
 }

@@ -1,30 +1,27 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Tests
+﻿using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.TestBase;
+
+namespace FizzCode.DbTools.DataDefinition.Tests;
+public class SqlTableCustomPropertyDbTyped : TestDatabaseDeclaration
 {
-    using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Generic1;
-    using FizzCode.DbTools.TestBase;
+    public Table1Table Table1 { get; } = new Table1Table();
+}
 
-    public class SqlTableCustomPropertyDbTyped : TestDatabaseDeclaration
+public class Table1Table : SqlTable
+{
+    public SqlColumn Id { get; } = Generic1.Generic1.AddInt32().SetPK().SetIdentity();
+    public SqlColumn Name { get; } = Generic1.Generic1.AddNVarChar(100);
+    public SqlTableCustomProperty MyCustomProperty { get; } = new MyCustomProperty();
+}
+
+public class MyCustomProperty : SqlTableCustomProperty
+{
+    public MyCustomProperty()
     {
-        public Table1Table Table1 { get; } = new Table1Table();
     }
 
-    public class Table1Table : SqlTable
+    public MyCustomProperty(SqlTable sqlTable)
+        : base(sqlTable)
     {
-        public SqlColumn Id { get; } = Generic1.AddInt32().SetPK().SetIdentity();
-        public SqlColumn Name { get; } = Generic1.AddNVarChar(100);
-        public SqlTableCustomProperty MyCustomProperty { get; } = new MyCustomProperty();
-    }
-
-    public class MyCustomProperty : SqlTableCustomProperty
-    {
-        public MyCustomProperty()
-        {
-        }
-
-        public MyCustomProperty(SqlTable sqlTable)
-            : base(sqlTable)
-        {
-        }
     }
 }

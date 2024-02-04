@@ -1,10 +1,8 @@
-﻿namespace FizzCode.DbTools.DataDeclaration
-{
-    using FizzCode.DbTools.DataDefinition.Base;
+﻿using FizzCode.DbTools.DataDefinition.Base;
 
-    public interface IForeignKeyNamingStrategy : INamingStrategy
-    {
-        void SetFKName(ForeignKey fk);
-        string GetFkToPkColumnName(SqlColumn referredColumn, string prefix);
-    }
+namespace FizzCode.DbTools.DataDeclaration;
+public interface IForeignKeyNamingStrategy : INamingStrategy
+{
+    void SetFKName(ForeignKey fk);
+    string GetFkToPkColumnName(SqlColumn referredColumn, string prefix);
 }

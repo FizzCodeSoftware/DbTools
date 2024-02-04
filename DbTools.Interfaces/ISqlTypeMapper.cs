@@ -1,9 +1,7 @@
-﻿namespace FizzCode.DbTools.Interfaces
-{
-    using FizzCode.DbTools.DataDefinition.Base;
+﻿using FizzCode.DbTools.DataDefinition.Base;
 
-    public interface ISqlTypeMapper
-    {
-        string GetType(SqlType type);
-    }
+namespace FizzCode.DbTools.Interfaces;
+public interface ISqlTypeMapper
+{
+    string GetType(SqlType type);
 }

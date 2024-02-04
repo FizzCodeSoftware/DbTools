@@ -1,8 +1,6 @@
-﻿namespace FizzCode.DbTools.Common
-{
-    using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-    public abstract class SqlEngineVersionDictionary<T> : Dictionary<SqlEngineVersion, T>
-    {
-    }
+namespace FizzCode.DbTools.Common;
+public abstract class SqlEngineVersionDictionary<T> : Dictionary<SqlEngineVersion, T>
+{
 }

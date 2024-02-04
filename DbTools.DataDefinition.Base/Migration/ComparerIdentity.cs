@@ -1,46 +1,41 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+public class ComparerIdentity : ComparerSqlColumnPropertyBase<Identity, IdentityMigration>
 {
-    using System.Collections.Generic;
-    using FizzCode.DbTools.DataDefinition.Base;
-
-    public class ComparerIdentity : ComparerSqlColumnPropertyBase<Identity, IdentityMigration>
+    public static List<IdentityMigration> CompareIdentity(SqlColumn columnOriginal, SqlColumn columnNew)
     {
-        public static List<IdentityMigration> CompareIdentity(SqlColumn columnOriginal, SqlColumn columnNew)
-        {
-            var comparer = new ComparerIdentity();
-            var changes = comparer.CompareProperties(columnOriginal, columnNew);
-            return changes;
-        }
+        var comparer = new ComparerIdentity();
+        var changes = comparer.CompareProperties(columnOriginal, columnNew);
+        return changes;
+    }
 
-        public override IdentityMigration CreateChange(Identity originalProperty, Identity newProperty)
+    public override IdentityMigration CreateChange(Identity originalProperty, Identity newProperty)
+    {
+        return new IdentityChange()
         {
-            return new IdentityChange()
-            {
-                Identity = originalProperty,
-                NewIdentity = newProperty
-            };
-        }
+            Identity = originalProperty,
+            NewIdentity = newProperty
+        };
+    }
 
-        public override IdentityMigration CreateDelete(Identity originalProperty)
+    public override IdentityMigration CreateDelete(Identity originalProperty)
+    {
+        return new IdentityDelete()
         {
-            return new IdentityDelete()
-            {
-                Identity = originalProperty
-            };
-        }
+            Identity = originalProperty
+        };
+    }
 
-        public override IdentityMigration CreateNew(Identity originalProperty)
+    public override IdentityMigration CreateNew(Identity originalProperty)
+    {
+        return new IdentityNew()
         {
-            return new IdentityNew()
-            {
-                Identity = originalProperty
-            };
-        }
+            Identity = originalProperty
+        };
+    }
 
-        protected override bool ComparePropertiesInternal(Identity propertyOriginal, Identity propertyNew)
-        {
-            return propertyOriginal.Seed == propertyNew.Seed
-                && propertyOriginal.Increment == propertyNew.Increment;
-        }
+    protected override bool ComparePropertiesInternal(Identity propertyOriginal, Identity propertyNew)
+    {
+        return propertyOriginal.Seed == propertyNew.Seed
+            && propertyOriginal.Increment == propertyNew.Increment;
     }
 }

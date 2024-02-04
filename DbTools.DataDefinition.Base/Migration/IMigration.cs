@@ -1,18 +1,17 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
-{
-    public interface IMigration
-    { }
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 
-    // Other / all cases
-    // New PK, Deleted PK, Renamed PK - changed PK?
+public interface IMigration
+{ }
 
-    // New TableDescription, Deleted TableDescription
-    // New ColumnDescription, Deleted ColumnDescription
+// Other / all cases
+// New PK, Deleted PK, Renamed PK - changed PK?
 
-    // New DefaultValue, Deleted DefaultValue
-    // New Identity, Deleted Identity
+// New TableDescription, Deleted TableDescription
+// New ColumnDescription, Deleted ColumnDescription
 
-    // (not implemented) Trigger
+// New DefaultValue, Deleted DefaultValue
+// New Identity, Deleted Identity
 
-    // SuspectedTableRename - if remove/add table but the internal schema is exactly the asame, suspect table rename
-}
+// (not implemented) Trigger
+
+// SuspectedTableRename - if remove/add table but the internal schema is exactly the asame, suspect table rename

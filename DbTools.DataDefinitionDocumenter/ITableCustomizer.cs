@@ -1,11 +1,9 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
-{
-    using FizzCode.DbTools.DataDefinition.Base;
+﻿using FizzCode.DbTools.DataDefinition.Base;
 
-    public interface ITableCustomizer
-    {
-        bool ShouldSkip(SchemaAndTableName tableName);
-        string Category(SchemaAndTableName tableName);
-        string BackGroundColor(SchemaAndTableName tableName);
-    }
+namespace FizzCode.DbTools.DataDefinitionDocumenter;
+public interface ITableCustomizer
+{
+    bool ShouldSkip(SchemaAndTableName tableName);
+    string Category(SchemaAndTableName tableName);
+    string BackGroundColor(SchemaAndTableName tableName);
 }

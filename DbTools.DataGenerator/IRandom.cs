@@ -1,9 +1,8 @@
-﻿namespace FizzCode.DbTools.DataGenerator
+﻿namespace FizzCode.DbTools.DataGenerator;
+
+public interface IRandom
 {
-    public interface IRandom
-    {
-        int Next();
-        int Next(int maxValue);
-        int Next(int minValue, int maxValue);
-    }
+    int Next();
+    int Next(int maxValue);
+    int Next(int minValue, int maxValue);
 }

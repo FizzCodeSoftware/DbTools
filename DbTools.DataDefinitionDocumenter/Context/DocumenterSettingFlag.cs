@@ -1,11 +1,10 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
+﻿namespace FizzCode.DbTools.DataDefinitionDocumenter;
+
+public enum DocumenterSettingFlag
 {
-    public enum DocumenterSettingFlag
-    {
-        None,
-        NoForeignKeys,
-        NoIndexes,
-        NoUniqueConstraints,
-        NoInternalDataTypes
-    }
+    None,
+    NoForeignKeys,
+    NoIndexes,
+    NoUniqueConstraints,
+    NoInternalDataTypes
 }

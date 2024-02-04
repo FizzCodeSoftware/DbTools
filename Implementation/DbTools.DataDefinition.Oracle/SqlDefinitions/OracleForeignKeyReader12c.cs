@@ -1,37 +1,36 @@
-﻿namespace FizzCode.DbTools.DataDefinitionReader
+﻿using System.Linq;
+using FizzCode.DbTools.Common;
+using FizzCode.DbTools.DataDefinition;
+using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+using FizzCode.DbTools.SqlExecuter;
+
+namespace FizzCode.DbTools.DataDefinitionReader;
+public class OracleForeignKeyReader12c : OracleDataDefinitionElementReader
 {
-    using System.Linq;
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
-    using FizzCode.DbTools.SqlExecuter;
+    private readonly RowSet _queryResult;
 
-    public class OracleForeignKeyReader12c : OracleDataDefinitionElementReader
+    public OracleForeignKeyReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
+        : base(executer, schemaNames)
     {
-        private readonly RowSet _queryResult;
+        var sqlStatement = GetStatement();
+        AddSchemaNamesFilter(ref sqlStatement, "cons.owner");
+        sqlStatement += "\r\nORDER BY owner, table_name, position";
+        _queryResult = Executer.ExecuteQuery(sqlStatement);
+    }
 
-        public OracleForeignKeyReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
-            : base(executer, schemaNames)
+    public void GetForeignKeysAndUniqueConstrainsts(DatabaseDefinition dd)
+    {
+        foreach (var table in dd.GetTables())
         {
-            var sqlStatement = GetStatement();
-            AddSchemaNamesFilter(ref sqlStatement, "cons.owner");
-            sqlStatement += "\r\nORDER BY owner, table_name, position";
-            _queryResult = Executer.ExecuteQuery(sqlStatement);
+            GetForeignKeys(table);
+            GetUniqueConstraints(table);
         }
+    }
 
-        public void GetForeignKeysAndUniqueConstrainsts(DatabaseDefinition dd)
-        {
-            foreach (var table in dd.GetTables())
-            {
-                GetForeignKeys(table);
-                GetUniqueConstraints(table);
-            }
-        }
-
-        private static string GetStatement()
-        {
-            return @"
+    private static string GetStatement()
+    {
+        return @"
 SELECT 
 		cons.owner,
 		cons.constraint_name,
@@ -60,59 +59,58 @@ SELECT
 	WHERE
 		(cons.constraint_type = 'R' OR cons.constraint_type = 'U')
 		AND (refcols.POSITION IS NULL OR cols.POSITION = refcols.POSITION)";
-        }
+    }
 
-        public void GetUniqueConstraints(SqlTable table)
+    public void GetUniqueConstraints(SqlTable table)
+    {
+        UniqueConstraint uniqueConstraint = null;
+        var rows = _queryResult
+            .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "OWNER", "TABLE_NAME") && r.GetAs<string>("CONSTRAINT_TYPE") == "U")
+            .ToList();
+
+        foreach (var row in rows)
         {
-            UniqueConstraint uniqueConstraint = null;
-            var rows = _queryResult
-                .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "OWNER", "TABLE_NAME") && r.GetAs<string>("CONSTRAINT_TYPE") == "U")
-                .ToList();
-
-            foreach (var row in rows)
+            if (row.GetAs<decimal>("POSITION") == 1)
             {
-                if (row.GetAs<decimal>("POSITION") == 1)
-                {
-                    uniqueConstraint = new UniqueConstraint(table, row.GetAs<string>("CONSTRAINT_NAME"));
-                    table.Properties.Add(uniqueConstraint);
-                }
-
-                var column = table.Columns[row.GetAs<string>("COLUMN_NAME")];
-                uniqueConstraint.SqlColumns.Add(new ColumnAndOrder(column, AscDesc.Asc));
+                uniqueConstraint = new UniqueConstraint(table, row.GetAs<string>("CONSTRAINT_NAME"));
+                table.Properties.Add(uniqueConstraint);
             }
+
+            var column = table.Columns[row.GetAs<string>("COLUMN_NAME")];
+            uniqueConstraint.SqlColumns.Add(new ColumnAndOrder(column, AscDesc.Asc));
         }
+    }
 
-        public void GetForeignKeys(SqlTable table)
+    public void GetForeignKeys(SqlTable table)
+    {
+        var rows = _queryResult
+            .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "OWNER", "TABLE_NAME") && r.GetAs<string>("CONSTRAINT_TYPE") == "R")
+            .ToList();
+
+        foreach (var row in rows)
         {
-            var rows = _queryResult
-                .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "OWNER", "TABLE_NAME") && r.GetAs<string>("CONSTRAINT_TYPE") == "R")
-                .ToList();
+            var fkColumn = table.Columns[row.GetAs<string>("COLUMN_NAME")];
 
-            foreach (var row in rows)
+            // TODO how to query reference in a nother schema?
+            var referencedSchema = row.GetAs<string>("R_OWNER");
+            var referencedTable = row.GetAs<string>("REF_TABLE_NAME");
+            var referencedSchemaAndTableName = new SchemaAndTableName(referencedSchema, referencedTable);
+            var referencedColumn = row.GetAs<string>("REF_COLUMN_NAME");
+            var fkName = row.GetAs<string>("CONSTRAINT_NAME");
+
+            var referencedSqlTableSchemaAndTableNameAsToStore = GenericDataDefinitionReader.GetSchemaAndTableNameAsToStore(referencedSchemaAndTableName, Executer.Context);
+
+            var referencedSqlTable = table.DatabaseDefinition.GetTable(referencedSqlTableSchemaAndTableNameAsToStore);
+
+            if (!table.Properties.OfType<ForeignKey>().Any(fk => fk.SqlTable.SchemaAndTableName == table.SchemaAndTableName && fk.ReferredTable.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk.Name == fkName))
             {
-                var fkColumn = table.Columns[row.GetAs<string>("COLUMN_NAME")];
-
-                // TODO how to query reference in a nother schema?
-                var referencedSchema = row.GetAs<string>("R_OWNER");
-                var referencedTable = row.GetAs<string>("REF_TABLE_NAME");
-                var referencedSchemaAndTableName = new SchemaAndTableName(referencedSchema, referencedTable);
-                var referencedColumn = row.GetAs<string>("REF_COLUMN_NAME");
-                var fkName = row.GetAs<string>("CONSTRAINT_NAME");
-
-                var referencedSqlTableSchemaAndTableNameAsToStore = GenericDataDefinitionReader.GetSchemaAndTableNameAsToStore(referencedSchemaAndTableName, Executer.Context);
-
-                var referencedSqlTable = table.DatabaseDefinition.GetTable(referencedSqlTableSchemaAndTableNameAsToStore);
-
-                if (!table.Properties.OfType<ForeignKey>().Any(fk => fk.SqlTable.SchemaAndTableName == table.SchemaAndTableName && fk.ReferredTable.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk.Name == fkName))
-                {
-                    table.Properties.Add(new ForeignKey(table, referencedSqlTable, fkName));
-                }
-
-                var referencedSqlColumn = referencedSqlTable[referencedColumn];
-
-                var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
-                fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkColumn, referencedSqlColumn));
+                table.Properties.Add(new ForeignKey(table, referencedSqlTable, fkName));
             }
+
+            var referencedSqlColumn = referencedSqlTable[referencedColumn];
+
+            var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
+            fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkColumn, referencedSqlColumn));
         }
     }
 }

@@ -1,25 +1,24 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
+﻿namespace FizzCode.DbTools.DataDefinition.Base;
+
+public class ColumnAndOrder
 {
-    public class ColumnAndOrder
+    public SqlColumnBase SqlColumn { get; set; }
+    public AscDesc Order { get; set; }
+    public string OrderAsKeyword => Order.ToString().ToUpperInvariant();
+
+    protected ColumnAndOrder(AscDesc order)
     {
-        public SqlColumnBase SqlColumn { get; set; }
-        public AscDesc Order { get; set; }
-        public string OrderAsKeyword => Order.ToString().ToUpperInvariant();
+        Order = order;
+    }
 
-        protected ColumnAndOrder(AscDesc order)
-        {
-            Order = order;
-        }
+    public ColumnAndOrder(SqlColumnBase sqlColumn, AscDesc order)
+        : this(order)
+    {
+        SqlColumn = sqlColumn;
+    }
 
-        public ColumnAndOrder(SqlColumnBase sqlColumn, AscDesc order)
-            : this(order)
-        {
-            SqlColumn = sqlColumn;
-        }
-
-        public override string ToString()
-        {
-            return $"{SqlColumn.Name} {OrderAsKeyword}";
-        }
+    public override string ToString()
+    {
+        return $"{SqlColumn.Name} {OrderAsKeyword}";
     }
 }

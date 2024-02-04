@@ -1,25 +1,23 @@
-﻿namespace FizzCode.DbTools.SqlGenerator.Oracle
+﻿using FizzCode.DbTools.Common;
+using FizzCode.DbTools.SqlGenerator.Base;
+
+namespace FizzCode.DbTools.SqlGenerator.Oracle;
+public class OracleGenerator : AbstractSqlGeneratorBase
 {
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.SqlGenerator.Base;
+    public override SqlEngineVersion SqlVersion => OracleVersion.Oracle12c;
 
-    public class OracleGenerator : AbstractSqlGeneratorBase
+    public OracleGenerator(Context context)
+        : base(context)
     {
-        public override SqlEngineVersion SqlVersion => OracleVersion.Oracle12c;
+    }
 
-        public OracleGenerator(Context context)
-            : base(context)
-        {
-        }
+    public override string GuardKeywordsImplementation(string name)
+    {
+        var shouldUpperCaseEscapedNames = Context.Settings.SqlVersionSpecificSettings["UpperCaseEscapedNames"].ToString() == "true";
 
-        public override string GuardKeywordsImplementation(string name)
-        {
-            var shouldUpperCaseEscapedNames = Context.Settings.SqlVersionSpecificSettings["UpperCaseEscapedNames"].ToString() == "true";
+        if (shouldUpperCaseEscapedNames)
+            name = name.ToUpper();
 
-            if (shouldUpperCaseEscapedNames)
-                name = name.ToUpper();
-
-            return $"\"{name}\"";
-        }
+        return $"\"{name}\"";
     }
 }

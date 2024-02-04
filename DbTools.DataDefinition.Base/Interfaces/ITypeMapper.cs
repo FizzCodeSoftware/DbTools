@@ -1,12 +1,8 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Interfaces
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Interfaces;
+public interface ITypeMapper
 {
-    using FizzCode.DbTools;
+    SqlEngineVersion SqlVersion { get; }
 
-    public interface ITypeMapper
-    {
-        SqlEngineVersion SqlVersion { get; }
-
-        ISqlType MapFromGeneric1(ISqlType genericType);
-        ISqlType MapToGeneric1(ISqlType sqlType);
-    }
+    ISqlType MapFromGeneric1(ISqlType genericType);
+    ISqlType MapToGeneric1(ISqlType sqlType);
 }

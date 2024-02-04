@@ -1,47 +1,45 @@
-﻿namespace FizzCode.DbTools.DataDefinition.MsSql2016
+﻿using System.Collections.Generic;
+using System.Globalization;
+using FizzCode.DbTools.DataDeclaration;
+using FizzCode.DbTools.DataDefinition.Base;
+
+namespace FizzCode.DbTools.DataDefinition.MsSql2016;
+public class ForeignKeyNamingMsSqlDefaultStrategy : ForeignKeyNamingDefaultStrategy
 {
-    using System.Collections.Generic;
-    using System.Globalization;
-    using FizzCode.DbTools.DataDeclaration;
-    using FizzCode.DbTools.DataDefinition.Base;
+    private readonly Dictionary<string, ForeignKey> _generatedNames = new();
+    private readonly Dictionary<string, List<ForeignKey>> _renames = new();
 
-    public class ForeignKeyNamingMsSqlDefaultStrategy : ForeignKeyNamingDefaultStrategy
+    public override void SetFKName(ForeignKey fk)
     {
-        private readonly Dictionary<string, ForeignKey> _generatedNames = new();
-        private readonly Dictionary<string, List<ForeignKey>> _renames = new();
+        if (fk.SqlTable.SchemaAndTableName == null || fk.ReferredTable.SchemaAndTableName == null)
+            return;
 
-        public override void SetFKName(ForeignKey fk)
+        var fkName = fk.SqlTable.SchemaAndTableName.TableName + "__" + fk.ReferredTable.SchemaAndTableName.TableName;
+        if (fkName.Length > 110)
         {
-            if (fk.SqlTable.SchemaAndTableName == null || fk.ReferredTable.SchemaAndTableName == null)
-                return;
+            fkName = fkName.Substring(0, 110);
+        }
 
-            var fkName = fk.SqlTable.SchemaAndTableName.TableName + "__" + fk.ReferredTable.SchemaAndTableName.TableName;
-            if (fkName.Length > 110)
+        if (_generatedNames.TryGetValue(fkName, out var firstFk))
+        {
+            if (!_renames.TryGetValue(fkName, out var renameList))
             {
-                fkName = fkName.Substring(0, 110);
-            }
-
-            if (_generatedNames.TryGetValue(fkName, out var firstFk))
-            {
-                if (!_renames.TryGetValue(fkName, out var renameList))
+                renameList = new List<ForeignKey>
                 {
-                    renameList = new List<ForeignKey>
-                    {
-                        firstFk,
-                    };
+                    firstFk,
+                };
 
-                    _renames.Add(fkName, renameList);
-                    firstFk.Name += "_1";
-                }
+                _renames.Add(fkName, renameList);
+                firstFk.Name += "_1";
+            }
 
-                renameList.Add(fk);
-                fk.Name = fkName + "_" + renameList.Count.ToString("D", CultureInfo.InvariantCulture);
-            }
-            else
-            {
-                _generatedNames.Add(fkName, fk);
-                fk.Name = fkName;
-            }
+            renameList.Add(fk);
+            fk.Name = fkName + "_" + renameList.Count.ToString("D", CultureInfo.InvariantCulture);
+        }
+        else
+        {
+            _generatedNames.Add(fkName, fk);
+            fk.Name = fkName;
         }
     }
 }

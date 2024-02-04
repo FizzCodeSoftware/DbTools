@@ -1,31 +1,30 @@
-﻿namespace FizzCode.DbTools.DataDefinitionReader
+﻿using System.Linq;
+using FizzCode.DbTools.Common;
+using FizzCode.DbTools.DataDefinition;
+using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+using FizzCode.DbTools.SqlExecuter;
+
+namespace FizzCode.DbTools.DataDefinitionReader;
+public class MsSqlForeignKeyReader2016 : GenericDataDefinitionElementReader
 {
-    using System.Linq;
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
-    using FizzCode.DbTools.SqlExecuter;
+    private RowSet _queryResult;
+    private RowSet QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement());
 
-    public class MsSqlForeignKeyReader2016 : GenericDataDefinitionElementReader
+    public MsSqlForeignKeyReader2016(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
+        : base(executer, schemaNames)
     {
-        private RowSet _queryResult;
-        private RowSet QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement());
+    }
 
-        public MsSqlForeignKeyReader2016(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
-            : base(executer, schemaNames)
-        {
-        }
+    public void GetForeignKeys(DatabaseDefinition dd)
+    {
+        foreach (var table in dd.GetTables())
+            GetForeignKeys(table);
+    }
 
-        public void GetForeignKeys(DatabaseDefinition dd)
-        {
-            foreach (var table in dd.GetTables())
-                GetForeignKeys(table);
-        }
-
-        private static string GetStatement()
-        {
-            return @"
+    private static string GetStatement()
+    {
+        return @"
 SELECT
      KCU1.CONSTRAINT_NAME AS FK_CONSTRAINT_NAME
     ,KCU1.CONSTRAINT_SCHEMA as FK_CONSTRAINT_SCHEMA
@@ -54,51 +53,50 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
 
 --WHERE KCU1.TABLE_NAME = ''
 --ORDER BY KCU1.ORDINAL_POSITION";
-        }
+    }
 
-        public void GetForeignKeys(SqlTable table)
+    public void GetForeignKeys(SqlTable table)
+    {
+        var rows = QueryResult
+            .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "FK_CONSTRAINT_SCHEMA", "FK_TABLE_NAME"))
+            .OrderBy(row => row.GetAs<string>("FK_CONSTRAINT_NAME"))
+            .ThenBy(row => row.GetAs<int>("FK_ORDINAL_POSITION"))
+            .ToList();
+
+        foreach (var row in rows)
         {
-            var rows = QueryResult
-                .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "FK_CONSTRAINT_SCHEMA", "FK_TABLE_NAME"))
-                .OrderBy(row => row.GetAs<string>("FK_CONSTRAINT_NAME"))
-                .ThenBy(row => row.GetAs<int>("FK_ORDINAL_POSITION"))
-                .ToList();
+            var fkColumn = table.Columns[row.GetAs<string>("FK_COLUMN_NAME")];
 
-            foreach (var row in rows)
+            var referencedSchema = row.GetAs<string>("REFERENCED_CONSTRAINT_SCHEMA");
+            var referencedTable = row.GetAs<string>("REFERENCED_TABLE_NAME");
+            var referencedSchemaAndTableName = new SchemaAndTableName(referencedSchema, referencedTable);
+            var referencedColumn = row.GetAs<string>("REFERENCED_COLUMN_NAME");
+            var fkName = row.GetAs<string>("FK_CONSTRAINT_NAME");
+
+            var referencedSqlTableSchemaAndTableNameAsToStore = GenericDataDefinitionReader.GetSchemaAndTableNameAsToStore(referencedSchemaAndTableName, Executer.Context);
+
+            var referencedSqlTable = table.DatabaseDefinition.GetTable(referencedSqlTableSchemaAndTableNameAsToStore);
+
+            ForeignKey fk;
+
+            if (row.GetAs<int>("FK_ORDINAL_POSITION") == 1)
             {
-                var fkColumn = table.Columns[row.GetAs<string>("FK_COLUMN_NAME")];
+                fk = new ForeignKey(table, referencedSqlTable, fkName);
+                table.Properties.Add(fk);
 
-                var referencedSchema = row.GetAs<string>("REFERENCED_CONSTRAINT_SCHEMA");
-                var referencedTable = row.GetAs<string>("REFERENCED_TABLE_NAME");
-                var referencedSchemaAndTableName = new SchemaAndTableName(referencedSchema, referencedTable);
-                var referencedColumn = row.GetAs<string>("REFERENCED_COLUMN_NAME");
-                var fkName = row.GetAs<string>("FK_CONSTRAINT_NAME");
-
-                var referencedSqlTableSchemaAndTableNameAsToStore = GenericDataDefinitionReader.GetSchemaAndTableNameAsToStore(referencedSchemaAndTableName, Executer.Context);
-
-                var referencedSqlTable = table.DatabaseDefinition.GetTable(referencedSqlTableSchemaAndTableNameAsToStore);
-
-                ForeignKey fk;
-
-                if (row.GetAs<int>("FK_ORDINAL_POSITION") == 1)
-                {
-                    fk = new ForeignKey(table, referencedSqlTable, fkName);
-                    table.Properties.Add(fk);
-
-                    if (row.GetAs<int>("IsNotTrusted") == 1)
-                        fk.SqlEngineVersionSpecificProperties.Add(new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true"));
-                    else if (row.GetAs<int>("IsNotTrusted") == 0)
-                        fk.SqlEngineVersionSpecificProperties.Add(new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "false"));
-                }
-                else
-                {
-                    fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
-                }
-
-                var referencedSqlColumn = referencedSqlTable[referencedColumn];
-
-                fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkColumn, referencedSqlColumn));
+                if (row.GetAs<int>("IsNotTrusted") == 1)
+                    fk.SqlEngineVersionSpecificProperties.Add(new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true"));
+                else if (row.GetAs<int>("IsNotTrusted") == 0)
+                    fk.SqlEngineVersionSpecificProperties.Add(new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "false"));
             }
+            else
+            {
+                fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
+            }
+
+            var referencedSqlColumn = referencedSqlTable[referencedColumn];
+
+            fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkColumn, referencedSqlColumn));
         }
     }
 }

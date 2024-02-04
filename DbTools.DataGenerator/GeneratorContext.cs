@@ -1,21 +1,19 @@
-﻿namespace FizzCode.DbTools.DataGenerator
+﻿using System;
+
+namespace FizzCode.DbTools.DataGenerator;
+public class GeneratorContext
 {
-    using System;
+    public IRandom Random { get; }
+    public DateTime Now { get; }
 
-    public class GeneratorContext
+    public GeneratorContext(IRandom random)
+        : this(random, DateTime.Now)
     {
-        public IRandom Random { get; }
-        public DateTime Now { get; }
+    }
 
-        public GeneratorContext(IRandom random)
-            : this(random, DateTime.Now)
-        {
-        }
-
-        public GeneratorContext(IRandom random, DateTime now)
-        {
-            Random = random;
-            Now = now;
-        }
+    public GeneratorContext(IRandom random, DateTime now)
+    {
+        Random = random;
+        Now = now;
     }
 }

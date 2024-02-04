@@ -1,11 +1,10 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter;
-
-using FizzCode.DbTools.Common.Logger;
+﻿using FizzCode.DbTools.Common.Logger;
 using FizzCode.DbTools.DataDefinition.Base;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
+namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public partial class Documenter
 {
     private void AddTables(List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory, List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategory, bool hasCategories)

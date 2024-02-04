@@ -1,14 +1,10 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+public abstract class ColumnMigration : IMigration
 {
-    using FizzCode.DbTools.DataDefinition.Base;
+    public SqlColumn SqlColumn { get; set; }
 
-    public abstract class ColumnMigration : IMigration
+    public override string ToString()
     {
-        public SqlColumn SqlColumn { get; set; }
-
-        public override string ToString()
-        {
-            return SqlColumn.ToString();
-        }
+        return SqlColumn.ToString();
     }
 }

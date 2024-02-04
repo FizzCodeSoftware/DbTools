@@ -1,27 +1,25 @@
-﻿namespace FizzCode.DbTools.QueryBuilder
+﻿using System.Text;
+
+namespace FizzCode.DbTools.QueryBuilder;
+public static class StringBuilderExtension
 {
-    using System.Text;
-
-    public static class StringBuilderExtension
+    public static StringBuilder AppendComma(this StringBuilder sb, string value)
     {
-        public static StringBuilder AppendComma(this StringBuilder sb, string value)
-        {
-            if (!string.IsNullOrEmpty(value))
-                sb.Append(", ");
+        if (!string.IsNullOrEmpty(value))
+            sb.Append(", ");
 
-            sb.Append(value);
+        sb.Append(value);
 
-            return sb;
-        }
+        return sb;
+    }
 
-        public static StringBuilder AppendSpace(this StringBuilder sb, string value)
-        {
-            if (sb.Length > 0)
-                sb.Append(' ');
+    public static StringBuilder AppendSpace(this StringBuilder sb, string value)
+    {
+        if (sb.Length > 0)
+            sb.Append(' ');
 
-            sb.Append(value);
+        sb.Append(value);
 
-            return sb;
-        }
+        return sb;
     }
 }

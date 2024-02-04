@@ -1,148 +1,146 @@
-﻿namespace FizzCode.DbTools.TestBase
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using FizzCode.DbTools.Common;
+using FizzCode.DbTools.Common.Logger;
+using FizzCode.DbTools.DataDefinition;
+using FizzCode.DbTools.Factory.Interfaces;
+using FizzCode.DbTools.Interfaces;
+using FizzCode.LightWeight.AdoNet;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace FizzCode.DbTools.TestBase;
+public class SqlExecuterTestAdapter : ConfigurationBase
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.Common.Logger;
-    using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.Factory.Interfaces;
-    using FizzCode.DbTools.Interfaces;
-    using FizzCode.LightWeight.AdoNet;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    private readonly Dictionary<string, (ISqlStatementExecuter SqlExecuter, SqlEngineVersion Version)> sqlExecutersAndDialects = new();
 
-    public class SqlExecuterTestAdapter : ConfigurationBase
+    private readonly Dictionary<SqlConnectionKeyAndDatabaseDefinitionTypeAsKey, DatabaseDefinition> _dds = new();
+
+    public override string ConfigurationFileName => "testconfig";
+
+    private readonly ISqlExecuterFactory _sqlExecuterFactory;
+    private readonly IFactoryContainer _root;
+
+    public SqlExecuterTestAdapter()
     {
-        private readonly Dictionary<string, (ISqlStatementExecuter SqlExecuter, SqlEngineVersion Version)> sqlExecutersAndDialects = new();
+        _root = new TestFactoryContainer();
+        _sqlExecuterFactory = _root.Get<ISqlExecuterFactory>();
+}
 
-        private readonly Dictionary<SqlConnectionKeyAndDatabaseDefinitionTypeAsKey, DatabaseDefinition> _dds = new();
+    public void Check(SqlEngineVersion version)
+    {
+        TestHelper.CheckProvider(version, ConnectionStrings.All);
 
-        public override string ConfigurationFileName => "testconfig";
-
-        private readonly ISqlExecuterFactory _sqlExecuterFactory;
-        private readonly IFactoryContainer _root;
-
-        public SqlExecuterTestAdapter()
-        {
-            _root = new TestFactoryContainer();
-            _sqlExecuterFactory = _root.Get<ISqlExecuterFactory>();
+        if (!TestHelper.ShouldRunIntegrationTest(version))
+            Assert.Inconclusive("Test is skipped, integration tests are not running.");
     }
 
-        public void Check(SqlEngineVersion version)
-        {
-            TestHelper.CheckProvider(version, ConnectionStrings.All);
+    public NamedConnectionString Initialize(string connectionStringKey, params DatabaseDefinition[] dds)
+    {
+        return Initialize(connectionStringKey, false, dds);
+    }
 
-            if (!TestHelper.ShouldRunIntegrationTest(version))
-                Assert.Inconclusive("Test is skipped, integration tests are not running.");
+    public NamedConnectionString InitializeAndCreate(string connectionStringKey, params DatabaseDefinition[] dds)
+    {
+        return Initialize(connectionStringKey, true, dds);
+    }
+
+    private NamedConnectionString Initialize(string connectionStringKey, bool shouldCreate, params DatabaseDefinition[] dds)
+    {
+        var connectionString = ConnectionStrings[connectionStringKey];
+
+        if (connectionString == null)
+            throw new InvalidOperationException($"No connection string is configured for {connectionStringKey}");
+
+        var sqlEngineVersion = connectionString.GetSqlEngineVersion();
+
+        foreach(var dd in dds)
+        {
+            var key = new SqlConnectionKeyAndDatabaseDefinitionTypeAsKey(connectionStringKey, dd);
+            if (!_dds.ContainsKey(key))
+                _dds.Add(key, dd);
         }
 
-        public NamedConnectionString Initialize(string connectionStringKey, params DatabaseDefinition[] dds)
+        if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
         {
-            return Initialize(connectionStringKey, false, dds);
-        }
+            //var generator = _sqlGeneratorFactory.CreateSqlGenerator(sqlEngineVersion, GetContext(sqlEngineVersion));
+            var executer = _sqlExecuterFactory.CreateSqlExecuter(connectionString);
+            sqlExecutersAndDialects.Add(connectionStringKey, (executer, sqlEngineVersion));
 
-        public NamedConnectionString InitializeAndCreate(string connectionStringKey, params DatabaseDefinition[] dds)
-        {
-            return Initialize(connectionStringKey, true, dds);
-        }
-
-        private NamedConnectionString Initialize(string connectionStringKey, bool shouldCreate, params DatabaseDefinition[] dds)
-        {
-            var connectionString = ConnectionStrings[connectionStringKey];
-
-            if (connectionString == null)
-                throw new InvalidOperationException($"No connection string is configured for {connectionStringKey}");
-
-            var sqlEngineVersion = connectionString.GetSqlEngineVersion();
-
-            foreach(var dd in dds)
+            if (shouldCreate && TestHelper.ShouldRunIntegrationTest(sqlEngineVersion))
             {
-                var key = new SqlConnectionKeyAndDatabaseDefinitionTypeAsKey(connectionStringKey, dd);
-                if (!_dds.ContainsKey(key))
-                    _dds.Add(key, dd);
+                executer.InitializeDatabase(false, dds);
             }
+        }
 
-            if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))
+        return connectionString;
+    }
+
+    public void Cleanup()
+    {
+        var logger = _root.Get<Logger>();
+        logger.Log(LogSeverity.Debug, "Cleanup is called.", "SqlExecuterTestAdapter");
+
+        var exceptions = new List<Exception>();
+        foreach (var sqlExecuterAndDialect in sqlExecutersAndDialects.Values)
+        {
+            logger.Log(LogSeverity.Debug, $"Cleanup is called for {sqlExecuterAndDialect.Version}", "SqlExecuterTestAdapter");
+            try
             {
-                //var generator = _sqlGeneratorFactory.CreateSqlGenerator(sqlEngineVersion, GetContext(sqlEngineVersion));
-                var executer = _sqlExecuterFactory.CreateSqlExecuter(connectionString);
-                sqlExecutersAndDialects.Add(connectionStringKey, (executer, sqlEngineVersion));
-
-                if (shouldCreate && TestHelper.ShouldRunIntegrationTest(sqlEngineVersion))
+                var shouldDrop = TestHelper.ShouldRunIntegrationTest(sqlExecuterAndDialect.Version);
+                if (shouldDrop)
                 {
-                    executer.InitializeDatabase(false, dds);
+                    var dds = _dds.Where(e => e.Key == new SqlConnectionKeyAndDatabaseDefinitionTypeAsKey(sqlExecuterAndDialect.Version.UniqueName, e.Value)).Select(e => e.Value).ToArray();
+                    sqlExecuterAndDialect.SqlExecuter.CleanupDatabase(true, dds);
                 }
             }
-
-            return connectionString;
-        }
-
-        public void Cleanup()
-        {
-            var logger = _root.Get<Logger>();
-            logger.Log(LogSeverity.Debug, "Cleanup is called.", "SqlExecuterTestAdapter");
-
-            var exceptions = new List<Exception>();
-            foreach (var sqlExecuterAndDialect in sqlExecutersAndDialects.Values)
+            catch (Exception ex)
             {
-                logger.Log(LogSeverity.Debug, $"Cleanup is called for {sqlExecuterAndDialect.Version}", "SqlExecuterTestAdapter");
-                try
-                {
-                    var shouldDrop = TestHelper.ShouldRunIntegrationTest(sqlExecuterAndDialect.Version);
-                    if (shouldDrop)
-                    {
-                        var dds = _dds.Where(e => e.Key == new SqlConnectionKeyAndDatabaseDefinitionTypeAsKey(sqlExecuterAndDialect.Version.UniqueName, e.Value)).Select(e => e.Value).ToArray();
-                        sqlExecuterAndDialect.SqlExecuter.CleanupDatabase(true, dds);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    exceptions.Add(ex);
-                }
+                exceptions.Add(ex);
             }
-
-            if (exceptions.Count > 0)
-                throw new AggregateException(exceptions);
         }
 
-        public string ExecuteNonQuery(string connectionStringKey, string query)
-        {
-            var connectionString = Initialize(connectionStringKey);
+        if (exceptions.Count > 0)
+            throw new AggregateException(exceptions);
+    }
 
-            var sqlEngineVersion = connectionString.GetSqlEngineVersion();
+    public string ExecuteNonQuery(string connectionStringKey, string query)
+    {
+        var connectionString = Initialize(connectionStringKey);
 
-            if (!TestHelper.ShouldRunIntegrationTest(sqlEngineVersion))
-                return "Query execution is skipped, integration tests are not running.";
+        var sqlEngineVersion = connectionString.GetSqlEngineVersion();
 
-            sqlExecutersAndDialects[connectionStringKey].SqlExecuter.ExecuteNonQuery(query);
-            return null;
-        }
+        if (!TestHelper.ShouldRunIntegrationTest(sqlEngineVersion))
+            return "Query execution is skipped, integration tests are not running.";
 
-        public string ExecuteWithPrepareNonQuery(string connectionStringKey, string query)
-        {
-            sqlExecutersAndDialects[connectionStringKey].SqlExecuter.ExecuteNonQuery(PrepareSql(connectionStringKey, query));
-            return null;
-        }
+        sqlExecutersAndDialects[connectionStringKey].SqlExecuter.ExecuteNonQuery(query);
+        return null;
+    }
 
-        public RowSet ExecuteWithPrepareQuery(string connectionStringKey, string query)
-        {
-            return sqlExecutersAndDialects[connectionStringKey].SqlExecuter.ExecuteQuery(PrepareSql(connectionStringKey, query));
-        }
+    public string ExecuteWithPrepareNonQuery(string connectionStringKey, string query)
+    {
+        sqlExecutersAndDialects[connectionStringKey].SqlExecuter.ExecuteNonQuery(PrepareSql(connectionStringKey, query));
+        return null;
+    }
 
-        public string PrepareSql(string connectionStringKey, string query)
-        {
-            var version = sqlExecutersAndDialects[connectionStringKey].Version;
+    public RowSet ExecuteWithPrepareQuery(string connectionStringKey, string query)
+    {
+        return sqlExecutersAndDialects[connectionStringKey].SqlExecuter.ExecuteQuery(PrepareSql(connectionStringKey, query));
+    }
 
-            var preparedQuery = query;
-            if (version is OracleVersion)
-                preparedQuery = query.Replace('[', '"').Replace(']', '"');
+    public string PrepareSql(string connectionStringKey, string query)
+    {
+        var version = sqlExecutersAndDialects[connectionStringKey].Version;
 
-            return preparedQuery;
-        }
+        var preparedQuery = query;
+        if (version is OracleVersion)
+            preparedQuery = query.Replace('[', '"').Replace(']', '"');
 
-        public ISqlStatementExecuter GetExecuter(string connectionStringKey)
-        {
-            return sqlExecutersAndDialects[connectionStringKey].SqlExecuter;
-        }
+        return preparedQuery;
+    }
+
+    public ISqlStatementExecuter GetExecuter(string connectionStringKey)
+    {
+        return sqlExecutersAndDialects[connectionStringKey].SqlExecuter;
     }
 }

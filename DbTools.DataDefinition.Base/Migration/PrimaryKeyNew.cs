@@ -1,10 +1,9 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+
+public class PrimaryKeyNew : PrimaryKeyMigration
 {
-    public class PrimaryKeyNew : PrimaryKeyMigration
+    public override string ToString()
     {
-        public override string ToString()
-        {
-            return "PN: " + base.ToString();
-        }
+        return "PN: " + base.ToString();
     }
 }

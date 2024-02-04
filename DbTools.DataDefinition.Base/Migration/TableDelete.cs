@@ -1,10 +1,9 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+
+public class TableDelete : TableMigration
 {
-    public class TableDelete : TableMigration
+    public override string ToString()
     {
-        public override string ToString()
-        {
-            return "TD: " + base.ToString();
-        }
+        return "TD: " + base.ToString();
     }
 }

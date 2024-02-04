@@ -1,15 +1,14 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
-{
-    public class ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn : ForeignKeyRegistrationBase
-    {
-        public SqlColumn SingleFkColumn { get; set; }
-        public string SingleReferredColumnName { get; set; }
+﻿namespace FizzCode.DbTools.DataDefinition.Base;
 
-        public ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(SqlColumn singleFkColumn, SchemaAndTableName referredTableName, string singleReferredColumnName, string fkName)
-            : base(singleFkColumn.Table, referredTableName, fkName)
-        {
-            SingleFkColumn = singleFkColumn;
-            SingleReferredColumnName = singleReferredColumnName;
-        }
+public class ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn : ForeignKeyRegistrationBase
+{
+    public SqlColumn SingleFkColumn { get; set; }
+    public string SingleReferredColumnName { get; set; }
+
+    public ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(SqlColumn singleFkColumn, SchemaAndTableName referredTableName, string singleReferredColumnName, string fkName)
+        : base(singleFkColumn.Table, referredTableName, fkName)
+    {
+        SingleFkColumn = singleFkColumn;
+        SingleReferredColumnName = singleReferredColumnName;
     }
 }

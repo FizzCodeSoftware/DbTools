@@ -1,58 +1,57 @@
-﻿namespace FizzCode.DbTools.DataDefinitionReader
+﻿using System.Linq;
+using FizzCode.DbTools.Common;
+using FizzCode.DbTools.DataDefinition;
+using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+using FizzCode.DbTools.SqlExecuter;
+
+namespace FizzCode.DbTools.DataDefinitionReader;
+public class OracleIndexReader12c : OracleDataDefinitionElementReader
 {
-    using System.Linq;
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
-    using FizzCode.DbTools.SqlExecuter;
+    private readonly RowSet _queryResult;
 
-    public class OracleIndexReader12c : OracleDataDefinitionElementReader
+    public OracleIndexReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
+        : base(executer, schemaNames)
     {
-        private readonly RowSet _queryResult;
+        var sqlStatement = GetStatement();
+        AddSchemaNamesFilter(ref sqlStatement, "ind.table_owner");
+        _queryResult = Executer.ExecuteQuery(sqlStatement);
+    }
 
-        public OracleIndexReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
-            : base(executer, schemaNames)
+    public void GetIndexes(DatabaseDefinition dd)
+    {
+        foreach (var table in dd.GetTables())
+            GetIndex(table);
+    }
+
+    public void GetIndex(SqlTable table)
+    {
+        Index index = null;
+        var rows = _queryResult
+            .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table, "TABLE_OWNER", "TABLE_NAME")).OrderBy(row => row.GetAs<string>("INDEX_NAME")).ThenBy(row => row.GetAs<decimal>("COLUMN_POSITION"))
+            .ToList();
+
+        foreach (var row in rows)
         {
-            var sqlStatement = GetStatement();
-            AddSchemaNamesFilter(ref sqlStatement, "ind.table_owner");
-            _queryResult = Executer.ExecuteQuery(sqlStatement);
-        }
-
-        public void GetIndexes(DatabaseDefinition dd)
-        {
-            foreach (var table in dd.GetTables())
-                GetIndex(table);
-        }
-
-        public void GetIndex(SqlTable table)
-        {
-            Index index = null;
-            var rows = _queryResult
-                .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table, "TABLE_OWNER", "TABLE_NAME")).OrderBy(row => row.GetAs<string>("INDEX_NAME")).ThenBy(row => row.GetAs<decimal>("COLUMN_POSITION"))
-                .ToList();
-
-            foreach (var row in rows)
+            if (row.GetAs<decimal>("COLUMN_POSITION") == 1)
             {
-                if (row.GetAs<decimal>("COLUMN_POSITION") == 1)
+                index = new Index(table, row.GetAs<string>("INDEX_NAME"))
                 {
-                    index = new Index(table, row.GetAs<string>("INDEX_NAME"))
-                    {
-                        Unique = row.GetAs<string>("UNIQUENESS") == "UNIQUE"
-                    };
+                    Unique = row.GetAs<string>("UNIQUENESS") == "UNIQUE"
+                };
 
-                    table.Properties.Add(index);
-                }
-
-                var column = table.Columns[row.GetAs<string>("COLUMN_NAME")];
-
-                index.SqlColumns.Add(new ColumnAndOrder(column, AscDesc.Asc));
+                table.Properties.Add(index);
             }
-        }
 
-        private static string GetStatement()
-        {
-            return @"
+            var column = table.Columns[row.GetAs<string>("COLUMN_NAME")];
+
+            index.SqlColumns.Add(new ColumnAndOrder(column, AscDesc.Asc));
+        }
+    }
+
+    private static string GetStatement()
+    {
+        return @"
 SELECT
 	ind.table_owner,
 	ind.table_name,
@@ -70,6 +69,5 @@ INNER JOIN dba_users u ON u.username = ind.table_owner
 LEFT JOIN all_constraints cons ON cons.owner = ind.owner AND cons.table_name = ind.table_name AND cons.index_name = ind.index_name AND (cons.constraint_type = 'P' OR cons.constraint_type = 'U')
 
 WHERE cons.constraint_type IS NULL";
-        }
     }
 }

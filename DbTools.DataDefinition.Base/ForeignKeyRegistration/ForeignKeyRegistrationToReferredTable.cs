@@ -1,15 +1,11 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
+﻿namespace FizzCode.DbTools.DataDefinition.Base;
+public class ForeignKeyRegistrationToReferredTable : ForeignKeyRegistrationNonExsistingColumn
 {
-    using System.Collections.Generic;
+    public List<ColumnReference> Map { get; set; }
 
-    public class ForeignKeyRegistrationToReferredTable : ForeignKeyRegistrationNonExsistingColumn
+    public ForeignKeyRegistrationToReferredTable(SqlTable table, SchemaAndTableName referredTableName, bool isNullable, string fkName, List<ColumnReference> map)
+        : base(table, referredTableName, isNullable, fkName)
     {
-        public List<ColumnReference> Map { get; set; }
-
-        public ForeignKeyRegistrationToReferredTable(SqlTable table, SchemaAndTableName referredTableName, bool isNullable, string fkName, List<ColumnReference> map)
-            : base(table, referredTableName, isNullable, fkName)
-        {
-            Map = map;
-        }
+        Map = map;
     }
 }

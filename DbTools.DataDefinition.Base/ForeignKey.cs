@@ -1,47 +1,44 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
+﻿using System.Text;
+
+namespace FizzCode.DbTools.DataDefinition.Base;
+public class ForeignKey : SqlTableOrViewPropertyBase<SqlTable>
 {
-    using System.Collections.Generic;
-    using System.Text;
+    public string Name { get; set; }
 
-    public class ForeignKey : SqlTableOrViewPropertyBase<SqlTable>
+    public List<ForeignKeyColumnMap> ForeignKeyColumns { get; set; } = new List<ForeignKeyColumnMap>();
+
+    public SqlTable ReferredTable { get; }
+
+    public SqlTable SqlTable { get => SqlTableOrView; }
+
+    public ForeignKey(SqlTable table, SqlTable referredTable, string name)
+        : base(table)
     {
-        public string Name { get; set; }
+        Name = name;
+        ReferredTable = referredTable;
+    }
 
-        public List<ForeignKeyColumnMap> ForeignKeyColumns { get; set; } = new List<ForeignKeyColumnMap>();
+    public override string ToString()
+    {
+        var sb = new StringBuilder();
 
-        public SqlTable ReferredTable { get; }
-
-        public SqlTable SqlTable { get => SqlTableOrView; }
-
-        public ForeignKey(SqlTable table, SqlTable referredTable, string name)
-            : base(table)
+        var isFirst = true;
+        foreach (var fkColumn in ForeignKeyColumns)
         {
-            Name = name;
-            ReferredTable = referredTable;
+            if (!isFirst)
+                sb.Append(", ");
+            else
+                isFirst = false;
+
+            sb.Append(fkColumn.ForeignKeyColumn.Table.SchemaAndTableName)
+                .Append('.')
+                .Append(fkColumn.ForeignKeyColumn.Name)
+                .Append(" -> ")
+                .Append(fkColumn.ReferredColumn.Table.SchemaAndTableName)
+                .Append('.')
+                .Append(fkColumn.ReferredColumn.Name);
         }
 
-        public override string ToString()
-        {
-            var sb = new StringBuilder();
-
-            var isFirst = true;
-            foreach (var fkColumn in ForeignKeyColumns)
-            {
-                if (!isFirst)
-                    sb.Append(", ");
-                else
-                    isFirst = false;
-
-                sb.Append(fkColumn.ForeignKeyColumn.Table.SchemaAndTableName)
-                    .Append('.')
-                    .Append(fkColumn.ForeignKeyColumn.Name)
-                    .Append(" -> ")
-                    .Append(fkColumn.ReferredColumn.Table.SchemaAndTableName)
-                    .Append('.')
-                    .Append(fkColumn.ReferredColumn.Name);
-            }
-
-            return sb.ToString();
-        }
+        return sb.ToString();
     }
 }

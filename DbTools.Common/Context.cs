@@ -1,7 +1,6 @@
-﻿namespace FizzCode.DbTools.Common
+﻿namespace FizzCode.DbTools.Common;
+
+public class Context
 {
-    public class Context
-    {
-        public Settings Settings { get; set; }
-    }
+    public Settings Settings { get; set; }
 }

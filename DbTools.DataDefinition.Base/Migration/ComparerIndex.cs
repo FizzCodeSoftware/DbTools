@@ -1,60 +1,55 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+public class ComparerIndex : ComparerIndexBase<Index, IndexMigration>
 {
-    using System.Collections.Generic;
-    using FizzCode.DbTools.DataDefinition.Base;
-
-    public class ComparerIndex : ComparerIndexBase<Index, IndexMigration>
+    public static new List<IndexMigration> CompareIndexes(SqlTable tableOriginal, SqlTable tableNew)
     {
-        public static new List<IndexMigration> CompareIndexes(SqlTable tableOriginal, SqlTable tableNew)
-        {
-            var comparer = new ComparerIndex();
-            var changes = ((ComparerIndexBase<Index, IndexMigration>)comparer).CompareIndexes(tableOriginal, tableNew);
-            return changes;
-        }
+        var comparer = new ComparerIndex();
+        var changes = ((ComparerIndexBase<Index, IndexMigration>)comparer).CompareIndexes(tableOriginal, tableNew);
+        return changes;
+    }
 
-        protected override bool CompareIndexColumns(Index indexOriginal, Index indexNew)
+    protected override bool CompareIndexColumns(Index indexOriginal, Index indexNew)
+    {
+        if (!base.CompareIndexColumns(indexOriginal, indexNew))
+            return false;
+
+        if (indexOriginal.Includes.Count != indexNew.Includes.Count)
+            return false;
+
+        for (var i = 0; i < indexOriginal.Includes.Count; i++)
         {
-            if (!base.CompareIndexColumns(indexOriginal, indexNew))
+            if (indexOriginal.Includes[i].Name != indexNew.Includes[i].Name)
                 return false;
 
-            if (indexOriginal.Includes.Count != indexNew.Includes.Count)
+            if (Comparer.ColumnChanged(indexOriginal.Includes[i], indexNew.Includes[i]))
                 return false;
-
-            for (var i = 0; i < indexOriginal.Includes.Count; i++)
-            {
-                if (indexOriginal.Includes[i].Name != indexNew.Includes[i].Name)
-                    return false;
-
-                if (Comparer.ColumnChanged(indexOriginal.Includes[i], indexNew.Includes[i]))
-                    return false;
-            }
-
-            return true;
         }
 
-        public override IndexMigration CreateDelete(Index originalIndex)
+        return true;
+    }
+
+    public override IndexMigration CreateDelete(Index originalIndex)
+    {
+        return new IndexDelete()
         {
-            return new IndexDelete()
-            {
-                Index = originalIndex
-            };
-        }
+            Index = originalIndex
+        };
+    }
 
-        public override IndexMigration CreateNew(Index originalIndex)
+    public override IndexMigration CreateNew(Index originalIndex)
+    {
+        return new IndexNew()
         {
-            return new IndexNew()
-            {
-                Index = originalIndex
-            };
-        }
+            Index = originalIndex
+        };
+    }
 
-        public override IndexMigration CreateChange(Index originalIndex, Index newIndex)
+    public override IndexMigration CreateChange(Index originalIndex, Index newIndex)
+    {
+        return new IndexChange()
         {
-            return new IndexChange()
-            {
-                Index = originalIndex,
-                NewIndex = newIndex
-            };
-        }
+            Index = originalIndex,
+            NewIndex = newIndex
+        };
     }
 }

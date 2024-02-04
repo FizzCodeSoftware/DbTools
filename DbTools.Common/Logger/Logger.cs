@@ -1,30 +1,28 @@
-﻿namespace FizzCode.DbTools.Common.Logger
+﻿using System;
+
+namespace FizzCode.DbTools.Common.Logger;
+public class Logger
 {
-    using System;
+    public EventHandler<LogEventArgs> LogEvent { get; set; }
 
-    public class Logger
+    public void Log(LogSeverity severity, string text, params object[] args)
     {
-        public EventHandler<LogEventArgs> LogEvent { get; set; }
-
-        public void Log(LogSeverity severity, string text, params object[] args)
+        LogEvent?.Invoke(this, new LogEventArgs()
         {
-            LogEvent?.Invoke(this, new LogEventArgs()
-            {
-                Text = text,
-                Severity = severity,
-                Arguments = args,
-            });
-        }
+            Text = text,
+            Severity = severity,
+            Arguments = args,
+        });
+    }
 
-        public void LogOps(LogSeverity severity, string text, params object[] args)
+    public void LogOps(LogSeverity severity, string text, params object[] args)
+    {
+        LogEvent?.Invoke(this, new LogEventArgs()
         {
-            LogEvent?.Invoke(this, new LogEventArgs()
-            {
-                Text = text,
-                Severity = severity,
-                Arguments = args,
-                ForOps = true,
-            });
-        }
+            Text = text,
+            Severity = severity,
+            Arguments = args,
+            ForOps = true,
+        });
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Interfaces
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Interfaces;
+
+public interface ITypeMapperFactory
 {
-    public interface ITypeMapperFactory
-    {
-        ITypeMapper GetTypeMapper(SqlEngineVersion version);
-    }
+    ITypeMapper GetTypeMapper(SqlEngineVersion version);
 }

@@ -1,29 +1,27 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Factory
+﻿using FizzCode.DbTools.Factory.Interfaces;
+using FizzCode.DbTools.Interfaces;
+using FizzCode.DbTools.SqlExecuter;
+using FizzCode.LightWeight.AdoNet;
+
+namespace FizzCode.DbTools.DataDefinition.Factory;
+public class SqlMigratorFactory : ISqlMigratorFactory
 {
-    using FizzCode.DbTools.Factory.Interfaces;
-    using FizzCode.DbTools.Interfaces;
-    using FizzCode.DbTools.SqlExecuter;
-    using FizzCode.LightWeight.AdoNet;
+    private readonly ISqlMigrationGeneratorFactory _sqlMigrationGeneratorFactory;
+    private readonly ISqlExecuterFactory _sqlExecuterFactory;
 
-    public class SqlMigratorFactory : ISqlMigratorFactory
+    public SqlMigratorFactory(ISqlMigrationGeneratorFactory sqlMigrationGeneratorFactory, ISqlExecuterFactory sqlExecuterFactory)
     {
-        private readonly ISqlMigrationGeneratorFactory _sqlMigrationGeneratorFactory;
-        private readonly ISqlExecuterFactory _sqlExecuterFactory;
+        _sqlMigrationGeneratorFactory = sqlMigrationGeneratorFactory;
+        _sqlExecuterFactory = sqlExecuterFactory;
+    }
 
-        public SqlMigratorFactory(ISqlMigrationGeneratorFactory sqlMigrationGeneratorFactory, ISqlExecuterFactory sqlExecuterFactory)
-        {
-            _sqlMigrationGeneratorFactory = sqlMigrationGeneratorFactory;
-            _sqlExecuterFactory = sqlExecuterFactory;
-        }
+    public IDatabaseMigrator FromConnectionStringSettings(NamedConnectionString connectionString)
+    {
+        var sqlEngineVersion = connectionString.GetSqlEngineVersion();
 
-        public IDatabaseMigrator FromConnectionStringSettings(NamedConnectionString connectionString)
-        {
-            var sqlEngineVersion = connectionString.GetSqlEngineVersion();
+        var migrationGenerator = _sqlMigrationGeneratorFactory.CreateMigrationGenerator(sqlEngineVersion);
+        var executer = _sqlExecuterFactory.CreateSqlExecuter(connectionString);
 
-            var migrationGenerator = _sqlMigrationGeneratorFactory.CreateMigrationGenerator(sqlEngineVersion);
-            var executer = _sqlExecuterFactory.CreateSqlExecuter(connectionString);
-
-            return new DatabaseMigrator(executer, migrationGenerator);
-        }
+        return new DatabaseMigrator(executer, migrationGenerator);
     }
 }

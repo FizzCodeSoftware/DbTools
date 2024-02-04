@@ -1,13 +1,11 @@
-﻿namespace FizzCode.DbTools.Common
+﻿using System.Collections.Generic;
+
+namespace FizzCode.DbTools.Common;
+public class RowSet : List<Row>
 {
-    using System.Collections.Generic;
+    public RowSet()
+    { }
 
-    public class RowSet : List<Row>
-    {
-        public RowSet()
-        { }
-
-        public RowSet(IEnumerable<Row> collection) : base(collection)
-        { }
-    }
+    public RowSet(IEnumerable<Row> collection) : base(collection)
+    { }
 }

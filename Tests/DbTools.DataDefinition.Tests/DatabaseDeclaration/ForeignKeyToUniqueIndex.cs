@@ -1,9 +1,7 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Tests
-{
-    using FizzCode.DbTools.TestBase;
+﻿using FizzCode.DbTools.TestBase;
 
-    // TODO
-    public class ForeignKeyToUniqueIndex : TestDatabaseDeclaration
-    {
-    }
+namespace FizzCode.DbTools.DataDefinition.Tests;
+// TODO
+public class ForeignKeyToUniqueIndex : TestDatabaseDeclaration
+{
 }

@@ -1,6 +1,5 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+
+public class ForeignKeyNew : ForeignKeyMigration
 {
-    public class ForeignKeyNew : ForeignKeyMigration
-    {
-    }
 }

@@ -1,12 +1,8 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+public abstract class ColumnNewOrDelete : ColumnMigration
 {
-    using FizzCode.DbTools.DataDefinition.Base;
+    public string Name => SqlColumn.Name;
+    public SqlType Type => (SqlType)SqlColumn.Type;
 
-    public abstract class ColumnNewOrDelete : ColumnMigration
-    {
-        public string Name => SqlColumn.Name;
-        public SqlType Type => (SqlType)SqlColumn.Type;
-
-        public SqlTable Table => SqlColumn.Table;
-    }
+    public SqlTable Table => SqlColumn.Table;
 }

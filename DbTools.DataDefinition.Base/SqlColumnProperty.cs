@@ -1,12 +1,11 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
-{
-    public abstract class SqlColumnProperty
-    {
-        public SqlColumnBase SqlColumn { get; }
+﻿namespace FizzCode.DbTools.DataDefinition.Base;
 
-        protected SqlColumnProperty(SqlColumnBase sqlColumn)
-        {
-            SqlColumn = sqlColumn;
-        }
+public abstract class SqlColumnProperty
+{
+    public SqlColumnBase SqlColumn { get; }
+
+    protected SqlColumnProperty(SqlColumnBase sqlColumn)
+    {
+        SqlColumn = sqlColumn;
     }
 }

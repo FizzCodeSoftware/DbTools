@@ -1,89 +1,87 @@
-﻿namespace FizzCode.DbTools.QueryBuilder
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using FizzCode.DbTools.DataDefinition.Base;
+
+namespace FizzCode.DbTools.QueryBuilder;
+public class Expression : IEnumerable<object>
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text;
-    using FizzCode.DbTools.DataDefinition.Base;
-
-    public class Expression : IEnumerable<object>
+    public List<object> Values { get; } = new List<object>();
+    public Expression(params object[] expressionParts)
     {
-        public List<object> Values { get; } = new List<object>();
-        public Expression(params object[] expressionParts)
-        {
-            Values = expressionParts.ToList();
-        }
+        Values = expressionParts.ToList();
+    }
 
-        /*public static implicit operator Expression(object[] expressionParts)
-        {
-            var expression = new Expression(expressionParts);
-            return expression;
-        }*/
+    /*public static implicit operator Expression(object[] expressionParts)
+    {
+        var expression = new Expression(expressionParts);
+        return expression;
+    }*/
 
-        public IEnumerator<object> GetEnumerator()
-        {
-            return Values.GetEnumerator();
-        }
+    public IEnumerator<object> GetEnumerator()
+    {
+        return Values.GetEnumerator();
+    }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return Values.GetEnumerator();
-        }
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return Values.GetEnumerator();
+    }
 
-        public static string GetExpression(IEnumerable<object> expressionParts, IEnumerable<QueryElement> queryElements, QueryElement mainQueryElement = null)
-        {
-            var sb = new StringBuilder();
-            string previous = null;
+    public static string GetExpression(IEnumerable<object> expressionParts, IEnumerable<QueryElement> queryElements, QueryElement mainQueryElement = null)
+    {
+        var sb = new StringBuilder();
+        string previous = null;
 
-            foreach (var obj in expressionParts)
+        foreach (var obj in expressionParts)
+        {
+            if (obj is Expression expression)
             {
-                if (obj is Expression expression)
+                sb.AppendSpace(GetExpression(expression.Values, queryElements, mainQueryElement));
+            }
+            else if (obj is SqlColumn sqlColumn)
+            {
+                if (previous?.EndsWith('.') != true)
                 {
-                    sb.AppendSpace(GetExpression(expression.Values, queryElements, mainQueryElement));
-                }
-                else if (obj is SqlColumn sqlColumn)
-                {
-                    if (previous?.EndsWith('.') != true)
+                    var table = sqlColumn.Table;
+
+                    var alias = "";
+
+                    alias = table.GetAlias();
+
+                    if (alias == null)
                     {
-                        var table = sqlColumn.Table;
-
-                        var alias = "";
-
-                        alias = table.GetAlias();
-
-                        if (alias == null)
-                        {
-                            alias = mainQueryElement?.Table.SchemaAndTableName == table.SchemaAndTableName
-                            ? mainQueryElement.Table.GetAlias()
-                            : queryElements.Single(qe => qe.Table.SchemaAndTableName == table.SchemaAndTableName).Table.GetAlias();
-                        }
-
-                        sb.AppendSpace(alias);
-                        sb.Append('.');
+                        alias = mainQueryElement?.Table.SchemaAndTableName == table.SchemaAndTableName
+                        ? mainQueryElement.Table.GetAlias()
+                        : queryElements.Single(qe => qe.Table.SchemaAndTableName == table.SchemaAndTableName).Table.GetAlias();
                     }
 
-                    sb.Append(((QueryColumn)sqlColumn).Value);
-                    previous = null;
+                    sb.AppendSpace(alias);
+                    sb.Append('.');
                 }
-                else if (obj is string @string)
-                {
-                    sb.AppendSpace(@string);
-                    previous = @string;
-                }
-                else if (obj is int @int)
-                {
-                    sb.AppendSpace(@int.ToString(CultureInfo.InvariantCulture));
-                    // previous = @int;
-                }
-                else
-                {
-                    throw new ArgumentException($"Expression part type is not handled. Type: {obj.GetType()}, Value: {obj}.");
-                }
-            }
 
-            return sb.ToString();
+                sb.Append(((QueryColumn)sqlColumn).Value);
+                previous = null;
+            }
+            else if (obj is string @string)
+            {
+                sb.AppendSpace(@string);
+                previous = @string;
+            }
+            else if (obj is int @int)
+            {
+                sb.AppendSpace(@int.ToString(CultureInfo.InvariantCulture));
+                // previous = @int;
+            }
+            else
+            {
+                throw new ArgumentException($"Expression part type is not handled. Type: {obj.GetType()}, Value: {obj}.");
+            }
         }
+
+        return sb.ToString();
     }
 }

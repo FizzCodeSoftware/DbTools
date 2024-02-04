@@ -1,13 +1,12 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
-{
-    public class ForeignKeyRegistrationToTableWithUniqueKey : ForeignKeyRegistrationNonExsistingColumn
-    {
-        public string NamePrefix { get; set; }
+﻿namespace FizzCode.DbTools.DataDefinition.Base;
 
-        public ForeignKeyRegistrationToTableWithUniqueKey(SqlTable table, SchemaAndTableName referredTableName, bool isNullable, string namePrefix, string fkName)
-            : base(table, referredTableName, isNullable, fkName)
-        {
-            NamePrefix = namePrefix;
-        }
+public class ForeignKeyRegistrationToTableWithUniqueKey : ForeignKeyRegistrationNonExsistingColumn
+{
+    public string NamePrefix { get; set; }
+
+    public ForeignKeyRegistrationToTableWithUniqueKey(SqlTable table, SchemaAndTableName referredTableName, bool isNullable, string namePrefix, string fkName)
+        : base(table, referredTableName, isNullable, fkName)
+    {
+        NamePrefix = namePrefix;
     }
 }

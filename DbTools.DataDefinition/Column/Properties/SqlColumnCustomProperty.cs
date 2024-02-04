@@ -1,12 +1,10 @@
-﻿namespace FizzCode.DbTools.DataDefinition
-{
-    using FizzCode.DbTools.DataDefinition.Base;
+﻿using FizzCode.DbTools.DataDefinition.Base;
 
-    public class SqlColumnCustomProperty : SqlColumnProperty
+namespace FizzCode.DbTools.DataDefinition;
+public class SqlColumnCustomProperty : SqlColumnProperty
+{
+    public SqlColumnCustomProperty(SqlColumn sqlColumn)
+        : base(sqlColumn)
     {
-        public SqlColumnCustomProperty(SqlColumn sqlColumn)
-            : base(sqlColumn)
-        {
-        }
     }
 }

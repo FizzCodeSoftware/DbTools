@@ -1,10 +1,9 @@
-﻿namespace FizzCode.DbTools.QueryBuilder
+﻿namespace FizzCode.DbTools.QueryBuilder;
+
+public enum JoinType
 {
-    public enum JoinType
-    {
-        Left,
-        Inner,
-        Right,
-        Outer
-    }
+    Left,
+    Inner,
+    Right,
+    Outer
 }

@@ -1,31 +1,28 @@
-﻿// Ensure no in-assembly parallel execution of tests (“IAP”) is happening
-[assembly: Microsoft.VisualStudio.TestTools.UnitTesting.Parallelize(Workers = 1, Scope = Microsoft.VisualStudio.TestTools.UnitTesting.ExecutionScope.ClassLevel)]
+﻿using FizzCode.DbTools.SqlExecuter;
+using FizzCode.DbTools.TestBase;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FizzCode.DbTools.DataDefinition.View.Tests
+// Ensure no in-assembly parallel execution of tests (“IAP”) is happening
+[assembly: Parallelize(Workers = 1, Scope = ExecutionScope.ClassLevel)]
+namespace FizzCode.DbTools.DataDefinition.View.Tests;
+[TestClass]
+public class ViewTestsBase
 {
-    using FizzCode.DbTools.SqlExecuter;
-    using FizzCode.DbTools.TestBase;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    protected static SqlExecuterTestAdapter SqlExecuterTestAdapter { get; } = new();
 
-    [TestClass]
-    public class ViewTestsBase
+    [AssemblyCleanup]
+    public static void Cleanup()
     {
-        protected static SqlExecuterTestAdapter SqlExecuterTestAdapter { get; } = new();
+        SqlExecuterTestAdapter.Cleanup();
+    }
 
-        [AssemblyCleanup]
-        public static void Cleanup()
-        {
-            SqlExecuterTestAdapter.Cleanup();
-        }
+    protected static void Init(SqlEngineVersion version, DatabaseDefinition dd)
+    {
+        SqlExecuterTestAdapter.Check(version);
+        SqlExecuterTestAdapter.Initialize(version.UniqueName, dd);
 
-        protected static void Init(SqlEngineVersion version, DatabaseDefinition dd)
-        {
-            SqlExecuterTestAdapter.Check(version);
-            SqlExecuterTestAdapter.Initialize(version.UniqueName, dd);
+        var databaseCreator = new DatabaseCreator(dd, SqlExecuterTestAdapter.GetExecuter(version.UniqueName));
 
-            var databaseCreator = new DatabaseCreator(dd, SqlExecuterTestAdapter.GetExecuter(version.UniqueName));
-
-            databaseCreator.ReCreateDatabase(true);
-        }
+        databaseCreator.ReCreateDatabase(true);
     }
 }

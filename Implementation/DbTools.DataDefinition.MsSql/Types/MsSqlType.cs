@@ -1,9 +1,7 @@
-﻿namespace FizzCode.DbTools.DataDefinition
-{
-    using FizzCode.DbTools.DataDefinition.Base;
+﻿using FizzCode.DbTools.DataDefinition.Base;
 
-    public abstract class MsSqlType : SqlTypeInfo
-    {
-        public virtual bool IsMaxLengthAllowed { get; }
-    }
+namespace FizzCode.DbTools.DataDefinition;
+public abstract class MsSqlType : SqlTypeInfo
+{
+    public virtual bool IsMaxLengthAllowed { get; }
 }

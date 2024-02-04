@@ -1,8 +1,7 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter;
-
-using FizzCode.DbTools.DataDefinition.Base;
+﻿using FizzCode.DbTools.DataDefinition.Base;
 using System.Collections.Generic;
 
+namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public abstract partial class DocumenterWriterBase
 {
     protected void AddViewHeader(bool hasCategories, string category, SqlTableOrView table, string firstColumn = null)

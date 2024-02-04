@@ -1,40 +1,35 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+public class ComparerUniqueConstraint : ComparerIndexBase<UniqueConstraint, UniqueConstraintMigration>
 {
-    using System.Collections.Generic;
-    using FizzCode.DbTools.DataDefinition.Base;
-
-    public class ComparerUniqueConstraint : ComparerIndexBase<UniqueConstraint, UniqueConstraintMigration>
+    public static List<UniqueConstraintMigration> CompareUniqueConstraints(SqlTable tableOriginal, SqlTable tableNew)
     {
-        public static List<UniqueConstraintMigration> CompareUniqueConstraints(SqlTable tableOriginal, SqlTable tableNew)
-        {
-            var comparer = new ComparerUniqueConstraint();
-            var changes = comparer.CompareIndexes(tableOriginal, tableNew);
-            return changes;
-        }
+        var comparer = new ComparerUniqueConstraint();
+        var changes = comparer.CompareIndexes(tableOriginal, tableNew);
+        return changes;
+    }
 
-        public override UniqueConstraintMigration CreateDelete(UniqueConstraint originalIndex)
+    public override UniqueConstraintMigration CreateDelete(UniqueConstraint originalIndex)
+    {
+        return new UniqueConstraintDelete()
         {
-            return new UniqueConstraintDelete()
-            {
-                UniqueConstraint = originalIndex
-            };
-        }
+            UniqueConstraint = originalIndex
+        };
+    }
 
-        public override UniqueConstraintMigration CreateNew(UniqueConstraint originalIndex)
+    public override UniqueConstraintMigration CreateNew(UniqueConstraint originalIndex)
+    {
+        return new UniqueConstraintNew()
         {
-            return new UniqueConstraintNew()
-            {
-                UniqueConstraint = originalIndex
-            };
-        }
+            UniqueConstraint = originalIndex
+        };
+    }
 
-        public override UniqueConstraintMigration CreateChange(UniqueConstraint originalIndex, UniqueConstraint newIndex)
+    public override UniqueConstraintMigration CreateChange(UniqueConstraint originalIndex, UniqueConstraint newIndex)
+    {
+        return new UniqueConstraintChange()
         {
-            return new UniqueConstraintChange()
-            {
-                UniqueConstraint = originalIndex,
-                NewUniqueConstraint = newIndex
-            };
-        }
+            UniqueConstraint = originalIndex,
+            NewUniqueConstraint = newIndex
+        };
     }
 }

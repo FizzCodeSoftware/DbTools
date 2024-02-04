@@ -1,28 +1,26 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
+﻿using FizzCode.DbTools.Common.Logger;
+
+namespace FizzCode.DbTools.DataDefinitionDocumenter;
+public abstract class DocumenterBase
 {
-    using FizzCode.DbTools.Common.Logger;
+    protected DocumenterContextBase Context { get; }
 
-    public abstract class DocumenterBase
+    protected DocumenterHelper Helper { get; set; }
+
+    protected SqlEngineVersion Version { get; set; }
+
+    protected string DatabaseName { get; }
+
+    protected DocumenterBase(DocumenterContextBase context, SqlEngineVersion version, string databaseName = "")
     {
-        protected DocumenterContextBase Context { get; }
+        Context = context;
+        Version = version;
+        DatabaseName = databaseName;
+        Helper = new DocumenterHelper(context.Settings);
+    }
 
-        protected DocumenterHelper Helper { get; set; }
-
-        protected SqlEngineVersion Version { get; set; }
-
-        protected string DatabaseName { get; }
-
-        protected DocumenterBase(DocumenterContextBase context, SqlEngineVersion version, string databaseName = "")
-        {
-            Context = context;
-            Version = version;
-            DatabaseName = databaseName;
-            Helper = new DocumenterHelper(context.Settings);
-        }
-
-        protected void Log(LogSeverity severity, string text, params object[] args)
-        {
-            Context.Logger.Log(severity, text, args);
-        }
+    protected void Log(LogSeverity severity, string text, params object[] args)
+    {
+        Context.Logger.Log(severity, text, args);
     }
 }

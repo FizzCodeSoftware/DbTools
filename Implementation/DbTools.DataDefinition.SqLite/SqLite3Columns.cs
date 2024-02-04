@@ -1,56 +1,54 @@
-﻿namespace FizzCode.DbTools.DataDefinition.SqLite3
+﻿using FizzCode.DbTools.DataDefinition.Base;
+
+namespace FizzCode.DbTools.DataDefinition.SqLite3;
+public static class SqLite3Columns
 {
-    using FizzCode.DbTools.DataDefinition.Base;
-
-    public static class SqLite3Columns
+    private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
     {
-        private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)
+        return SqlColumnHelper.Add(SqLiteVersion.SqLite3, table, name, sqlType);
+    }
+
+    public static SqlColumn AddInteger(this SqlTable table, string name, bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            return SqlColumnHelper.Add(SqLiteVersion.SqLite3, table, name, sqlType);
-        }
+            SqlTypeInfo = SqLiteType3.Integer,
+            IsNullable = isNullable
+        };
 
-        public static SqlColumn AddInteger(this SqlTable table, string name, bool isNullable = false)
+        return Add(table, name, sqlType);
+    }
+
+    public static SqlColumn AddReal(this SqlTable table, string name, bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = SqLiteType3.Integer,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = SqLiteType3.Real,
+            IsNullable = isNullable
+        };
 
-            return Add(table, name, sqlType);
-        }
+        return Add(table, name, sqlType);
+    }
 
-        public static SqlColumn AddReal(this SqlTable table, string name, bool isNullable = false)
+    public static SqlColumn AddText(this SqlTable table, string name, bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = SqLiteType3.Real,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = SqLiteType3.Text,
+            IsNullable = isNullable
+        };
 
-            return Add(table, name, sqlType);
-        }
+        return Add(table, name, sqlType);
+    }
 
-        public static SqlColumn AddText(this SqlTable table, string name, bool isNullable = false)
+    public static SqlColumn AddBlob(this SqlTable table, string name, bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = SqLiteType3.Text,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = SqLiteType3.Blob,
+            IsNullable = isNullable
+        };
 
-            return Add(table, name, sqlType);
-        }
-
-        public static SqlColumn AddBlob(this SqlTable table, string name, bool isNullable = false)
-        {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = SqLiteType3.Blob,
-                IsNullable = isNullable
-            };
-
-            return Add(table, name, sqlType);
-        }
+        return Add(table, name, sqlType);
     }
 }

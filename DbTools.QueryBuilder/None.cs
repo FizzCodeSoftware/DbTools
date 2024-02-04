@@ -1,6 +1,5 @@
-﻿namespace FizzCode.DbTools.QueryBuilder
+﻿namespace FizzCode.DbTools.QueryBuilder;
+
+public class None : QueryColumn
 {
-    public class None : QueryColumn
-    {
-    }
 }

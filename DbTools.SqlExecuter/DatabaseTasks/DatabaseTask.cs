@@ -1,14 +1,12 @@
-﻿namespace FizzCode.DbTools.SqlExecuter
+﻿using FizzCode.DbTools.Interfaces;
+
+namespace FizzCode.DbTools.SqlExecuter;
+public abstract class DatabaseTask
 {
-    using FizzCode.DbTools.Interfaces;
-
-    public abstract class DatabaseTask
+    protected DatabaseTask(ISqlStatementExecuter sqlExecuter)
     {
-        protected DatabaseTask(ISqlStatementExecuter sqlExecuter)
-        {
-            Executer = sqlExecuter;
-        }
-
-        protected ISqlStatementExecuter Executer { get; }
+        Executer = sqlExecuter;
     }
+
+    protected ISqlStatementExecuter Executer { get; }
 }

@@ -1,7 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter;
+﻿using System.Collections.Generic;
 
-using System.Collections.Generic;
-
+namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public partial class Documenter
 {
     private void WriteTablesAndAllColumnsHeaderLine(bool hasCategories)

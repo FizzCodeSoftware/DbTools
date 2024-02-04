@@ -1,55 +1,53 @@
-﻿namespace FizzCode.DbTools.QueryBuilder
+﻿using FizzCode.DbTools.DataDefinition.Base;
+
+namespace FizzCode.DbTools.QueryBuilder;
+public static class SqlTableExtension
 {
-    using FizzCode.DbTools.DataDefinition.Base;
-
-    public static class SqlTableExtension
+    public static T Alias<T>(this T table, string alias = null) where T : SqlTable, new()
     {
-        public static T Alias<T>(this T table, string alias = null) where T : SqlTable, new()
+        var newTable = new T
         {
-            var newTable = new T
-            {
-                DatabaseDefinition = table.DatabaseDefinition,
-                SchemaAndTableName = table.SchemaAndTableName
-            };
+            DatabaseDefinition = table.DatabaseDefinition,
+            SchemaAndTableName = table.SchemaAndTableName
+        };
 
-            newTable.Properties.AddRange(table.Properties);
+        newTable.Properties.AddRange(table.Properties);
 
-            foreach (var column in table.Columns)
-            {
-                var newSqlColumn = new SqlColumn();
-                column.CopyTo(newSqlColumn);
-                newSqlColumn.Table = newTable;
-                newTable.Columns.Add(newSqlColumn);
-            }
-
-            SqlTableHelper.SetAlias(newTable, alias);
-            SqlTableHelper.SetupDeclaredTable(newTable);
-
-            return newTable;
+        foreach (var column in table.Columns)
+        {
+            var newSqlColumn = new SqlColumn();
+            column.CopyTo(newSqlColumn);
+            newSqlColumn.Table = newTable;
+            newTable.Columns.Add(newSqlColumn);
         }
 
-        public static T AliasView<T>(this T table, string alias = null) where T : SqlView, new()
+        SqlTableHelper.SetAlias(newTable, alias);
+        SqlTableHelper.SetupDeclaredTable(newTable);
+
+        return newTable;
+    }
+
+    public static T AliasView<T>(this T table, string alias = null) where T : SqlView, new()
+    {
+        var newView = new T
         {
-            var newView = new T
-            {
-                DatabaseDefinition = table.DatabaseDefinition,
-                SchemaAndTableName = table.SchemaAndTableName
-            };
+            DatabaseDefinition = table.DatabaseDefinition,
+            SchemaAndTableName = table.SchemaAndTableName
+        };
 
-            newView.Properties.AddRange(table.Properties);
+        newView.Properties.AddRange(table.Properties);
 
-            foreach (var column in table.Columns)
-            {
-                var newSqlColumn = new SqlViewColumn();
-                column.CopyTo(newSqlColumn);
-                newSqlColumn.View = newView;
-                newView.Columns.Add(newSqlColumn);
-            }
-
-            SqlTableHelper.SetAlias(newView, alias);
-            // SqlTableHelper.SetupDeclaredTable(newView);
-
-            return newView;
+        foreach (var column in table.Columns)
+        {
+            var newSqlColumn = new SqlViewColumn();
+            column.CopyTo(newSqlColumn);
+            newSqlColumn.View = newView;
+            newView.Columns.Add(newSqlColumn);
         }
+
+        SqlTableHelper.SetAlias(newView, alias);
+        // SqlTableHelper.SetupDeclaredTable(newView);
+
+        return newView;
     }
 }

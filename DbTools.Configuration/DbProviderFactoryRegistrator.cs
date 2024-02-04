@@ -1,19 +1,17 @@
-﻿namespace FizzCode.DbTools
-{
-    using System.Data.Common;
-    using Microsoft.Extensions.Configuration;
+﻿using System.Data.Common;
+using Microsoft.Extensions.Configuration;
 
-    public static class DbProviderFactoryRegistrator
+namespace FizzCode.DbTools;
+public static class DbProviderFactoryRegistrator
+{
+    public static void LoadFromConfiguration(IConfigurationRoot configuration, string sectionKey = "DbProviderFactories")
     {
-        public static void LoadFromConfiguration(IConfigurationRoot configuration, string sectionKey = "DbProviderFactories")
+        var children = configuration
+            .GetSection(sectionKey)
+            .GetChildren();
+        foreach (var child in children)
         {
-            var children = configuration
-                .GetSection(sectionKey)
-                .GetChildren();
-            foreach (var child in children)
-            {
-                DbProviderFactories.RegisterFactory(child.GetValue<string>("InvariantName"), child.GetValue<string>("Type"));
-            }
+            DbProviderFactories.RegisterFactory(child.GetValue<string>("InvariantName"), child.GetValue<string>("Type"));
         }
     }
 }

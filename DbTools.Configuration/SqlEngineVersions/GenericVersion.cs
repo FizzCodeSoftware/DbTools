@@ -1,14 +1,12 @@
-﻿namespace FizzCode.DbTools
+﻿using FizzCode.LightWeight.AdoNet;
+
+namespace FizzCode.DbTools;
+public class GenericVersion : SqlEngineVersion
 {
-    using FizzCode.LightWeight.AdoNet;
-
-    public class GenericVersion : SqlEngineVersion
+    internal GenericVersion(string uniqueName, string versionString, string versionNumber)
+        : base(SqlEngine.Generic, uniqueName, versionString, versionNumber, null)
     {
-        internal GenericVersion(string uniqueName, string versionString, string versionNumber)
-            : base(SqlEngine.Generic, uniqueName, versionString, versionNumber, null)
-        {
-        }
-
-        public static GenericVersion Generic1 { get; } = new GenericVersion(nameof(Generic1), "1", "1");
     }
+
+    public static GenericVersion Generic1 { get; } = new GenericVersion(nameof(Generic1), "1", "1");
 }

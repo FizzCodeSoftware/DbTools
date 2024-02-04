@@ -1,12 +1,11 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
+﻿namespace FizzCode.DbTools.DataDefinitionDocumenter;
+
+public enum GeneratorSettingFlag
 {
-    public enum GeneratorSettingFlag
-    {
-        None,
-        NoForeignKeys,
-        NoIndexes,
-        NoUniqueConstraints,
-        ShouldCommentOutColumnsWithFkReferencedTables,
-        ShouldCommentOutFkReferences
-    }
+    None,
+    NoForeignKeys,
+    NoIndexes,
+    NoUniqueConstraints,
+    ShouldCommentOutColumnsWithFkReferencedTables,
+    ShouldCommentOutFkReferences
 }

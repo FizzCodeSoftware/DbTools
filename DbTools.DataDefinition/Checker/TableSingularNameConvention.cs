@@ -1,31 +1,29 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Checker
+﻿using FizzCode.DbTools.DataDefinition.Base;
+
+namespace FizzCode.DbTools.DataDefinition.Checker;
+public abstract class Convention : SchemaCheck
 {
-    using FizzCode.DbTools.DataDefinition.Base;
+    public override string Type => "Convention";
+}
 
-    public abstract class Convention : SchemaCheck
+public class TableSingularNameConvention : Convention
+{
+    public TableSingularNameConvention(SchemaAndTableName schemaAndTableName)
     {
-        public override string Type => "Convention";
+        _schemaAndTableName = schemaAndTableName;
     }
 
-    public class TableSingularNameConvention : Convention
+    private SchemaAndTableName _schemaAndTableName;
+
+    public void SetTableSchemaAndTableName(SchemaAndTableName schemaAndTableName)
     {
-        public TableSingularNameConvention(SchemaAndTableName schemaAndTableName)
-        {
-            _schemaAndTableName = schemaAndTableName;
-        }
-
-        private SchemaAndTableName _schemaAndTableName;
-
-        public void SetTableSchemaAndTableName(SchemaAndTableName schemaAndTableName)
-        {
-            _schemaAndTableName = schemaAndTableName;
-        }
-
-        public override string DisplayName => "Table name should be singular.";
-
-        public override string DisplayInfo => $"TableName: {_schemaAndTableName.TableName}";
-
-        public override string Schema => _schemaAndTableName.Schema;
-        public override string ElementName => _schemaAndTableName.TableName;
+        _schemaAndTableName = schemaAndTableName;
     }
+
+    public override string DisplayName => "Table name should be singular.";
+
+    public override string DisplayInfo => $"TableName: {_schemaAndTableName.TableName}";
+
+    public override string Schema => _schemaAndTableName.Schema;
+    public override string ElementName => _schemaAndTableName.TableName;
 }

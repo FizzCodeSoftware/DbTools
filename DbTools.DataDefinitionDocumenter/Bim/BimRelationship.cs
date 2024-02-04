@@ -1,40 +1,38 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter
+﻿using FizzCode.DbTools.DataDefinition.Base;
+
+namespace FizzCode.DbTools.DataDefinitionDocumenter;
+public class BimRelationship
 {
-    using FizzCode.DbTools.DataDefinition.Base;
+    public SqlColumn FromColumn { get; set; }
+    public SchemaAndTableName ToTableSchemaAndTableName { get; set; }
+    public string ToColumnName { get; set; }
+    public string RelationshipIdentifier { get; set; }
 
-    public class BimRelationship
+    public BimRelationship(SqlColumn fromColumn, SchemaAndTableName toTableSchemaAndTableName, string toColumnName, string relationshipIdentifier = null)
     {
-        public SqlColumn FromColumn { get; set; }
-        public SchemaAndTableName ToTableSchemaAndTableName { get; set; }
-        public string ToColumnName { get; set; }
-        public string RelationshipIdentifier { get; set; }
+        FromColumn = fromColumn;
+        ToTableSchemaAndTableName = toTableSchemaAndTableName;
+        ToColumnName = toColumnName;
+        RelationshipIdentifier = relationshipIdentifier;
+    }
 
-        public BimRelationship(SqlColumn fromColumn, SchemaAndTableName toTableSchemaAndTableName, string toColumnName, string relationshipIdentifier = null)
+    public SchemaAndTableName FromTableSchemaAndTableName => FromColumn.Table.SchemaAndTableName;
+
+    public string ToKey => ToTableSchemaAndTableName + "/" + ToColumnName;
+
+    public string RelationshipIdentifierKey
+    {
+        get
         {
-            FromColumn = fromColumn;
-            ToTableSchemaAndTableName = toTableSchemaAndTableName;
-            ToColumnName = toColumnName;
-            RelationshipIdentifier = relationshipIdentifier;
+            if (RelationshipIdentifier == null)
+                return null;
+
+            return ToTableSchemaAndTableName + "/" + RelationshipIdentifier;
         }
+    }
 
-        public SchemaAndTableName FromTableSchemaAndTableName => FromColumn.Table.SchemaAndTableName;
-
-        public string ToKey => ToTableSchemaAndTableName + "/" + ToColumnName;
-
-        public string RelationshipIdentifierKey
-        {
-            get
-            {
-                if (RelationshipIdentifier == null)
-                    return null;
-
-                return ToTableSchemaAndTableName + "/" + RelationshipIdentifier;
-            }
-        }
-
-        public override string ToString()
-        {
-            return FromTableSchemaAndTableName + " -> " + ToTableSchemaAndTableName + " (" + RelationshipIdentifier + ")";
-        }
+    public override string ToString()
+    {
+        return FromTableSchemaAndTableName + " -> " + ToTableSchemaAndTableName + " (" + RelationshipIdentifier + ")";
     }
 }

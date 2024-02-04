@@ -1,25 +1,23 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Tests
+﻿using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.DataDefinition.Generic1;
+using FizzCode.DbTools.TestBase;
+
+namespace FizzCode.DbTools.DataDefinition.Tests;
+public class TestDatabaseFkChange : TestDatabaseDeclaration
 {
-    using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Generic1;
-    using FizzCode.DbTools.TestBase;
-
-    public class TestDatabaseFkChange : TestDatabaseDeclaration
+    public SqlTable Primary1 { get; } = AddTable(table =>
     {
-        public SqlTable Primary1 { get; } = AddTable(table =>
-        {
-            table.AddInt32("Id").SetPK();
-        });
+        table.AddInt32("Id").SetPK();
+    });
 
-        public SqlTable Primary2 { get; } = AddTable(table =>
-        {
-            table.AddInt32("Id").SetPK();
-        });
+    public SqlTable Primary2 { get; } = AddTable(table =>
+    {
+        table.AddInt32("Id").SetPK();
+    });
 
-        public SqlTable Foreign { get; } = AddTable(table =>
-        {
-            table.AddInt32("Id").SetPK().SetIdentity();
-            table.AddInt32("PrimaryId").SetForeignKeyToTable(nameof(Primary1), "FkChange");
-        });
-    }
+    public SqlTable Foreign { get; } = AddTable(table =>
+    {
+        table.AddInt32("Id").SetPK().SetIdentity();
+        table.AddInt32("PrimaryId").SetForeignKeyToTable(nameof(Primary1), "FkChange");
+    });
 }

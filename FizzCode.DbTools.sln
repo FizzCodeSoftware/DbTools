@@ -6,7 +6,8 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Global", "Global", "{0445F7BE-5D4F-441B-87A9-93835E59ABEB}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		FizzCode.ruleset = FizzCode.ruleset
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
 		README.md = README.md
 	EndProjectSection
 EndProject

@@ -1,46 +1,45 @@
-﻿namespace FizzCode.DbTools.DataDefinitionReader
+﻿using System.Linq;
+using FizzCode.DbTools.Common;
+using FizzCode.DbTools.DataDefinition;
+using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+using FizzCode.DbTools.SqlExecuter;
+
+namespace FizzCode.DbTools.DataDefinitionReader;
+public class OracleIdentityReader12c : OracleDataDefinitionElementReader
 {
-    using System.Linq;
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
-    using FizzCode.DbTools.SqlExecuter;
+    private readonly RowSet _queryResult;
 
-    public class OracleIdentityReader12c : OracleDataDefinitionElementReader
+    public OracleIdentityReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
+        : base(executer, schemaNames)
     {
-        private readonly RowSet _queryResult;
+        var sqlStatement = GetStatement();
+        AddSchemaNamesFilter(ref sqlStatement, "owner");
+        _queryResult = Executer.ExecuteQuery(sqlStatement);
+    }
 
-        public OracleIdentityReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
-            : base(executer, schemaNames)
+    public void GetIdentity(DatabaseDefinition dd)
+    {
+        foreach (var table in dd.GetTables())
+            GetIdentity(table);
+    }
+
+    public void GetIdentity(SqlTable table)
+    {
+        var rows = _queryResult
+            .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table, "OWNER", "TABLE_NAME"))
+            .ToList();
+
+        foreach (var row in rows)
         {
-            var sqlStatement = GetStatement();
-            AddSchemaNamesFilter(ref sqlStatement, "owner");
-            _queryResult = Executer.ExecuteQuery(sqlStatement);
+            var column = table.Columns[row.GetAs<string>("COLUMN_NAME")];
+            column.Properties.Add(new Identity(column));
         }
+    }
 
-        public void GetIdentity(DatabaseDefinition dd)
-        {
-            foreach (var table in dd.GetTables())
-                GetIdentity(table);
-        }
-
-        public void GetIdentity(SqlTable table)
-        {
-            var rows = _queryResult
-                .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table, "OWNER", "TABLE_NAME"))
-                .ToList();
-
-            foreach (var row in rows)
-            {
-                var column = table.Columns[row.GetAs<string>("COLUMN_NAME")];
-                column.Properties.Add(new Identity(column));
-            }
-        }
-
-        private static string GetStatement()
-        {
-            return @"
+    private static string GetStatement()
+    {
+        return @"
 SELECT owner,
     table_name, 
     column_name,
@@ -48,6 +47,5 @@ SELECT owner,
     identity_options
 FROM all_tab_identity_cols
 WHERE 1=1";
-        }
     }
 }

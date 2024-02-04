@@ -1,8 +1,4 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+public abstract class TableMigration : SqlTable, IMigration
 {
-    using FizzCode.DbTools.DataDefinition.Base;
-
-    public abstract class TableMigration : SqlTable, IMigration
-    {
-    }
 }

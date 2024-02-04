@@ -1,12 +1,11 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using FizzCode.DbTools.Common.Logger;
 using FizzCode.DbTools.DataDefinition;
 using FizzCode.DbTools.DataDefinition.Base;
 
+namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public partial class Documenter : DocumenterWriterBase
 {
     public Documenter(DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)

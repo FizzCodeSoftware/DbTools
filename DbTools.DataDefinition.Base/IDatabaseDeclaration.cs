@@ -1,10 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
+﻿namespace FizzCode.DbTools.DataDefinition.Base;
+public interface IDatabaseDeclaration
 {
-    using System.Collections.Generic;
-
-    public interface IDatabaseDeclaration
-    {
-        void CreateRegisteredForeignKeys(SqlTable sqlTable);
-        void AddAutoNaming(List<SqlTable> tables);
-    }
+    void CreateRegisteredForeignKeys(SqlTable sqlTable);
+    void AddAutoNaming(List<SqlTable> tables);
 }

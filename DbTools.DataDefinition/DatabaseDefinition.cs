@@ -1,107 +1,105 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿using System.Collections.Generic;
+using System.Linq;
+using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+using FizzCode.DbTools.Factory;
+using FizzCode.DbTools.Factory.Interfaces;
+
+namespace FizzCode.DbTools.DataDefinition;
+public class DatabaseDefinition : IDatabaseDefinition
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
-    using FizzCode.DbTools.Factory;
-    using FizzCode.DbTools.Factory.Interfaces;
+    public TypeMappers TypeMappers { get; }
+    public SqlEngineVersion MainVersion { get; protected set; }
+    public List<SqlEngineVersion> SecondaryVersions { get; protected set; }
+    public Tables Tables { get; } = new Tables();
+    protected Views Views { get; } = new Views();
 
-    public class DatabaseDefinition : IDatabaseDefinition
+    protected IFactoryContainer FactoryContainer;
+
+    public List<StoredProcedure> StoredProcedures { get; } = new List<StoredProcedure>();
+
+    public DatabaseDefinition(SqlEngineVersion mainVersion, params SqlEngineVersion[] secondaryVersions)
+        : this(new Root(), mainVersion, secondaryVersions)
     {
-        public TypeMappers TypeMappers { get; }
-        public SqlEngineVersion MainVersion { get; protected set; }
-        public List<SqlEngineVersion> SecondaryVersions { get; protected set; }
-        public Tables Tables { get; } = new Tables();
-        protected Views Views { get; } = new Views();
+    }
 
-        protected IFactoryContainer FactoryContainer;
+    public DatabaseDefinition(IFactoryContainer factoryContainer, SqlEngineVersion mainVersion, params SqlEngineVersion[] secondaryVersions)
+    {
+        FactoryContainer = factoryContainer;
 
-        public List<StoredProcedure> StoredProcedures { get; } = new List<StoredProcedure>();
+        MainVersion = mainVersion;
+        SecondaryVersions = secondaryVersions?.ToList();
 
-        public DatabaseDefinition(SqlEngineVersion mainVersion, params SqlEngineVersion[] secondaryVersions)
-            : this(new Root(), mainVersion, secondaryVersions)
+        FactoryContainer.TryGet(out ITypeMapperFactory typeMapperFactory);
+        TypeMappers = new TypeMappers(typeMapperFactory);
+    }
+
+    public void AddTable(SqlTable sqlTable)
+    {
+        sqlTable.DatabaseDefinition = this;
+
+        foreach (var column in sqlTable.Columns)
         {
+            SqlColumnHelper.MapFromGen1(column);
         }
 
-        public DatabaseDefinition(IFactoryContainer factoryContainer, SqlEngineVersion mainVersion, params SqlEngineVersion[] secondaryVersions)
+        Tables.Add(sqlTable);
+    }
+
+    public void AddView(SqlView sqlTable)
+    {
+        sqlTable.DatabaseDefinition = this;
+
+        foreach (var column in sqlTable.Columns)
         {
-            FactoryContainer = factoryContainer;
-
-            MainVersion = mainVersion;
-            SecondaryVersions = secondaryVersions?.ToList();
-
-            FactoryContainer.TryGet(out ITypeMapperFactory typeMapperFactory);
-            TypeMappers = new TypeMappers(typeMapperFactory);
+            SqlColumnHelper.MapFromGen1(column);
         }
 
-        public void AddTable(SqlTable sqlTable)
-        {
-            sqlTable.DatabaseDefinition = this;
+        Views.Add(sqlTable);
+    }
 
-            foreach (var column in sqlTable.Columns)
-            {
-                SqlColumnHelper.MapFromGen1(column);
-            }
+    public virtual List<SqlTable> GetTables()
+    {
+        return Tables.ToList();
+    }
 
-            Tables.Add(sqlTable);
-        }
+    public virtual List<SqlView> GetViews()
+    {
+        return Views.ToList();
+    }
 
-        public void AddView(SqlView sqlTable)
-        {
-            sqlTable.DatabaseDefinition = this;
+    public SqlTable GetTable(string schema, string tableName)
+    {
+        return Tables[SchemaAndTableName.Concat(schema, tableName)];
+    }
 
-            foreach (var column in sqlTable.Columns)
-            {
-                SqlColumnHelper.MapFromGen1(column);
-            }
+    public SqlTable GetTable(string tableName)
+    {
+        return Tables[tableName];
+    }
 
-            Views.Add(sqlTable);
-        }
+    public SqlTable GetTable(SchemaAndTableName schemaAndTableName)
+    {
+        return Tables[schemaAndTableName.SchemaAndName];
+    }
 
-        public virtual List<SqlTable> GetTables()
-        {
-            return Tables.ToList();
-        }
+    public bool Contains(SchemaAndTableName schemaAndTableName)
+    {
+        return Tables.ContainsKey(schemaAndTableName.SchemaAndName);
+    }
 
-        public virtual List<SqlView> GetViews()
-        {
-            return Views.ToList();
-        }
+    public bool Contains(string schema, string tableName)
+    {
+        return Contains(SchemaAndTableName.Concat(schema, tableName));
+    }
 
-        public SqlTable GetTable(string schema, string tableName)
-        {
-            return Tables[SchemaAndTableName.Concat(schema, tableName)];
-        }
+    public IEnumerable<string> GetSchemaNames()
+    {
+        var schemas = GetTables()
+            .Select(t => t.SchemaAndTableName.Schema)
+            .Distinct()
+            .Where(sn => !string.IsNullOrEmpty(sn));
 
-        public SqlTable GetTable(string tableName)
-        {
-            return Tables[tableName];
-        }
-
-        public SqlTable GetTable(SchemaAndTableName schemaAndTableName)
-        {
-            return Tables[schemaAndTableName.SchemaAndName];
-        }
-
-        public bool Contains(SchemaAndTableName schemaAndTableName)
-        {
-            return Tables.ContainsKey(schemaAndTableName.SchemaAndName);
-        }
-
-        public bool Contains(string schema, string tableName)
-        {
-            return Contains(SchemaAndTableName.Concat(schema, tableName));
-        }
-
-        public IEnumerable<string> GetSchemaNames()
-        {
-            var schemas = GetTables()
-                .Select(t => t.SchemaAndTableName.Schema)
-                .Distinct()
-                .Where(sn => !string.IsNullOrEmpty(sn));
-
-            return schemas;
-        }
+        return schemas;
     }
 }

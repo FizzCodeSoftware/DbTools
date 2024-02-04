@@ -1,20 +1,18 @@
-﻿namespace FizzCode.DbTools.SqlGenerator.SqLite
+﻿using FizzCode.DbTools.Common;
+using FizzCode.DbTools.SqlGenerator.Base;
+
+namespace FizzCode.DbTools.SqlGenerator.SqLite;
+public class SqLiteGenerator : AbstractSqlGeneratorBase
 {
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.SqlGenerator.Base;
+    public override SqlEngineVersion SqlVersion => SqLiteVersion.SqLite3;
 
-    public class SqLiteGenerator : AbstractSqlGeneratorBase
+    public SqLiteGenerator(Context context)
+        : base(context)
     {
-        public override SqlEngineVersion SqlVersion => SqLiteVersion.SqLite3;
+    }
 
-        public SqLiteGenerator(Context context)
-            : base(context)
-        {
-        }
-
-        public override string GuardKeywordsImplementation(string name)
-        {
-            return $"\"{name}\"";
-        }
+    public override string GuardKeywordsImplementation(string name)
+    {
+        return $"\"{name}\"";
     }
 }

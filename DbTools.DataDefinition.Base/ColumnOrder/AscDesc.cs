@@ -1,8 +1,7 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
+﻿namespace FizzCode.DbTools.DataDefinition.Base;
+
+public enum AscDesc
 {
-    public enum AscDesc
-    {
-        Asc,
-        Desc,
-    }
+    Asc,
+    Desc,
 }

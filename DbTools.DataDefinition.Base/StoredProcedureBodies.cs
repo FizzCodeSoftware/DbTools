@@ -1,8 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base
-{
-    using FizzCode.DbTools.Common;
+﻿using FizzCode.DbTools.Common;
 
-    public class StoredProcedureBodies : SqlEngineVersionDictionary<string>
-    {
-    }
+namespace FizzCode.DbTools.DataDefinition.Base;
+public class StoredProcedureBodies : SqlEngineVersionDictionary<string>
+{
 }

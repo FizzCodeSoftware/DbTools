@@ -1,8 +1,7 @@
-﻿namespace FizzCode.DbTools.QueryBuilder.Interfaces
+﻿namespace FizzCode.DbTools.QueryBuilder.Interfaces;
+
+public interface IQueryBuilder
 {
-    public interface IQueryBuilder
-    {
-        string Build(IQuery query);
-        SqlEngineVersion SqlVersion { get; }
-    }
+    string Build(IQuery query);
+    SqlEngineVersion SqlVersion { get; }
 }

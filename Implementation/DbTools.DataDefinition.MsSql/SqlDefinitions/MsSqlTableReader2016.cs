@@ -1,95 +1,93 @@
-﻿namespace FizzCode.DbTools.DataDefinitionReader
+﻿using System.Linq;
+using FizzCode.DbTools.Common;
+using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+using FizzCode.DbTools.DataDefinition.MsSql2016;
+using FizzCode.DbTools.SqlExecuter;
+
+namespace FizzCode.DbTools.DataDefinitionReader;
+public class MsSqlTableReader2016 : GenericDataDefinitionElementReader
 {
-    using System.Linq;
-    using FizzCode.DbTools.Common;
-    using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
-    using FizzCode.DbTools.DataDefinition.MsSql2016;
-    using FizzCode.DbTools.SqlExecuter;
+    private ILookup<string, Row> _queryResult;
+    private ILookup<string, Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement()).ToLookup(x => x.GetAs<string>("SchemaAndTableName"));
 
-    public class MsSqlTableReader2016 : GenericDataDefinitionElementReader
+    protected MsSql2016TypeMapper TypeMapper { get; } = new MsSql2016TypeMapper();
+
+    public MsSqlTableReader2016(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
+        : base(executer, schemaNames)
     {
-        private ILookup<string, Row> _queryResult;
-        private ILookup<string, Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement()).ToLookup(x => x.GetAs<string>("SchemaAndTableName"));
+    }
 
-        protected MsSql2016TypeMapper TypeMapper { get; } = new MsSql2016TypeMapper();
+    public SqlView GetViewDefinition(SchemaAndTableName schemaAndTableName)
+    {
+        var sqlView = new SqlView(schemaAndTableName);
 
-        public MsSqlTableReader2016(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
-            : base(executer, schemaNames)
+        var rows = QueryResult[schemaAndTableName.SchemaAndName]
+            .OrderBy(r => r.GetAs<int>("ORDINAL_POSITION"));
+
+        foreach (var row in rows)
         {
-        }
+            var sqlType = GetSqlTypeFromRow(row);
 
-        public SqlView GetViewDefinition(SchemaAndTableName schemaAndTableName)
-        {
-            var sqlView = new SqlView(schemaAndTableName);
-
-            var rows = QueryResult[schemaAndTableName.SchemaAndName]
-                .OrderBy(r => r.GetAs<int>("ORDINAL_POSITION"));
-
-            foreach (var row in rows)
+            var column = new SqlViewColumn
             {
-                var sqlType = GetSqlTypeFromRow(row);
+                SqlTableOrView = sqlView
+            };
+            column.Types.Add(Executer.Generator.SqlVersion, sqlType);
+            column.Name = row.GetAs<string>("COLUMN_NAME");
 
-                var column = new SqlViewColumn
-                {
-                    SqlTableOrView = sqlView
-                };
-                column.Types.Add(Executer.Generator.SqlVersion, sqlType);
-                column.Name = row.GetAs<string>("COLUMN_NAME");
-
-                sqlView.Columns.Add(column.Name, column);
-            }
-
-            return sqlView;
+            sqlView.Columns.Add(column.Name, column);
         }
 
-        public SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName)
+        return sqlView;
+    }
+
+    public SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName)
+    {
+        var sqlTable = new SqlTable(schemaAndTableName);
+
+        var rows = QueryResult[schemaAndTableName.SchemaAndName]
+            .OrderBy(r => r.GetAs<int>("ORDINAL_POSITION"));
+
+        foreach (var row in rows)
         {
-            var sqlTable = new SqlTable(schemaAndTableName);
+            var sqlType = GetSqlTypeFromRow(row);
 
-            var rows = QueryResult[schemaAndTableName.SchemaAndName]
-                .OrderBy(r => r.GetAs<int>("ORDINAL_POSITION"));
-
-            foreach (var row in rows)
+            var column = new SqlColumn
             {
-                var sqlType = GetSqlTypeFromRow(row);
+                Table = sqlTable
+            };
+            column.Types.Add(Executer.Generator.SqlVersion, sqlType);
+            column.Name = row.GetAs<string>("COLUMN_NAME");
 
-                var column = new SqlColumn
-                {
-                    Table = sqlTable
-                };
-                column.Types.Add(Executer.Generator.SqlVersion, sqlType);
-                column.Name = row.GetAs<string>("COLUMN_NAME");
-
-                sqlTable.Columns.Add(column.Name, column);
-            }
-
-            return sqlTable;
+            sqlTable.Columns.Add(column.Name, column);
         }
 
-        private SqlType GetSqlTypeFromRow(Row row)
-        {
-            var type = row.GetAs<string>("DATA_TYPE");
+        return sqlTable;
+    }
 
-            var numericPrecision = row.GetAs<byte?>("NUMERIC_PRECISION") ?? 0;
-            var numericScale = row.GetAs<int?>("NUMERIC_SCALE") ?? 0;
-            var characterMaximumLength = row.GetAs<int?>("CHARACTER_MAXIMUM_LENGTH") ?? 0;
-            var dateTimePrecision = row.GetAs<short?>("DATETIME_PRECISION") ?? 0;
+    private SqlType GetSqlTypeFromRow(Row row)
+    {
+        var type = row.GetAs<string>("DATA_TYPE");
 
-            var isNullable = row.GetAs<string>("IS_NULLABLE") == "YES";
+        var numericPrecision = row.GetAs<byte?>("NUMERIC_PRECISION") ?? 0;
+        var numericScale = row.GetAs<int?>("NUMERIC_SCALE") ?? 0;
+        var characterMaximumLength = row.GetAs<int?>("CHARACTER_MAXIMUM_LENGTH") ?? 0;
+        var dateTimePrecision = row.GetAs<short?>("DATETIME_PRECISION") ?? 0;
 
-            var sqlType = TypeMapper.MapSqlTypeFromReaderInfo(type, isNullable, numericPrecision, numericScale, characterMaximumLength, dateTimePrecision);
-            return sqlType;
-        }
+        var isNullable = row.GetAs<string>("IS_NULLABLE") == "YES";
 
-        private static string GetStatement()
-        {
-            return @"
+        var sqlType = TypeMapper.MapSqlTypeFromReaderInfo(type, isNullable, numericPrecision, numericScale, characterMaximumLength, dateTimePrecision);
+        return sqlType;
+    }
+
+    private static string GetStatement()
+    {
+        return @"
 SELECT
     CONCAT(TABLE_SCHEMA, '.', TABLE_NAME) SchemaAndTableName,
     ORDINAL_POSITION, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE, IS_NULLABLE, DATETIME_PRECISION
 FROM
     INFORMATION_SCHEMA.COLUMNS";
-        }
     }
 }

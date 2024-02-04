@@ -1,15 +1,13 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿using FizzCode.DbTools.DataDefinition.Base;
+
+namespace FizzCode.DbTools.DataDefinition;
+public class DefaultValue : SqlColumnProperty
 {
-    using FizzCode.DbTools.DataDefinition.Base;
+    public string Value { get; }
 
-    public class DefaultValue : SqlColumnProperty
+    public DefaultValue(SqlColumn sqlColumn, string value)
+        : base(sqlColumn)
     {
-        public string Value { get; }
-
-        public DefaultValue(SqlColumn sqlColumn, string value)
-            : base(sqlColumn)
-        {
-            Value = value;
-        }
+        Value = value;
     }
 }

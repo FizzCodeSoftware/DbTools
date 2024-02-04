@@ -1,10 +1,9 @@
-﻿namespace FizzCode.DbTools.TestBase;
-
-using System;
+﻿using System;
 using System.Text;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+namespace FizzCode.DbTools.TestBase;
 /// <summary>
 /// Expected exception for testing, with expected start of exception message.
 /// </summary>

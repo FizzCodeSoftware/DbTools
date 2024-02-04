@@ -1,21 +1,19 @@
-﻿namespace FizzCode.DbTools.DataDefinition
+﻿using System;
+using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+
+namespace FizzCode.DbTools.DataDefinition;
+public class Generic1TypeMapper : AbstractTypeMapper
 {
-    using System;
-    using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+    public override SqlEngineVersion SqlVersion => GenericVersion.Generic1;
 
-    public class Generic1TypeMapper : AbstractTypeMapper
+    public override ISqlType MapFromGeneric1(ISqlType genericType)
     {
-        public override SqlEngineVersion SqlVersion => GenericVersion.Generic1;
+        throw new NotImplementedException();
+    }
 
-        public override ISqlType MapFromGeneric1(ISqlType genericType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override ISqlType MapToGeneric1(ISqlType sqlType)
-        {
-            throw new NotImplementedException();
-        }
+    public override ISqlType MapToGeneric1(ISqlType sqlType)
+    {
+        throw new NotImplementedException();
     }
 }

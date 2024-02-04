@@ -1,6 +1,5 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+
+public class IdentityDelete : IdentityMigration
 {
-    public class IdentityDelete : IdentityMigration
-    {
-    }
 }

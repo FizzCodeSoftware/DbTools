@@ -1,10 +1,9 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+
+public class UniqueConstraintNew : UniqueConstraintMigration
 {
-    public class UniqueConstraintNew : UniqueConstraintMigration
+    public override string ToString()
     {
-        public override string ToString()
-        {
-            return "UN: " + base.ToString();
-        }
+        return "UN: " + base.ToString();
     }
 }

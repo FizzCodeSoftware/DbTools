@@ -1,7 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter;
+﻿using FizzCode.DbTools.DataDefinition.Base;
 
-using FizzCode.DbTools.DataDefinition.Base;
-
+namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public abstract partial class DocumenterWriterBase
 {
     protected void AddIndex(Index index, string firstColumn = null)

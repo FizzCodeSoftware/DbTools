@@ -1,46 +1,45 @@
-﻿namespace FizzCode.DbTools.DataDefinitionReader
+﻿using System.Linq;
+using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+using FizzCode.DbTools.SqlExecuter;
+
+namespace FizzCode.DbTools.DataDefinitionReader;
+public class OracleViewReader12c : OracleTableOrViewReader12c
 {
-    using System.Linq;
-    using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.Base.Interfaces;
-    using FizzCode.DbTools.SqlExecuter;
-
-    public class OracleViewReader12c : OracleTableOrViewReader12c
+    public OracleViewReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
+        : base(executer, schemaNames)
     {
-        public OracleViewReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
-            : base(executer, schemaNames)
-        {
-            var sqlStatement = GetStatement();
-            AddSchemaNamesFilter(ref sqlStatement, "all_tab_columns.owner");
-            QueryResult = Executer.ExecuteQuery(sqlStatement).ToLookup(x => x.GetAs<string>("SCHEMAANDTABLENAME"));
-        }
+        var sqlStatement = GetStatement();
+        AddSchemaNamesFilter(ref sqlStatement, "all_tab_columns.owner");
+        QueryResult = Executer.ExecuteQuery(sqlStatement).ToLookup(x => x.GetAs<string>("SCHEMAANDTABLENAME"));
+    }
 
-        public SqlView GetViewDefinition(SchemaAndTableName schemaAndTableName)
-        {
-            var sqlView = new SqlView(schemaAndTableName);
-            var rows = QueryResult[schemaAndTableName.SchemaAndName]
-                .OrderBy(r => r.GetAs<decimal>("COLUMN_ID"));
+    public SqlView GetViewDefinition(SchemaAndTableName schemaAndTableName)
+    {
+        var sqlView = new SqlView(schemaAndTableName);
+        var rows = QueryResult[schemaAndTableName.SchemaAndName]
+            .OrderBy(r => r.GetAs<decimal>("COLUMN_ID"));
 
-            foreach (var row in rows)
+        foreach (var row in rows)
+        {
+            var sqlType = GetSqlTypeFromRow(row);
+
+            var column = new SqlViewColumn
             {
-                var sqlType = GetSqlTypeFromRow(row);
+                SqlTableOrView = sqlView
+            };
+            column.Types.Add(Executer.Generator.SqlVersion, sqlType);
+            column.Name = row.GetAs<string>("COLUMN_NAME");
 
-                var column = new SqlViewColumn
-                {
-                    SqlTableOrView = sqlView
-                };
-                column.Types.Add(Executer.Generator.SqlVersion, sqlType);
-                column.Name = row.GetAs<string>("COLUMN_NAME");
-
-                sqlView.Columns.Add(column.Name, column);
-            }
-
-            return sqlView;
+            sqlView.Columns.Add(column.Name, column);
         }
 
-        private static string GetStatement()
-        {
-            return @"
+        return sqlView;
+    }
+
+    private static string GetStatement()
+    {
+        return @"
 SELECT all_tab_columns.column_id, 
   CONCAT(CONCAT(all_tab_columns.owner, '.'), all_tab_columns.table_name) AS SchemaAndTableName,
   all_tab_columns.column_name, 
@@ -53,7 +52,6 @@ SELECT all_tab_columns.column_id,
 FROM sys.all_tab_columns
 INNER JOIN sys.all_views v ON v.owner = all_tab_columns.owner
 AND all_tab_columns.table_name = v.view_name";
-        }
-
     }
+
 }

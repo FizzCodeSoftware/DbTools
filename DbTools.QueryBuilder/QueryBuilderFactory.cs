@@ -1,29 +1,27 @@
-﻿namespace FizzCode.DbTools.QueryBuilder
+﻿using FizzCode.DbTools.Factory.Interfaces;
+using FizzCode.DbTools.QueryBuilder.Interfaces;
+
+namespace FizzCode.DbTools.QueryBuilder;
+public class QueryBuilderFactory : IQueryBuilderFactory
 {
-    using FizzCode.DbTools.Factory.Interfaces;
-    using FizzCode.DbTools.QueryBuilder.Interfaces;
+    protected IContextFactory ContextFactory { get; }
+    protected ISqlGeneratorBaseFactory SqlGeneratorBaseFactory { get; }
 
-    public class QueryBuilderFactory : IQueryBuilderFactory
+    public QueryBuilderFactory(IContextFactory contextFactory, ISqlGeneratorBaseFactory sqlGeneratorBaseFactory)
     {
-        protected IContextFactory ContextFactory { get; }
-        protected ISqlGeneratorBaseFactory SqlGeneratorBaseFactory { get; }
+        ContextFactory = contextFactory;
+        SqlGeneratorBaseFactory = sqlGeneratorBaseFactory;
+    }
 
-        public QueryBuilderFactory(IContextFactory contextFactory, ISqlGeneratorBaseFactory sqlGeneratorBaseFactory)
-        {
-            ContextFactory = contextFactory;
-            SqlGeneratorBaseFactory = sqlGeneratorBaseFactory;
-        }
+    public IQueryBuilderConnector CreateQueryBuilderConnector(SqlEngineVersion version)
+    {
+        var context = ContextFactory.CreateContext(version);
+        return new QueryBuilderConnector(context, CreateQueryBuilder(version));
+    }
 
-        public IQueryBuilderConnector CreateQueryBuilderConnector(SqlEngineVersion version)
-        {
-            var context = ContextFactory.CreateContext(version);
-            return new QueryBuilderConnector(context, CreateQueryBuilder(version));
-        }
-
-        public IQueryBuilder CreateQueryBuilder(SqlEngineVersion version)
-        {
-            var sqlGeneratorBase = SqlGeneratorBaseFactory.CreateGenerator(version);
-            return new QueryBuilderSqlGeneratorBase(sqlGeneratorBase);
-        }
+    public IQueryBuilder CreateQueryBuilder(SqlEngineVersion version)
+    {
+        var sqlGeneratorBase = SqlGeneratorBaseFactory.CreateGenerator(version);
+        return new QueryBuilderSqlGeneratorBase(sqlGeneratorBase);
     }
 }

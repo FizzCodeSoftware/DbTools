@@ -1,8 +1,5 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+public class IdentityMigration : SqlColumnPropertyMigration
 {
-    using FizzCode.DbTools.DataDefinition.Base;
-    public class IdentityMigration : SqlColumnPropertyMigration
-    {
-        public Identity Identity { get; set; }
-    }
+    public Identity Identity { get; set; }
 }

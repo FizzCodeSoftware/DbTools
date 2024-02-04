@@ -1,9 +1,8 @@
-﻿namespace FizzCode.DbTools.DataGenerator
+﻿namespace FizzCode.DbTools.DataGenerator;
+
+public abstract class GeneratorTypizedText : GeneratorBase<string>
 {
-    public abstract class GeneratorTypizedText : GeneratorBase<string>
+    protected GeneratorTypizedText()
     {
-        protected GeneratorTypizedText()
-        {
-        }
     }
 }

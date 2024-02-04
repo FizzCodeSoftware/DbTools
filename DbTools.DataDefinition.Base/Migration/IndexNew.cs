@@ -1,10 +1,9 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+
+public class IndexNew : IndexMigration
 {
-    public class IndexNew : IndexMigration
+    public override string ToString()
     {
-        public override string ToString()
-        {
-            return "IN: " + base.ToString();
-        }
+        return "IN: " + base.ToString();
     }
 }

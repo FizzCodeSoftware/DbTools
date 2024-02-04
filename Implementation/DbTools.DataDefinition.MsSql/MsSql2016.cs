@@ -1,365 +1,362 @@
-﻿namespace FizzCode.DbTools.DataDefinition.MsSql2016
+﻿using FizzCode.DbTools.DataDefinition.Base;
+
+namespace FizzCode.DbTools.DataDefinition.MsSql2016;
+public static class MsSql2016
 {
-    using FizzCode.DbTools.DataDefinition;
-    using FizzCode.DbTools.DataDefinition.Base;
-
-    public static class MsSql2016
+    private static SqlColumn Add(SqlType sqlType)
     {
-        private static SqlColumn Add(SqlType sqlType)
+        var sqlColumn = new SqlColumn
         {
-            var sqlColumn = new SqlColumn
-            {
-                Table = new SqlTable() // dummy Sql Table
-            };
-            sqlColumn.Types.Add(MsSqlVersion.MsSql2016, sqlType);
+            Table = new SqlTable() // dummy Sql Table
+        };
+        sqlColumn.Types.Add(MsSqlVersion.MsSql2016, sqlType);
 
-            return sqlColumn;
-        }
+        return sqlColumn;
+    }
 
-        public static SqlColumn AddChar(int length, bool isNullable = false)
+    public static SqlColumn AddChar(int length, bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.Char,
-                Length = length,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.Char,
+            Length = length,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddNChar(int length, bool isNullable = false)
+    public static SqlColumn AddNChar(int length, bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.NChar,
-                Length = length,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.NChar,
+            Length = length,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddVarChar(int length, bool isNullable = false)
+    public static SqlColumn AddVarChar(int length, bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.VarChar,
-                Length = length,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.VarChar,
+            Length = length,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddNVarChar(int length, bool isNullable = false)
+    public static SqlColumn AddNVarChar(int length, bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.NVarChar,
-                Length = length,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.NVarChar,
+            Length = length,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddBit(bool isNullable = false)
+    public static SqlColumn AddBit(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.Bit,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.Bit,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddTinyInt(bool isNullable = false)
+    public static SqlColumn AddTinyInt(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.TinyInt,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.TinyInt,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddSmallInt(bool isNullable = false)
+    public static SqlColumn AddSmallInt(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.SmallInt,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.SmallInt,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddInt(bool isNullable = false)
+    public static SqlColumn AddInt(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.Int,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.Int,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddBigInt(bool isNullable = false)
+    public static SqlColumn AddBigInt(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.BigInt,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.BigInt,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddDecimal(int length, int scale, bool isNullable = false)
+    public static SqlColumn AddDecimal(int length, int scale, bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.Decimal,
-                IsNullable = isNullable,
-                Length = length,
-                Scale = scale
-            };
+            SqlTypeInfo = MsSqlType2016.Decimal,
+            IsNullable = isNullable,
+            Length = length,
+            Scale = scale
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddNumeric(int length, int scale, bool isNullable = false)
+    public static SqlColumn AddNumeric(int length, int scale, bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.Numeric,
-                IsNullable = isNullable,
-                Length = length,
-                Scale = scale
-            };
+            SqlTypeInfo = MsSqlType2016.Numeric,
+            IsNullable = isNullable,
+            Length = length,
+            Scale = scale
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddMoney(bool isNullable = false)
+    public static SqlColumn AddMoney(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.Money,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.Money,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddSmallMoney(bool isNullable = false)
+    public static SqlColumn AddSmallMoney(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.SmallMoney,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.SmallMoney,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddFloat(bool isNullable = false)
+    public static SqlColumn AddFloat(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.Float,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.Float,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddReal(bool isNullable = false)
+    public static SqlColumn AddReal(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.Real,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.Real,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddDate(bool isNullable = false)
+    public static SqlColumn AddDate(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.Date,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.Date,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddTime(bool isNullable = false)
+    public static SqlColumn AddTime(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.Time,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.Time,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddDateTime(bool isNullable = false)
+    public static SqlColumn AddDateTime(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.DateTime,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.DateTime,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddDateTime2(int length, bool isNullable = false)
+    public static SqlColumn AddDateTime2(int length, bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.DateTime2,
-                IsNullable = isNullable,
-                Length = length
-            };
+            SqlTypeInfo = MsSqlType2016.DateTime2,
+            IsNullable = isNullable,
+            Length = length
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddDateTimeOffset(int length, bool isNullable = false)
+    public static SqlColumn AddDateTimeOffset(int length, bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.DateTimeOffset,
-                IsNullable = isNullable,
-                Length = length
-            };
+            SqlTypeInfo = MsSqlType2016.DateTimeOffset,
+            IsNullable = isNullable,
+            Length = length
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddSmallDateTime(bool isNullable = false)
+    public static SqlColumn AddSmallDateTime(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.SmallDateTime,
-                IsNullable = isNullable
-            };
+            SqlTypeInfo = MsSqlType2016.SmallDateTime,
+            IsNullable = isNullable
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddBinary(int length, bool isNullable = false)
+    public static SqlColumn AddBinary(int length, bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.Binary,
-                IsNullable = isNullable,
-                Length = length
-            };
+            SqlTypeInfo = MsSqlType2016.Binary,
+            IsNullable = isNullable,
+            Length = length
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddVarBinary(int length, bool isNullable = false)
+    public static SqlColumn AddVarBinary(int length, bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.VarBinary,
-                IsNullable = isNullable,
-                Length = length
-            };
+            SqlTypeInfo = MsSqlType2016.VarBinary,
+            IsNullable = isNullable,
+            Length = length
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddImage(bool isNullable = false)
+    public static SqlColumn AddImage(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.Image,
-                IsNullable = isNullable,
-            };
+            SqlTypeInfo = MsSqlType2016.Image,
+            IsNullable = isNullable,
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddText(bool isNullable = false)
+    public static SqlColumn AddText(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.Text,
-                IsNullable = isNullable,
-            };
+            SqlTypeInfo = MsSqlType2016.Text,
+            IsNullable = isNullable,
+        };
 
-            return Add(sqlType);
-        }
-        public static SqlColumn AddNText(bool isNullable = false)
+        return Add(sqlType);
+    }
+    public static SqlColumn AddNText(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.NText,
-                IsNullable = isNullable,
-            };
+            SqlTypeInfo = MsSqlType2016.NText,
+            IsNullable = isNullable,
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddUniqueIdentifier(bool isNullable = false)
+    public static SqlColumn AddUniqueIdentifier(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.UniqueIdentifier,
-                IsNullable = isNullable,
-            };
+            SqlTypeInfo = MsSqlType2016.UniqueIdentifier,
+            IsNullable = isNullable,
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn AddXml(bool isNullable = false)
+    public static SqlColumn AddXml(bool isNullable = false)
+    {
+        var sqlType = new SqlType
         {
-            var sqlType = new SqlType
-            {
-                SqlTypeInfo = MsSqlType2016.Xml,
-                IsNullable = isNullable,
-            };
+            SqlTypeInfo = MsSqlType2016.Xml,
+            IsNullable = isNullable,
+        };
 
-            return Add(sqlType);
-        }
+        return Add(sqlType);
+    }
 
-        public static SqlColumn SetForeignKeyTo(string referredTableName, string fkName = null)
+    public static SqlColumn SetForeignKeyTo(string referredTableName, string fkName = null)
+    {
+        var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
+
+        var singleFkColumn = new SqlColumn
         {
-            var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
+            Table = new SqlTable()
+        };
 
-            var singleFkColumn = new SqlColumn
-            {
-                Table = new SqlTable()
-            };
+        var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, null, fkName);
 
-            var fk = new ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn(singleFkColumn, referredTableNameWithSchema, null, fkName);
+        singleFkColumn.Table.Properties.Add(fk);
 
-            singleFkColumn.Table.Properties.Add(fk);
+        return singleFkColumn;
+    }
 
-            return singleFkColumn;
-        }
+    public static UniqueConstraint AddUniqueConstraint(params string[] columnNames)
+    {
+        var table = new SqlTable(); // dummy SqlTable
+        var uc = new UniqueConstraint(table, null);
 
-        public static UniqueConstraint AddUniqueConstraint(params string[] columnNames)
-        {
-            var table = new SqlTable(); // dummy SqlTable
-            var uc = new UniqueConstraint(table, null);
+        foreach (var columnName in columnNames)
+            uc.SqlColumns.Add(new ColumnAndOrderRegistration(columnName, AscDesc.Asc));
 
-            foreach (var columnName in columnNames)
-                uc.SqlColumns.Add(new ColumnAndOrderRegistration(columnName, AscDesc.Asc));
-
-            return uc;
-        }
+        return uc;
     }
 }

@@ -1,38 +1,36 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Tests
+﻿using System.Linq;
+using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.DataDefinition.MsSql2016;
+using FizzCode.DbTools.TestBase;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace FizzCode.DbTools.DataDefinition.Tests;
+public class TestDatabaseFkNoCheckTest : TestDatabaseDeclaration
 {
-    using System.Linq;
-    using FizzCode.DbTools.DataDefinition.Base;
-    using FizzCode.DbTools.DataDefinition.MsSql2016;
-    using FizzCode.DbTools.TestBase;
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
+    public SqlTable Primary { get; } = AddTable(table =>
+      {
+          table.AddInt("Id").SetPK();
+      });
 
-    public class TestDatabaseFkNoCheckTest : TestDatabaseDeclaration
+    public SqlTable Foreign { get; } = AddTable(table =>
+      {
+          table.AddInt("Id").SetPK().SetIdentity();
+          table.AddInt("PrimaryId").SetForeignKeyToTable(nameof(Primary), new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true"));
+      });
+}
+
+[TestClass]
+public class DatabaseDefinitionFkNoCheckTest
+{
+    [TestMethod]
+    public void FkNoCheckTest()
     {
-        public SqlTable Primary { get; } = AddTable(table =>
-          {
-              table.AddInt("Id").SetPK();
-          });
+        var dd_ = new TestDatabaseFkNoCheckTest();
 
-        public SqlTable Foreign { get; } = AddTable(table =>
-          {
-              table.AddInt("Id").SetPK().SetIdentity();
-              table.AddInt("PrimaryId").SetForeignKeyToTable(nameof(Primary), new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true"));
-          });
-    }
+        var property = dd_.GetTable("Foreign").Properties.OfType<ForeignKey>().First().SqlEngineVersionSpecificProperties.First();
 
-    [TestClass]
-    public class DatabaseDefinitionFkNoCheckTest
-    {
-        [TestMethod]
-        public void FkNoCheckTest()
-        {
-            var dd_ = new TestDatabaseFkNoCheckTest();
-
-            var property = dd_.GetTable("Foreign").Properties.OfType<ForeignKey>().First().SqlEngineVersionSpecificProperties.First();
-
-            Assert.AreEqual(MsSqlVersion.MsSql2016, property.Version);
-            Assert.AreEqual("Nocheck", property.Name);
-            Assert.AreEqual("true", property.Value);
-        }
+        Assert.AreEqual(MsSqlVersion.MsSql2016, property.Version);
+        Assert.AreEqual("Nocheck", property.Name);
+        Assert.AreEqual("true", property.Value);
     }
 }
