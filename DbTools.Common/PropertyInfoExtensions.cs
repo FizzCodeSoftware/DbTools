@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
-using FizzCode.DbTools.Common;
 
-namespace FizzCode.DbTools.DataDeclaration;
+namespace FizzCode.DbTools.Common;
 
 public static class PropertyInfoExtensions
 {

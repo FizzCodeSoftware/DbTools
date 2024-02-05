@@ -14,6 +14,6 @@ public static class Throw
     public static void InvalidOperationExceptionIfNull(object? argument, Type typeOfProperty, Type typeOfObject)
     {
         if (argument is null)
-            throw new InvalidOperationException($"The property {typeOfProperty.Name} cannot be null on {typeOfObject.Name}.");
+            throw new InvalidOperationException($"The property {typeOfProperty.GetFriendlyTypeName()} cannot be null on {typeOfObject.Name}.");
     }
 }

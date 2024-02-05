@@ -41,6 +41,7 @@ public class DataDefinitionReaderForeignKeyCompositeTests : DataDefinitionReader
 
         var order = dd.GetTable("Order");
 
+        // TODO for Oracle, order of FK columns can be different
         Assert.AreEqual(topOrdersPerCompany.Columns["Top1A"], fk1.ForeignKeyColumns[0].ForeignKeyColumn);
         Assert.AreEqual(topOrdersPerCompany.Columns["Top1B"], fk1.ForeignKeyColumns[1].ForeignKeyColumn);
 

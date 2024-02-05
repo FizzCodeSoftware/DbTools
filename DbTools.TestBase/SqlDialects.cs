@@ -31,9 +31,9 @@ public abstract class SqlVersionsBasAttribute : Attribute, ITestDataSource
         }
     }
 
-    public string GetDisplayName(MethodInfo methodInfo, object[] data)
+    public string GetDisplayName(MethodInfo methodInfo, object?[]? data)
     {
-        var versionKey = (SqlEngineVersion)data[0];
+        var versionKey = (SqlEngineVersion?)data?[0];
         return $"{methodInfo.Name} {versionKey}";
     }
 }

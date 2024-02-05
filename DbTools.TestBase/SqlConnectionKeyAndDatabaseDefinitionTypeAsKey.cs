@@ -1,4 +1,5 @@
 ﻿using System;
+using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDefinition;
 
 namespace FizzCode.DbTools.TestBase;
@@ -9,7 +10,9 @@ internal class SqlConnectionKeyAndDatabaseDefinitionTypeAsKey
     internal SqlConnectionKeyAndDatabaseDefinitionTypeAsKey(string connectionStringKey, DatabaseDefinition dd)
     {
         _connectionStringKey = connectionStringKey;
-        _databaseDefinitionTypeFullName = dd.GetType().FullName;
+        var fullName = dd.GetType().FullName;
+        Throw.InvalidOperationExceptionIfNull(fullName, "dd.GetType().FullName");
+        _databaseDefinitionTypeFullName = fullName!;
     }
 
     public override string ToString()
@@ -17,7 +20,7 @@ internal class SqlConnectionKeyAndDatabaseDefinitionTypeAsKey
         return _connectionStringKey + "_" + _databaseDefinitionTypeFullName;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is SqlConnectionKeyAndDatabaseDefinitionTypeAsKey s && s.ToString() == ToString();
     }

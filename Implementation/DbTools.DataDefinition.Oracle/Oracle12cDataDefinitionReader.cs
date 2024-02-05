@@ -64,7 +64,7 @@ public class Oracle12cDataDefinitionReader : GenericDataDefinitionReader
         // TODO 
         // ColumnDocumentationReader.GetColumnDocumentation(sqlTable);
 
-        sqlTable.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlTable.SchemaAndTableName, Executer.Context);
+        sqlTable.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlTable.SchemaAndTableNameSafe, Executer.Context);
 
         return sqlTable;
     }

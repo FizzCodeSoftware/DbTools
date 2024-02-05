@@ -90,7 +90,7 @@ public class SqlExecuterTestAdapter : ConfigurationBase
                 var shouldDrop = TestHelper.ShouldRunIntegrationTest(sqlExecuterAndDialect.Version);
                 if (shouldDrop)
                 {
-                    var dds = _dds.Where(e => e.Key == new SqlConnectionKeyAndDatabaseDefinitionTypeAsKey(sqlExecuterAndDialect.Version.UniqueName, e.Value)).Select(e => e.Value).ToArray();
+                    var dds = _dds.Where(dd => dd.Key == new SqlConnectionKeyAndDatabaseDefinitionTypeAsKey(sqlExecuterAndDialect.Version.UniqueName, dd.Value)).Select(e => e.Value).ToArray();
                     sqlExecuterAndDialect.SqlExecuter.CleanupDatabase(true, dds);
                 }
             }
