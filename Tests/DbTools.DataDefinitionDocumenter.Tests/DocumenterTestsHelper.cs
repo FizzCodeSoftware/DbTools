@@ -3,7 +3,7 @@
 namespace FizzCode.DbTools.DataDefinitionDocumenter.Tests;
 public static class DocumenterTestsHelper
 {
-    public static DocumenterContext CreateTestDocumenterContext(SqlEngineVersion version, ITableCustomizer customizer = null)
+    public static DocumenterContext CreateTestDocumenterContext(SqlEngineVersion version, ITableCustomizer? customizer = null)
     {
         var context = new DocumenterContext
         {
@@ -16,7 +16,7 @@ public static class DocumenterTestsHelper
         return context;
     }
 
-    public static ChangeDocumenterContext CreateTestChangeContext(SqlEngineVersion version, ITableCustomizer customizerOriginal = null, ITableCustomizer customizerNew = null)
+    public static ChangeDocumenterContext CreateTestChangeContext(SqlEngineVersion version, ITableCustomizer? customizerOriginal = null, ITableCustomizer? customizerNew = null)
     {
         var documenterContext = CreateTestDocumenterContext(version, null);
 
@@ -32,7 +32,7 @@ public static class DocumenterTestsHelper
         return changeDocumenterContext;
     }
 
-    public static GeneratorContext CreateTestGeneratorContext(SqlEngineVersion version, ITableCustomizer customizer = null)
+    public static GeneratorContext CreateTestGeneratorContext(SqlEngineVersion version, ITableCustomizer? customizer = null)
     {
         var context = new GeneratorContext
         {

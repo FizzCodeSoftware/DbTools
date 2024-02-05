@@ -15,7 +15,7 @@ public static class SqlEngineVersions
             foreach (var prop in staticInstanceProperties)
             {
                 var version = prop.GetValue(null) as SqlEngineVersion;
-                AllVersions.Add(version);
+                AllVersions.Add(version!);
             }
         }
     }

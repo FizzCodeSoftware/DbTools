@@ -4,7 +4,7 @@ namespace FizzCode.DbTools.DataDefinition.Base;
 public interface IDatabaseDefinition
 {
     SqlEngineVersion MainVersion { get; }
-    List<SqlEngineVersion> SecondaryVersions { get; }
+    List<SqlEngineVersion>? SecondaryVersions { get; }
     List<StoredProcedure> StoredProcedures { get; }
     TypeMappers TypeMappers { get; }
 

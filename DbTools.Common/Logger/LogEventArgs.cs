@@ -13,9 +13,9 @@ public enum LogSeverity
 
 public class LogEventArgs : EventArgs
 {
-    public string Text { get; set; }
-    public object[] Arguments { get; set; }
-    public LogSeverity Severity { get; set; }
-    public bool ForOps { get; set; }
-    public Exception Exception { get; set; }
+    public required string Text { get; init; }
+    public object[]? Arguments { get; init; }
+    public LogSeverity Severity { get; init; }
+    public bool ForOps { get; init; }
+    public Exception? Exception { get; init; }
 }

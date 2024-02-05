@@ -21,6 +21,6 @@ public static class Features
         if (_features.ContainsKey(name) && _features[name].Support.ContainsKey(version))
             return _features[name].Support[version];
 
-        return new FeatureSupport(Support.Unknown, null);
+        return new FeatureSupport(Support.Unknown, $"The support for the feature {name} for {version} is unknown.");
     }
 }

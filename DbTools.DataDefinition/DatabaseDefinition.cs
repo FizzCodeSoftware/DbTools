@@ -10,7 +10,7 @@ public class DatabaseDefinition : IDatabaseDefinition
 {
     public TypeMappers TypeMappers { get; }
     public SqlEngineVersion MainVersion { get; protected set; }
-    public List<SqlEngineVersion> SecondaryVersions { get; protected set; }
+    public List<SqlEngineVersion>? SecondaryVersions { get; protected set; }
     public Tables Tables { get; } = [];
     protected Views Views { get; } = [];
 
@@ -23,14 +23,13 @@ public class DatabaseDefinition : IDatabaseDefinition
     {
     }
 
-    public DatabaseDefinition(IFactoryContainer factoryContainer, SqlEngineVersion mainVersion, params SqlEngineVersion[] secondaryVersions)
+    public DatabaseDefinition(IFactoryContainer factoryContainer, SqlEngineVersion mainVersion, params SqlEngineVersion[]? secondaryVersions)
     {
         FactoryContainer = factoryContainer;
 
         MainVersion = mainVersion;
         SecondaryVersions = secondaryVersions?.ToList();
-
-        FactoryContainer.TryGet(out ITypeMapperFactory typeMapperFactory);
+        var typeMapperFactory = FactoryContainer.Get<ITypeMapperFactory>();
         TypeMappers = new TypeMappers(typeMapperFactory);
     }
 
@@ -96,10 +95,10 @@ public class DatabaseDefinition : IDatabaseDefinition
     public IEnumerable<string> GetSchemaNames()
     {
         var schemas = GetTables()
-            .Select(t => t.SchemaAndTableName.Schema)
+            .Select(t => t.SchemaAndTableNameSafe.Schema)
             .Distinct()
             .Where(sn => !string.IsNullOrEmpty(sn));
 
-        return schemas;
+        return schemas!;
     }
 }

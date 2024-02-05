@@ -4,7 +4,7 @@ public abstract class ForeignKeyRegistrationBase : ForeignKey
 {
     public SchemaAndTableName ReferredTableName { get; }
 
-    protected ForeignKeyRegistrationBase(SqlTable table, SchemaAndTableName referredTableName, string name)
+    protected ForeignKeyRegistrationBase(SqlTable table, SchemaAndTableName referredTableName, string? name)
         : base(table, null, name)
     {
         Name = name;

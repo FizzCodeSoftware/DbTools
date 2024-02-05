@@ -8,13 +8,9 @@ using FizzCode.DbTools.SqlExecuter.Oracle;
 using FizzCode.LightWeight;
 
 namespace FizzCode.DbTools.DataDefinition.Oracle12c;
-public class Oracle12cDataDefinitionReader : GenericDataDefinitionReader
+public class Oracle12cDataDefinitionReader(NamedConnectionString connectionString, ContextWithLogger context, ISchemaNamesToRead schemaNames)
+    : GenericDataDefinitionReader(new Oracle12cExecuter(context, connectionString, new Oracle12cGenerator(context)), schemaNames)
 {
-    public Oracle12cDataDefinitionReader(NamedConnectionString connectionString, ContextWithLogger context, ISchemaNamesToRead schemaNames)
-        : base(new Oracle12cExecuter(context, connectionString, new Oracle12cGenerator(context)), schemaNames)
-    {
-    }
-
     public override DatabaseDefinition GetDatabaseDefinition()
     {
         var dd = new DatabaseDefinition(OracleVersion.Oracle12c, GenericVersion.Generic1);

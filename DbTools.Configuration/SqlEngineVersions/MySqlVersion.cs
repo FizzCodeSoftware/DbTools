@@ -8,5 +8,5 @@ public class MySqlVersion : SqlEngineVersion
     {
     }
 
-    public static MySqlVersion Generic { get; } = new MySqlVersion(nameof(Generic), null, null);
+    public static MySqlVersion Generic { get; } = new MySqlVersion(nameof(Generic), "0", "0");
 }

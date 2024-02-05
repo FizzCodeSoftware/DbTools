@@ -5,7 +5,7 @@ using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 namespace FizzCode.DbTools.DataDefinition.Base;
 public class SqlType : ISqlType
 {
-    public ISqlTypeInfo SqlTypeInfo { get; set; }
+    public required ISqlTypeInfo SqlTypeInfo { get; set; }
     public bool IsNullable { get; set; }
     public int? Length { get; set; }
     public int? Scale { get; set; }

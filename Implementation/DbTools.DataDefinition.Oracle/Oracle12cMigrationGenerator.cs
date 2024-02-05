@@ -8,13 +8,9 @@ using FizzCode.DbTools.DataDefinition.Base.Migration;
 using FizzCode.DbTools.DataDefinition.SqlGenerator;
 
 namespace FizzCode.DbTools.DataDefinition.Oracle12c;
-public class Oracle12cMigrationGenerator : AbstractSqlMigrationGenerator
+public class Oracle12cMigrationGenerator(ContextWithLogger context)
+    : AbstractSqlMigrationGenerator(context, new Oracle12cGenerator(context))
 {
-    public Oracle12cMigrationGenerator(ContextWithLogger context)
-        : base(context, new Oracle12cGenerator(context))
-    {
-    }
-
     public override string CreateColumns(params ColumnNew[] columnNews)
     {
         var tableNames = columnNews.Select(c => c.Table.SchemaAndTableName).Distinct();

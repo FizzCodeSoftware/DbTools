@@ -8,13 +8,10 @@ using FizzCode.DbTools.DataDefinition.SqlGenerator;
 using FizzCode.DbTools.SqlGenerator.Oracle;
 
 namespace FizzCode.DbTools.DataDefinition.Oracle12c;
-public class Oracle12cGenerator : AbstractSqlGenerator
+public class Oracle12cGenerator(Context context)
+    : AbstractSqlGenerator(new OracleGenerator(context))
 {
-    public Oracle12cGenerator(Context context)
-        : base(new OracleGenerator(context))
-    {
-        SqlVersion = OracleVersion.Oracle12c;
-    }
+    public override SqlEngineVersion SqlVersion => OracleVersion.Oracle12c;
 
     public override SqlStatementWithParameters CreateSchema(string schemaName)
     {

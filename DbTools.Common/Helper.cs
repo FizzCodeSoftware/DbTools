@@ -21,7 +21,9 @@ public static class Helper
 
         if (version is OracleVersion)
         {
-            sqlVersionSpecificSettings["OracleDatabaseName"] = configuration["oracleDatabaseName"];
+            Throw.InvalidOperationExceptionIfNull(configuration["oracleDatabaseName"], "oracleDatabaseName in configuration.");
+
+            sqlVersionSpecificSettings["OracleDatabaseName"] = configuration["oracleDatabaseName"]!;
             var upperCaseEscapedNames = configuration["upperCaseEscapedNames"];
             if (upperCaseEscapedNames is null || upperCaseEscapedNames == "")
                 upperCaseEscapedNames = "false";

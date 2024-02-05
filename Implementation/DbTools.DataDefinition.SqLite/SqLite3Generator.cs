@@ -8,13 +8,10 @@ using FizzCode.DbTools.DataDefinition.SqlGenerator;
 using FizzCode.DbTools.SqlGenerator.SqLite;
 
 namespace FizzCode.DbTools.DataDefinition.SqLite3;
-public class SqLite3Generator : AbstractSqlGenerator
+public class SqLite3Generator(Context context)
+    : AbstractSqlGenerator(new SqLiteGenerator(context))
 {
-    public SqLite3Generator(Context context)
-        : base(new SqLiteGenerator(context))
-    {
-        SqlVersion = SqLiteVersion.SqLite3;
-    }
+    public override SqlEngineVersion SqlVersion => SqLiteVersion.SqLite3;
 
     public override string DropAllForeignKeys()
     {
@@ -89,7 +86,9 @@ public class SqLite3Generator : AbstractSqlGenerator
 
         if (pk != null
             && pk.SqlColumns.Any(pkc => pkc.SqlColumn.Properties.OfType<Identity>().FirstOrDefault() != null))
+        {
             return;
+        }
 
         base.CreateTablePrimaryKey(table, sb);
     }

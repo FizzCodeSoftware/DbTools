@@ -3,7 +3,7 @@
 namespace FizzCode.DbTools.Common.Logger;
 public class Logger
 {
-    public EventHandler<LogEventArgs> LogEvent { get; set; }
+    public EventHandler<LogEventArgs>? LogEvent { get; set; }
 
     public void Log(LogSeverity severity, string text, params object[] args)
     {

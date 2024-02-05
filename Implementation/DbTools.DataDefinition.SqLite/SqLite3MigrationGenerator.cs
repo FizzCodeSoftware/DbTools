@@ -2,10 +2,7 @@
 using FizzCode.DbTools.DataDefinition.SqlGenerator;
 
 namespace FizzCode.DbTools.DataDefinition.SqLite3;
-public class SqLite3MigrationGenerator : AbstractSqlMigrationGenerator
+public class SqLite3MigrationGenerator(ContextWithLogger context)
+    : AbstractSqlMigrationGenerator(context, new SqLite3Generator(context))
 {
-    public SqLite3MigrationGenerator(ContextWithLogger context)
-        : base(context, new SqLite3Generator(context))
-    {
-    }
 }

@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
 namespace FizzCode.DbTools.DataDefinition.Base;
-public class ForeignKey(SqlTable table, SqlTable referredTable, string name)
+public class ForeignKey(SqlTable table, SqlTable? referredTable, string? name)
     : SqlTableOrViewPropertyBase<SqlTable>(table)
 {
-    public string Name { get; set; } = name;
+    public string? Name { get; set; } = name;
 
     public List<ForeignKeyColumnMap> ForeignKeyColumns { get; set; } = [];
 
-    public SqlTable ReferredTable { get; } = referredTable;
+    public SqlTable? ReferredTable { get; } = referredTable;
 
     public SqlTable SqlTable { get => SqlTableOrView; }
 

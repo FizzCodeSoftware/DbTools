@@ -10,7 +10,7 @@ using Microsoft.Extensions.Configuration;
 namespace FizzCode.DbTools.Factory;
 public class Root : IFactoryContainer
 {
-    protected static IContainer Container { get; set; }
+    protected static IContainer? Container { get; set; }
     protected static List<(Type, Type)> RegisteredTypes { get; set; } = [];
     protected static List<(Type, object)> RegisteredInstances { get; set; } = [];
     private static bool _isInitialized;
@@ -34,7 +34,7 @@ public class Root : IFactoryContainer
         {
             var registerTypeRef = miRegisterType.MakeGenericMethod(type1);
             var result = registerTypeRef.Invoke(builder, new object[] { builder });
-            var miAs = result.GetType().GetMethods().Where(m => m.Name == "As" && m.IsGenericMethod).First();
+            var miAs = result!.GetType().GetMethods().Where(m => m.Name == "As" && m.IsGenericMethod).First();
             var asRef = miAs.MakeGenericMethod(type2);
             asRef.Invoke(result, null);
         }
@@ -56,7 +56,7 @@ public class Root : IFactoryContainer
             Build();
             _isInitialized = true;
         }
-        var scope = Container.BeginLifetimeScope();
+        var scope = Container!.BeginLifetimeScope();
         return scope.Resolve<TFactory>();
     }
 
@@ -67,7 +67,7 @@ public class Root : IFactoryContainer
             Build();
             _isInitialized = true;
         }
-        var scope = Container.BeginLifetimeScope();
+        var scope = Container!.BeginLifetimeScope();
         var succeed = scope.TryResolve(typeof(TFactory), out var factoryObj);
         factory = factoryObj as TFactory;
         return succeed;

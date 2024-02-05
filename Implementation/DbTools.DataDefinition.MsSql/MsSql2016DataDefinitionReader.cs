@@ -9,13 +9,9 @@ using FizzCode.DbTools.SqlExecuter.MsSql;
 using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 
 namespace FizzCode.DbTools.DataDefinition.MsSql2016;
-public class MsSql2016DataDefinitionReader : GenericDataDefinitionReader
+public class MsSql2016DataDefinitionReader(NamedConnectionString connectionString, ContextWithLogger context, ISchemaNamesToRead schemaNames)
+    : GenericDataDefinitionReader(new MsSql2016Executer(context, connectionString, new MsSql2016Generator(context)), schemaNames)
 {
-    public MsSql2016DataDefinitionReader(NamedConnectionString connectionString, ContextWithLogger context, ISchemaNamesToRead schemaNames)
-        : base(new MsSql2016Executer(context, connectionString, new MsSql2016Generator(context)), schemaNames)
-    {
-    }
-
     public override DatabaseDefinition GetDatabaseDefinition()
     {
         var dd = new DatabaseDefinition(MsSqlVersion.MsSql2016, GenericVersion.Generic1);

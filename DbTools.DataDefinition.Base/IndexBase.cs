@@ -20,6 +20,6 @@ public abstract class IndexBase<T> : SqlTableOrViewPropertyBase<T> where T : Sql
         if (withOrder)
             return string.Join(", ", SqlColumns);
 
-        return string.Join(", ", SqlColumns.Select(cao => cao.SqlColumn.Name));
+        return string.Join(", ", SqlColumns.Select(cao => cao.SqlColumn?.Name));
     }
 }

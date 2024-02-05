@@ -7,7 +7,7 @@ namespace FizzCode.DbTools.Common;
 [DebuggerDisplay("{ToString(),nq}")]
 public class Row : Dictionary<string, object>
 {
-    public T GetAs<T>(string name)
+    public T? GetAs<T>(string name)
     {
         try
         {

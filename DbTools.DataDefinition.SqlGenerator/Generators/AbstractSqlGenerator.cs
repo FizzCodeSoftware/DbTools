@@ -12,7 +12,7 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
 {
     public Context Context { get => SqlGeneratorBase.Context; }
 
-    public SqlEngineVersion SqlVersion { get; protected set; }
+    public abstract SqlEngineVersion SqlVersion { get; }
 
     protected ISqlGeneratorBase SqlGeneratorBase { get; }
 

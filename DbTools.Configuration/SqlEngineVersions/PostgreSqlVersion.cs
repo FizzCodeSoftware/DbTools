@@ -8,5 +8,5 @@ public class PostgreSqlVersion : SqlEngineVersion
     {
     }
 
-    public static PostgreSqlVersion Generic { get; } = new PostgreSqlVersion(nameof(Generic), null, null);
+    public static PostgreSqlVersion Generic { get; } = new PostgreSqlVersion(nameof(Generic), "0", "0");
 }

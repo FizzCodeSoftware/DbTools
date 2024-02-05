@@ -2,6 +2,5 @@
 
 public class ContextWithLogger : Context
 {
-    
-    public Logger.Logger Logger { get; set; }
+    public required Logger.Logger Logger { get; init; }
 }

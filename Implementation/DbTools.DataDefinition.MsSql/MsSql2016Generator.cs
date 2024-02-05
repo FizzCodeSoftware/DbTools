@@ -9,13 +9,10 @@ using FizzCode.DbTools.DataDefinition.SqlGenerator;
 using FizzCode.DbTools.Interfaces;
 
 namespace FizzCode.DbTools.DataDefinition.MsSql2016;
-public class MsSql2016Generator : AbstractSqlGenerator, ISqlGeneratorDropAndCreateDatabase
+public class MsSql2016Generator(Context context)
+    : AbstractSqlGenerator(new MsSqlGenerator(context)), ISqlGeneratorDropAndCreateDatabase
 {
-    public MsSql2016Generator(Context context)
-        : base(new MsSqlGenerator(context))
-    {
-        SqlVersion = MsSqlVersion.MsSql2016;
-    }
+    public override SqlEngineVersion SqlVersion => MsSqlVersion.MsSql2016;
 
     public SqlStatementWithParameters CreateDatabase(string databaseName)
     {

@@ -6,14 +6,10 @@ using FizzCode.DbTools.Factory.Interfaces;
 using FizzCode.DbTools.Interfaces;
 
 namespace FizzCode.DbTools.DataDefinition.Factory;
-public class SqlGeneratorFactory : ISqlGeneratorFactory
+public class SqlGeneratorFactory(IContextFactory contextFactory)
+    : ISqlGeneratorFactory
 {
-    private readonly IContextFactory _contextFactory;
-
-    public SqlGeneratorFactory(IContextFactory contextFactory)
-    {
-        _contextFactory = contextFactory;
-    }
+    private readonly IContextFactory _contextFactory = contextFactory;
 
     public ISqlGenerator CreateSqlGenerator(SqlEngineVersion version)
     {

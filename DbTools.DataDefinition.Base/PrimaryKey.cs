@@ -4,7 +4,7 @@ public class PrimaryKey : IndexBase<SqlTable>
 {
     public SqlTable SqlTable { get => SqlTableOrView; }
 
-    public PrimaryKey(SqlTable sqlTable, string name)
+    public PrimaryKey(SqlTable sqlTable, string? name)
         : base(sqlTable, name)
     {
     }
