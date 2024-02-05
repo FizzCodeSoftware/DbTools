@@ -27,8 +27,8 @@ public class ChangeDocumenter : DocumenterWriterBase
         NewDatabaseName = newDatabaseName;
     }
 
-    private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategoryOrignal = new();
-    private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategoryOriginal = new();
+    private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategoryOrignal = [];
+    private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategoryOriginal = [];
 
     //private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategoryNew = new List<KeyValuePair<string, SqlTable>>();
     //private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategoryNew = new List<KeyValuePair<string, SqlTable>>();
@@ -346,7 +346,7 @@ public class ChangeDocumenter : DocumenterWriterBase
         // TODO coloring to incude schema
         var hexColor = Context.CustomizerNew.BackGroundColor(schemaAndTableName);
 
-        if (hexColor == null)
+        if (hexColor is null)
             return null;
 
         return ColorTranslator.FromHtml(hexColor);

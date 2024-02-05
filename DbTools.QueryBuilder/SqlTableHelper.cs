@@ -9,7 +9,7 @@ public static class SqlTableHelper
     internal static void SetAliasProperty(this SqlTable sqlTable, string alias)
     {
         var aliasProperty = sqlTable.Properties.OfType<AliasTableProperty>().FirstOrDefault();
-        if (aliasProperty == null)
+        if (aliasProperty is null)
         {
             aliasProperty = new AliasTableProperty();
             sqlTable.Properties.Add(aliasProperty);
@@ -21,7 +21,7 @@ public static class SqlTableHelper
     internal static void SetAliasProperty(this SqlView sqlView, string alias)
     {
         var aliasProperty = sqlView.Properties.OfType<AliasViewProperty>().FirstOrDefault();
-        if (aliasProperty == null)
+        if (aliasProperty is null)
         {
             aliasProperty = new AliasViewProperty();
             sqlView.Properties.Add(aliasProperty);

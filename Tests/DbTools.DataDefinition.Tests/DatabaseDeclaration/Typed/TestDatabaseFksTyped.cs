@@ -1,4 +1,5 @@
 ﻿using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.DataDefinition.Generic;
 using FizzCode.DbTools.TestBase;
 
 namespace FizzCode.DbTools.DataDefinition.Tests;
@@ -11,22 +12,22 @@ public class TestDatabaseFksTyped : TestDatabaseDeclaration
 
 public class Child : SqlTable
 {
-    public SqlColumn Id { get; } = Generic1.Generic1.AddInt32().SetPK().SetIdentity();
-    public SqlColumn Name { get; } = Generic1.Generic1.AddNVarChar(100);
+    public SqlColumn Id { get; } = Generic1.AddInt32().SetPK().SetIdentity();
+    public SqlColumn Name { get; } = Generic1.AddNVarChar(100);
 
-    public SqlColumn ParentId { get; } = Generic1.Generic1.SetForeignKeyTo(nameof(TestDatabaseFksTyped.Parent));
+    public SqlColumn ParentId { get; } = Generic1.SetForeignKeyTo(nameof(TestDatabaseFksTyped.Parent));
 }
 
 public class ChildChild : SqlTable
 {
-    public SqlColumn Id { get; } = Generic1.Generic1.AddInt32().SetPK().SetIdentity();
-    public SqlColumn Name { get; } = Generic1.Generic1.AddNVarChar(100);
+    public SqlColumn Id { get; } = Generic1.AddInt32().SetPK().SetIdentity();
+    public SqlColumn Name { get; } = Generic1.AddNVarChar(100);
 
-    public SqlColumn ChildId { get; } = Generic1.Generic1.SetForeignKeyTo(nameof(TestDatabaseFksTyped.Child));
+    public SqlColumn ChildId { get; } = Generic1.SetForeignKeyTo(nameof(TestDatabaseFksTyped.Child));
 }
 
 public class Parent : SqlTable
 {
-    public SqlColumn Id { get; } = Generic1.Generic1.AddInt32().SetPK().SetIdentity();
-    public SqlColumn Name { get; } = Generic1.Generic1.AddNVarChar(100);
+    public SqlColumn Id { get; } = Generic1.AddInt32().SetPK().SetIdentity();
+    public SqlColumn Name { get; } = Generic1.AddNVarChar(100);
 }

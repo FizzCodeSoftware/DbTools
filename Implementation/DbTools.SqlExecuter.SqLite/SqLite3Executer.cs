@@ -10,7 +10,7 @@ namespace FizzCode.DbTools.SqlExecuter.SqLite3;
 public class SqLite3Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDatabase
 #pragma warning restore CA1001 // Types that own disposable fields should be disposable
 {
-    public SqLite3Executer(ContextWithLogger context, NamedConnectionString connectionString, ISqlGenerator sqlGenerator = null)
+    public SqLite3Executer(ContextWithLogger context, NamedConnectionString connectionString, ISqlGenerator? sqlGenerator = null)
         : base(context, connectionString, sqlGenerator)
     {
     }
@@ -30,7 +30,7 @@ public class SqLite3Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDa
         Log(LogSeverity.Verbose, "Create database.");
 
         if (_connection != null)
-            throw new Exception("Database already connected.");
+            throw new System.Exception("Database already connected.");
 
         _connection = new SQLiteConnection(ConnectionString.ConnectionString);
         _connection.Open();
@@ -74,7 +74,7 @@ public class SqLite3Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDa
             }
             catch (SQLiteException ex)
             {
-                var newEx = new Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
+                var newEx = new System.Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
                 throw newEx;
             }
         }
@@ -107,7 +107,7 @@ public class SqLite3Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDa
                 }
                 catch (SQLiteException ex)
                 {
-                    var newEx = new Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
+                    var newEx = new System.Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
                     throw newEx;
                 }
             }
@@ -135,7 +135,7 @@ public class SqLite3Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDa
             }
             catch (SQLiteException ex)
             {
-                var newEx = new Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
+                var newEx = new System.Exception($"Sql fails:\r\n{command.CommandText}\r\n{ex.Message}", ex);
                 throw newEx;
             }
         }
@@ -143,6 +143,6 @@ public class SqLite3Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDa
 
     public override string GetDatabase()
     {
-        throw new NotImplementedException();
+        throw new System.NotImplementedException();
     }
 }

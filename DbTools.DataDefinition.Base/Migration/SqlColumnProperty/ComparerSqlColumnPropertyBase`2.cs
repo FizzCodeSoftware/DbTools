@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+﻿using System.Collections.Generic;
+
+namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public abstract class ComparerSqlColumnPropertyBase<TProperty, TMigration>
     where TProperty : SqlColumnProperty
     where TMigration : SqlColumnPropertyMigration
@@ -18,7 +20,7 @@ public abstract class ComparerSqlColumnPropertyBase<TProperty, TMigration>
         foreach (var propertyNew in columnNew.Properties.OfType<TProperty>())
         {
             var propertyOriginal = columnOriginal.Properties.OfType<TProperty>().FirstOrDefault();
-            if (propertyOriginal == null)
+            if (propertyOriginal is null)
             {
                 changes.Add(CreateNew(propertyNew));
             }

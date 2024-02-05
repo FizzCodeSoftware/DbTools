@@ -26,7 +26,7 @@ public class SqlStatementWithParameters
     }
 
     public string Statement { get; set; }
-    public Dictionary<string, object> Parameters { get; } = new Dictionary<string, object>();
+    public Dictionary<string, object> Parameters { get; } = [];
 
     public static implicit operator SqlStatementWithParameters(string statement)
     {

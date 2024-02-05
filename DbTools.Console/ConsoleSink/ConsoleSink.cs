@@ -20,7 +20,7 @@ internal class ConsoleSink : ILogEventSink
 
         var template = new MessageTemplateParser().Parse(outputTemplate);
 
-        _writers = new List<Action<LogEvent, TextWriter>>();
+        _writers = [];
         foreach (var token in template.Tokens)
         {
             switch (token)
@@ -64,7 +64,7 @@ internal class ConsoleSink : ILogEventSink
 
     public void Emit(LogEvent logEvent)
     {
-        if (logEvent == null)
+        if (logEvent is null)
             return;
 
         using (var builder = new StringWriter(new StringBuilder(1024)))
@@ -121,7 +121,7 @@ internal class ConsoleSink : ILogEventSink
 
     private static void WriteException(LogEvent logEvent, TextWriter builder)
     {
-        if (logEvent.Exception == null)
+        if (logEvent.Exception is null)
             return;
 
         var lines = logEvent.Exception.ToString().Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);

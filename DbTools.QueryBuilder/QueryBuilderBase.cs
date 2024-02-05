@@ -9,7 +9,7 @@ public abstract class QueryBuilderBase
     protected bool HasColumnWithSameName(QueryElement queryElement, QueryColumn queryColumn)
     {
         var columns = queryElement.GetColumns();
-        if (columns == null)
+        if (columns is null)
             return false;
 
         return columns.Any(c => c.Value == queryColumn.Value);

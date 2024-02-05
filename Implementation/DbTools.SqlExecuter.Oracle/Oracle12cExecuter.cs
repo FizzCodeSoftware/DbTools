@@ -3,6 +3,9 @@ using FizzCode.LightWeight.AdoNet;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.Common;
 using FizzCode.DbTools.Interfaces;
+using System.Collections.Generic;
+using System;
+using System.Linq;
 
 namespace FizzCode.DbTools.SqlExecuter.Oracle;
 public class Oracle12cExecuter : SqlStatementExecuter

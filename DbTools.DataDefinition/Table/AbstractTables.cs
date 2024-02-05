@@ -6,8 +6,8 @@ using FizzCode.DbTools.DataDefinition.Base;
 namespace FizzCode.DbTools.DataDefinition;
 public abstract class AbstractTables<T> : ICollection<T> where T: SqlTableOrView
 {
-    protected SortedList<int, T> _sorted = new();
-    protected readonly Dictionary<string, T> byName = new();
+    protected SortedList<int, T> _sorted = [];
+    protected readonly Dictionary<string, T> byName = [];
 
     public int Count => byName.Count;
 

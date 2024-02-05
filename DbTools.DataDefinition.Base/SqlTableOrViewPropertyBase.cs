@@ -9,5 +9,5 @@ public abstract class SqlTableOrViewPropertyBase<T> where T : SqlTableOrView
         SqlTableOrView = sqlTable;
     }
 
-    public SqlEngineVersionSpecificProperties SqlEngineVersionSpecificProperties { get; } = new SqlEngineVersionSpecificProperties();
+    public SqlEngineVersionSpecificProperties SqlEngineVersionSpecificProperties { get; } = [];
 }

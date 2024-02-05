@@ -13,10 +13,10 @@ public class StoredProcedure
         SpParameters = sqlParameters.ToList();
     }
 
-    public StoredProcedureBodies StoredProcedureBodies { get; } = new();
+    public StoredProcedureBodies StoredProcedureBodies { get; } = [];
 
     public IDatabaseDefinition? DatabaseDefinition { get; set; }
     public SchemaAndTableName? SchemaAndSpName { get; set; }
 
-    public List<SqlParameter> SpParameters { get; } = new List<SqlParameter>();
+    public List<SqlParameter> SpParameters { get; } = [];
 }

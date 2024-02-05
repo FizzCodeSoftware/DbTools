@@ -23,7 +23,7 @@ public static class Helper
         {
             sqlVersionSpecificSettings["OracleDatabaseName"] = configuration["oracleDatabaseName"];
             var upperCaseEscapedNames = configuration["upperCaseEscapedNames"];
-            if (upperCaseEscapedNames == null || upperCaseEscapedNames == "")
+            if (upperCaseEscapedNames is null || upperCaseEscapedNames == "")
                 upperCaseEscapedNames = "false";
 
             sqlVersionSpecificSettings["UpperCaseEscapedNames"] = upperCaseEscapedNames;

@@ -15,7 +15,7 @@ public class DocumenterWriterExcel : IDocumenterWriter
         ExcelPackage = new ExcelPackage();
     }
 
-    private readonly Dictionary<string, Sheet> _sheets = new();
+    private readonly Dictionary<string, Sheet> _sheets = [];
 
     protected string GetSheetName(string name)
     {
@@ -124,7 +124,7 @@ public class DocumenterWriterExcel : IDocumenterWriter
             foreach (var mergeAddress in sheet.MergedCells)
             {
                 var mergedRange = sheet.Cells[mergeAddress];
-                if (mergedRange.Value == null)
+                if (mergedRange.Value is null)
                     continue;
 
                 var value = (mergedRange.Value as object[,])?[0, 0]?.ToString();

@@ -11,7 +11,7 @@ public class Row : Dictionary<string, object>
     {
         try
         {
-            if (default(T) == null && DBNull.Value.Equals(this[name]))
+            if (default(T) is null && DBNull.Value.Equals(this[name]))
                 return default;
 
             return (T)this[name];
@@ -41,7 +41,7 @@ public class Row : Dictionary<string, object>
     {
         try
         {
-            if (default(T) == null && DBNull.Value.Equals(this[name]))
+            if (default(T) is null && DBNull.Value.Equals(this[name]))
                 return default;
 
             return (T)this[name];

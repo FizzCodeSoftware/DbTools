@@ -1,11 +1,11 @@
-﻿using Index = FizzCode.DbTools.DataDefinition.Base.Index;
+﻿using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.DataDeclaration;
 public class IndexNamingDefaultStrategy : IIndexNamingStrategy
 {
     public void SetIndexName(Index index)
     {
-        if (index.SqlTableOrView.SchemaAndTableName.TableName == null)
+        if (index.SqlTableOrView.SchemaAndTableNameSafe.TableName is null)
             return;
 
         // TODO view index name?

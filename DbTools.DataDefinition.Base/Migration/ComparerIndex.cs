@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+﻿using System.Collections.Generic;
+
+namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public class ComparerIndex : ComparerIndexBase<Index, IndexMigration>
 {
     public static new List<IndexMigration> CompareIndexes(SqlTable tableOriginal, SqlTable tableNew)

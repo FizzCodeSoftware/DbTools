@@ -112,9 +112,9 @@ public static class TestHelper
 
     private static List<SqlEngineVersion> GetSqlVersionsWithConfiguredConnectionStrting(IEnumerable<NamedConnectionString> connectionStringCollection)
     {
-        if (_sqlVersionsWithConfiguredConnectionStrting == null)
+        if (_sqlVersionsWithConfiguredConnectionStrting is null)
         {
-            _sqlVersionsWithConfiguredConnectionStrting = new List<SqlEngineVersion>();
+            _sqlVersionsWithConfiguredConnectionStrting = [];
             foreach (var connectionString in connectionStringCollection)
             {
                 if (!string.IsNullOrEmpty(connectionString.ConnectionString))

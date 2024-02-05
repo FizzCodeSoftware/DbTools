@@ -12,7 +12,7 @@
     <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
     <AssemblyName>FizzCode.DbTools.Factory.Interfaces</AssemblyName>
     <RootNamespace>FizzCode.DbTools.Factory.Interfaces</RootNamespace>
-	<ImplicitUsings>enable</ImplicitUsings>
+	<ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 

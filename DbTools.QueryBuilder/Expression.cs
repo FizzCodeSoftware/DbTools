@@ -9,7 +9,7 @@ using FizzCode.DbTools.DataDefinition.Base;
 namespace FizzCode.DbTools.QueryBuilder;
 public class Expression : IEnumerable<object>
 {
-    public List<object> Values { get; } = new List<object>();
+    public List<object> Values { get; } = [];
     public Expression(params object[] expressionParts)
     {
         Values = expressionParts.ToList();
@@ -52,7 +52,7 @@ public class Expression : IEnumerable<object>
 
                     alias = table.GetAlias();
 
-                    if (alias == null)
+                    if (alias is null)
                     {
                         alias = mainQueryElement?.Table.SchemaAndTableName == table.SchemaAndTableName
                         ? mainQueryElement.Table.GetAlias()

@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public abstract class ColumnMigration : IMigration
 {
-    public SqlColumn SqlColumn { get; set; }
+    public required SqlColumn SqlColumn { get; init; }
 
     public override string ToString()
     {

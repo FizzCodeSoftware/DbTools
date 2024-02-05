@@ -11,12 +11,12 @@ public class DatabaseDefinition : IDatabaseDefinition
     public TypeMappers TypeMappers { get; }
     public SqlEngineVersion MainVersion { get; protected set; }
     public List<SqlEngineVersion> SecondaryVersions { get; protected set; }
-    public Tables Tables { get; } = new Tables();
-    protected Views Views { get; } = new Views();
+    public Tables Tables { get; } = [];
+    protected Views Views { get; } = [];
 
     protected IFactoryContainer FactoryContainer;
 
-    public List<StoredProcedure> StoredProcedures { get; } = new List<StoredProcedure>();
+    public List<StoredProcedure> StoredProcedures { get; } = [];
 
     public DatabaseDefinition(SqlEngineVersion mainVersion, params SqlEngineVersion[] secondaryVersions)
         : this(new Root(), mainVersion, secondaryVersions)

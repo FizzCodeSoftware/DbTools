@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.Factory.Interfaces;
+﻿using System;
+
+namespace FizzCode.DbTools.Factory.Interfaces;
 public interface IFactoryContainer
 {
     TFactory Get<TFactory>() where TFactory : notnull;

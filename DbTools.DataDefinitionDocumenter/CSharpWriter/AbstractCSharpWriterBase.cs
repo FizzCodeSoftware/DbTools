@@ -31,7 +31,7 @@ public abstract class AbstractCSharpWriterBase
     {
         var fkOnColumn = column.Table.Properties.OfType<ForeignKey>().FirstOrDefault(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn == column));
 
-        if (fkOnColumn == null)
+        if (fkOnColumn is null)
             return false;
 
         return GeneratorContext.Customizer.ShouldSkip(fkOnColumn.ReferredTable.SchemaAndTableName);

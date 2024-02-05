@@ -8,7 +8,7 @@ public static class StaticConfiguration
 
     public static void Initialize(string configurationFileName)
     {
-        if (_configuration == null)
+        if (_configuration is null)
             _configuration = new ConfigurationBase(configurationFileName);
         else
             if (configurationFileName != _configuration.ConfigurationFileName)

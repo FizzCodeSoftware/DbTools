@@ -5,8 +5,7 @@ public static class RowSetExtensions
 {
     public static RowSet ToRowSet(this IEnumerable<Row> source)
     {
-        if (source == null)
-            throw new System.ArgumentNullException(nameof(source));
+        System.ArgumentNullException.ThrowIfNull(source);
 
         return new RowSet(source);
     }

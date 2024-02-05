@@ -24,7 +24,7 @@ public class BimRelationship
     {
         get
         {
-            if (RelationshipIdentifier == null)
+            if (RelationshipIdentifier is null)
                 return null;
 
             return ToTableSchemaAndTableName + "/" + RelationshipIdentifier;

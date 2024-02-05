@@ -8,9 +8,9 @@ using FizzCode.DbTools.QueryBuilder;
 namespace FizzCode.DbTools.TestBase;
 public class TestFactoryContainer : IFactoryContainer
 {
-    protected Dictionary<Type, Func<object>> RegisteredCreators { get; set; } = new();
-    protected Dictionary<Type, Type> RegisteredTypes { get; set; } = new();
-    protected Dictionary<Type, object> RegisteredInstances { get; set; } = new();
+    protected Dictionary<Type, Func<object>> RegisteredCreators { get; set; } = [];
+    protected Dictionary<Type, Type> RegisteredTypes { get; set; } = [];
+    protected Dictionary<Type, object> RegisteredInstances { get; set; } = [];
 
     public TestFactoryContainer()
     {
@@ -42,7 +42,7 @@ public class TestFactoryContainer : IFactoryContainer
         if (RegisteredTypes.ContainsKey(typeof(T)))
             factoryType = RegisteredTypes[typeof(T)];
         
-        if (factoryType == null)
+        if (factoryType is null)
             return (T)RegisteredInstances[typeof(T)];
 
         var instance = (T)Activator.CreateInstance(factoryType);
@@ -56,7 +56,7 @@ public class TestFactoryContainer : IFactoryContainer
 
     public void RegisterInstance<T>(T instance)
     {
-        if (instance == null)
+        if (instance is null)
             throw new ArgumentNullException(nameof(instance));
 
         RegisteredInstances.Add(typeof(T), instance);

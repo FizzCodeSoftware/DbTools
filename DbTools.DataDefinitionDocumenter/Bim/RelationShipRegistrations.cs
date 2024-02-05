@@ -4,7 +4,7 @@ using System.Linq;
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public class RelationShipRegistrations
 {
-    private readonly Dictionary<string, List<BimRelationship>> _fromTo = new();
+    private readonly Dictionary<string, List<BimRelationship>> _fromTo = [];
 
     public List<BimRelationship> GetByFromTable(string fromTableName)
     {
@@ -19,7 +19,7 @@ public class RelationShipRegistrations
     public void Add(BimRelationship relationShipRegistration)
     {
         if (!_fromTo.ContainsKey(relationShipRegistration.FromTableSchemaAndTableName))
-            _fromTo.Add(relationShipRegistration.FromTableSchemaAndTableName, new List<BimRelationship>());
+            _fromTo.Add(relationShipRegistration.FromTableSchemaAndTableName, []);
 
         _fromTo[relationShipRegistration.FromTableSchemaAndTableName].Add(relationShipRegistration);
     }

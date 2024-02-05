@@ -1,9 +1,7 @@
-﻿using System.Collections;
-
-namespace FizzCode.DbTools.DataDefinition.Base;
+﻿namespace FizzCode.DbTools.DataDefinition.Base;
 public class SqlEngineVersionSpecificProperties : IEnumerable<SqlEngineVersionSpecificProperty>
 {
-    private readonly Dictionary<string, SqlEngineVersionSpecificProperty> _properties = new();
+    private readonly Dictionary<string, SqlEngineVersionSpecificProperty> _properties = [];
 
     public string this[SqlEngineVersion version, string name]
     {
@@ -11,6 +9,7 @@ public class SqlEngineVersionSpecificProperties : IEnumerable<SqlEngineVersionSp
         set
         {
             var key = SqlEngineVersionSpecificProperty.GetKey(version, name);
+
             if (!_properties.ContainsKey(key))
                 Add(new SqlEngineVersionSpecificProperty(version, name, value));
             else

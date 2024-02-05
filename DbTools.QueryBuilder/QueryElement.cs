@@ -18,7 +18,7 @@ public abstract class QueryElement
     protected QueryElement(SqlTableOrView sqlTable, string alias, params QueryColumn[] columns)
         : this(sqlTable, columns)
     {
-        if ((alias == null && Table.GetAlias() == null)
+        if ((alias == null && Table.GetAlias() is null)
             || (alias != null && Table.GetAlias() != alias))
         {
             _ = sqlTable switch

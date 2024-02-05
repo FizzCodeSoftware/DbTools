@@ -2,7 +2,7 @@
 
 #pragma warning disable CA1720 // Identifier contains type name
 
-namespace FizzCode.DbTools.DataDefinition.Generic1;
+namespace FizzCode.DbTools.DataDefinition.Generic;
 public abstract class GenericSqlType1 : SqlTypeInfo
 {
     public static SqlChar Char { get; } = new SqlChar();

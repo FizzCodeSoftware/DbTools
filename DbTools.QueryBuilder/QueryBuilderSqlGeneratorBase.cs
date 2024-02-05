@@ -78,7 +78,7 @@ public class QueryBuilderSqlGeneratorBase : QueryBuilderBase, IQueryBuilder
     {
         var columns = queryElement.GetColumns();
 
-        if (columns == null)
+        if (columns is null)
             return "";
 
         var sb = new StringBuilder();
@@ -177,7 +177,7 @@ public class QueryBuilderSqlGeneratorBase : QueryBuilderBase, IQueryBuilder
 
         var queryTableProperties = (_query.Table as SqlTable).Properties;
 
-        if (join.ColumnSource == null && join.ColumnTarget == null)
+        if (join.ColumnSource == null && join.ColumnTarget is null)
         { // auto build JOIN ON
             var fk = queryTableProperties.OfType<ForeignKey>().First(fk => fk.ForeignKeyColumns[0].ReferredColumn.Table.SchemaAndTableName == join.Table.SchemaAndTableName);
 
@@ -206,7 +206,7 @@ public class QueryBuilderSqlGeneratorBase : QueryBuilderBase, IQueryBuilder
         {
             var joinTableProperties = (join.Table as SqlTable).Properties;
             var pk = joinTableProperties.OfType<PrimaryKey>().FirstOrDefault();
-            if (pk == null)
+            if (pk is null)
                 throw new ArgumentException($"Target Join table has no Primary Key. Table: {join.Table.SchemaAndTableName}, source column: {join.ColumnSource}.");
 
             if (pk.SqlColumns.Count > 1)
@@ -222,10 +222,10 @@ public class QueryBuilderSqlGeneratorBase : QueryBuilderBase, IQueryBuilder
             sb.Append('.');
             sb.Append(join.ColumnTarget.Value);
         }
-        else if (join.ColumnSource != null && join.ColumnTarget == null)
+        else if (join.ColumnSource != null && join.ColumnTarget is null)
         {
             var pk = queryTableProperties.OfType<PrimaryKey>().FirstOrDefault();
-            if (pk == null)
+            if (pk is null)
                 throw new ArgumentException($"Target Join table has no Primary Key. Table: {join.Table.SchemaAndTableName}, source column: {join.ColumnSource}.");
 
             if (pk.SqlColumns.Count > 1)

@@ -2,7 +2,7 @@
 using System.Globalization;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.DataDefinition.Base.Interfaces;
-using FizzCode.DbTools.DataDefinition.Generic1;
+using FizzCode.DbTools.DataDefinition.Generic;
 
 namespace FizzCode.DbTools.DataDefinition.MsSql2016;
 public class MsSql2016TypeMapper : AbstractTypeMapper
@@ -53,19 +53,19 @@ public class MsSql2016TypeMapper : AbstractTypeMapper
     {
         return genericType.SqlTypeInfo switch
         {
-            Generic1.SqlChar _ => genericType.Clone(MsSqlType2016.Char),
-            Generic1.SqlNChar _ => genericType.Clone(MsSqlType2016.NChar),
-            Generic1.SqlVarChar _ => genericType.Clone(MsSqlType2016.VarChar),
-            Generic1.SqlNVarChar _ => genericType.Clone(MsSqlType2016.NVarChar),
-            SqlFloatSmall _ => genericType.Clone(MsSqlType2016.Float),
-            SqlFloatLarge _ => genericType.Clone(MsSqlType2016.Real),
-            Generic1.SqlBit _ => genericType.Clone(MsSqlType2016.Bit),
-            SqlByte _ => genericType.Clone(MsSqlType2016.TinyInt),
-            SqlInt16 _ => genericType.Clone(MsSqlType2016.SmallInt),
-            SqlInt32 _ => genericType.Clone(MsSqlType2016.Int),
-            SqlInt64 _ => genericType.Clone(MsSqlType2016.BigInt),
-            Generic1.SqlDateTime _ => genericType.Clone(MsSqlType2016.DateTime),
-            Generic1.SqlDate _ => genericType.Clone(MsSqlType2016.Date),
+            Generic.SqlChar _ => genericType.Clone(MsSqlType2016.Char),
+            Generic.SqlNChar _ => genericType.Clone(MsSqlType2016.NChar),
+            Generic.SqlVarChar _ => genericType.Clone(MsSqlType2016.VarChar),
+            Generic.SqlNVarChar _ => genericType.Clone(MsSqlType2016.NVarChar),
+            Generic.SqlFloatSmall _ => genericType.Clone(MsSqlType2016.Float),
+            Generic.SqlFloatLarge _ => genericType.Clone(MsSqlType2016.Real),
+            Generic.SqlBit _ => genericType.Clone(MsSqlType2016.Bit),
+            Generic.SqlByte _ => genericType.Clone(MsSqlType2016.TinyInt),
+            Generic.SqlInt16 _ => genericType.Clone(MsSqlType2016.SmallInt),
+            Generic.SqlInt32 _ => genericType.Clone(MsSqlType2016.Int),
+            Generic.SqlInt64 _ => genericType.Clone(MsSqlType2016.BigInt),
+            Generic.SqlDateTime _ => genericType.Clone(MsSqlType2016.DateTime),
+            Generic.SqlDate _ => genericType.Clone(MsSqlType2016.Date),
             _ => throw new NotImplementedException($"Unmapped type {genericType.SqlTypeInfo}"),
         };
     }

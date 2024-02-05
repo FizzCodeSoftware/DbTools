@@ -4,7 +4,7 @@ public class UniqueConstraint : IndexBase<SqlTable>
 {
     public SqlTable SqlTable { get => SqlTableOrView; }
 
-    public UniqueConstraint(SqlTable sqlTable, string name)
+    public UniqueConstraint(SqlTable sqlTable, string? name)
         : base(sqlTable, name, true)
     {
     }
@@ -16,7 +16,7 @@ public class UniqueConstraint : IndexBase<SqlTable>
         set
         {
             if (!value)
-                throw new ArgumentException("Unique Constraint is always Unique.");
+                throw new System.ArgumentException("Unique Constraint is always Unique.");
         }
     }
 

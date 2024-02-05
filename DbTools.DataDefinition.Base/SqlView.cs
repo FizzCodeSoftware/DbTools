@@ -1,7 +1,10 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base;
+﻿using System;
+using System.Collections.Generic;
+
+namespace FizzCode.DbTools.DataDefinition.Base;
 public class SqlView : SqlTableOrView
 {
-    public List<SqlTableOrViewPropertyBase<SqlView>> Properties { get; } = new();
+    public List<SqlTableOrViewPropertyBase<SqlView>> Properties { get; } = [];
 
     public SqlView()
     {
@@ -22,7 +25,7 @@ public class SqlView : SqlTableOrView
     {
     }
 
-    public SqlViewBodies SqlViewBodies { get; } = new();
+    public SqlViewBodies SqlViewBodies { get; } = [];
 
     protected static SqlViewColumn AddColumn(Action<SqlViewColumn> configurator)
     {
@@ -38,5 +41,5 @@ public class SqlView : SqlTableOrView
     }
 
     public SqlViewColumn this[string columnName] => Columns[columnName];
-    public ViewColumnsOrdered Columns { get; } = new();
+    public ViewColumnsOrdered Columns { get; } = [];
 }

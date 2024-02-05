@@ -1,4 +1,5 @@
-﻿using System.Data.Common;
+﻿using System;
+using System.Data.Common;
 
 namespace FizzCode.DbTools.SqlExecuter.Oracle;
 public static class OracleDbCommandPreparer

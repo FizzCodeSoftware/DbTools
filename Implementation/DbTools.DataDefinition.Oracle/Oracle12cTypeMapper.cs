@@ -2,7 +2,7 @@
 using System.Globalization;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.DataDefinition.Base.Interfaces;
-using FizzCode.DbTools.DataDefinition.Generic1;
+using FizzCode.DbTools.DataDefinition.Generic;
 
 namespace FizzCode.DbTools.DataDefinition.Oracle12c;
 public class Oracle12cTypeMapper : AbstractTypeMapper
@@ -44,9 +44,9 @@ public class Oracle12cTypeMapper : AbstractTypeMapper
     {
         return genericType.SqlTypeInfo switch
         {
-            Generic1.SqlChar _ => genericType.Clone(OracleType12c.Char),
-            Generic1.SqlNChar _ => genericType.Clone(OracleType12c.NChar),
-            Generic1.SqlVarChar _ => genericType.Clone(OracleType12c.VarChar),
+            Generic.SqlChar _ => genericType.Clone(OracleType12c.Char),
+            Generic.SqlNChar _ => genericType.Clone(OracleType12c.NChar),
+            Generic.SqlVarChar _ => genericType.Clone(OracleType12c.VarChar),
             SqlNVarChar _ => genericType.Clone(OracleType12c.NVarChar2),
             SqlFloatSmall _ => genericType.Clone(OracleType12c.BinaryFloat),
             SqlFloatLarge _ => genericType.Clone(OracleType12c.BinaryDouble),
@@ -56,7 +56,7 @@ public class Oracle12cTypeMapper : AbstractTypeMapper
             SqlInt32 _ => genericType.Clone(OracleType12c.Number, 9, 0),
             SqlInt64 _ => genericType.Clone(OracleType12c.Number, 19, 0),
             SqlDateTime _ => genericType.Clone(OracleType12c.Date),
-            Generic1.SqlDate _ => genericType.Clone(OracleType12c.Date),
+            Generic.SqlDate _ => genericType.Clone(OracleType12c.Date),
             _ => throw new NotImplementedException($"Unmapped type {genericType.SqlTypeInfo}"),
         };
     }

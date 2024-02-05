@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base;
+﻿using System.Collections.Generic;
+
+namespace FizzCode.DbTools.DataDefinition.Base;
 public interface IDatabaseDefinition
 {
     SqlEngineVersion MainVersion { get; }

@@ -13,10 +13,10 @@ public class BimGeneratorRoot
 public class BimGeneratorModel
 {
     public string Culture { get; set; } = "hu-HU";
-    public List<DataSource> DataSources { get; } = new List<DataSource>();
-    public List<Table> Tables { get; } = new List<Table>();
-    public List<Relationship> Relationships { get; } = new List<Relationship>();
-    public List<Annotation> Annotations { get; } = new List<Annotation>();
+    public List<DataSource> DataSources { get; } = [];
+    public List<Table> Tables { get; } = [];
+    public List<Relationship> Relationships { get; } = [];
+    public List<Annotation> Annotations { get; } = [];
 }
 
 public class DataSource

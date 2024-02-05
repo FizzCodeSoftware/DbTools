@@ -198,7 +198,7 @@ public static class ForeignKeyHelper
         if (table.DatabaseDefinition is IDatabaseDeclaration dd)
         {
             dd.CreateRegisteredForeignKeys(table);
-            dd.AddAutoNaming(new List<SqlTable>() { table });
+            dd.AddAutoNaming([table]);
             CircularFKDetector.DectectCircularFKs(new List<SqlTable>() { table });
         }
     }

@@ -1,4 +1,5 @@
-﻿using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+﻿using System;
+using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 
 namespace FizzCode.DbTools.DataDefinition.Base;
 public abstract class SqlTypeInfo : ISqlTypeInfo

@@ -13,7 +13,7 @@
     <AssemblyName>FizzCode.DbTools.SqlGenerator.Oracle</AssemblyName>
     <RootNamespace>FizzCode.DbTools.SqlGenerator.Oracle</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-	<ImplicitUsings>enable</ImplicitUsings>
+	<ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>	
     <NoWarn>CS1591</NoWarn>
   </PropertyGroup>

@@ -1,22 +1,17 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace FizzCode.DbTools.DataDefinition.Base;
-public class ForeignKey : SqlTableOrViewPropertyBase<SqlTable>
+public class ForeignKey(SqlTable table, SqlTable referredTable, string name)
+    : SqlTableOrViewPropertyBase<SqlTable>(table)
 {
-    public string Name { get; set; }
+    public string Name { get; set; } = name;
 
-    public List<ForeignKeyColumnMap> ForeignKeyColumns { get; set; } = new List<ForeignKeyColumnMap>();
+    public List<ForeignKeyColumnMap> ForeignKeyColumns { get; set; } = [];
 
-    public SqlTable ReferredTable { get; }
+    public SqlTable ReferredTable { get; } = referredTable;
 
     public SqlTable SqlTable { get => SqlTableOrView; }
-
-    public ForeignKey(SqlTable table, SqlTable referredTable, string name)
-        : base(table)
-    {
-        Name = name;
-        ReferredTable = referredTable;
-    }
 
     public override string ToString()
     {
@@ -30,11 +25,11 @@ public class ForeignKey : SqlTableOrViewPropertyBase<SqlTable>
             else
                 isFirst = false;
 
-            sb.Append(fkColumn.ForeignKeyColumn.Table.SchemaAndTableName)
+            sb.Append(fkColumn.ForeignKeyColumn.Table.SchemaAndTableNameSafe)
                 .Append('.')
                 .Append(fkColumn.ForeignKeyColumn.Name)
                 .Append(" -> ")
-                .Append(fkColumn.ReferredColumn.Table.SchemaAndTableName)
+                .Append(fkColumn.ReferredColumn.Table.SchemaAndTableNameSafe)
                 .Append('.')
                 .Append(fkColumn.ReferredColumn.Name);
         }

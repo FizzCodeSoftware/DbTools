@@ -1,14 +1,20 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base;
+﻿using System.Collections.Generic;
+
+namespace FizzCode.DbTools.DataDefinition.Base;
 public abstract class SqlColumnBase : SqlElementWithNameAndType
 {
-    public SqlTableOrView SqlTableOrView { get; set; }
+    /// <summary>
+    /// The <see cref="SqlTable"/> or <see cref="SqlView"/> of the <see cref="SqlColumnBase">Sql Column</see>.
+    /// Note that with declaration, first this will be null, and will be set from the constructor of <see cref="DatabaseDeclaration">.
+    /// </summary>
+    public SqlTableOrView? SqlTableOrView { get; set; }
 
-    private List<SqlColumnProperty> _properties;
-    public List<SqlColumnProperty> Properties => _properties ??= new List<SqlColumnProperty>();
+    private List<SqlColumnProperty>? _properties;
+    public List<SqlColumnProperty> Properties => _properties ??= [];
 
     public override string ToString()
     {
-        return $"{Name} {Types.Describe(SqlTableOrView?.DatabaseDefinition?.MainVersion)} on {SqlTableOrView.SchemaAndTableName}";
+        return $"{Name} {Types.Describe(SqlTableOrView?.DatabaseDefinition?.MainVersion)} on {SqlTableOrView?.SchemaAndTableName}";
     }
 
     public SqlColumnBase CopyTo(SqlColumnBase column)
@@ -25,5 +31,5 @@ public abstract class SqlColumnBase : SqlElementWithNameAndType
         return Properties.Any(x => x is T);
     }
 
-    protected override IDatabaseDefinition DatabaseDefinition => SqlTableOrView.DatabaseDefinition;
+    protected override IDatabaseDefinition? DatabaseDefinition => SqlTableOrView?.DatabaseDefinition;
 }

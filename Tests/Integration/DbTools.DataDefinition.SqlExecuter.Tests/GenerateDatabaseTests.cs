@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using FizzCode.DbTools.DataDefinition;
 using FizzCode.DbTools.DataDefinition.Base;
-using FizzCode.DbTools.DataDefinition.Generic1;
+using FizzCode.DbTools.DataDefinition.Generic;
 using FizzCode.DbTools.DataDefinition.Tests;
 using FizzCode.DbTools.TestBase;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

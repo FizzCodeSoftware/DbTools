@@ -2,7 +2,7 @@
 
 public class ColumnAndOrder
 {
-    public SqlColumnBase SqlColumn { get; set; }
+    public SqlColumnBase? SqlColumn { get; }
     public AscDesc Order { get; set; }
     public string OrderAsKeyword => Order.ToString().ToUpperInvariant();
 
@@ -19,6 +19,6 @@ public class ColumnAndOrder
 
     public override string ToString()
     {
-        return $"{SqlColumn.Name} {OrderAsKeyword}";
+        return $"{SqlColumn?.Name} {OrderAsKeyword}";
     }
 }

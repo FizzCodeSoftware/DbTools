@@ -37,7 +37,7 @@ public class SchemaNamesToRead : ISchemaNamesToRead
 
     public static ISchemaNamesToRead ToSchemaNames(IEnumerable<string> schemaNames)
     {
-        if (schemaNames == null)
+        if (schemaNames is null)
             return new SchemaNamesToRead(true);
 
         var schemaNamesList = schemaNames.ToList();

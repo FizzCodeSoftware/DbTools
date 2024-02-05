@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace FizzCode.DbTools.DataDefinition.Base;
 public class SqlEngineVersionSpecificProperty : IEnumerable<SqlEngineVersionSpecificProperty>

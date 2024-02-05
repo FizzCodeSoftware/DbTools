@@ -12,7 +12,7 @@ A very simple database definition looks like this (from
 ```cs
 namespace FizzCode.DbTools.DataDefinition.Tests
 {
-    using FizzCode.DbTools.DataDefinition.Generic1;
+    using FizzCode.DbTools.DataDefinition.Generic;
     using FizzCode.DbTools.TestBase;
 
     public class TestDatabaseSimpleTyped : TestDatabaseDeclaration

@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.Factory.Collections;
+﻿using System.Collections.Generic;
+
+namespace FizzCode.DbTools.Factory.Collections;
 
 public abstract class SqlEngineVersionFactoryDictionary<T, TIFactory> : Dictionary<SqlEngineVersion, T>
 {

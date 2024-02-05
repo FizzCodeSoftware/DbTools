@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Interfaces;
+﻿using System.Collections.Generic;
+
+namespace FizzCode.DbTools.DataDefinition.Base.Interfaces;
 public interface ISchemaNamesToRead
 {
     bool All { get; set; }

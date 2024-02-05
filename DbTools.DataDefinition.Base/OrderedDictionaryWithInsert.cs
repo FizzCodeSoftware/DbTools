@@ -1,11 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace FizzCode.DbTools.DataDefinition.Base;
 public abstract class OrderedDictionaryWithInsert<TKey, TValue> : ICollection<TValue>
     where TKey : notnull
 {
-    private readonly Dictionary<TKey, TValue> _dictionary = new();
-    private readonly SortedDictionary<int, TKey> _order = new();
+    private readonly Dictionary<TKey, TValue> _dictionary = [];
+    private readonly SortedDictionary<int, TKey> _order = [];
     private int _maxOrder;
 
     public abstract void Add(TValue item);
@@ -39,14 +40,6 @@ public abstract class OrderedDictionaryWithInsert<TKey, TValue> : ICollection<TV
             _order.Add(newOrder, key);
         }
     }
-
-    /*public IEnumerable<TValue> Values
-    {
-        get
-        {
-            return this;
-        }
-    }*/
 
     public int Count => _dictionary.Count;
 
@@ -107,7 +100,7 @@ public abstract class OrderedDictionaryWithInsert<TKey, TValue> : ICollection<TV
 
     public TValue this[TKey key] => _dictionary[key];
 
-    public bool TryGetValue(TKey key, out TValue value)
+    public bool TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
     {
         return _dictionary.TryGetValue(key, out value);
     }

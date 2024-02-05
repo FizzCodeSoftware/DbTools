@@ -31,11 +31,11 @@ public class Query : QueryElement, IQuery
 
     public QueryColumnAliasStrategy QueryColumnAliasStrategy { get; set; }
 
-    public List<JoinBase> Joins { get; } = new List<JoinBase>();
-    public List<Query> Unions { get; } = new List<Query>();
-    public List<QueryElement> QueryElements { get; } = new List<QueryElement>();
+    public List<JoinBase> Joins { get; } = [];
+    public List<Query> Unions { get; } = [];
+    public List<QueryElement> QueryElements { get; } = [];
 
-    public List<Filter> Filters { get; } = new List<Filter>();
+    public List<Filter> Filters { get; } = [];
 
     public Query Union(Query query)
     {
@@ -410,7 +410,7 @@ public class Query : QueryElement, IQuery
         return this;
     }
 
-    public List<QueryColumn> GroupByColumns { get; } = new List<QueryColumn>();
+    public List<QueryColumn> GroupByColumns { get; } = [];
 
     public Query GroupBy(params QueryColumn[] columns)
     {
@@ -482,7 +482,9 @@ public class Query : QueryElement, IQuery
             };
             sqlColumn.Types.CopyTo(parameter.Types);
         } else
+        {
             throw new ArgumentException("Unknown SqlTableOrView Type.");
+        }
 
         var filter = new Filter()
         {

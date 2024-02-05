@@ -1,6 +1,7 @@
 ﻿using FizzCode.DbTools.DataDefinition;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.QueryBuilder.Interfaces;
+using System.Linq;
 using System.Reflection;
 
 namespace FizzCode.DbTools.DataDeclaration;
@@ -14,7 +15,7 @@ public static class DeclaredStoredProcedures
 
         foreach (var property in properties)
         {
-            var sp = (StoredProcedure)property.GetValue(dd);
+            var sp = property.GetValueSafe<StoredProcedure>(dd);
 
             if (sp is IStoredProcedureFromQuery spq)
             {
@@ -25,7 +26,7 @@ public static class DeclaredStoredProcedures
                 }
             }
 
-            if (sp.SchemaAndSpName == null)
+            if (sp.SchemaAndSpName is null)
             {
                 var schemaAndTableName = new SchemaAndTableName(property.Name);
                 if (string.IsNullOrEmpty(schemaAndTableName.Schema) && !string.IsNullOrEmpty(dd.DefaultSchema))

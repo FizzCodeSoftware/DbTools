@@ -53,7 +53,7 @@ public class Generator
 
         var generator = sqlColumnDataGenerator?.Generator;
 
-        if (generator == null)
+        if (generator is null)
         {
             if (!column.Types[Version].IsNullable)
                 generator = GetDefaultGenerator(column);
@@ -71,18 +71,18 @@ public class Generator
         var type = column.Types[Version];
         return type.SqlTypeInfo switch
         {
-            DataDefinition.Generic1.SqlNVarChar _ => new GeneratorString(1, type.Length.Value + 1),
+            DataDefinition.Generic.SqlNVarChar _ => new GeneratorString(1, type.Length.Value + 1),
             DataDefinition.MsSql2016.SqlNVarChar _ => new GeneratorString(1, type.Length.Value + 1),
             DataDefinition.Oracle12c.SqlNVarChar2 _ => new GeneratorString(1, type.Length.Value + 1),
 
-            DataDefinition.Generic1.SqlInt32 _ => new GeneratorInt32(),
+            DataDefinition.Generic.SqlInt32 _ => new GeneratorInt32(),
             DataDefinition.MsSql2016.SqlInt _ => new GeneratorInt32(),
 
-            DataDefinition.Generic1.SqlDate _ => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
+            DataDefinition.Generic.SqlDate _ => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
             DataDefinition.MsSql2016.SqlDate _ => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
             DataDefinition.Oracle12c.SqlDate _ => new GeneratorDateMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
 
-            DataDefinition.Generic1.SqlDateTime _ => new GeneratorDateTimeMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
+            DataDefinition.Generic.SqlDateTime _ => new GeneratorDateTimeMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
             DataDefinition.MsSql2016.SqlDateTime _ => new GeneratorDateTimeMinMax(new DateTime(1950, 1, 1), new DateTime(2050, 1, 1)),
 
             _ => throw new NotImplementedException($"Unhandled type: {type.SqlTypeInfo}"),

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace FizzCode.DbTools.DataDefinition.Base;
 /// <summary>
@@ -34,7 +35,7 @@ public class SchemaAndTableName : IComparable, IEquatable<SchemaAndTableName>
 
     public static string Concat(string? schema, string tableName)
     {
-        if (schema == null)
+        if (schema is null)
             return tableName;
 
         return schema + "." + tableName;
@@ -52,9 +53,9 @@ public class SchemaAndTableName : IComparable, IEquatable<SchemaAndTableName>
 
     public int CompareTo(object? obj)
     {
-        if (obj == null)
+        if (obj is null)
             return -1;
-        
+
         var other = (SchemaAndTableName)obj;
 
         var compareSchema = string.CompareOrdinal(Schema, other.Schema);

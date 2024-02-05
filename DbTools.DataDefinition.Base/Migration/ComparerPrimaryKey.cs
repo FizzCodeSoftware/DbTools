@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+﻿using System.Collections.Generic;
+
+namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public class ComparerPrimaryKey : ComparerIndexBase<PrimaryKey, PrimaryKeyMigration>
 {
     public static List<PrimaryKeyMigration> ComparePrimaryKeys(SqlTable tableOriginal, SqlTable tableNew)

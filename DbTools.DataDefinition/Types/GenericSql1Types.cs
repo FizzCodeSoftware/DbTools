@@ -1,6 +1,6 @@
 ﻿using FizzCode.DbTools.DataDefinition.Base;
 
-namespace FizzCode.DbTools.DataDefinition.Generic1;
+namespace FizzCode.DbTools.DataDefinition.Generic;
 public abstract class GenericSqlType : SqlTypeInfo
 {
 }

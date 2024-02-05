@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using FizzCode.DbTools.DataDefinition.Base;
-using FizzCode.DbTools.DataDefinition.Generic1;
+using FizzCode.DbTools.DataDefinition.Generic;
 
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public class Generic1CSharpTypedWriter : AbstractCSharpTypedWriter

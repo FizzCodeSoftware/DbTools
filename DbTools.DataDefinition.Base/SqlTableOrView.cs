@@ -1,13 +1,20 @@
 ﻿using System.Diagnostics;
+using FizzCode.DbTools.Common;
 
 namespace FizzCode.DbTools.DataDefinition.Base;
 [DebuggerDisplay("{ToString(),nq}")]
 public abstract class SqlTableOrView
 {
-    public IDatabaseDefinition DatabaseDefinition { get; set; }
-    public SchemaAndTableName SchemaAndTableName { get; set; }
-
-    //public List<SqlTableOrViewPropertyBase<SqlTableOrView>> Properties { get; } = new();
+    /// <summary>
+    /// The <see cref="DatabaseDefinition">definition</see> or <see cref="DatabaseDeclaration">declaration</see> of the <see cref="SqlTableOrView"/>.
+    /// Note that with declaration, first this will be null, and will be set from the constructor of <see cref="DatabaseDeclaration">.
+    /// </summary>
+    public IDatabaseDefinition? DatabaseDefinition { get; set; }
+    /// <summary>
+    /// The <see cref="SchemaAndTableName"/> of the <see cref="SqlTableOrView"/>.
+    /// Note that with declaration, first this will be null, and will be set from the constructor of <see cref="DatabaseDeclaration">.
+    /// </summary>
+    public SchemaAndTableName? SchemaAndTableName { get; set; }
 
     public SqlTableOrView()
     {
@@ -31,5 +38,18 @@ public abstract class SqlTableOrView
     public override string ToString()
     {
         return SchemaAndTableName?.SchemaAndName ?? "";
+    }
+
+    /// <summary>
+    /// Accessing the <see cref="SchemaAndTableName"/> with null check.
+    /// </summary>
+    public SchemaAndTableName SchemaAndTableNameSafe
+    {
+        get
+        {
+            Throw.InvalidOperationExceptionIfNull(SchemaAndTableName);
+
+            return SchemaAndTableName!;
+        }
     }
 }

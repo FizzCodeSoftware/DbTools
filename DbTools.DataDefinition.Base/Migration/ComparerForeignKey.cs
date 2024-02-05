@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+﻿using System.Collections.Generic;
+
+namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public static class ComparerForeignKey
 {
     public static List<ForeignKeyMigration> CompareForeignKeys(SqlTable tableOriginal, SqlTable tableNew)
@@ -21,7 +23,7 @@ public static class ComparerForeignKey
         foreach (var fkNew in tableNew.Properties.OfType<ForeignKey>())
         {
             var fkOriginal = tableOriginal.Properties.OfType<ForeignKey>().FirstOrDefault(fkOriginal => fkOriginal.Name == fkNew.Name);
-            if (fkOriginal == null)
+            if (fkOriginal is null)
             {
                 changes.Add(new ForeignKeyNew()
                 {
@@ -88,7 +90,7 @@ public static class ComparerForeignKey
         foreach (var propertyOriginal in propertiesOriginal)
         {
             var propertyNew = propertiesNew.FirstOrDefault(p => p.Version == propertyOriginal.Version && p.Name == propertyOriginal.Name);
-            if (propertyNew == null)
+            if (propertyNew is null)
             {
                 changes.Add(new SqlEngineVersionSpecificPropertyDelete()
                 {
@@ -100,7 +102,7 @@ public static class ComparerForeignKey
         foreach (var propertyNew in propertiesNew)
         {
             var propertyOriginal = propertiesOriginal.FirstOrDefault(p => p.Version == propertyNew.Version && p.Name == propertyNew.Name);
-            if (propertyOriginal == null)
+            if (propertyOriginal is null)
             {
                 changes.Add(new SqlEngineVersionSpecificPropertyNew()
                 {

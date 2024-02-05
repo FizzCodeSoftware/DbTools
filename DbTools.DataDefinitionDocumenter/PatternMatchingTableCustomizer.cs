@@ -6,7 +6,7 @@ using FizzCode.DbTools.DataDefinition.Base;
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public class PatternMatchingTableCustomizer : ITableCustomizer
 {
-    public List<PatternMatchingTableCustomizerItem> Patterns { get; } = new List<PatternMatchingTableCustomizerItem>();
+    public List<PatternMatchingTableCustomizerItem> Patterns { get; } = [];
 
     public void AddPattern(string patternSchema, string patternTableName, string patternExceptSchema, string patternExceptTableName, bool shouldSkip, string category, string backGroundColor)
     {
@@ -94,13 +94,13 @@ public class PatternMatchingTableCustomizer : ITableCustomizer
 
     private static bool CheckMatch(SchemaAndTableName schemaAndTableNameActual, SchemaAndTableName schemaAndTableNamePattern)
     {
-        if (schemaAndTableNamePattern.TableName == null && schemaAndTableNamePattern.Schema == null)
+        if (schemaAndTableNamePattern.TableName == null && schemaAndTableNamePattern.Schema is null)
             return false;
 
         var isTableNameMatch = schemaAndTableNamePattern.TableName == null
             || CheckMatchRegexOrString(schemaAndTableNameActual.TableName, schemaAndTableNamePattern.TableName);
 
-        if (schemaAndTableNamePattern.Schema == null)
+        if (schemaAndTableNamePattern.Schema is null)
             return isTableNameMatch;
 
         var isSchemaMatch = CheckMatchRegexOrString(schemaAndTableNameActual.Schema, schemaAndTableNamePattern.Schema);
@@ -124,7 +124,7 @@ public class PatternMatchingTableCustomizer : ITableCustomizer
 
     private static string RegexFormFromWildCharForm(string schemaOrTableName)
     {
-        if (schemaOrTableName == null)
+        if (schemaOrTableName is null)
             return null;
 
         return Regex.Escape(schemaOrTableName).Replace(@"\*", ".*", StringComparison.OrdinalIgnoreCase).Replace(@"\?", ".", StringComparison.OrdinalIgnoreCase).Replace("#", @"\d", StringComparison.OrdinalIgnoreCase) + "$";
@@ -132,7 +132,7 @@ public class PatternMatchingTableCustomizer : ITableCustomizer
 
     private static bool IsRegex(string pattern)
     {
-        if (pattern == null)
+        if (pattern is null)
             return false;
 
         return pattern.Contains("*", StringComparison.OrdinalIgnoreCase) || pattern.Contains("?", StringComparison.OrdinalIgnoreCase) || pattern.Contains("#", StringComparison.OrdinalIgnoreCase);

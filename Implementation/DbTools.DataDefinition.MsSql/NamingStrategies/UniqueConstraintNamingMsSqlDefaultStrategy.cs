@@ -6,7 +6,7 @@ public class UniqueConstraintNamingMsSqlDefaultStrategy : IUniqueConstraintNamin
 {
     public void SetUniqueConstraintName(UniqueConstraint uniqueConstraint)
     {
-        if (uniqueConstraint.SqlTable.SchemaAndTableName.TableName == null)
+        if (uniqueConstraint.SqlTable.SchemaAndTableName.TableName is null)
             return;
 
         var indexNameColumnsPart = string.Join("_", uniqueConstraint.SqlColumns.ConvertAll(co => co.SqlColumn.Name));

@@ -1,7 +1,7 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 using FizzCode.DbTools.DataDefinition;
 using FizzCode.DbTools.DataDefinition.Base;
-using Index = FizzCode.DbTools.DataDefinition.Base.Index;
 
 namespace FizzCode.DbTools.DataDeclaration;
 internal static class RegisteredForeignKeysCreator
@@ -95,7 +95,7 @@ internal static class RegisteredForeignKeysCreator
         if (referredUnique.SqlColumns.Count > 1)
         {
             var messageDescriptionSb = new StringBuilder();
-            Exception innerException = null;
+            System.Exception innerException = null;
             try
             {
                 messageDescriptionSb.Append("FK: ");
@@ -104,7 +104,7 @@ internal static class RegisteredForeignKeysCreator
                 foreach (var referredColumn in referredUnique.SqlColumns)
                     messageDescriptionSb.AppendLine(referredColumn.SqlColumn.ToString());
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 messageDescriptionSb.Append("Exception on gathering FK and UK info, see InnerException.");
                 innerException = ex;
@@ -154,7 +154,7 @@ internal static class RegisteredForeignKeysCreator
 
     private static IndexBase<SqlTable> GetReferredUniqueIndex(SqlTable referredTable, string referredColumnName)
     {
-        if (referredColumnName == null)
+        if (referredColumnName is null)
             return GetReferredUniqueIndex(referredTable);
 
         var pkCandidate = referredTable.Properties.OfType<PrimaryKey>().FirstOrDefault(pk => pk.SqlColumns.Any(c => c.SqlColumn.Name == referredColumnName) && pk.SqlColumns.Count == 1);
@@ -186,7 +186,7 @@ internal static class RegisteredForeignKeysCreator
             ?? referredTable.Properties.OfType<Index>().FirstOrDefault(i => i.Unique) as IndexBase<SqlTable>
             ?? referredTable.Properties.OfType<UniqueConstraint>().FirstOrDefault();
 
-        if (uniqueIndex == null)
+        if (uniqueIndex is null)
             throw new InvalidForeignKeyRegistrationException("Can't define Foreign Key registration against a table without primary key, unique index or unique constraint.");
 
         return uniqueIndex;

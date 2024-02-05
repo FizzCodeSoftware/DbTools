@@ -101,7 +101,7 @@ EXEC sp_executesql @sql";
     public override SqlStatementWithParameters CreateDbTableDescription(SqlTable table)
     {
         var sqlTableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
-        if (sqlTableDescription == null)
+        if (sqlTableDescription is null)
         {
             return null;
         }
@@ -119,7 +119,7 @@ EXEC sp_executesql @sql";
     public override SqlStatementWithParameters CreateDbColumnDescription(SqlColumn column)
     {
         var sqlColumnDescription = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
-        if (sqlColumnDescription == null)
+        if (sqlColumnDescription is null)
             return null;
 
         var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=@SchemaName, @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");

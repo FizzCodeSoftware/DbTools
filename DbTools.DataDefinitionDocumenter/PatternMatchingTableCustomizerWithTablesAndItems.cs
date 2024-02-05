@@ -9,11 +9,11 @@ public class PatternMatchingTableCustomizerWithTablesAndItems : ITableCustomizer
         PatternMatchingTableCustomizer = patternMatchingTableCustomizer;
     }
 
-    public Dictionary<SchemaAndTableName, List<PatternMatchingTableCustomizerItem>> TableMatches { get; } = new Dictionary<SchemaAndTableName, List<PatternMatchingTableCustomizerItem>>();
+    public Dictionary<SchemaAndTableName, List<PatternMatchingTableCustomizerItem>> TableMatches { get; } = [];
 
-    public Dictionary<PatternMatchingTableCustomizerItem, List<SchemaAndTableName>> MatchTables { get; } = new Dictionary<PatternMatchingTableCustomizerItem, List<SchemaAndTableName>>();
+    public Dictionary<PatternMatchingTableCustomizerItem, List<SchemaAndTableName>> MatchTables { get; } = [];
 
-    public Dictionary<PatternMatchingTableCustomizerItem, List<SchemaAndTableName>> MatchTablesWithException { get; } = new Dictionary<PatternMatchingTableCustomizerItem, List<SchemaAndTableName>>();
+    public Dictionary<PatternMatchingTableCustomizerItem, List<SchemaAndTableName>> MatchTablesWithException { get; } = [];
 
     public PatternMatchingTableCustomizer PatternMatchingTableCustomizer { get; }
 
@@ -24,13 +24,13 @@ public class PatternMatchingTableCustomizerWithTablesAndItems : ITableCustomizer
         if (item != null)
         {
             if (!TableMatches.ContainsKey(schemaAndTableName))
-                TableMatches.Add(schemaAndTableName, new List<PatternMatchingTableCustomizerItem>());
+                TableMatches.Add(schemaAndTableName, []);
 
             if (!TableMatches[schemaAndTableName].Contains(item))
                 TableMatches[schemaAndTableName].Add(item);
 
             if (!MatchTables.ContainsKey(item))
-                MatchTables.Add(item, new List<SchemaAndTableName>());
+                MatchTables.Add(item, []);
 
             if (!MatchTables[item].Contains(schemaAndTableName))
                 MatchTables[item].Add(schemaAndTableName);
@@ -39,7 +39,7 @@ public class PatternMatchingTableCustomizerWithTablesAndItems : ITableCustomizer
         if (isMatchWithException)
         {
             if (!MatchTablesWithException.ContainsKey(item))
-                MatchTablesWithException.Add(item, new List<SchemaAndTableName>());
+                MatchTablesWithException.Add(item, []);
 
             if (!MatchTablesWithException[item].Contains(schemaAndTableName))
                 MatchTablesWithException[item].Add(schemaAndTableName);

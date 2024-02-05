@@ -24,7 +24,7 @@ public static class CircularFKDetector
                 }
                 else
                 {
-                    cFKs = new List<CircularFK>();
+                    cFKs = [];
                 }
             }
 

@@ -28,13 +28,13 @@ public class PatternMatchingTableCustomizerItem
         return $"{Pattern}; {PatternExcept}; {(ShouldSkipIfMatch ? "1" : "0")}; {CategoryIfMatch}; {BackGroundColorIfMatch}";
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is not PatternMatchingTableCustomizerItem item)
             return false;
 
-        return ((item.Pattern == null && Pattern == null) || item.Pattern.Equals(Pattern))
-            && ((item.PatternExcept == null && PatternExcept == null) || item.PatternExcept.Equals(PatternExcept))
+        return ((item.Pattern == null && Pattern is null) || item.Pattern.Equals(Pattern))
+            && ((item.PatternExcept == null && PatternExcept is null) || item.PatternExcept.Equals(PatternExcept))
             && item.ShouldSkipIfMatch == ShouldSkipIfMatch
             && item.CategoryIfMatch == CategoryIfMatch
             && item.BackGroundColorIfMatch == BackGroundColorIfMatch;

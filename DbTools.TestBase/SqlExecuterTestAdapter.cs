@@ -12,9 +12,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace FizzCode.DbTools.TestBase;
 public class SqlExecuterTestAdapter : ConfigurationBase
 {
-    private readonly Dictionary<string, (ISqlStatementExecuter SqlExecuter, SqlEngineVersion Version)> sqlExecutersAndDialects = new();
+    private readonly Dictionary<string, (ISqlStatementExecuter SqlExecuter, SqlEngineVersion Version)> sqlExecutersAndDialects = [];
 
-    private readonly Dictionary<SqlConnectionKeyAndDatabaseDefinitionTypeAsKey, DatabaseDefinition> _dds = new();
+    private readonly Dictionary<SqlConnectionKeyAndDatabaseDefinitionTypeAsKey, DatabaseDefinition> _dds = [];
 
     public override string ConfigurationFileName => "testconfig";
 
@@ -49,7 +49,7 @@ public class SqlExecuterTestAdapter : ConfigurationBase
     {
         var connectionString = ConnectionStrings[connectionStringKey];
 
-        if (connectionString == null)
+        if (connectionString is null)
             throw new InvalidOperationException($"No connection string is configured for {connectionStringKey}");
 
         var sqlEngineVersion = connectionString.GetSqlEngineVersion();

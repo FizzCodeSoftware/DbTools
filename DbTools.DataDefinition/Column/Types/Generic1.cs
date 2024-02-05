@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using FizzCode.DbTools.DataDefinition.Base;
 
-namespace FizzCode.DbTools.DataDefinition.Generic1;
+namespace FizzCode.DbTools.DataDefinition.Generic;
 public static class Generic1
 {
     private static SqlColumn Add(SqlType sqlType)
@@ -186,7 +186,7 @@ public static class Generic1
         return Add(sqlType);
     }
 
-    public static SqlColumn SetForeignKeyTo(string referredTableName, string fkName = null)
+    public static SqlColumn SetForeignKeyTo(string referredTableName, string? fkName = null)
     {
         var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
 

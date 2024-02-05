@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+﻿using System.Collections.Generic;
+
+namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public class ComparerUniqueConstraint : ComparerIndexBase<UniqueConstraint, UniqueConstraintMigration>
 {
     public static List<UniqueConstraintMigration> CompareUniqueConstraints(SqlTable tableOriginal, SqlTable tableNew)

@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+﻿using System.Collections.Generic;
+
+namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public abstract class ComparerIndexBase<TIndex, TMigration>
     where TIndex : IndexBase<SqlTable>
     where TMigration : IMigration
@@ -19,7 +21,7 @@ public abstract class ComparerIndexBase<TIndex, TMigration>
         foreach (var indexNew in tableNew.Properties.OfType<TIndex>())
         {
             var indexOriginal = tableOriginal.Properties.OfType<TIndex>().FirstOrDefault(indexOriginal => indexOriginal.Name == indexNew.Name);
-            if (indexOriginal == null)
+            if (indexOriginal is null)
             {
                 changes.Add(CreateNew(indexNew));
             }

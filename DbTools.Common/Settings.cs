@@ -2,6 +2,6 @@
 
 public class Settings
 {
-    public SqlVersionSpecificSettings SqlVersionSpecificSettings { get; set; } = new SqlVersionSpecificSettings();
+    public SqlVersionSpecificSettings SqlVersionSpecificSettings { get; set; } = [];
     public Options Options { get; set; } = new Options();
 }

@@ -6,7 +6,7 @@ public class Feature
     public Feature(string name)
     {
         Name = name;
-        Support = new FeatureSupports();
+        Support = [];
     }
 
     public string Name { get; set; }

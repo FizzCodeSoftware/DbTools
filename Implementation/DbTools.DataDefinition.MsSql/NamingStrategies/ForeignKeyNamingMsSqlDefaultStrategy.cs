@@ -6,12 +6,12 @@ using FizzCode.DbTools.DataDefinition.Base;
 namespace FizzCode.DbTools.DataDefinition.MsSql2016;
 public class ForeignKeyNamingMsSqlDefaultStrategy : ForeignKeyNamingDefaultStrategy
 {
-    private readonly Dictionary<string, ForeignKey> _generatedNames = new();
-    private readonly Dictionary<string, List<ForeignKey>> _renames = new();
+    private readonly Dictionary<string, ForeignKey> _generatedNames = [];
+    private readonly Dictionary<string, List<ForeignKey>> _renames = [];
 
     public override void SetFKName(ForeignKey fk)
     {
-        if (fk.SqlTable.SchemaAndTableName == null || fk.ReferredTable.SchemaAndTableName == null)
+        if (fk.SqlTable.SchemaAndTableName == null || fk.ReferredTable.SchemaAndTableName is null)
             return;
 
         var fkName = fk.SqlTable.SchemaAndTableName.TableName + "__" + fk.ReferredTable.SchemaAndTableName.TableName;
@@ -24,10 +24,10 @@ public class ForeignKeyNamingMsSqlDefaultStrategy : ForeignKeyNamingDefaultStrat
         {
             if (!_renames.TryGetValue(fkName, out var renameList))
             {
-                renameList = new List<ForeignKey>
-                {
+                renameList =
+                [
                     firstFk,
-                };
+                ];
 
                 _renames.Add(fkName, renameList);
                 firstFk.Name += "_1";

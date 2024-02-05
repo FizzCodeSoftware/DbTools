@@ -76,7 +76,7 @@ public abstract partial class DocumenterWriterBase : DocumenterBase
         // TODO coloring to incude schema
         var hexColor = Context.Customizer.BackGroundColor(schemaAndTableName);
 
-        if (hexColor == null)
+        if (hexColor is null)
             return null;
 
         return ColorTranslator.FromHtml(hexColor);

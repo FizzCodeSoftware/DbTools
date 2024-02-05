@@ -11,7 +11,7 @@ public static class X
 {
     public static RowSet ToRowSet(this IEnumerable<Row> source)
     {
-        if (source == null)
+        if (source is null)
             throw new System.ArgumentNullException(nameof(source));
 
         return new RowSet(source);

@@ -6,7 +6,7 @@ using FizzCode.DbTools.DataDefinition.Base;
 namespace FizzCode.DbTools.DataDefinition;
 public class CircularFK : SqlTableOrViewPropertyBase<SqlTable>
 {
-    public List<ForeignKey> ForeignKeyChain { get; set; } = new List<ForeignKey>();
+    public List<ForeignKey> ForeignKeyChain { get; set; } = [];
     
     public SqlTable SqlTable { get => SqlTableOrView; }
 

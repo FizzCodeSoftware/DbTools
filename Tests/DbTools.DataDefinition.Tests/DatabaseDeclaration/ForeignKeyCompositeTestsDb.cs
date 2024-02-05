@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using FizzCode.DbTools.DataDefinition.Base;
-using FizzCode.DbTools.DataDefinition.Generic1;
+using FizzCode.DbTools.DataDefinition.Generic;
 using FizzCode.DbTools.TestBase;
 
 namespace FizzCode.DbTools.DataDefinition.Tests;

@@ -1,6 +1,6 @@
 ﻿using FizzCode.DbTools.DataDefinition.Base;
 
-namespace FizzCode.DbTools.DataDefinition.Generic1;
+namespace FizzCode.DbTools.DataDefinition.Generic;
 public static class Generic1Columns
 {
     private static SqlColumn Add(SqlTable table, string name, SqlType sqlType)

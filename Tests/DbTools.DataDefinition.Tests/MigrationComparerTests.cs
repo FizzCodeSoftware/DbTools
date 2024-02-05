@@ -3,7 +3,7 @@ using System.Linq;
 using FizzCode.DbTools.DataDeclaration;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.DataDefinition.Base.Migration;
-using FizzCode.DbTools.DataDefinition.Generic1;
+using FizzCode.DbTools.DataDefinition.Generic;
 using FizzCode.DbTools.TestBase;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

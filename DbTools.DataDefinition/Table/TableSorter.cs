@@ -57,7 +57,7 @@ internal static class TableSorter
 
             foreach (var parent in current.Parents)
             {
-                var parentWithDependencies = GetTablesWithDependencies(new List<SqlTable>() { parent })[0];
+                var parentWithDependencies = GetTablesWithDependencies([parent])[0];
                 Visit(parentWithDependencies, visited, sorted);
             }
 

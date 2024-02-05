@@ -38,7 +38,7 @@ public static class SqlEngineVersions
         return null;
     }
 
-    public static List<SqlEngineVersion> AllVersions { get; } = new List<SqlEngineVersion>();
+    public static List<SqlEngineVersion> AllVersions { get; } = [];
 
     public static SqlEngineVersion GetLatestVersionOfDialect<T>() where T : SqlEngineVersion
     {

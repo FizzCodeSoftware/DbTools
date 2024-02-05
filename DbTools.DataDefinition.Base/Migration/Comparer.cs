@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+﻿using System.Collections.Generic;
+
+namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public class Comparer
 {
     public List<IMigration> Compare(IDatabaseDefinition originalDd, IDatabaseDefinition newDd)
@@ -10,11 +12,11 @@ public class Comparer
         // handle renamed tables - needs parameter / external info
         foreach (var tableOriginal in originalDd.GetTables())
         {
-            if (!newDd.Contains(tableOriginal.SchemaAndTableName))
+            if (!newDd.Contains(tableOriginal.SchemaAndTableNameSafe))
             {
                 var tableDelete = new TableDelete
                 {
-                    SchemaAndTableName = tableOriginal.SchemaAndTableName
+                    SchemaAndTableName = tableOriginal.SchemaAndTableNameSafe
                 };
 
                 changes.Add(tableDelete);
@@ -23,7 +25,7 @@ public class Comparer
 
         foreach (var tableNewDd in newDd.GetTables())
         {
-            if (!originalDd.Contains(tableNewDd.SchemaAndTableName))
+            if (!originalDd.Contains(tableNewDd.SchemaAndTableNameSafe))
             {
                 var tableNew = new TableNew(tableNewDd);
                 changes.Add(tableNew);
@@ -33,9 +35,9 @@ public class Comparer
         foreach (var tableOriginal in originalDd.GetTables())
         {
             // not deleted
-            if (newDd.Contains(tableOriginal.SchemaAndTableName))
+            if (newDd.Contains(tableOriginal.SchemaAndTableNameSafe))
             {
-                var tableNew = newDd.GetTable(tableOriginal.SchemaAndTableName);
+                var tableNew = newDd.GetTable(tableOriginal.SchemaAndTableNameSafe);
                 changes.AddRange(CompareColumns(tableOriginal, tableNew));
                 changes.AddRange(ComparerPrimaryKey.ComparePrimaryKeys(tableOriginal, tableNew));
                 changes.AddRange(ComparerForeignKey.CompareForeignKeys(tableOriginal, tableNew));
@@ -53,7 +55,7 @@ public class Comparer
         foreach (var columnOriginal in tableOriginal.Columns)
         {
             tableNew.Columns.TryGetValue(columnOriginal.Name, out var columnNew);
-            if (columnNew == null)
+            if (columnNew is null)
             {
                 changes.Add(new ColumnDelete()
                 {
@@ -65,7 +67,7 @@ public class Comparer
         foreach (var columnNew in tableNew.Columns)
         {
             tableOriginal.Columns.TryGetValue(columnNew.Name, out var columnOriginal);
-            if (columnOriginal == null)
+            if (columnOriginal is null)
             {
                 changes.Add(new ColumnNew()
                 {
@@ -97,9 +99,9 @@ public class Comparer
 
     public static bool ColumnChanged(SqlColumnBase columnNew, SqlColumnBase columnOriginal)
     {
-        return (columnOriginal.Type.SqlTypeInfo.HasLength && columnOriginal.Type.Length != columnNew.Type.Length)
-                             || (columnOriginal.Type.SqlTypeInfo.HasScale && columnOriginal.Type.Scale != columnNew.Type.Scale)
-                             || columnOriginal.Type.SqlTypeInfo.GetType().Name != columnNew.Type.SqlTypeInfo.GetType().Name
+        return (columnOriginal.Type!.SqlTypeInfo.HasLength && columnOriginal.Type.Length != columnNew.Type!.Length)
+                             || (columnOriginal.Type.SqlTypeInfo.HasScale && columnOriginal.Type.Scale != columnNew.Type!.Scale)
+                             || columnOriginal.Type.SqlTypeInfo.GetType().Name != columnNew.Type!.SqlTypeInfo.GetType().Name
                              || columnOriginal.Type.IsNullable != columnNew.Type.IsNullable;
     }
 }

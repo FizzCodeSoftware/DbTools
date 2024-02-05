@@ -1,4 +1,5 @@
-﻿using FizzCode.DbTools.Common;
+﻿using System;
+using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.Interfaces;
 

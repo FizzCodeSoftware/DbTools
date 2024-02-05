@@ -1,14 +1,14 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Base;
 public abstract class IndexBase<T> : SqlTableOrViewPropertyBase<T> where T : SqlTableOrView
 {
-    public string Name { get; set; }
+    public string? Name { get; set; }
 
-    public List<ColumnAndOrder> SqlColumns { get; set; } = new List<ColumnAndOrder>();
+    public List<ColumnAndOrder> SqlColumns { get; set; } = [];
 
     public bool Unique { get; set; }
     public bool? Clustered { get; set; }
 
-    protected IndexBase(T sqlTable, string name, bool unique = false)
+    protected IndexBase(T sqlTable, string? name, bool unique = false)
         : base(sqlTable)
     {
         Name = name;

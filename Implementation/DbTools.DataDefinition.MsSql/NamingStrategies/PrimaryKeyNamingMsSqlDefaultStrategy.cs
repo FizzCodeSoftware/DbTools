@@ -8,7 +8,7 @@ public class PrimaryKeyNamingMsSqlDefaultStrategy : IPrimaryKeyNamingStrategy
 {
     public void SetPrimaryKeyName(PrimaryKey pk)
     {
-        if (pk.SqlTable.SchemaAndTableName?.TableName == null)
+        if (pk.SqlTable.SchemaAndTableName?.TableName is null)
             return;
 
         var pkName = $"PK_{pk.SqlTable.SchemaAndTableName.TableName}";

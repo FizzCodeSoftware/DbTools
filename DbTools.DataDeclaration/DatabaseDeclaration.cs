@@ -1,9 +1,10 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using FizzCode.DbTools.DataDefinition;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.Factory.Interfaces;
 using FizzCode.DbTools.QueryBuilder.Interfaces;
-using Index = FizzCode.DbTools.DataDefinition.Base.Index;
 
 namespace FizzCode.DbTools.DataDeclaration;
 public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
@@ -46,7 +47,7 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
     {
         foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithUniqueKeySingleColumn>(sqlTable))
         {
-            if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
+            if (DefaultSchema is not null && fkRegistration.ReferredTableName is not null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
                 fkRegistration.ReferredTableName.Schema = DefaultSchema;
 
             RegisteredForeignKeysCreator.UniqueKeySingleColumn(this, sqlTable, fkRegistration);
@@ -54,7 +55,7 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
 
         foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithUniqueKey>(sqlTable))
         {
-            if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
+            if (DefaultSchema is not null && fkRegistration.ReferredTableName is not null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
                 fkRegistration.ReferredTableName.Schema = DefaultSchema;
 
             RegisteredForeignKeysCreator.UniqueKey(this, sqlTable, fkRegistration, NamingStrategies.ForeignKey);
@@ -62,7 +63,7 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
 
         foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToTableWithUniqueKeyExistingColumn>(sqlTable))
         {
-            if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
+            if (DefaultSchema is not null && fkRegistration.ReferredTableName is not null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
                 fkRegistration.ReferredTableName.Schema = DefaultSchema;
 
             RegisteredForeignKeysCreator.PrimaryKeyExistingColumn(this, sqlTable, fkRegistration);
@@ -70,7 +71,7 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
 
         foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToReferredTableExistingColumns>(sqlTable))
         {
-            if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
+            if (DefaultSchema is not null && fkRegistration.ReferredTableName is not null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
                 fkRegistration.ReferredTableName.Schema = DefaultSchema;
 
             RegisteredForeignKeysCreator.ReferredTableExistingColumns(this, sqlTable, fkRegistration);
@@ -78,7 +79,7 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
 
         foreach (var fkRegistration in GetProperties<ForeignKeyRegistrationToReferredTable>(sqlTable))
         {
-            if (DefaultSchema != null && fkRegistration.ReferredTableName != null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
+            if (DefaultSchema is not null && fkRegistration.ReferredTableName is not null && string.IsNullOrEmpty(fkRegistration.ReferredTableName.Schema))
                 fkRegistration.ReferredTableName.Schema = DefaultSchema;
 
             RegisteredForeignKeysCreator.ReferredTable(this, sqlTable, fkRegistration);
@@ -119,9 +120,9 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
 
         foreach (var property in properties)
         {
-            var table = (SqlTable)property.GetValue(this);
+            var table = property.GetValueSafe<SqlTable>(this);
 
-            if (table.SchemaAndTableName == null)
+            if (table.SchemaAndTableName is null)
             {
                 var schemaAndTableName = new SchemaAndTableName(property.Name);
                 if (string.IsNullOrEmpty(schemaAndTableName.Schema) && !string.IsNullOrEmpty(DefaultSchema))
@@ -142,7 +143,7 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
 
         if (fields.Count > 0)
         {
-            throw new InvalidOperationException(nameof(DatabaseDeclaration) + " is only compatible with tabled defined in public properties. Please review the following fields: " + string.Join(", ", fields.Select(fi => fi.Name)));
+            throw new System.InvalidOperationException(nameof(DatabaseDeclaration) + " is only compatible with tabled defined in public properties. Please review the following fields: " + string.Join(", ", fields.Select(fi => fi.Name)));
         }
     }
 
@@ -158,11 +159,11 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
     {
         var properties = table.GetType()
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-            .Where(pi => typeof(SqlColumn).IsAssignableFrom(pi.PropertyType) && !pi.GetIndexParameters().Any());
+            .Where(pi => typeof(SqlColumn).IsAssignableFrom(pi.PropertyType) && pi.GetIndexParameters().Length == 0);
 
         foreach (var property in properties)
         {
-            var column = (SqlColumn)property.GetValue(table);
+            var column = property.GetValueSafe<SqlColumn>(table);
             column.Name = property.Name;
 
             var tablePlaceHolderProperties = column.Table.Properties;
@@ -200,7 +201,7 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
 
         foreach (var property in properties)
         {
-            var view = (SqlView)property.GetValue(this);
+            var view = property.GetValueSafe<SqlView>(this);
 
             if (view is IViewFromQuery vq)
             {
@@ -211,7 +212,7 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
                 }
             }
 
-            if (view.SchemaAndTableName == null)
+            if (view.SchemaAndTableName is null)
             {
                 var schemaAndTableName = new SchemaAndTableName(property.Name);
                 if (string.IsNullOrEmpty(schemaAndTableName.Schema) && !string.IsNullOrEmpty(DefaultSchema))
@@ -226,7 +227,7 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
         }
     }
 
-    protected static SqlTable AddTable(Action<SqlTable> configurator)
+    protected static SqlTable AddTable(System.Action<SqlTable> configurator)
     {
         var table = new SqlTable();
         configurator.Invoke(table);
@@ -240,11 +241,11 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
             .Where(pi =>
                 (typeof(Index).IsAssignableFrom(pi.PropertyType)
                 || typeof(UniqueConstraint).IsAssignableFrom(pi.PropertyType))
-                && !pi.GetIndexParameters().Any());
+                && pi.GetIndexParameters().Length == 0);
 
         foreach (var property in properties)
         {
-            var index = (IndexBase<SqlTable>)property.GetValue(table);
+            var index = property.GetValueSafe<IndexBase<SqlTable>>(table);
 
             if (!property.Name.StartsWith('_'))
                 index.Name = property.Name;
@@ -269,11 +270,11 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(pi =>
                 typeof(ForeignKey).IsAssignableFrom(pi.PropertyType)
-                && !pi.GetIndexParameters().Any());
+                && pi.GetIndexParameters().Length == 0);
 
         foreach (var property in properties)
         {
-            var fk = (ForeignKey)property.GetValue(table);
+            var fk = property.GetValueSafe<ForeignKey>(table);
 
             if (!property.Name.StartsWith('_'))
                 fk.Name = property.Name;
@@ -290,11 +291,11 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(pi =>
                 typeof(SqlTableCustomProperty).IsAssignableFrom(pi.PropertyType)
-                && !pi.GetIndexParameters().Any());
+                && pi.GetIndexParameters().Length == 0);
 
         foreach (var property in properties)
         {
-            var customProperty = (SqlTableCustomProperty)property.GetValue(table);
+            var customProperty = property.GetValueSafe<SqlTableCustomProperty>(table);
             customProperty.SqlTableOrView = table;
             table.Properties.Add(customProperty);
         }
@@ -306,11 +307,11 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(pi =>
                 typeof(SqlViewCustomProperty).IsAssignableFrom(pi.PropertyType)
-                && !pi.GetIndexParameters().Any());
+                && pi.GetIndexParameters().Length == 0);
 
         foreach (var property in properties)
         {
-            var customProperty = (SqlViewCustomProperty)property.GetValue(view);
+            var customProperty = property.GetValueSafe<SqlViewCustomProperty>(view);
             customProperty.SqlTableOrView = view;
             view.Properties.Add(customProperty);
         }

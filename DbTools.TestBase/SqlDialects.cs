@@ -13,7 +13,7 @@ public abstract class SqlVersionsBasAttribute : Attribute, ITestDataSource
 
     protected SqlVersionsBasAttribute(params Type[] versionTypes)
     {
-        Versions = new List<SqlEngineVersion>();
+        Versions = [];
         foreach (var versionType in versionTypes)
         {
             var version = (SqlEngineVersion)Activator.CreateInstance(versionType);
@@ -66,7 +66,7 @@ public sealed class SqlVersionsAttribute : SqlVersionsBasAttribute
 {
     public SqlVersionsAttribute(params string[] versionTypeNames)
     {
-        Versions = new List<SqlEngineVersion>();
+        Versions = [];
         var allversions = SqlEngineVersions.AllVersions;
         foreach (var versionTypeName in versionTypeNames)
         {

@@ -1,14 +1,9 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Base;
 
-public class ColumnAndOrderRegistration : ColumnAndOrder
+public class ColumnAndOrderRegistration(string columnName, AscDesc order)
+    : ColumnAndOrder(order)
 {
-    public string ColumnName { get; set; }
-
-    public ColumnAndOrderRegistration(string columnName, AscDesc order)
-        : base(order)
-    {
-        ColumnName = columnName;
-    }
+    public string ColumnName { get; set; } = columnName;
 
     public override string ToString()
     {

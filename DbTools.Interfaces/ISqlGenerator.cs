@@ -1,4 +1,5 @@
-﻿using FizzCode.DbTools.Common;
+﻿using System.Collections.Generic;
+using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.Interfaces;

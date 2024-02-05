@@ -1,4 +1,8 @@
-﻿using Autofac;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using Autofac;
 using Autofac.Configuration;
 using FizzCode.DbTools.Factory.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -7,8 +11,8 @@ namespace FizzCode.DbTools.Factory;
 public class Root : IFactoryContainer
 {
     protected static IContainer Container { get; set; }
-    protected static List<(Type, Type)> RegisteredTypes { get; set; } = new();
-    protected static List<(Type, object)> RegisteredInstances { get; set; } = new();
+    protected static List<(Type, Type)> RegisteredTypes { get; set; } = [];
+    protected static List<(Type, object)> RegisteredInstances { get; set; } = [];
     private static bool _isInitialized;
 
     protected void Build()
@@ -76,7 +80,7 @@ public class Root : IFactoryContainer
     }
     public void RegisterInstance<T>(T instance)
     {
-        if (instance == null)
+        if (instance is null)
             throw new ArgumentNullException(nameof(instance));
 
         RegisteredInstances.Add((typeof(T), instance));

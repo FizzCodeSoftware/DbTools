@@ -1,7 +1,9 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base;
+﻿using System;
+
+namespace FizzCode.DbTools.DataDefinition.Base;
 public class SqlTable : SqlTableOrView
 {
-    public List<SqlTableOrViewPropertyBase<SqlTable>> Properties { get; } = new();
+    public List<SqlTableOrViewPropertyBase<SqlTable>> Properties { get; } = [];
 
     public SqlTable()
     {
@@ -36,5 +38,5 @@ public class SqlTable : SqlTableOrView
     }
 
     public SqlColumn this[string columnName] => Columns[columnName];
-    public ColumnsOrdered Columns { get; } = new();
+    public ColumnsOrdered Columns { get; } = [];
 }

@@ -7,7 +7,7 @@ using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 using FizzCode.DbTools.DataDefinition.Base.Migration;
 using FizzCode.DbTools.DataDefinition.Factory;
-using FizzCode.DbTools.DataDefinition.Generic1;
+using FizzCode.DbTools.DataDefinition.Generic;
 using FizzCode.DbTools.DataDefinition.Tests;
 using FizzCode.DbTools.DataDefinitionReader;
 using FizzCode.DbTools.Factory.Interfaces;

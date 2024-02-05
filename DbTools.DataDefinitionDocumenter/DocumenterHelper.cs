@@ -18,7 +18,7 @@ public class DocumenterHelper
 
         var defaultSchema = Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema", null);
 
-        if (Settings.Options.ShouldUseDefaultSchema && schema == null)
+        if (Settings.Options.ShouldUseDefaultSchema && schema is null)
             return defaultSchema + separator + tableName;
 
         if (!Settings.Options.ShouldUseDefaultSchema && schema == defaultSchema)

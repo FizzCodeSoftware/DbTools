@@ -4,8 +4,8 @@ namespace FizzCode.DbTools.DataDefinitionDocumenter.BimDTO;
 public class Table
 {
     public string Name { get; set; }
-    public List<Column> Columns { get; } = new List<Column>();
-    public List<Partition> Partitions { get; } = new List<Partition>();
+    public List<Column> Columns { get; } = [];
+    public List<Partition> Partitions { get; } = [];
 }
 
 public class Column
@@ -18,7 +18,7 @@ public class Column
     // TODO leave out if null
     public string FormatString { get; set; }
     // TODO leave out if null
-    public List<Annotation> Annotations { get; } = new List<Annotation>();
+    public List<Annotation> Annotations { get; } = [];
 }
 
 public class Partition
@@ -31,5 +31,5 @@ public class Partition
 public class PartitionSource
 {
     public string Type { get; set; }
-    public List<string> Expression { get; } = new List<string>();
+    public List<string> Expression { get; } = [];
 }
