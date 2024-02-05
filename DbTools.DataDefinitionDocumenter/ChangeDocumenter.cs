@@ -7,24 +7,18 @@ using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.DataDefinition.Base.Migration;
 
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
-public class ChangeDocumenter : DocumenterWriterBase
+public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocumenterContext context, SqlEngineVersion version, string originalDatabaseName = "", string newDatabaseName = "", string? fileName = null)
+    : DocumenterWriterBase(documenterWriter, context, version, originalDatabaseName, fileName)
 {
     protected string OriginalDatabaseName => DatabaseName;
 
-    protected string NewDatabaseName { get; }
+    protected string NewDatabaseName { get; } = newDatabaseName;
 
-    public new ChangeDocumenterContext Context { get; }
+    public new ChangeDocumenterContext Context { get; } = context;
 
-    public ChangeDocumenter(ChangeDocumenterContext context, SqlEngineVersion version, string originalDatabaseName = "", string newDatabaseName = "", string fileName = null)
+    public ChangeDocumenter(ChangeDocumenterContext context, SqlEngineVersion version, string originalDatabaseName = "", string newDatabaseName = "", string? fileName = null)
         : this(new DocumenterWriterExcel(), context, version, originalDatabaseName, newDatabaseName, fileName)
     {
-    }
-
-    public ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocumenterContext context, SqlEngineVersion version, string originalDatabaseName = "", string newDatabaseName = "", string fileName = null)
-        : base(documenterWriter, context, version, originalDatabaseName, fileName)
-    {
-        Context = context;
-        NewDatabaseName = newDatabaseName;
     }
 
     private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategoryOrignal = [];
@@ -333,15 +327,15 @@ public class ChangeDocumenter : DocumenterWriterBase
     private void ProcessTable(List<SchemaAndTableName> processedTables, SqlTable table)
     {
         // TODO SqlTable and SqlView
-        if (!processedTables.Contains(table.SchemaAndTableName))
+        if (!processedTables.Contains(table.SchemaAndTableNameSafe))
         {
-            processedTables.Add(table.SchemaAndTableName);
+            processedTables.Add(table.SchemaAndTableNameSafe);
             // TODO category
             AddTableHeader(false, null, table, "Event");
         }
     }
 
-    protected override Color? GetColor(SchemaAndTableName schemaAndTableName)
+    protected override Color? GetColor(SchemaAndTableName? schemaAndTableName)
     {
         // TODO coloring to incude schema
         var hexColor = Context.CustomizerNew.BackGroundColor(schemaAndTableName);

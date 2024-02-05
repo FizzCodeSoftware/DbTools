@@ -7,15 +7,11 @@ using FizzCode.DbTools.Interfaces;
 
 namespace FizzCode.DbTools.SqlExecuter.SqLite3;
 #pragma warning disable CA1001 // Types that own disposable fields should be disposable
-public class SqLite3Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDatabase
+public class SqLite3Executer(ContextWithLogger context, NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
+    : SqlStatementExecuter(context, connectionString, sqlGenerator), ISqlExecuterDropAndCreateDatabase
 #pragma warning restore CA1001 // Types that own disposable fields should be disposable
 {
-    public SqLite3Executer(ContextWithLogger context, NamedConnectionString connectionString, ISqlGenerator? sqlGenerator = null)
-        : base(context, connectionString, sqlGenerator)
-    {
-    }
-
-    private SQLiteConnection _connection;
+    private SQLiteConnection? _connection;
 
     public override void InitializeDatabase(bool dropIfExists, params IDatabaseDefinition[] dds)
     {

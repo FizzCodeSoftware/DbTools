@@ -113,12 +113,16 @@ public class DocumenterWriterExcel : IDocumenterWriter
             {
                 var hasValue = false;
                 for (var col = start.Column; col <= end.Column && !hasValue; col++)
+                {
                     if (!string.IsNullOrEmpty(sheet.Cells[row, col].Text))
                         hasValue = true;
+                }
 
                 if (hasValue)
+                {
                     foreach (var cell in sheet.Cells[row, 1, row, end.Column])
                         cell.Style.Border.BorderAround(ExcelBorderStyle.Thin);
+                }
             }
 
             foreach (var mergeAddress in sheet.MergedCells)

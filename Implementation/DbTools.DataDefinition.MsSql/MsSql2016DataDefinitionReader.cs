@@ -9,7 +9,7 @@ using FizzCode.DbTools.SqlExecuter.MsSql;
 using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 
 namespace FizzCode.DbTools.DataDefinition.MsSql2016;
-public class MsSql2016DataDefinitionReader(NamedConnectionString connectionString, ContextWithLogger context, ISchemaNamesToRead schemaNames)
+public class MsSql2016DataDefinitionReader(NamedConnectionString connectionString, ContextWithLogger context, ISchemaNamesToRead? schemaNames)
     : GenericDataDefinitionReader(new MsSql2016Executer(context, connectionString, new MsSql2016Generator(context)), schemaNames)
 {
     public override DatabaseDefinition GetDatabaseDefinition()

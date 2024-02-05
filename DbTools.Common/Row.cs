@@ -22,7 +22,7 @@ public class Row : Dictionary<string, object>
         }
     }
 
-    public T GetAs<T>(string name, T defaultValue)
+    public T? GetAs<T>(string name, T? defaultValue)
     {
         if (!ContainsKey(name))
             return defaultValue;
@@ -37,7 +37,7 @@ public class Row : Dictionary<string, object>
         }
     }
 
-    public T CastAs<T>(string name)
+    public T? CastAs<T>(string name)
     {
         try
         {

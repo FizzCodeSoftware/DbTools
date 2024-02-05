@@ -7,12 +7,12 @@ using FizzCode.DbTools.DataDefinition.Checker;
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public class SchemaCheckerDocumenter : DocumenterWriterBase
 {
-    public SchemaCheckerDocumenter(DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
+    public SchemaCheckerDocumenter(DocumenterContext context, SqlEngineVersion version, string databaseName = "", string? fileName = null)
         : this(new DocumenterWriterExcel(), context, version, databaseName, fileName)
     {
     }
 
-    protected SchemaCheckerDocumenter(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
+    protected SchemaCheckerDocumenter(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string? fileName = null)
         : base(documenterWriter, context, version, databaseName, fileName)
     {
     }

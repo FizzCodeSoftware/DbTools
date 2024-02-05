@@ -6,14 +6,10 @@ using FizzCode.DbTools.QueryBuilder.Interfaces;
 using FizzCode.DbTools.SqlGenerator.Base;
 
 namespace FizzCode.DbTools.QueryBuilder;
-public class QueryBuilderConnector : AbstractSqlGeneratorBase, IQueryBuilderConnector
+public class QueryBuilderConnector(Context context, IQueryBuilder queryBuilder)
+    : AbstractSqlGeneratorBase(context), IQueryBuilderConnector
 {
-    protected IQueryBuilder QueryBuilder { get; }
-    public QueryBuilderConnector(Context context, IQueryBuilder queryBuilder)
-        : base(context)
-    {
-        QueryBuilder = queryBuilder;
-    }
+    protected IQueryBuilder QueryBuilder { get; } = queryBuilder;
 
     public override SqlEngineVersion SqlVersion
     {
@@ -26,6 +22,7 @@ public class QueryBuilderConnector : AbstractSqlGeneratorBase, IQueryBuilderConn
     public void ProcessStoredProcedureFromQuery(IStoredProcedureFromQuery storedProcedureFromQuery)
     {
         var sp = storedProcedureFromQuery as StoredProcedureFromQuery;
+        Throw.InvalidOperationExceptionIfNull(sp, nameof(storedProcedureFromQuery));
 
         foreach (var p in GetParametersFromFilters(sp.Query))
             sp.SpParameters.Add(p);
@@ -36,6 +33,7 @@ public class QueryBuilderConnector : AbstractSqlGeneratorBase, IQueryBuilderConn
     public void ProcessViewFromQuery(IViewFromQuery viewFromQuery)
     {
         var view = viewFromQuery as ViewFromQuery;
+        Throw.InvalidOperationExceptionIfNull(view, nameof(viewFromQuery));
         view.SqlViewBodies.Add(SqlVersion, Build(view.Query));
     }
 

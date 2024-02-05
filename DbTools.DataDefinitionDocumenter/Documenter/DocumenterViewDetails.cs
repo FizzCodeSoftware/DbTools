@@ -8,12 +8,12 @@ public partial class Documenter
 {
     private void AddViews(List<KeyValuePair<string, SqlView>> _sqlViewsByCategory, List<KeyValuePair<string, SqlView>> _skippedSqlViewsByCategory, bool hasCategories)
     {
-        foreach (var viewKvp in _sqlViewsByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName.Schema).ThenBy(t => t.Value.SchemaAndTableName.TableName))
+        foreach (var viewKvp in _sqlViewsByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName?.Schema).ThenBy(t => t.Value!.SchemaAndTableNameSafe.TableName))
         {
-            Context.Logger.Log(LogSeverity.Verbose, "Generating {ViewName}.", "Documenter", viewKvp.Value.SchemaAndTableName);
+            Context.Logger.Log(LogSeverity.Verbose, "Generating {ViewName}.", "Documenter", viewKvp.Value.SchemaAndTableName ?? "");
             var category = viewKvp.Key;
             var view = viewKvp.Value;
-            //AddViewToViewList(category, table, hasCategories);
+            AddViewToViewList(category, view, hasCategories);
 
             var sheetColor = GetColor(view.SchemaAndTableName);
             if (sheetColor != null)

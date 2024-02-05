@@ -2,20 +2,16 @@
 using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
-public class PatternMatchingTableCustomizerWithTablesAndItems : ITableCustomizer
+public class PatternMatchingTableCustomizerWithTablesAndItems(PatternMatchingTableCustomizer patternMatchingTableCustomizer)
+    : ITableCustomizer
 {
-    public PatternMatchingTableCustomizerWithTablesAndItems(PatternMatchingTableCustomizer patternMatchingTableCustomizer)
-    {
-        PatternMatchingTableCustomizer = patternMatchingTableCustomizer;
-    }
-
     public Dictionary<SchemaAndTableName, List<PatternMatchingTableCustomizerItem>> TableMatches { get; } = [];
 
     public Dictionary<PatternMatchingTableCustomizerItem, List<SchemaAndTableName>> MatchTables { get; } = [];
 
     public Dictionary<PatternMatchingTableCustomizerItem, List<SchemaAndTableName>> MatchTablesWithException { get; } = [];
 
-    public PatternMatchingTableCustomizer PatternMatchingTableCustomizer { get; }
+    public PatternMatchingTableCustomizer PatternMatchingTableCustomizer { get; } = patternMatchingTableCustomizer;
 
     protected PatternMatchingTableCustomizerItem GetPatternMatching(SchemaAndTableName schemaAndTableName)
     {
@@ -48,13 +44,13 @@ public class PatternMatchingTableCustomizerWithTablesAndItems : ITableCustomizer
         return item;
     }
 
-    public string BackGroundColor(SchemaAndTableName tableName)
+    public string? BackGroundColor(SchemaAndTableName tableName)
     {
         var item = GetPatternMatching(tableName);
         return item?.BackGroundColorIfMatch;
     }
 
-    public string Category(SchemaAndTableName tableName)
+    public string? Category(SchemaAndTableName tableName)
     {
         var item = GetPatternMatching(tableName);
         return item?.CategoryIfMatch;

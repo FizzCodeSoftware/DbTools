@@ -10,7 +10,7 @@ public class DataDefinitionReaderFactory(IContextFactory contextFactory) : IData
 {
     private readonly IContextFactory _contextFactory = contextFactory;
 
-    public IDataDefinitionReader CreateDataDefinitionReader(NamedConnectionString connectionString, ISchemaNamesToRead schemaNames)
+    public IDataDefinitionReader CreateDataDefinitionReader(NamedConnectionString connectionString, ISchemaNamesToRead? schemaNames)
     {
         var sqlEngineVersion = connectionString.GetSqlEngineVersion();
         var context = _contextFactory.CreateContextWithLogger(sqlEngineVersion);

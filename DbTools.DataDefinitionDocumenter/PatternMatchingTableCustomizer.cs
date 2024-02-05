@@ -13,13 +13,13 @@ public class PatternMatchingTableCustomizer : ITableCustomizer
         Patterns.Add(new PatternMatchingTableCustomizerItem(new SchemaAndTableName(patternSchema, patternTableName), new SchemaAndTableName(patternExceptSchema, patternExceptTableName), shouldSkip, category, backGroundColor));
     }
 
-    public string BackGroundColor(SchemaAndTableName tableName)
+    public string? BackGroundColor(SchemaAndTableName? tableName)
     {
         var item = GetPatternMatching(tableName);
         return item?.BackGroundColorIfMatch;
     }
 
-    public string Category(SchemaAndTableName tableName)
+    public string? Category(SchemaAndTableName tableName)
     {
         var item = GetPatternMatching(tableName);
         return item?.CategoryIfMatch;
@@ -122,12 +122,16 @@ public class PatternMatchingTableCustomizer : ITableCustomizer
         return string.Equals(actual, regexOrString, StringComparison.InvariantCultureIgnoreCase);
     }
 
-    private static string RegexFormFromWildCharForm(string schemaOrTableName)
+    private static string? RegexFormFromWildCharForm(string schemaOrTableName)
     {
         if (schemaOrTableName is null)
             return null;
 
-        return Regex.Escape(schemaOrTableName).Replace(@"\*", ".*", StringComparison.OrdinalIgnoreCase).Replace(@"\?", ".", StringComparison.OrdinalIgnoreCase).Replace("#", @"\d", StringComparison.OrdinalIgnoreCase) + "$";
+        return Regex.Escape(schemaOrTableName)
+            .Replace(@"\*", ".*", StringComparison.OrdinalIgnoreCase)
+            .Replace(@"\?", ".", StringComparison.OrdinalIgnoreCase)
+            .Replace("#", @"\d", StringComparison.OrdinalIgnoreCase)
+            + "$";
     }
 
     private static bool IsRegex(string pattern)
@@ -135,6 +139,8 @@ public class PatternMatchingTableCustomizer : ITableCustomizer
         if (pattern is null)
             return false;
 
-        return pattern.Contains("*", StringComparison.OrdinalIgnoreCase) || pattern.Contains("?", StringComparison.OrdinalIgnoreCase) || pattern.Contains("#", StringComparison.OrdinalIgnoreCase);
+        return pattern.Contains('*', StringComparison.OrdinalIgnoreCase)
+            || pattern.Contains('?', StringComparison.OrdinalIgnoreCase)
+            || pattern.Contains('#', StringComparison.OrdinalIgnoreCase);
     }
 }

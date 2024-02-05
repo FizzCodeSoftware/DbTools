@@ -8,15 +8,9 @@ using System;
 using System.Linq;
 
 namespace FizzCode.DbTools.SqlExecuter.Oracle;
-public class Oracle12cExecuter : SqlStatementExecuter
+public class Oracle12cExecuter(ContextWithLogger context, NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
+    : SqlStatementExecuter(context, connectionString, sqlGenerator)
 {
-    public object Oracle12cGenerator { get; private set; }
-
-    public Oracle12cExecuter(ContextWithLogger context, NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
-        : base(context, connectionString, sqlGenerator)
-    {
-    }
-
     public override DbConnection OpenConnectionMaster()
     {
         return OpenConnection();
@@ -25,6 +19,7 @@ public class Oracle12cExecuter : SqlStatementExecuter
     public override string GetDatabase()
     {
         var oracleDatabaseName = Context.Settings.SqlVersionSpecificSettings.GetAs<string>("OracleDatabaseName");
+        Throw.InvalidOperationExceptionIfNull(oracleDatabaseName);
         return oracleDatabaseName;
     }
 
@@ -36,6 +31,7 @@ public class Oracle12cExecuter : SqlStatementExecuter
         {
             var allSchemas = dds.SelectMany(dd => dd.GetSchemaNames().ToList()).ToList();
 
+            Throw.InvalidOperationExceptionIfNull(defaultSchema);
             allSchemas.Add(defaultSchema);
 
             foreach (var schema in allSchemas)
@@ -91,6 +87,7 @@ WHERE {column} = @value", value);
         }
 
         var defaultSchema = Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
+        Throw.InvalidOperationExceptionIfNull(defaultSchema);
         var currentUser = ExecuteQuery("select user from dual")[0].GetAs<string>("USER");
 
         ExecuteNonQuery($"ALTER SESSION SET current_schema = {currentUser}");

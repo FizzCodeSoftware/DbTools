@@ -27,7 +27,7 @@ public class SchemaAndTableName : IComparable, IEquatable<SchemaAndTableName>
         }
     }
 
-    public SchemaAndTableName(string schema, string tableName)
+    public SchemaAndTableName(string? schema, string tableName)
     {
         Schema = schema;
         TableName = tableName;

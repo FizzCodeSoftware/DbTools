@@ -4,29 +4,36 @@ using System.Collections.Generic;
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public abstract partial class DocumenterWriterBase
 {
-    protected void AddViewHeader(bool hasCategories, string category, SqlTableOrView table, string firstColumn = null)
+    protected void AddViewHeader(bool hasCategories, string category, SqlView view, string? firstColumn = null)
     {
-        var mergeAmount = !Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11;
+        var mergeAmount = !Context.DocumenterSettings.NoInternalDataTypes ? 4 : 3;
         mergeAmount += firstColumn == null ? 0 : 1;
 
-        WriteColor(table.SchemaAndTableName, "Schema");
-        WriteAndMerge(table.SchemaAndTableName, mergeAmount, table.SchemaAndTableName.Schema);
-        WriteLine(table.SchemaAndTableName);
+        var schemaAndTableName = view.SchemaAndTableNameSafe;
+        WriteColor(schemaAndTableName, "Schema");
+        WriteAndMerge(schemaAndTableName, mergeAmount, schemaAndTableName.Schema);
+        WriteLine(schemaAndTableName);
 
-        WriteColor(table.SchemaAndTableName, "View name");
-        WriteAndMerge(table.SchemaAndTableName, mergeAmount, table.SchemaAndTableName.TableName);
-        WriteLine(table.SchemaAndTableName);
+        WriteColor(schemaAndTableName, "View name");
+        WriteAndMerge(schemaAndTableName, mergeAmount, schemaAndTableName.TableName);
+        WriteLine(schemaAndTableName);
+
+        /*var viewDescription = view.Properties.OfType<SqlViewDescription>().FirstOrDefault();
+
+        WriteColor(schemaAndTableName, "Description");
+        WriteAndMerge(schemaAndTableName, mergeAmount, viewDescription?.Description);
+        WriteLine(schemaAndTableName);*/
 
         if (hasCategories && !string.IsNullOrEmpty(category))
         {
-            WriteColor(table.SchemaAndTableName, "Category");
-            WriteAndMerge(table.SchemaAndTableName, mergeAmount, category);
-            WriteLine(table.SchemaAndTableName);
+            WriteColor(schemaAndTableName, "Category");
+            WriteAndMerge(schemaAndTableName, mergeAmount, category);
+            WriteLine(schemaAndTableName);
         }
 
-        WriteLine(table.SchemaAndTableName);
+        WriteLine(schemaAndTableName);
         if (firstColumn != null)
-            Write(table.SchemaAndTableName, firstColumn);
+            Write(schemaAndTableName, firstColumn);
 
         var viewColums = new List<string>();
 
@@ -35,22 +42,22 @@ public abstract partial class DocumenterWriterBase
         if (Context.DocumenterSettings.NoInternalDataTypes)
             viewColums.Remove("Data Type (DbTools)");
 
-        WriteLine(table.SchemaAndTableName, viewColums.ToArray());
+        WriteLine(schemaAndTableName, viewColums.ToArray());
     }
 
-    protected void AddColumnsToViewSheet(SqlViewColumn column, string firstColumn = null)
+    protected void AddColumnsToViewSheet(SqlViewColumn column, string? firstColumn = null)
     {
-        var table = column.SqlTableOrView;
+        var view = column.SqlTableOrView;
         var sqlType = column.Type;
 
         if (firstColumn != null)
-            Write(table.SchemaAndTableName, firstColumn);
+            Write(view.SchemaAndTableName, firstColumn);
 
         if (!Context.DocumenterSettings.NoInternalDataTypes)
-            Write(table.SchemaAndTableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
+            Write(view.SchemaAndTableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
         else
-            Write(table.SchemaAndTableName, column.Name, sqlType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
+            Write(view.SchemaAndTableName, column.Name, sqlType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
 
-        WriteLine(table.SchemaAndTableName);
+        WriteLine(view.SchemaAndTableName);
     }
 }

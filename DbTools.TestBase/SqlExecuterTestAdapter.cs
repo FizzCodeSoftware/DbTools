@@ -57,8 +57,7 @@ public class SqlExecuterTestAdapter : ConfigurationBase
         foreach(var dd in dds)
         {
             var key = new SqlConnectionKeyAndDatabaseDefinitionTypeAsKey(connectionStringKey, dd);
-            if (!_dds.ContainsKey(key))
-                _dds.Add(key, dd);
+            _dds.TryAdd(key, dd);
         }
 
         if (!sqlExecutersAndDialects.ContainsKey(connectionStringKey))

@@ -2,13 +2,9 @@
 using FizzCode.DbTools.Factory.Collections;
 
 namespace FizzCode.DbTools.DataDefinition.Base;
-public class TypeMappers : SqlEngineVersionFactoryDictionary<ITypeMapper, ITypeMapperFactory>
+public class TypeMappers(ITypeMapperFactory factory)
+    : SqlEngineVersionFactoryDictionary<ITypeMapper, ITypeMapperFactory>(factory)
 {
-    public TypeMappers(ITypeMapperFactory factory)
-        : base(factory)
-    {
-    }
-
     protected override ITypeMapper Create(SqlEngineVersion version)
     {
         return _factory.GetTypeMapper(version);

@@ -9,21 +9,13 @@ public abstract class ComparerTestsBase
 {
     protected static readonly TypeMappers _typeMappers = new(new TypeMapperFactory());
 
-    protected class DatabaseDefinitions
+    protected class DatabaseDefinitions(DatabaseDefinition originalDd, DatabaseDefinition newDd, string dbNameOriginal, string dbNameNew)
     {
-        public DatabaseDefinitions(DatabaseDefinition originalDd, DatabaseDefinition newDd, string dbNameOriginal, string dbNameNew)
-        {
-            Original = originalDd;
-            New = newDd;
-            DbNameOriginal = dbNameOriginal;
-            DbNameNew = dbNameNew;
-        }
+        public DatabaseDefinition Original { get; } = originalDd;
+        public DatabaseDefinition New { get; } = newDd;
 
-        public DatabaseDefinition Original { get; }
-        public DatabaseDefinition New { get; }
-
-        public string DbNameOriginal { get; }
-        public string DbNameNew { get; }
+        public string DbNameOriginal { get; } = dbNameOriginal;
+        public string DbNameNew { get; } = dbNameNew;
     }
 
     public abstract void Table_Add(SqlEngineVersion version);

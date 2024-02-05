@@ -26,7 +26,8 @@ public static class DocumenterTestsHelper
             DocumenterSettings = documenterContext.DocumenterSettings,
             Logger = documenterContext.Logger,
             CustomizerOriginal = customizerOriginal ?? new EmptyTableCustomizer(),
-            CustomizerNew = customizerNew ?? new EmptyTableCustomizer()
+            CustomizerNew = customizerNew ?? new EmptyTableCustomizer(),
+            Customizer = new EmptyTableCustomizer()
         };
 
         return changeDocumenterContext;

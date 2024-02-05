@@ -9,7 +9,7 @@ public abstract partial class DocumenterWriterBase : DocumenterBase
 {
     protected new DocumenterContext Context => (DocumenterContext)base.Context;
 
-    protected DocumenterWriterBase(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
+    protected DocumenterWriterBase(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string? fileName = null)
         : base(context, version, databaseName)
     {
         DocumenterWriter = documenterWriter;
@@ -61,7 +61,7 @@ public abstract partial class DocumenterWriterBase : DocumenterBase
         DocumenterWriter.WriteLink(Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), text, Helper.GetSimplifiedSchemaAndTableName(targetSchemaAndTableName), backgroundColor);
     }
 
-    protected void WriteAndMerge(SchemaAndTableName schemaAndTableName, int mergeAmount, params object[] content)
+    protected void WriteAndMerge(SchemaAndTableName schemaAndTableName, int mergeAmount, params object[]? content)
     {
         DocumenterWriter.WriteAndMerge(GetColor(schemaAndTableName), Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), mergeAmount, FormatBoolContent(content));
     }
@@ -103,8 +103,11 @@ public abstract partial class DocumenterWriterBase : DocumenterBase
         return list.Where(x => !ShouldSkipKnownTechnicalTable(x.SchemaAndTableName)).ToList();
     }
 
-    private static object[] FormatBoolContent(params object[] content)
+    private static object[]? FormatBoolContent(params object[]? content)
     {
+        if(content is null)
+            return null;
+
         var result = new List<object>();
         foreach (var obj in content)
         {

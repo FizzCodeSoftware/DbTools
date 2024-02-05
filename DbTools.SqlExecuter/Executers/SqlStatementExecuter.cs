@@ -30,6 +30,7 @@ public abstract class SqlStatementExecuter : ISqlStatementExecuter
         var dbf = DbProviderFactories.GetFactory(ConnectionString.ProviderName);
 
         var connection = dbf.CreateConnection();
+        Throw.InvalidOperationExceptionIfNull(connection);
         connection.ConnectionString = ConnectionString.ConnectionString;
         connection.Open();
 
@@ -41,6 +42,7 @@ public abstract class SqlStatementExecuter : ISqlStatementExecuter
         var dbf = DbProviderFactories.GetFactory(ConnectionString.ProviderName);
 
         var connection = dbf.CreateConnection();
+        Throw.InvalidOperationExceptionIfNull(connection);
         connection.Open();
 
         return connection;
@@ -51,6 +53,7 @@ public abstract class SqlStatementExecuter : ISqlStatementExecuter
         var dbf = DbProviderFactories.GetFactory(ConnectionString.ProviderName);
 
         var command = dbf.CreateCommand();
+        Throw.InvalidOperationExceptionIfNull(command);
 #pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
         command.CommandText = sqlStatementWithParameters.Statement;
 #pragma warning restore CA2100 // Review SQL queries for security vulnerabilities
@@ -69,7 +72,9 @@ public abstract class SqlStatementExecuter : ISqlStatementExecuter
     public DbConnectionStringBuilder GetConnectionStringBuilder()
     {
         var dbf = DbProviderFactories.GetFactory(ConnectionString.ProviderName);
-        return dbf.CreateConnectionStringBuilder();
+        var csb = dbf.CreateConnectionStringBuilder();
+        Throw.InvalidOperationExceptionIfNull(csb);
+        return csb;
     }
 
     public abstract string GetDatabase();
@@ -166,7 +171,8 @@ public abstract class SqlStatementExecuter : ISqlStatementExecuter
 
         try
         {
-            result = command.ExecuteScalar();
+            var nullableResult = command.ExecuteScalar();
+            result = nullableResult is null ? "" : nullableResult;
         }
         catch (DbException ex)
         {

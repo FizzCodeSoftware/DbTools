@@ -21,7 +21,7 @@ public class SchemaNamesToRead : ISchemaNamesToRead
     public bool AllNotSystem { get; set; }
     public bool AllDefault { get; set; }
 
-    public List<string> SchemaNames { get; set; }
+    public List<string>? SchemaNames { get; set; }
 
     public static implicit operator SchemaNamesToRead(List<string> schemaNames)
     {

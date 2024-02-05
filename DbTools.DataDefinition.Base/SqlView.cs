@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace FizzCode.DbTools.DataDefinition.Base;
 public class SqlView : SqlTableOrView

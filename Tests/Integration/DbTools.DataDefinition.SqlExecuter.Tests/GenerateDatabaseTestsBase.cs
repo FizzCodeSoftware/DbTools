@@ -5,7 +5,7 @@ using FizzCode.DbTools.DataDefinition;
 namespace FizzCode.DbTools.SqlExecuter.Tests;
 public abstract class GenerateDatabaseTestsBase : SqlExecuterTestsBase
 {
-    protected static void GenerateDatabase(DatabaseDefinition dd, SqlEngineVersion version, Action action = null)
+    protected static void GenerateDatabase(DatabaseDefinition dd, SqlEngineVersion version, Action? action = null)
     {
         SqlExecuterTestAdapter.Check(version);
         SqlExecuterTestAdapter.Initialize(version.UniqueName, dd);

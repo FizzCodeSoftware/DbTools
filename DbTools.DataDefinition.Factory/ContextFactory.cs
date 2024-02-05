@@ -4,13 +4,9 @@ using FizzCode.DbTools.Factory.Interfaces;
 using FizzCode.LightWeight.Configuration;
 
 namespace FizzCode.DbTools.DataDefinition.Factory;
-public class ContextFactory : IContextFactory
+public class ContextFactory(Logger logger) : IContextFactory
 {
-    private readonly Logger _logger;
-    public ContextFactory(Logger logger)
-    {
-        _logger = logger;
-    }
+    private readonly Logger _logger = logger;
 
     public Context CreateContext(SqlEngineVersion version)
     {

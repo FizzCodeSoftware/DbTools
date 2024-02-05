@@ -29,6 +29,7 @@ internal class AppCommands
         root.Register<SqlGeneratorFactory>(typeof(ISqlGeneratorFactory));
         root.Register<SqlExecuterFactory>(typeof(ISqlExecuterFactory));
         root.Register<DataDefinitionReaderFactory>(typeof(IDataDefinitionReaderFactory));
+        root.Register<TypeMapperFactory>(typeof(ITypeMapperFactory));
 
         _sqlExecuterFactory = root.Get<ISqlExecuterFactory>();
         _dataDefinitionReaderFactory = root.Get<IDataDefinitionReaderFactory>();
@@ -308,8 +309,9 @@ internal class AppCommands
     private static DocumenterContext CreateDocumenterContext(ContextWithLogger context, string patternFileName)
     {
         var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
+        Throw.InvalidOperationExceptionIfNull(documenterSettings, "Documenter.DocumenterSettings in configuration.");
 
-        ITableCustomizer customizer = null;
+        ITableCustomizer? customizer = null;
 
         if (patternFileName != null)
             customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
@@ -329,10 +331,11 @@ internal class AppCommands
     private static GeneratorContext CreateGeneratorContext(ContextWithLogger context, string patternFileName)
     {
         var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
+        Throw.InvalidOperationExceptionIfNull(documenterSettings, "Documenter.DocumenterSettings in configuration.");
 
         var generatorSetting = new GeneratorSettings { WorkingDirectory = documenterSettings.WorkingDirectory };
 
-        ITableCustomizer customizer = null;
+        ITableCustomizer? customizer = null;
 
         if (patternFileName != null)
             customizer = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileName, documenterSettings);
@@ -352,9 +355,10 @@ internal class AppCommands
     private static ChangeDocumenterContext CreateChangeDocumenterContext(ContextWithLogger context, string patternFileNameOriginal, string patternFileNameNew)
     {
         var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
+        Throw.InvalidOperationExceptionIfNull(documenterSettings, "Documenter.DocumenterSettings in configuration.");
 
-        ITableCustomizer customizerOriginal = null;
-        ITableCustomizer customizerNew = null;
+        ITableCustomizer? customizerOriginal = null;
+        ITableCustomizer? customizerNew = null;
 
         if (patternFileNameOriginal != null)
             customizerOriginal = PatternMatchingTableCustomizerFromPatterns.FromCsv(patternFileNameOriginal, documenterSettings);
@@ -371,7 +375,8 @@ internal class AppCommands
             Settings = context.Settings,
             Logger = context.Logger,
             CustomizerOriginal = customizerOriginal,
-            CustomizerNew = customizerNew
+            CustomizerNew = customizerNew,
+            Customizer = new EmptyTableCustomizer()
         };
         return changeDocumenterContext;
     }

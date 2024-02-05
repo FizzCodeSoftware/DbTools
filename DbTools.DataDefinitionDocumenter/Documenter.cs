@@ -6,22 +6,17 @@ using FizzCode.DbTools.DataDefinition;
 using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
-public partial class Documenter : DocumenterWriterBase
+public partial class Documenter(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string? fileName = null)
+    : DocumenterWriterBase(documenterWriter, context, version, databaseName, fileName)
 {
-    public Documenter(DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
+    public Documenter(DocumenterContext context, SqlEngineVersion version, string databaseName = "", string? fileName = null)
         : this(new DocumenterWriterExcel(), context, version, databaseName, fileName)
     {
     }
 
-    public Documenter(IDocumenterWriter documenterWriter, DocumenterContext context, SqlEngineVersion version, string databaseName = "", string fileName = null)
-        : base(documenterWriter, context, version, databaseName, fileName)
-    {
-        Customizer = context.Customizer is PatternMatchingTableCustomizer customizer
+    private ITableCustomizer? Customizer { get; } = context.Customizer is PatternMatchingTableCustomizer customizer
             ? new PatternMatchingTableCustomizerWithTablesAndItems(customizer)
             : context.Customizer;
-    }
-
-    private ITableCustomizer Customizer { get; }
     public void Document(IDatabaseDefinition databaseDefinition)
     {
         Log(LogSeverity.Information, "Starting on {DatabaseName}.", "Documenter", DatabaseName);
@@ -37,8 +32,10 @@ public partial class Documenter : DocumenterWriterBase
 
         foreach (var table in tables)
         {
-            if (!Customizer.ShouldSkip(table.SchemaAndTableName))
-                _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(Customizer.Category(table.SchemaAndTableName), table));
+            SchemaAndTableName schemaAndTableName = table.SchemaAndTableNameSafe;
+
+            if (Customizer is not null && !Customizer.ShouldSkip(schemaAndTableName))
+                _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(Customizer.Category(schemaAndTableName), table));
             else
                 _skippedSqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(Customizer.Category(table.SchemaAndTableName), table));
         }
@@ -165,9 +162,12 @@ public partial class Documenter : DocumenterWriterBase
 
         DocumenterWriter.Write(GetColor(view.SchemaAndTableName), "Views", view.Columns.Count);
 
-        var tableDescription = view.Properties.OfType<SqlTableDescription>().FirstOrDefault();
+        // TODO SqlViewDescription
+        /*
+        var tableDescription = view.Properties.OfType<>(SqlViewDescription).FirstOrDefault();
         if (tableDescription != null)
             DocumenterWriter.Write(GetColor(view.SchemaAndTableName), "Views", tableDescription.Description);
+        */
 
         DocumenterWriter.WriteLine("Views");
     }

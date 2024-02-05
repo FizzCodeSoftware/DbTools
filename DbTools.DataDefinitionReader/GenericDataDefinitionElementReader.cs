@@ -6,7 +6,7 @@ using FizzCode.DbTools.SqlExecuter;
 namespace FizzCode.DbTools.DataDefinitionReader;
 public abstract class GenericDataDefinitionElementReader
 {
-    protected GenericDataDefinitionElementReader(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
+    protected GenericDataDefinitionElementReader(SqlStatementExecuter executer, ISchemaNamesToRead? schemaNames)
     {
         Executer = executer;
         

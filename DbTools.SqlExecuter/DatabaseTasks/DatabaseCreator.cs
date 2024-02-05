@@ -3,15 +3,9 @@ using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.Interfaces;
 
 namespace FizzCode.DbTools.SqlExecuter;
-public class DatabaseCreator : DatabaseTask
+public class DatabaseCreator(IDatabaseDefinition databaseDefinition, ISqlStatementExecuter sqlExecuter) : DatabaseTask(sqlExecuter)
 {
-    public IDatabaseDefinition DatabaseDefinition { get; }
-
-    public DatabaseCreator(IDatabaseDefinition databaseDefinition, ISqlStatementExecuter sqlExecuter)
-        : base(sqlExecuter)
-    {
-        DatabaseDefinition = databaseDefinition;
-    }
+    public IDatabaseDefinition DatabaseDefinition { get; } = databaseDefinition;
 
     public void ReCreateDatabase(bool createElements)
     {

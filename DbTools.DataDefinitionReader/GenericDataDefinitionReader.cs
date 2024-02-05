@@ -8,7 +8,7 @@ using FizzCode.DbTools.SqlExecuter;
 namespace FizzCode.DbTools.DataDefinitionReader;
 public abstract class GenericDataDefinitionReader : GenericDataDefinitionElementReader, IDataDefinitionReader
 {
-    protected GenericDataDefinitionReader(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
+    protected GenericDataDefinitionReader(SqlStatementExecuter executer, ISchemaNamesToRead? schemaNames)
         : base(executer, schemaNames)
     {
     }

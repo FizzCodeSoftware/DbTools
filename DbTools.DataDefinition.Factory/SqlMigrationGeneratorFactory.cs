@@ -6,14 +6,9 @@ using FizzCode.DbTools.Factory.Interfaces;
 using FizzCode.DbTools.Interfaces;
 
 namespace FizzCode.DbTools.DataDefinition.Factory;
-public class SqlMigrationGeneratorFactory : ISqlMigrationGeneratorFactory
+public class SqlMigrationGeneratorFactory(IContextFactory contextFactory) : ISqlMigrationGeneratorFactory
 {
-    protected readonly IContextFactory _contextFactory;
-
-    public SqlMigrationGeneratorFactory(IContextFactory contextFactory)
-    {
-        _contextFactory = contextFactory;
-    }
+    protected readonly IContextFactory _contextFactory = contextFactory;
 
     public ISqlMigrationGenerator CreateMigrationGenerator(SqlEngineVersion version)
     {

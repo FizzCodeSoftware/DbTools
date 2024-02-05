@@ -8,13 +8,9 @@ using FizzCode.DbTools.Common;
 using System;
 
 namespace FizzCode.DbTools.SqlExecuter.MsSql;
-public class MsSql2016Executer : SqlStatementExecuter, ISqlExecuterDropAndCreateDatabase
+public class MsSql2016Executer(ContextWithLogger context, NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
+    : SqlStatementExecuter(context, connectionString, sqlGenerator), ISqlExecuterDropAndCreateDatabase
 {
-    public MsSql2016Executer(ContextWithLogger context, NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
-        : base(context, connectionString, sqlGenerator)
-    {
-    }
-
     public override void InitializeDatabase(bool dropIfExists, params IDatabaseDefinition[] dds)
     {
         if(dropIfExists)

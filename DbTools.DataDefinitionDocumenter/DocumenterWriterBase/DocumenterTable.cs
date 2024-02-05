@@ -7,35 +7,36 @@ using System.Globalization;
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public abstract partial class DocumenterWriterBase
 {
-    protected void AddTableHeader(bool hasCategories, string category, SqlTable table, string firstColumn = null)
+    protected void AddTableHeader(bool hasCategories, string? category, SqlTable table, string? firstColumn = null)
     {
         var mergeAmount = !Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11;
         mergeAmount += firstColumn == null ? 0 : 1;
 
-        WriteColor(table.SchemaAndTableName, "Schema");
-        WriteAndMerge(table.SchemaAndTableName, mergeAmount, table.SchemaAndTableName.Schema);
-        WriteLine(table.SchemaAndTableName);
+        var schemaAndTableName = table.SchemaAndTableNameSafe;
+        WriteColor(schemaAndTableName, "Schema");
+        WriteAndMerge(schemaAndTableName, mergeAmount, schemaAndTableName.Schema);
+        WriteLine(schemaAndTableName);
 
-        WriteColor(table.SchemaAndTableName, "Table name");
-        WriteAndMerge(table.SchemaAndTableName, mergeAmount, table.SchemaAndTableName.TableName);
-        WriteLine(table.SchemaAndTableName);
+        WriteColor(schemaAndTableName, "Table name");
+        WriteAndMerge(schemaAndTableName, mergeAmount, schemaAndTableName.TableName);
+        WriteLine(schemaAndTableName);
 
         var tableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
 
-        WriteColor(table.SchemaAndTableName, "Description");
-        WriteAndMerge(table.SchemaAndTableName, mergeAmount, tableDescription?.Description);
-        WriteLine(table.SchemaAndTableName);
+        WriteColor(schemaAndTableName, "Description");
+        WriteAndMerge(schemaAndTableName, mergeAmount, tableDescription?.Description);
+        WriteLine(schemaAndTableName);
 
         if (hasCategories && !string.IsNullOrEmpty(category))
         {
-            WriteColor(table.SchemaAndTableName, "Category");
-            WriteAndMerge(table.SchemaAndTableName, mergeAmount, category);
-            WriteLine(table.SchemaAndTableName);
+            WriteColor(schemaAndTableName, "Category");
+            WriteAndMerge(schemaAndTableName, mergeAmount, category);
+            WriteLine(schemaAndTableName);
         }
 
-        WriteLine(table.SchemaAndTableName);
+        WriteLine(schemaAndTableName);
         if (firstColumn != null)
-            Write(table.SchemaAndTableName, firstColumn);
+            Write(schemaAndTableName, firstColumn);
 
         var tableColumns = new List<string>();
 
@@ -44,10 +45,10 @@ public abstract partial class DocumenterWriterBase
         if (Context.DocumenterSettings.NoInternalDataTypes)
             tableColumns.Remove("Data Type (DbTools)");
 
-        WriteLine(table.SchemaAndTableName, tableColumns.ToArray());
+        WriteLine(schemaAndTableName, tableColumns.ToArray());
     }
 
-    protected void AddColumnsToTableSheet(SqlColumn column, ColumnDocumentInfo columnDocumentInfo, string firstColumn = null)
+    protected void AddColumnsToTableSheet(SqlColumn column, ColumnDocumentInfo columnDocumentInfo, string? firstColumn = null)
     {
         var table = column.Table;
         var sqlType = column.Type;

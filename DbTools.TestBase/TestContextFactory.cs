@@ -3,13 +3,9 @@ using FizzCode.DbTools.Common;
 using FizzCode.DbTools.Factory.Interfaces;
 
 namespace FizzCode.DbTools.TestBase;
-public class TestContextFactory : IContextFactory
+public class TestContextFactory(Action<Settings>? settingsSetter) : IContextFactory
 {
-    private readonly Action<Settings> _settingsSetter;
-    public TestContextFactory(Action<Settings> settingsSetter)
-    {
-        _settingsSetter = settingsSetter;
-    }
+    private readonly Action<Settings>? _settingsSetter = settingsSetter;
 
     public Context CreateContext(SqlEngineVersion version)
     {

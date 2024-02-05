@@ -3,12 +3,12 @@
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public class EmptyTableCustomizer : ITableCustomizer
 {
-    public string BackGroundColor(SchemaAndTableName tableName)
+    public string? BackGroundColor(SchemaAndTableName? tableName)
     {
         return null;
     }
 
-    public string Category(SchemaAndTableName tableName)
+    public string? Category(SchemaAndTableName tableName)
     {
         return null;
     }
