@@ -13,7 +13,12 @@ public class Oracle12cDataDefinitionReader(NamedConnectionString connectionStrin
 {
     public override DatabaseDefinition GetDatabaseDefinition()
     {
-        var dd = new DatabaseDefinition(OracleVersion.Oracle12c, GenericVersion.Generic1);
+        return GetDatabaseDefinition(new DatabaseDefinition(OracleVersion.Oracle12c, GenericVersion.Generic1));
+    }
+
+    public override DatabaseDefinition GetDatabaseDefinition(IDatabaseDefinition idd)
+    {
+        var dd = (DatabaseDefinition)idd;
 
         Log(LogSeverity.Debug, "Reading table definitions from database.");
 

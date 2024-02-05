@@ -6,13 +6,9 @@ using FizzCode.DbTools.Factory.Interfaces;
 using FizzCode.LightWeight;
 
 namespace FizzCode.DbTools.DataDefinition.Factory;
-public class DataDefinitionReaderFactory : IDataDefinitionReaderFactory
+public class DataDefinitionReaderFactory(IContextFactory contextFactory) : IDataDefinitionReaderFactory
 {
-    private readonly IContextFactory _contextFactory;
-    public DataDefinitionReaderFactory(IContextFactory contextFactory)
-    {
-        _contextFactory = contextFactory;
-    }
+    private readonly IContextFactory _contextFactory = contextFactory;
 
     public IDataDefinitionReader CreateDataDefinitionReader(NamedConnectionString connectionString, ISchemaNamesToRead schemaNames)
     {

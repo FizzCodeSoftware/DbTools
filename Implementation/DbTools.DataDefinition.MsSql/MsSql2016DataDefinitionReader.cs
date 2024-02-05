@@ -14,8 +14,12 @@ public class MsSql2016DataDefinitionReader(NamedConnectionString connectionStrin
 {
     public override DatabaseDefinition GetDatabaseDefinition()
     {
-        var dd = new DatabaseDefinition(MsSqlVersion.MsSql2016, GenericVersion.Generic1);
+        return GetDatabaseDefinition(new DatabaseDefinition(MsSqlVersion.MsSql2016, GenericVersion.Generic1));
+    }
 
+    public override DatabaseDefinition GetDatabaseDefinition(IDatabaseDefinition idd)
+    {
+        var dd = (DatabaseDefinition)idd;
         Log(LogSeverity.Debug, "Reading table definitions from database.");
 
         var module = "Reader/" + Executer.Generator.SqlVersion.UniqueName;

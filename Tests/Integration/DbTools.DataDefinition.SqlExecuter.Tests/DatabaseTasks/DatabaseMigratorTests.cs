@@ -17,7 +17,7 @@ public class DatabaseMigratorTests : SqlExecuterTestsBase
 
     public DatabaseMigratorTests()
     {
-        var contextFactory = new ContextFactory(TestHelper.CreateLogger());
+        var contextFactory = new TestContextFactory(null);
         _sqlMigrationGeneratorFactory = new SqlMigrationGeneratorFactory(contextFactory);
     }
 

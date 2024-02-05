@@ -17,6 +17,7 @@ public abstract class GenericDataDefinitionReader : GenericDataDefinitionElement
     public abstract SqlTable GetTableDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition);
 
     public abstract IDatabaseDefinition GetDatabaseDefinition();
+    public abstract IDatabaseDefinition GetDatabaseDefinition(IDatabaseDefinition dd);
 
     protected void Log(LogSeverity severity, string text, params object[] args)
     {

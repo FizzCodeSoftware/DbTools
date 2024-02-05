@@ -110,7 +110,7 @@ public class DatabaseMigratorTests : DatabaseMigratorTestsBase
         var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(
             SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName]
             , SchemaNamesToRead.ToSchemaNames(dd.GetSchemaNames()));
-        var ddInDatabase = ddlReader.GetDatabaseDefinition();
+        var ddInDatabase = ddlReader.GetDatabaseDefinition(new DatabaseDefinition(new TestFactoryContainer(), version, GenericVersion.Generic1));
 
         var fk = dd.GetTable("Foreign").Properties.OfType<ForeignKey>().First();
 
@@ -161,7 +161,7 @@ public class DatabaseMigratorTests : DatabaseMigratorTestsBase
         databaseMigrator.NewPrimaryKey(primaryKeyNew);
 
         var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], SchemaNamesToRead.ToSchemaNames(dds.Original.GetSchemaNames()));
-        var ddInDatabase = ddlReader.GetDatabaseDefinition();
+        var ddInDatabase = ddlReader.GetDatabaseDefinition(new DatabaseDefinition(new TestFactoryContainer(), version, GenericVersion.Generic1));
 
         var newPk = ddInDatabase.GetTable("Company").Properties.OfType<PrimaryKey>().First();
         Assert.AreEqual(1, newPk.SqlColumns.Count);
@@ -187,7 +187,7 @@ public class DatabaseMigratorTests : DatabaseMigratorTestsBase
         Init(version, dds.Original);
 
         var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], SchemaNamesToRead.ToSchemaNames(dds.Original.GetSchemaNames()));
-        var ddInDatabase = ddlReader.GetDatabaseDefinition();
+        var ddInDatabase = ddlReader.GetDatabaseDefinition(new DatabaseDefinition(new TestFactoryContainer(), version, GenericVersion.Generic1));
 
         var comparer = new Comparer();
         changes = comparer.Compare(ddInDatabase, dds.New);

@@ -43,7 +43,9 @@ public abstract class DataDefinitionReaderTests
     {
         var schemaNamesToRead = SchemaNamesToRead.ToSchemaNames(schemaNames);
         var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], schemaNamesToRead);
-        var db = ddlReader.GetDatabaseDefinition();
+
+        var dd = new DatabaseDefinition(new TestFactoryContainer(), version, GenericVersion.Generic1);
+        var db = ddlReader.GetDatabaseDefinition(dd);
 
         return db;
     }
