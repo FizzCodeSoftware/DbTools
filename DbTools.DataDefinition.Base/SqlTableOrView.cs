@@ -48,8 +48,7 @@ public abstract class SqlTableOrView
         get
         {
             Throw.InvalidOperationExceptionIfNull(SchemaAndTableName);
-
-            return SchemaAndTableName!;
+            return SchemaAndTableName;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FizzCode.DbTools.Common;
 
 namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public class Comparer
@@ -54,6 +55,7 @@ public class Comparer
         var changes = new List<IMigration>();
         foreach (var columnOriginal in tableOriginal.Columns)
         {
+            Throw.InvalidOperationExceptionIfNull(columnOriginal.Name);
             tableNew.Columns.TryGetValue(columnOriginal.Name, out var columnNew);
             if (columnNew is null)
             {
@@ -66,6 +68,7 @@ public class Comparer
 
         foreach (var columnNew in tableNew.Columns)
         {
+            Throw.InvalidOperationExceptionIfNull(columnNew.Name);
             tableOriginal.Columns.TryGetValue(columnNew.Name, out var columnOriginal);
             if (columnOriginal is null)
             {
