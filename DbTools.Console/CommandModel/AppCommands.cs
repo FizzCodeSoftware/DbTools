@@ -5,7 +5,7 @@ using FizzCode.DbTools.Common;
 using FizzCode.DbTools.Common.Logger;
 using FizzCode.DbTools.SqlExecuter;
 using FizzCode.DbTools.DataDefinitionDocumenter;
-using FizzCode.LightWeight.AdoNet;
+using FizzCode.LightWeight;
 using Microsoft.Extensions.Configuration;
 using FizzCode.DbTools.DataDefinition.Factory;
 using FizzCode.DbTools.Factory.Interfaces;

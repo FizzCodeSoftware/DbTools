@@ -4,7 +4,7 @@ namespace FizzCode.DbTools;
 public class OracleVersion : SqlEngineVersion
 {
     public OracleVersion(string uniqueName, string versionString, string versionNumber)
-        : base(SqlEngine.OracleSql, uniqueName, versionString, versionNumber, "Oracle.ManagedDataAccess.Client")
+        : base(AdoNetEngine.OracleSql, uniqueName, versionString, versionNumber, "Oracle.ManagedDataAccess.Client")
     {
     }
 

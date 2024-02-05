@@ -4,7 +4,7 @@ namespace FizzCode.DbTools;
 public class PostgreSqlVersion : SqlEngineVersion
 {
     internal PostgreSqlVersion(string uniqueName, string versionString, string versionNumber)
-        : base(SqlEngine.PostgreSql, uniqueName, versionString, versionNumber, "Npgsql")
+        : base(AdoNetEngine.PostgreSql, uniqueName, versionString, versionNumber, "Npgsql")
     {
     }
 

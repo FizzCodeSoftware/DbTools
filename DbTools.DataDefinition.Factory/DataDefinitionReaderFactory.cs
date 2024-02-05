@@ -3,7 +3,7 @@ using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 using FizzCode.DbTools.DataDefinition.MsSql2016;
 using FizzCode.DbTools.DataDefinition.Oracle12c;
 using FizzCode.DbTools.Factory.Interfaces;
-using FizzCode.LightWeight.AdoNet;
+using FizzCode.LightWeight;
 
 namespace FizzCode.DbTools.DataDefinition.Factory;
 public class DataDefinitionReaderFactory : IDataDefinitionReaderFactory

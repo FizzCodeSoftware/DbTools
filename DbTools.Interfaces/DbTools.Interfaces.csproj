@@ -17,7 +17,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FizzCode.LightWeight.AdoNet.DbConnection" Version="2.0.31.6671" />
+    <PackageReference Include="FizzCode.LightWeight.AdoNet.DbConnection" Version="8.0.4" />
   </ItemGroup>
 
   <ItemGroup>

@@ -4,13 +4,13 @@ using FizzCode.LightWeight.AdoNet;
 namespace FizzCode.DbTools;
 public abstract class SqlEngineVersion
 {
-    public SqlEngine Engine { get; }
+    public AdoNetEngine Engine { get; }
     public string UniqueName { get; }
     public string VersionString { get; }
     public string VersionNumber { get; }
-    public string ProviderName { get; }
+    public string? ProviderName { get; }
 
-    protected SqlEngineVersion(SqlEngine engine, string uniqueName, string versionString, string versionNumber, string providerName)
+    protected SqlEngineVersion(AdoNetEngine engine, string uniqueName, string versionString, string versionNumber, string? providerName)
     {
         Engine = engine;
         UniqueName = uniqueName;
@@ -23,7 +23,7 @@ public abstract class SqlEngineVersion
     {
         return HashCode.Combine(UniqueName);
     }
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is SqlEngineVersion s && s.UniqueName == UniqueName;
     }

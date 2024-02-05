@@ -4,7 +4,7 @@ namespace FizzCode.DbTools;
 public class MySqlVersion : SqlEngineVersion
 {
     internal MySqlVersion(string uniqueName, string versionString, string versionNumber)
-        : base(SqlEngine.MySql, uniqueName, versionString, versionNumber, "MySql.Data.MySqlClient")
+        : base(AdoNetEngine.MySql, uniqueName, versionString, versionNumber, "MySql.Data.MySqlClient")
     {
     }
 

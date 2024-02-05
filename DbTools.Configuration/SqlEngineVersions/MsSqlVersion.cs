@@ -4,7 +4,7 @@ namespace FizzCode.DbTools;
 public class MsSqlVersion : SqlEngineVersion
 {
     internal MsSqlVersion(string uniqueName, string versionString, string versionNumber)
-        : base(SqlEngine.MsSql, uniqueName, versionString, versionNumber, "Microsoft.Data.SqlClient")
+        : base(AdoNetEngine.MsSql, uniqueName, versionString, versionNumber, "Microsoft.Data.SqlClient")
     {
     }
 

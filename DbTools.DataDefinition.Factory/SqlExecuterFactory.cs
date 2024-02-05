@@ -1,5 +1,5 @@
 ﻿using System;
-using FizzCode.LightWeight.AdoNet;
+using FizzCode.LightWeight;
 using FizzCode.DbTools.SqlExecuter.MsSql;
 using FizzCode.DbTools.SqlExecuter.Oracle;
 using FizzCode.DbTools.SqlExecuter.SqLite3;

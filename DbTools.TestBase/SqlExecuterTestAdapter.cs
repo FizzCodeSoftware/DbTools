@@ -6,7 +6,7 @@ using FizzCode.DbTools.Common.Logger;
 using FizzCode.DbTools.DataDefinition;
 using FizzCode.DbTools.Factory.Interfaces;
 using FizzCode.DbTools.Interfaces;
-using FizzCode.LightWeight.AdoNet;
+using FizzCode.LightWeight;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FizzCode.DbTools.TestBase;

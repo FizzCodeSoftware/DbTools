@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using FizzCode.DbTools.Common;
 using FizzCode.DbTools.Common.Logger;
-using FizzCode.LightWeight.AdoNet;
+using FizzCode.LightWeight;
 using FizzCode.LightWeight.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

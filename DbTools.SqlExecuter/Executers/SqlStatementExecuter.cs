@@ -4,7 +4,7 @@ using FizzCode.DbTools.Common;
 using FizzCode.DbTools.Common.Logger;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.Interfaces;
-using FizzCode.LightWeight.AdoNet;
+using FizzCode.LightWeight;
 
 namespace FizzCode.DbTools.SqlExecuter;
 public abstract class SqlStatementExecuter : ISqlStatementExecuter

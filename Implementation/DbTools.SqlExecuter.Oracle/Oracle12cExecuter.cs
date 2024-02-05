@@ -1,5 +1,5 @@
 ﻿using System.Data.Common;
-using FizzCode.LightWeight.AdoNet;
+using FizzCode.LightWeight;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.Common;
 using FizzCode.DbTools.Interfaces;

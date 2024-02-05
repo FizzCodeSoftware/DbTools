@@ -1,7 +1,7 @@
 ﻿using System.Data.SQLite;
 using FizzCode.DbTools.Common;
 using FizzCode.DbTools.Common.Logger;
-using FizzCode.LightWeight.AdoNet;
+using FizzCode.LightWeight;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.Interfaces;
 

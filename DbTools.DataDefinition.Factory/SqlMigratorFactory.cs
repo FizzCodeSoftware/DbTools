@@ -1,7 +1,7 @@
 ﻿using FizzCode.DbTools.Factory.Interfaces;
 using FizzCode.DbTools.Interfaces;
 using FizzCode.DbTools.SqlExecuter;
-using FizzCode.LightWeight.AdoNet;
+using FizzCode.LightWeight;
 
 namespace FizzCode.DbTools.DataDefinition.Factory;
 public class SqlMigratorFactory : ISqlMigratorFactory

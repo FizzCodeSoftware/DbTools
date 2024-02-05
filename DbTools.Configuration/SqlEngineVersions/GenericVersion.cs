@@ -4,7 +4,7 @@ namespace FizzCode.DbTools;
 public class GenericVersion : SqlEngineVersion
 {
     internal GenericVersion(string uniqueName, string versionString, string versionNumber)
-        : base(SqlEngine.Generic, uniqueName, versionString, versionNumber, null)
+        : base(AdoNetEngine.GenericSql, uniqueName, versionString, versionNumber, null)
     {
     }
 

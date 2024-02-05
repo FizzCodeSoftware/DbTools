@@ -1,7 +1,7 @@
 ﻿using System.Data.Common;
 using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDefinition.Base;
-using FizzCode.LightWeight.AdoNet;
+using FizzCode.LightWeight;
 
 namespace FizzCode.DbTools.Interfaces;
 public interface ISqlStatementExecuter

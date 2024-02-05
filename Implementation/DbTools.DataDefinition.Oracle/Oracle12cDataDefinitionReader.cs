@@ -5,7 +5,7 @@ using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 using FizzCode.DbTools.DataDefinitionReader;
 using FizzCode.DbTools.SqlExecuter.Oracle;
-using FizzCode.LightWeight.AdoNet;
+using FizzCode.LightWeight;
 
 namespace FizzCode.DbTools.DataDefinition.Oracle12c;
 public class Oracle12cDataDefinitionReader : GenericDataDefinitionReader
