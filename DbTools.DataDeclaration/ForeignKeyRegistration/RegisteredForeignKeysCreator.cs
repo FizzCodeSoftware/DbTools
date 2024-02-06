@@ -157,9 +157,9 @@ internal static class RegisteredForeignKeysCreator
         if (referredColumnName is null)
             return GetReferredUniqueIndex(referredTable);
 
-        var pkCandidate = referredTable.Properties.OfType<PrimaryKey>().FirstOrDefault(pk => pk.SqlColumns.Any(c => c.SqlColumn.Name == referredColumnName) && pk.SqlColumns.Count == 1);
-        var uiCandidates = referredTable.Properties.OfType <Index>().Where(i => i.Unique && i.SqlColumns.Any(c => c.SqlColumn.Name == referredColumnName) && i.SqlColumns.Count == 1);
-        var ucCandidates = referredTable.Properties.OfType<UniqueConstraint>().Where(uc => uc.SqlColumns.Any(c => c.SqlColumn.Name == referredColumnName) && uc.SqlColumns.Count == 1);
+        var pkCandidate = referredTable.Properties.OfType<PrimaryKey>().FirstOrDefault(pk => pk.SqlColumns.Any(c => c.SqlColumn!.Name == referredColumnName) && pk.SqlColumns.Count == 1);
+        var uiCandidates = referredTable.Properties.OfType <Index>().Where(i => i.Unique && i.SqlColumns.Any(c => c.SqlColumn!.Name == referredColumnName) && i.SqlColumns.Count == 1);
+        var ucCandidates = referredTable.Properties.OfType<UniqueConstraint>().Where(uc => uc.SqlColumns.Any(c => c.SqlColumn!.Name == referredColumnName) && uc.SqlColumns.Count == 1);
 
         var count = (pkCandidate != null ? 1 : 0) + uiCandidates.Count() + ucCandidates.Count();
 
