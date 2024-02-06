@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public class ForeignKeyChange : ForeignKeyMigration
 {
-    public ForeignKey NewForeignKey { get; set; }
+    public required ForeignKey NewForeignKey { get; init; }
 
-    public ForeignKeyInternalColumnChanges ForeignKeyInternalColumnChanges { get; set; }
+    public ForeignKeyInternalColumnChanges? ForeignKeyInternalColumnChanges { get; set; }
     public List<SqlEngineVersionSpecificPropertyMigration> SqlEngineVersionSpecificPropertyChanges { get; } = [];
 }
 

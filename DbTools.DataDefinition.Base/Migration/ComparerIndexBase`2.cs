@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public abstract class ComparerIndexBase<TIndex, TMigration>
     where TIndex : IndexBase<SqlTable>
     where TMigration : IMigration

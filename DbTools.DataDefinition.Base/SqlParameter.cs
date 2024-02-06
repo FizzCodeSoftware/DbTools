@@ -1,16 +1,15 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base;
+﻿using FizzCode.DbTools.Common;
 
-public class SqlParameter : SqlElementWithNameAndType
+namespace FizzCode.DbTools.DataDefinition.Base;
+
+public class SqlParameter(IDatabaseDefinition databaseDefinition) : SqlElementWithNameAndType
 {
-    public SqlParameter(IDatabaseDefinition databaseDefinition)
-    {
-        DatabaseDefinition = databaseDefinition;
-    }
-
-    protected override IDatabaseDefinition DatabaseDefinition { get; }
+    protected override IDatabaseDefinition DatabaseDefinition { get; } = databaseDefinition;
 
     public static implicit operator SqlParameter(SqlColumn column)
     {
+        Throw.InvalidOperationExceptionIfNull(column.Table.DatabaseDefinition);
+
         var parameter = new SqlParameter(column.Table.DatabaseDefinition)
         {
             Name = column.Name

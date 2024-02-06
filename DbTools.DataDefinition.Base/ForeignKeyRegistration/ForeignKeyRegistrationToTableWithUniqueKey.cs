@@ -1,12 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Base;
 
-public class ForeignKeyRegistrationToTableWithUniqueKey : ForeignKeyRegistrationNonExsistingColumn
+public class ForeignKeyRegistrationToTableWithUniqueKey(SqlTable table, SchemaAndTableName referredTableName, bool isNullable, string? namePrefix, string? fkName)
+    : ForeignKeyRegistrationNonExsistingColumn(table, referredTableName, isNullable, fkName)
 {
-    public string NamePrefix { get; set; }
-
-    public ForeignKeyRegistrationToTableWithUniqueKey(SqlTable table, SchemaAndTableName referredTableName, bool isNullable, string namePrefix, string fkName)
-        : base(table, referredTableName, isNullable, fkName)
-    {
-        NamePrefix = namePrefix;
-    }
+    public string? NamePrefix { get; set; } = namePrefix;
 }
