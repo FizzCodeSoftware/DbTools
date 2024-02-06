@@ -1,4 +1,5 @@
-﻿using FizzCode.DbTools.Common.Logger;
+﻿using FizzCode.DbTools.Common;
+using FizzCode.DbTools.Common.Logger;
 using FizzCode.DbTools.DataDefinition.Base;
 using System.Collections.Generic;
 using System.Globalization;
@@ -9,16 +10,16 @@ public partial class Documenter
 {
     private void AddTables(List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory, List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategory, bool hasCategories)
     {
-        foreach (var tableKvp in _sqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName.Schema).ThenBy(t => t.Value.SchemaAndTableName.TableName))
+        foreach (var tableKvp in _sqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableNameSafe.Schema).ThenBy(t => t.Value.SchemaAndTableNameSafe.TableName))
         {
-            Context.Logger.Log(LogSeverity.Verbose, "Generating {TableName}.", "Documenter", tableKvp.Value.SchemaAndTableName);
+            Context.Logger.Log(LogSeverity.Verbose, "Generating {TableName}.", "Documenter", tableKvp.Value.SchemaAndTableNameSafe);
             var category = tableKvp.Key;
             var table = tableKvp.Value;
             AddTableToTableList(category, table, hasCategories);
 
-            var sheetColor = GetColor(table.SchemaAndTableName);
+            var sheetColor = GetColor(table.SchemaAndTableNameSafe);
             if (sheetColor != null)
-                DocumenterWriter.SetSheetColor(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName), sheetColor.Value);
+                DocumenterWriter.SetSheetColor(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableNameSafe), sheetColor.Value);
 
             AddTableHeader(hasCategories, category, table);
 
@@ -27,7 +28,7 @@ public partial class Documenter
 
         WriteLine("Tables");
 
-        foreach (var tableKvp in _skippedSqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName.Schema).ThenBy(t => t.Value.SchemaAndTableName.TableName))
+        foreach (var tableKvp in _skippedSqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableNameSafe.Schema).ThenBy(t => t.Value.SchemaAndTableNameSafe.TableName))
         {
             var category = tableKvp.Key;
             var table = tableKvp.Value;
@@ -42,6 +43,7 @@ public partial class Documenter
         foreach (var column in table.Columns)
         {
             // TODO Create ISqlTypeMapper according to SqlDialect
+            Throw.InvalidOperationExceptionIfNull(column.Type);
             var sqlType = column.Type;
 
             var columnDocumentInfo = GetColumnDocumentInfo(pks, column);
@@ -50,34 +52,36 @@ public partial class Documenter
 
             AddColumnsToTableSheet(column, columnDocumentInfo);
 
+            var schemaAndTableName = table.SchemaAndTableNameSafe;
+
             if (hasCategories)
             {
                 if (!Context.DocumenterSettings.NoInternalDataTypes)
-                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
+                    DocumenterWriter.Write(GetColor(schemaAndTableName), "All columns", category, schemaAndTableName.Schema, schemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
                 else
-                    DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", category, table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
+                    DocumenterWriter.Write(GetColor(schemaAndTableName), "All columns", category, schemaAndTableName.Schema, schemaAndTableName.TableName, column.Name, sqlType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
             }
             else if (!Context.DocumenterSettings.NoInternalDataTypes)
             {
-                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
+                DocumenterWriter.Write(GetColor(schemaAndTableName), "All columns", schemaAndTableName.Schema, schemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
             }
             else
             {
-                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
+                DocumenterWriter.Write(GetColor(schemaAndTableName), "All columns", schemaAndTableName.Schema, schemaAndTableName.TableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
             }
 
             if (columnDocumentInfo.IsPk)
-                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", true);
+                DocumenterWriter.Write(GetColor(schemaAndTableName), "All columns", true);
             else
-                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", "");
+                DocumenterWriter.Write(GetColor(schemaAndTableName), "All columns", "");
 
             if (columnDocumentInfo.Identity != null)
-                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", $"IDENTITY ({columnDocumentInfo.Identity.Seed.ToString("D", CultureInfo.InvariantCulture)}, {columnDocumentInfo.Identity.Increment.ToString("D", CultureInfo.InvariantCulture)})");
+                DocumenterWriter.Write(GetColor(schemaAndTableName), "All columns", $"IDENTITY ({columnDocumentInfo.Identity.Seed.ToString("D", CultureInfo.InvariantCulture)}, {columnDocumentInfo.Identity.Increment.ToString("D", CultureInfo.InvariantCulture)})");
             else
-                DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", "");
+                DocumenterWriter.Write(GetColor(schemaAndTableName), "All columns", "");
 
-            DocumenterWriter.Write(GetColor(table.SchemaAndTableName), "All columns", columnDocumentInfo.DefaultValue);
-            DocumenterWriter.WriteLine(GetColor(table.SchemaAndTableName), "All columns", columnDocumentInfo.Description);
+            DocumenterWriter.Write(GetColor(schemaAndTableName), "All columns", columnDocumentInfo.DefaultValue);
+            DocumenterWriter.WriteLine(GetColor(schemaAndTableName), "All columns", columnDocumentInfo.Description);
         }
 
         AddForeignKeysToTableSheet(table);
@@ -93,6 +97,7 @@ public partial class Documenter
 
         if (!Context.DocumenterSettings.NoForeignKeys)
         {
+            Throw.InvalidOperationExceptionIfNull(table.SchemaAndTableName);
             WriteLine(table.SchemaAndTableName);
 
             WriteAndMerge(table.SchemaAndTableName, mergeAmount, "Foreign keys");
@@ -118,6 +123,7 @@ public partial class Documenter
 
     private void AdIndexesToTableSheet(SqlTable table)
     {
+        Throw.InvalidOperationExceptionIfNull(table.SchemaAndTableName);
         if (!Context.DocumenterSettings.NoIndexes)
         {
             WriteLine(table.SchemaAndTableName);
@@ -143,6 +149,7 @@ public partial class Documenter
     {
         if (!Context.DocumenterSettings.NoUniqueConstraints)
         {
+            Throw.InvalidOperationExceptionIfNull(table.SchemaAndTableName);
             WriteLine(table.SchemaAndTableName);
 
             var mergeAmount = 1 + (!Context.DocumenterSettings.NoInternalDataTypes ? 12 : 11);

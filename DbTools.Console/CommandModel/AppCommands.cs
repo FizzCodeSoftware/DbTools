@@ -283,6 +283,7 @@ internal class AppCommands
         var logger = new Logger();
 
         var logConfiguration = Program.Configuration.GetSection("Log").Get<LogConfiguration>();
+        Throw.InvalidOperationExceptionIfNull(logConfiguration, "Log in configuration");
 
         var iLogger = SerilogConfigurator.CreateLogger(logConfiguration);
         var iOpsLogger = SerilogConfigurator.CreateOpsLogger(logConfiguration);
@@ -309,7 +310,7 @@ internal class AppCommands
     private static DocumenterContext CreateDocumenterContext(ContextWithLogger context, string patternFileName)
     {
         var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
-        Throw.InvalidOperationExceptionIfNull(documenterSettings, "Documenter.DocumenterSettings in configuration.");
+        Throw.InvalidOperationExceptionIfNull(documenterSettings, "Documenter.DocumenterSettings in configuration");
 
         ITableCustomizer? customizer = null;
 
@@ -331,7 +332,7 @@ internal class AppCommands
     private static GeneratorContext CreateGeneratorContext(ContextWithLogger context, string patternFileName)
     {
         var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
-        Throw.InvalidOperationExceptionIfNull(documenterSettings, "Documenter.DocumenterSettings in configuration.");
+        Throw.InvalidOperationExceptionIfNull(documenterSettings, "Documenter.DocumenterSettings in configuration");
 
         var generatorSetting = new GeneratorSettings { WorkingDirectory = documenterSettings.WorkingDirectory };
 
@@ -355,7 +356,7 @@ internal class AppCommands
     private static ChangeDocumenterContext CreateChangeDocumenterContext(ContextWithLogger context, string patternFileNameOriginal, string patternFileNameNew)
     {
         var documenterSettings = Program.Configuration.GetSection("Documenter").Get<DocumenterSettings>();
-        Throw.InvalidOperationExceptionIfNull(documenterSettings, "Documenter.DocumenterSettings in configuration.");
+        Throw.InvalidOperationExceptionIfNull(documenterSettings, "Documenter.DocumenterSettings in configuration");
 
         ITableCustomizer? customizerOriginal = null;
         ITableCustomizer? customizerNew = null;

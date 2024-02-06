@@ -4,6 +4,6 @@ public class ViewColumnsOrdered : OrderedDictionaryWithInsert<string, SqlViewCol
 {
     public override void Add(SqlViewColumn item)
     {
-        Add(item.Name, item);
+        Add(item.Name!, item);
     }
 }

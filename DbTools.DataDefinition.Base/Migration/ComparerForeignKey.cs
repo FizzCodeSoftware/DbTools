@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public static class ComparerForeignKey
 {
     public static List<ForeignKeyMigration> CompareForeignKeys(SqlTable tableOriginal, SqlTable tableNew)

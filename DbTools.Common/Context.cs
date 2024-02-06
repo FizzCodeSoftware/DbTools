@@ -2,5 +2,5 @@
 
 public class Context
 {
-    public Settings Settings { get; set; }
+    public required Settings Settings { get; init; }
 }

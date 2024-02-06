@@ -35,7 +35,7 @@ public class SchemaNamesToRead : ISchemaNamesToRead
     public static SchemaNamesToRead AllNotSystemSchemas => new(false, true);
     public static SchemaNamesToRead AllDefaultSchemas => new(true);
 
-    public static ISchemaNamesToRead ToSchemaNames(IEnumerable<string> schemaNames)
+    public static ISchemaNamesToRead ToSchemaNames(IEnumerable<string>? schemaNames)
     {
         if (schemaNames is null)
             return new SchemaNamesToRead(true);

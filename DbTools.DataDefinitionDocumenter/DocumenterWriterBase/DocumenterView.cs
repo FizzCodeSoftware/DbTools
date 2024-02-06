@@ -1,4 +1,5 @@
-﻿using FizzCode.DbTools.DataDefinition.Base;
+﻿using FizzCode.DbTools.Common;
+using FizzCode.DbTools.DataDefinition.Base;
 using System.Collections.Generic;
 
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
@@ -37,7 +38,7 @@ public abstract partial class DocumenterWriterBase
 
         var viewColums = new List<string>();
 
-        viewColums.AddRange(new[] { "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Scale" });
+        viewColums.AddRange(viewColumnNames);
 
         if (Context.DocumenterSettings.NoInternalDataTypes)
             viewColums.Remove("Data Type (DbTools)");
@@ -45,19 +46,24 @@ public abstract partial class DocumenterWriterBase
         WriteLine(schemaAndTableName, viewColums.ToArray());
     }
 
+    private static readonly string[] viewColumnNames = ["Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Scale"];
+
     protected void AddColumnsToViewSheet(SqlViewColumn column, string? firstColumn = null)
     {
+        Throw.InvalidOperationExceptionIfNull(column.SqlTableOrView);
         var view = column.SqlTableOrView;
+        Throw.InvalidOperationExceptionIfNull(column.Type);
         var sqlType = column.Type;
 
+        var schemaAndTableName = view.SchemaAndTableNameSafe;
         if (firstColumn != null)
-            Write(view.SchemaAndTableName, firstColumn);
+            Write(schemaAndTableName, firstColumn);
 
         if (!Context.DocumenterSettings.NoInternalDataTypes)
-            Write(view.SchemaAndTableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
+            Write(schemaAndTableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
         else
-            Write(view.SchemaAndTableName, column.Name, sqlType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
+            Write(schemaAndTableName, column.Name, sqlType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
 
-        WriteLine(view.SchemaAndTableName);
+        WriteLine(schemaAndTableName);
     }
 }

@@ -39,7 +39,7 @@ public abstract class DataDefinitionReaderTests
         SqlExecuterTestAdapter.Cleanup();
     }
 
-    protected IDatabaseDefinition ReadDd(SqlEngineVersion version, IEnumerable<string> schemaNames)
+    protected IDatabaseDefinition ReadDd(SqlEngineVersion version, IEnumerable<string>? schemaNames)
     {
         var schemaNamesToRead = SchemaNamesToRead.ToSchemaNames(schemaNames);
         var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], schemaNamesToRead);

@@ -20,7 +20,7 @@ public static class SqlEngineVersions
         }
     }
 
-    public static SqlEngineVersion GetSqlEngineVersion(this FizzCode.LightWeight.NamedConnectionString connectionString)
+    public static SqlEngineVersion GetSqlEngineVersion(this LightWeight.NamedConnectionString connectionString)
     {
         var versionsByType = AllVersions.GroupBy(x => x.GetType());
         foreach (var group in versionsByType)

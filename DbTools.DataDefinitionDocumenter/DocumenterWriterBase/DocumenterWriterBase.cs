@@ -19,7 +19,7 @@ public abstract partial class DocumenterWriterBase : DocumenterBase
 
     protected IDocumenterWriter DocumenterWriter { get; set; }
 
-    protected string FileName { get; }
+    protected string? FileName { get; }
 
     public static bool ShouldSkipKnownTechnicalTable(SchemaAndTableName schemaAndTableName)
     {
@@ -31,27 +31,27 @@ public abstract partial class DocumenterWriterBase : DocumenterBase
             || schemaAndTableName.SchemaAndName == "dbo._sys_blocks";
     }
 
-    protected void Write(string sheetName, params object[] content)
+    protected void Write(string sheetName, params object?[] content)
     {
         DocumenterWriter.Write(sheetName, FormatBoolContent(content));
     }
 
-    protected void WriteLine(string sheetName, params object[] content)
+    protected void WriteLine(string sheetName, params object?[] content)
     {
         DocumenterWriter.WriteLine(sheetName, FormatBoolContent(content));
     }
 
-    protected void Write(SchemaAndTableName schemaAndTableName, params object[] content)
+    protected void Write(SchemaAndTableName schemaAndTableName, params object?[] content)
     {
         DocumenterWriter.Write(Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), FormatBoolContent(content));
     }
 
-    protected void WriteColor(SchemaAndTableName schemaAndTableName, params object[] content)
+    protected void WriteColor(SchemaAndTableName schemaAndTableName, params object?[] content)
     {
         DocumenterWriter.Write(GetColor(schemaAndTableName), Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), content);
     }
 
-    protected void WriteLine(SchemaAndTableName schemaAndTableName, params object[] content)
+    protected void WriteLine(SchemaAndTableName schemaAndTableName, params object?[] content)
     {
         DocumenterWriter.WriteLine(Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), FormatBoolContent(content));
     }
@@ -61,7 +61,7 @@ public abstract partial class DocumenterWriterBase : DocumenterBase
         DocumenterWriter.WriteLink(Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), text, Helper.GetSimplifiedSchemaAndTableName(targetSchemaAndTableName), backgroundColor);
     }
 
-    protected void WriteAndMerge(SchemaAndTableName schemaAndTableName, int mergeAmount, params object[]? content)
+    protected void WriteAndMerge(SchemaAndTableName schemaAndTableName, int mergeAmount, params object?[] content)
     {
         DocumenterWriter.WriteAndMerge(GetColor(schemaAndTableName), Helper.GetSimplifiedSchemaAndTableName(schemaAndTableName), mergeAmount, FormatBoolContent(content));
     }
@@ -100,15 +100,12 @@ public abstract partial class DocumenterWriterBase : DocumenterBase
 
     protected static List<SqlTable> RemoveKnownTechnicalTables(List<SqlTable> list)
     {
-        return list.Where(x => !ShouldSkipKnownTechnicalTable(x.SchemaAndTableName)).ToList();
+        return list.Where(x => !ShouldSkipKnownTechnicalTable(x.SchemaAndTableName!)).ToList();
     }
 
-    private static object[]? FormatBoolContent(params object[]? content)
+    private static object?[] FormatBoolContent(params object?[] content)
     {
-        if(content is null)
-            return null;
-
-        var result = new List<object>();
+        var result = new List<object?>();
         foreach (var obj in content)
         {
             if (obj is bool objAsBool)
@@ -122,9 +119,9 @@ public abstract partial class DocumenterWriterBase : DocumenterBase
 
     protected class ColumnDocumentInfo
     {
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public bool IsPk { get; set; }
-        public Identity Identity { get; set; }
-        public DefaultValue DefaultValue { get; set; }
+        public Identity? Identity { get; set; }
+        public DefaultValue? DefaultValue { get; set; }
     }
 }

@@ -1,4 +1,5 @@
-﻿using FizzCode.DbTools.Common.Logger;
+﻿using FizzCode.DbTools.Common;
+using FizzCode.DbTools.Common.Logger;
 using FizzCode.DbTools.DataDefinition.Base;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,8 @@ public partial class Documenter
             var view = viewKvp.Value;
             AddViewToViewList(category, view, hasCategories);
 
+            Throw.InvalidOperationExceptionIfNull(view.SchemaAndTableName);
+
             var sheetColor = GetColor(view.SchemaAndTableName);
             if (sheetColor != null)
                 DocumenterWriter.SetSheetColor(Helper.GetSimplifiedSchemaAndTableName(view.SchemaAndTableName), sheetColor.Value);
@@ -26,7 +29,7 @@ public partial class Documenter
 
         WriteLine("Views");
 
-        foreach (var tableKvp in _skippedSqlViewsByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName.Schema).ThenBy(t => t.Value.SchemaAndTableName.TableName))
+        foreach (var tableKvp in _skippedSqlViewsByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableNameSafe.Schema).ThenBy(t => t.Value.SchemaAndTableNameSafe.TableName))
         {
             var category = tableKvp.Key;
             var view = tableKvp.Value;
