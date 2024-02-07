@@ -12,7 +12,7 @@ public abstract class DbToolsException : Exception
     {
     }
 
-    protected DbToolsException(string message, Exception innerException)
+    protected DbToolsException(string message, Exception? innerException)
         : base(message, innerException)
     {
     }

@@ -13,7 +13,7 @@ public class ForeignKeyInternalColumnChanges : IMigration
 
 public abstract class SqlEngineVersionSpecificPropertyMigration : IMigration
 {
-    public SqlEngineVersionSpecificProperty SqlEngineVersionSpecificProperty { get; set; }
+    public SqlEngineVersionSpecificProperty? SqlEngineVersionSpecificProperty { get; set; }
 }
 
 public class SqlEngineVersionSpecificPropertyNew : SqlEngineVersionSpecificPropertyMigration
@@ -26,5 +26,5 @@ public class SqlEngineVersionSpecificPropertyDelete : SqlEngineVersionSpecificPr
 
 public class SqlEngineVersionSpecificPropertyChange : SqlEngineVersionSpecificPropertyMigration
 {
-    public SqlEngineVersionSpecificProperty NewSqlEngineVersionSpecificProperty { get; set; }
+    public SqlEngineVersionSpecificProperty? NewSqlEngineVersionSpecificProperty { get; set; }
 }

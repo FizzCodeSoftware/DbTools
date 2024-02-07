@@ -2,7 +2,7 @@
 
 public class TableRename : TableMigration
 {
-    public string NewName { get; set; }
+    public required string NewName { get; init; }
 
     public override string ToString()
     {

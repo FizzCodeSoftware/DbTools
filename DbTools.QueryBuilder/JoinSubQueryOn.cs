@@ -1,17 +1,11 @@
 ﻿namespace FizzCode.DbTools.QueryBuilder;
 
-public class JoinSubQueryOn : JoinOn
+public class JoinSubQueryOn(Query query, string? alias, Expression on, JoinType joinType, params QueryColumn[] columns)
+    : JoinOn(query.Table, null, on, joinType, columns)
 {
-    public JoinSubQueryOn(Query query, string? alias, Expression on, JoinType joinType, params QueryColumn[] columns)
-        : base(query.Table, null, on, joinType, columns)
-    {
-        SubQuery = query;
-        Alias = alias;
-    }
+    public Query SubQuery { get; set; } = query;
 
-    public Query SubQuery { get; set; }
-
-    public string? Alias { get; set; }
+    public string? Alias { get; set; } = alias;
 
     public override string ToString()
     {

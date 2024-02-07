@@ -36,7 +36,7 @@ public class DocumenterWriterExcel : IDocumenterWriter
         return _sheets[sheetName];
     }
 
-    public void WriteLine(string sheetName, params object[] content)
+    public void WriteLine(string sheetName, params object?[] content)
     {
         Write(sheetName, content);
 
@@ -44,7 +44,7 @@ public class DocumenterWriterExcel : IDocumenterWriter
         Sheet(sheetName).LastColumn = 1;
     }
 
-    public void WriteLine(Color? backgroundColor, string sheetName, params object[] content)
+    public void WriteLine(Color? backgroundColor, string sheetName, params object?[] content)
     {
         Write(backgroundColor, sheetName, content);
 
@@ -52,12 +52,12 @@ public class DocumenterWriterExcel : IDocumenterWriter
         Sheet(sheetName, backgroundColor).LastColumn = 1;
     }
 
-    public void Write(string sheetName, params object[] content)
+    public void Write(string sheetName, params object?[] content)
     {
         Write(null, sheetName, content);
     }
 
-    public void Write(Color? backgroundColor, string sheetName, params object[] content)
+    public void Write(Color? backgroundColor, string sheetName, params object?[] content)
     {
         var sheet = Sheet(sheetName, backgroundColor);
         foreach (var value in content)

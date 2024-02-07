@@ -31,10 +31,10 @@ internal static class RegisteredForeignKeysCreator
         var placeHolderColumn = sqlTable
             .Columns
             .OfType<SqlColumnFKRegistration>()
-            .FirstOrDefault(c => c.FKRegistration == fkRegistration);
+            .First(c => c.FKRegistration == fkRegistration);
 
-        var order = sqlTable.Columns.GetOrder(placeHolderColumn.Name);
-        sqlTable.Columns.Remove(placeHolderColumn.Name);
+        var order = sqlTable.Columns.GetOrder(placeHolderColumn.Name!);
+        sqlTable.Columns.Remove(placeHolderColumn.Name!);
 
         sqlTable.Columns.Add(col.Name, col, order);
 
@@ -48,9 +48,9 @@ internal static class RegisteredForeignKeysCreator
 
         var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
-        var placeHolderColumn = sqlTable.Columns.OfType<SqlColumnFKRegistration>().FirstOrDefault(c => c.FKRegistration == fkRegistration);
-        var order = sqlTable.Columns.GetOrder(placeHolderColumn.Name);
-        sqlTable.Columns.Remove(placeHolderColumn.Name);
+        var placeHolderColumn = sqlTable.Columns.OfType<SqlColumnFKRegistration>().First(c => c.FKRegistration == fkRegistration);
+        var order = sqlTable.Columns.GetOrder(placeHolderColumn.Name!);
+        sqlTable.Columns.Remove(placeHolderColumn.Name!);
 
         foreach (var pkColumnBase in referredUniqueIndex.SqlColumns.Select(x => x.SqlColumn))
         {
@@ -90,12 +90,12 @@ internal static class RegisteredForeignKeysCreator
         fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkRegistration.SingleFkColumn, pkColumn));
     }
 
-    private static void CheckValidity(IndexBase<SqlTable> referredUnique, string fkColumName)
+    private static void CheckValidity(IndexBase<SqlTable> referredUnique, string? fkColumName)
     {
         if (referredUnique.SqlColumns.Count > 1)
         {
             var messageDescriptionSb = new StringBuilder();
-            System.Exception innerException = null;
+            System.Exception? innerException = null;
             try
             {
                 messageDescriptionSb.Append("FK: ");
@@ -132,9 +132,9 @@ internal static class RegisteredForeignKeysCreator
 
         var fk = ReplaceFKRegistrationWithNewFK(sqlTable, fkRegistration, referredTable);
 
-        var placeHolderColumn = sqlTable.Columns.OfType<SqlColumnFKRegistration>().FirstOrDefault(c => c.FKRegistration == fkRegistration);
-        var order = sqlTable.Columns.GetOrder(placeHolderColumn.Name);
-        sqlTable.Columns.Remove(placeHolderColumn.Name);
+        var placeHolderColumn = sqlTable.Columns.OfType<SqlColumnFKRegistration>().First(c => c.FKRegistration == fkRegistration);
+        var order = sqlTable.Columns.GetOrder(placeHolderColumn.Name!);
+        sqlTable.Columns.Remove(placeHolderColumn.Name!);
 
         foreach (var fkGroup in fkRegistration.Map)
         {
@@ -152,7 +152,7 @@ internal static class RegisteredForeignKeysCreator
         }
     }
 
-    private static IndexBase<SqlTable> GetReferredUniqueIndex(SqlTable referredTable, string referredColumnName)
+    private static IndexBase<SqlTable> GetReferredUniqueIndex(SqlTable referredTable, string? referredColumnName)
     {
         if (referredColumnName is null)
             return GetReferredUniqueIndex(referredTable);
@@ -186,8 +186,10 @@ internal static class RegisteredForeignKeysCreator
             ?? referredTable.Properties.OfType<Index>().FirstOrDefault(i => i.Unique) as IndexBase<SqlTable>
             ?? referredTable.Properties.OfType<UniqueConstraint>().FirstOrDefault();
 
+#pragma warning disable IDE0270 // Use coalesce expression
         if (uniqueIndex is null)
             throw new InvalidForeignKeyRegistrationException("Can't define Foreign Key registration against a table without primary key, unique index or unique constraint.");
+#pragma warning restore IDE0270 // Use coalesce expression
 
         return uniqueIndex;
     }

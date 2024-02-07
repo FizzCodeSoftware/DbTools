@@ -37,7 +37,7 @@ public static class ComparerForeignKey
                     NewForeignKey = fkNew
                 };
 
-                if (fkOriginal.ReferredTable.SchemaAndTableName != fkNew.ReferredTable.SchemaAndTableName)
+                if (fkOriginal.ReferredTable!.SchemaAndTableName != fkNew.ReferredTable!.SchemaAndTableName)
                     fkChanged = true;
 
                 if (!CompareForeignKeyColumns(fkOriginal, fkNew))

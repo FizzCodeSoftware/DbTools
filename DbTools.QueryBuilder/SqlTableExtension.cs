@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
+using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.QueryBuilder;
@@ -7,7 +8,7 @@ public static class SqlTableExtension
 {
     public static T Alias<T>(this T table, string? alias) where T : SqlTable, new()
     {
-        T newTable = new T
+        var newTable = new T
         {
             DatabaseDefinition = table.DatabaseDefinition,
             SchemaAndTableName = table.SchemaAndTableName
@@ -40,11 +41,11 @@ public static class SqlTableExtension
     {
         var properties = table.GetType()
            .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-           .Where(pi => typeof(SqlColumn).IsAssignableFrom(pi.PropertyType) && !pi.GetIndexParameters().Any());
+           .Where(pi => typeof(SqlColumn).IsAssignableFrom(pi.PropertyType) && pi.GetIndexParameters().Length == 0);
 
         foreach (var property in properties)
         {
-            var columnDeclared = (SqlColumn)property.GetValue(table);
+            var columnDeclared = property.GetValueSafe<SqlColumn>(table);
             var column = table[property.Name];
 
             //column.CopyTo(columnDeclared);

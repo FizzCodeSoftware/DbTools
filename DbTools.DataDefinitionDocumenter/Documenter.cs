@@ -32,7 +32,7 @@ public partial class Documenter(IDocumenterWriter documenterWriter, DocumenterCo
 
         foreach (var table in tables)
         {
-            SchemaAndTableName schemaAndTableName = table.SchemaAndTableNameSafe;
+            var schemaAndTableName = table.SchemaAndTableNameSafe;
 
             if (Customizer is not null && !Customizer.ShouldSkip(schemaAndTableName))
                 _sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(Customizer.Category(schemaAndTableName), table));

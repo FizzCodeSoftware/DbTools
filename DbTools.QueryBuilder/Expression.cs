@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.QueryBuilder;
@@ -50,8 +51,11 @@ public class Expression(params object[] expressionParts)
                     alias = table.GetAlias();
 
                     alias ??= mainQueryElement?.Table.SchemaAndTableName == table.SchemaAndTableName
-                        ? mainQueryElement.Table.GetAlias()
-                        : queryElements.Single(qe => qe.Table.SchemaAndTableName == table.SchemaAndTableName).Table.GetAlias();
+                        ? mainQueryElement?.Table.GetAlias()
+                        : null;
+                    alias ??= queryElements.Single(qe => qe.Table.SchemaAndTableName == table.SchemaAndTableName).Table.GetAlias();
+
+                    Throw.InvalidOperationExceptionIfNull(alias);
 
                     sb.AppendSpace(alias);
                     sb.Append('.');

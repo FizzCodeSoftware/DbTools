@@ -27,7 +27,7 @@ public class Sheet
     public int LastRow { get; set; }
     public int LastColumn { get; set; }
 
-    public void SetValue(object value, Color? backgroundColor = null)
+    public void SetValue(object? value, Color? backgroundColor = null)
     {
         ExcelWorksheet.SetValue(LastRow, LastColumn, value);
         if (backgroundColor.HasValue)

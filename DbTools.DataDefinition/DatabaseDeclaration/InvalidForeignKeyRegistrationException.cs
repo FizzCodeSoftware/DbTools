@@ -13,7 +13,7 @@ public class InvalidForeignKeyRegistrationException : DbToolsException
     {
     }
 
-    public InvalidForeignKeyRegistrationException(string message, Exception innerException)
+    public InvalidForeignKeyRegistrationException(string message, Exception? innerException)
         : base(message, innerException)
     {
     }

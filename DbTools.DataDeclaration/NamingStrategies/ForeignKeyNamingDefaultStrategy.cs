@@ -12,7 +12,7 @@ public class ForeignKeyNamingDefaultStrategy : IForeignKeyNamingStrategy
         fk.Name = $"FK_{fk.SqlTable.SchemaAndTableName.TableName}__{string.Join("__", fk.ForeignKeyColumns.Select(y => y.ForeignKeyColumn.Name))}";
     }
 
-    public virtual string GetFkToPkColumnName(SqlColumn referredColumn, string prefix)
+    public virtual string GetFkToPkColumnName(SqlColumn referredColumn, string? prefix)
     {
         if (prefix != null)
         {

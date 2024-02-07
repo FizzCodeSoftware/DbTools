@@ -2,7 +2,7 @@
 
 public abstract class UniqueConstraintMigration : IMigration
 {
-    public UniqueConstraint UniqueConstraint { get; set; }
+    public required UniqueConstraint UniqueConstraint { get; init; }
 
     public override string ToString()
     {

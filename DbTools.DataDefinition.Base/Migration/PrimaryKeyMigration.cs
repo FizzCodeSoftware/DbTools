@@ -1,7 +1,7 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public abstract class PrimaryKeyMigration : IMigration
 {
-    public PrimaryKey PrimaryKey { get; set; }
+    public required PrimaryKey PrimaryKey { get; init; }
 
     public override string ToString()
     {

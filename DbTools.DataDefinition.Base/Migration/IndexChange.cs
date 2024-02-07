@@ -3,7 +3,7 @@
 namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public class IndexChange : IndexMigration
 {
-    public Index NewIndex { get; set; }
+    public required Index NewIndex { get; init; }
 
     public override string ToString()
     {

@@ -3,7 +3,7 @@
 namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public class UniqueConstraintChange : UniqueConstraintMigration
 {
-    public UniqueConstraint NewUniqueConstraint { get; set; }
+    public required UniqueConstraint NewUniqueConstraint { get; init; }
 
     public override string ToString()
     {

@@ -2,5 +2,5 @@
 
 public class SqlViewColumn : SqlColumnBase
 {
-    public SqlView View { get => (SqlView)SqlTableOrView; set => SqlTableOrView = value; }
+    public SqlView View { get => (SqlView)SqlTableOrView!; set => SqlTableOrView = value; }
 }

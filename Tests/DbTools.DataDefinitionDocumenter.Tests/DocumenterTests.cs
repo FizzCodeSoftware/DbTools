@@ -54,7 +54,7 @@ public class DocumenterTests : DocumenterTestsBase
 
     internal class TableCustomizer : ITableCustomizer
     {
-        public string BackGroundColor(SchemaAndTableName tableName)
+        public string? BackGroundColor(SchemaAndTableName tableName)
         {
             if (tableName.SchemaAndName == "Child")
                 return "#00FFFF";
@@ -62,7 +62,7 @@ public class DocumenterTests : DocumenterTestsBase
             return null;
         }
 
-        public string Category(SchemaAndTableName tableName)
+        public string? Category(SchemaAndTableName tableName)
         {
             if (tableName.SchemaAndName == "Child")
                 return "CategoryTest";

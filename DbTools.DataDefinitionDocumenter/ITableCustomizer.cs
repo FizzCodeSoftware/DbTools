@@ -5,5 +5,5 @@ public interface ITableCustomizer
 {
     bool ShouldSkip(SchemaAndTableName tableName);
     string? Category(SchemaAndTableName tableName);
-    string? BackGroundColor(SchemaAndTableName? tableName);
+    string? BackGroundColor(SchemaAndTableName tableName);
 }

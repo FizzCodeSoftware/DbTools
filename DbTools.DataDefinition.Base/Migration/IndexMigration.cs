@@ -2,9 +2,9 @@
 
 public abstract class IndexMigration : IMigration
 {
-    public Index Index { get; set; }
+    public required Index Index { get; init; }
 
-    public override string ToString()
+    public override string? ToString()
     {
         return Index.ToString();
     }

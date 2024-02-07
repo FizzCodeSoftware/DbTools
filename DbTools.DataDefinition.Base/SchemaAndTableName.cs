@@ -82,7 +82,7 @@ public class SchemaAndTableName : IComparable, IEquatable<SchemaAndTableName>
         return Equals(other);
     }
 
-    public static bool operator ==(SchemaAndTableName obj1, SchemaAndTableName obj2)
+    public static bool operator ==(SchemaAndTableName? obj1, SchemaAndTableName? obj2)
     {
         if (obj1 is null)
             return obj2 is null;
@@ -90,8 +90,11 @@ public class SchemaAndTableName : IComparable, IEquatable<SchemaAndTableName>
         return obj1.Equals(obj2);
     }
 
-    public static bool operator !=(SchemaAndTableName obj1, SchemaAndTableName obj2)
+    public static bool operator !=(SchemaAndTableName? obj1, SchemaAndTableName? obj2)
     {
+        if (obj1 is null && obj1 is null)
+            return false;
+
         return !obj1.Equals(obj2);
     }
 

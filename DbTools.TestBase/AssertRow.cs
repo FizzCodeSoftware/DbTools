@@ -31,22 +31,28 @@ public static class AssertRow
 
         foreach (var expectedKey in expectedKeys)
         {
-            if (!actual.ContainsKey(expectedKey))
+            if (!actual.TryGetValue(expectedKey, out var value))
             {
                 missingKeys.Add(expectedKey);
             }
             else
             {
                 var expectedValue = expected[expectedKey];
-                var actualValue = actual[expectedKey];
+                var actualValue = value;
 
                 bool isNotEqual;
 
+#pragma warning disable IDE0045 // Convert to conditional expression
                 if (version is SqLiteVersion
                     && expectedValue.GetType() != actualValue.GetType())
+                {
                     isNotEqual = !expectedValue.Equals(Convert.ChangeType(actualValue, expectedValue.GetType()));
+                }
                 else
+                {
                     isNotEqual = !expectedValue.Equals(actualValue);
+                }
+#pragma warning restore IDE0045 // Convert to conditional expression
 
                 if (isNotEqual)
                 {

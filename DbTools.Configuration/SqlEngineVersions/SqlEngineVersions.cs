@@ -20,7 +20,7 @@ public static class SqlEngineVersions
         }
     }
 
-    public static SqlEngineVersion GetSqlEngineVersion(this LightWeight.NamedConnectionString connectionString)
+    public static SqlEngineVersion? GetSqlEngineVersion(this LightWeight.NamedConnectionString connectionString)
     {
         var versionsByType = AllVersions.GroupBy(x => x.GetType());
         foreach (var group in versionsByType)
@@ -64,14 +64,14 @@ public static class SqlEngineVersions
         return result;
     }
 
-    public static SqlEngineVersion GetVersion<T>(string versionString)
+    public static SqlEngineVersion? GetVersion<T>(string versionString)
         where T : SqlEngineVersion
     {
         var result = AllVersions.Find(v => typeof(T).IsAssignableFrom(v.GetType()) && v.VersionString == versionString);
         return result;
     }
 
-    public static SqlEngineVersion GetVersion(string sqlType)
+    public static SqlEngineVersion? GetVersion(string sqlType)
     {
         var result = AllVersions.Find(v => v.UniqueName == sqlType);
         return result;

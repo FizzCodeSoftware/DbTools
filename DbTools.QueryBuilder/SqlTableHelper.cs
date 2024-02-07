@@ -53,7 +53,7 @@ public static class SqlTableHelper
         return aliasProperty?.Alias;
     }
 
-    internal static void SetAlias(SqlTable table, string alias)
+    internal static void SetAlias(SqlTable table, string? alias)
     {
         if (!string.IsNullOrEmpty(alias))
         {
@@ -99,7 +99,7 @@ public static class SqlTableHelper
     {
         var properties = table.GetType()
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
-            .Where(pi => typeof(SqlColumn).IsAssignableFrom(pi.PropertyType) && !pi.GetIndexParameters().Any());
+            .Where(pi => typeof(SqlColumn).IsAssignableFrom(pi.PropertyType) && pi.GetIndexParameters().Length == 0);
 
         foreach (var property in properties)
         {
@@ -115,7 +115,7 @@ public static class SqlTableHelper
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(pi =>
                 typeof(ForeignKey).IsAssignableFrom(pi.PropertyType)
-                && !pi.GetIndexParameters().Any());
+                && pi.GetIndexParameters().Length == 0);
 
         foreach (var property in properties)
         {
@@ -135,7 +135,7 @@ public static class SqlTableHelper
             .Where(pi =>
                 (typeof(Index).IsAssignableFrom(pi.PropertyType)
                 || typeof(UniqueConstraint).IsAssignableFrom(pi.PropertyType))
-                && !pi.GetIndexParameters().Any());
+                && pi.GetIndexParameters().Length == 0);
 
         foreach (var property in properties)
         {
@@ -162,7 +162,7 @@ public static class SqlTableHelper
             .GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(pi =>
                 typeof(SqlTableCustomProperty).IsAssignableFrom(pi.PropertyType)
-                && !pi.GetIndexParameters().Any());
+                && pi.GetIndexParameters().Length == 0);
 
         // TODO ?
         foreach (var property in properties)
