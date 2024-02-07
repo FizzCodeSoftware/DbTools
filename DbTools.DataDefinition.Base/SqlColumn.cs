@@ -2,7 +2,7 @@
 
 public class SqlColumn : SqlColumnBase
 {
-    public SqlTable Table { get => (SqlTable)SqlTableOrView; set => SqlTableOrView = value; }
+    public SqlTable Table { get => (SqlTable)SqlTableOrView!; set => SqlTableOrView = value; }
 
     public SqlColumn SetPK()
     {

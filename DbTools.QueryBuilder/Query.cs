@@ -7,20 +7,15 @@ using FizzCode.DbTools.QueryBuilder.Interfaces;
 namespace FizzCode.DbTools.QueryBuilder;
 public class Query : QueryElement, IQuery
 {
-    public Query(SqlTable sqlTable, string alias, QueryColumnAliasStrategy queryColumnAliasStrategy, params QueryColumn[] columns)
+    public Query(SqlTable sqlTable, string? alias, QueryColumnAliasStrategy queryColumnAliasStrategy, params QueryColumn[] columns)
         : base(sqlTable, alias, columns)
     {
         QueryElements.Add(this);
         QueryColumnAliasStrategy = queryColumnAliasStrategy;
     }
 
-    public Query(SqlTable sqlTable, string alias = null, params QueryColumn[] columns)
-        : this(sqlTable, alias, QueryColumnAliasStrategy.PrefixTableNameIfNeeded, columns)
-    {
-    }
-
     public Query(SqlTable sqlTable, params QueryColumn[] columns)
-        : this(sqlTable, null, columns)
+        : this(sqlTable, null, QueryColumnAliasStrategy.PrefixTableNameIfNeeded, columns)
     {
     }
 
@@ -87,7 +82,7 @@ public class Query : QueryElement, IQuery
     /// <param name="columnTarget">The column of the other table to join. This might be a column of the main table of the Query, or a column of the table of another QueryElement.</param>
     /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
     /// <returns>The Query.</returns>
-    public Query LeftJoinAlias(SqlTable table, string alias, QueryColumn columnSource, QueryColumn columnTarget, params QueryColumn[] columns)
+    public Query LeftJoinAlias(SqlTable table, string? alias, QueryColumn? columnSource, QueryColumn? columnTarget, params QueryColumn[] columns)
     {
         return Join(new Join(table, alias, columnSource, columnTarget, JoinType.Left, columns));
     }
@@ -117,7 +112,7 @@ public class Query : QueryElement, IQuery
     /// <param name="columnTarget">The column of the other table to join. This might be a column of the main table of the Query, or a column of the table of another QueryElement.</param>
     /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
     /// <returns>The Query.</returns>
-    public Query LeftJoin(SqlTable table, QueryColumn columnSource, QueryColumn columnTarget, params QueryColumn[] columns)
+    public Query LeftJoin(SqlTable table, QueryColumn? columnSource, QueryColumn? columnTarget, params QueryColumn[] columns)
     {
         return LeftJoinAlias(table, null, columnSource, columnTarget, columns);
     }
@@ -145,7 +140,7 @@ public class Query : QueryElement, IQuery
     /// <param name="on">The join condition.</param>
     /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
     /// <returns>The Query.</returns>
-    public Query LeftJoinAliasOn(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
+    public Query LeftJoinAliasOn(SqlTable table, string? alias, Expression on, params QueryColumn[] columns)
     {
         return Join(new JoinOn(table, alias, on, JoinType.Left, columns));
     }
@@ -199,7 +194,7 @@ public class Query : QueryElement, IQuery
     /// <param name="columnTarget">The column of the other table to join. This might be a column of the main table of the Query, or a column of the table of another QueryElement.</param>
     /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
     /// <returns>The Query.</returns>
-    public Query RightJoinAlias(SqlTable table, string alias, QueryColumn columnSource, QueryColumn columnTarget, params QueryColumn[] columns)
+    public Query RightJoinAlias(SqlTable table, string? alias, QueryColumn? columnSource, QueryColumn? columnTarget, params QueryColumn[] columns)
     {
         return Join(new Join(table, alias, columnSource, columnTarget, JoinType.Right, columns));
     }
@@ -229,7 +224,7 @@ public class Query : QueryElement, IQuery
     /// <param name="columnTarget">The column of the other table to join. This might be a column of the main table of the Query, or a column of the table of another QueryElement.</param>
     /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
     /// <returns>The Query.</returns>
-    public Query RightJoin(SqlTable table, QueryColumn columnSource, QueryColumn columnTarget, params QueryColumn[] columns)
+    public Query RightJoin(SqlTable table, QueryColumn? columnSource, QueryColumn? columnTarget, params QueryColumn[] columns)
     {
         return RightJoinAlias(table, null, columnSource, columnTarget, columns);
     }
@@ -257,7 +252,7 @@ public class Query : QueryElement, IQuery
     /// <param name="on">The join condition.</param>
     /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
     /// <returns>The Query.</returns>
-    public Query RightJoinAliasOn(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
+    public Query RightJoinAliasOn(SqlTable table, string? alias, Expression on, params QueryColumn[] columns)
     {
         return Join(new JoinOn(table, alias, on, JoinType.Right, columns));
     }
@@ -311,7 +306,7 @@ public class Query : QueryElement, IQuery
     /// <param name="columnTarget">The column of the other table to join. This might be a column of the main table of the Query, or a column of the table of another QueryElement.</param>
     /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
     /// <returns>The Query.</returns>
-    public Query InnerJoinAlias(SqlTable table, string alias, QueryColumn columnSource, QueryColumn columnTarget, params QueryColumn[] columns)
+    public Query InnerJoinAlias(SqlTable table, string? alias, QueryColumn? columnSource, QueryColumn? columnTarget, params QueryColumn[] columns)
     {
         return Join(new Join(table, alias, columnSource, columnTarget, JoinType.Inner, columns));
     }
@@ -341,7 +336,7 @@ public class Query : QueryElement, IQuery
     /// <param name="columnTarget">The column of the other table to join. This might be a column of the main table of the Query, or a column of the table of another QueryElement.</param>
     /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
     /// <returns>The Query.</returns>
-    public Query InnerJoin(SqlTable table, QueryColumn columnSource, QueryColumn columnTarget, params QueryColumn[] columns)
+    public Query InnerJoin(SqlTable table, QueryColumn? columnSource, QueryColumn? columnTarget, params QueryColumn[] columns)
     {
         return InnerJoinAlias(table, null, columnSource, columnTarget, columns);
     }
@@ -369,7 +364,7 @@ public class Query : QueryElement, IQuery
     /// <param name="on">The join condition.</param>
     /// <param name="columns">The columns to include in the query. Provide any number of <see cref="QueryColumn"/>s, or <see cref="SqlColumn"/>s (which will be impicitly cast as a QueryColumn.</param>
     /// <returns>The Query.</returns>
-    public Query InnerJoinAliasOn(SqlTable table, string alias, Expression on, params QueryColumn[] columns)
+    public Query InnerJoinAliasOn(SqlTable table, string? alias, Expression on, params QueryColumn[] columns)
     {
         return Join(new JoinOn(table, alias, on, JoinType.Inner, columns));
     }
@@ -392,12 +387,12 @@ public class Query : QueryElement, IQuery
         return InnerJoinAliasOn(query, null, on, columns);
     }
 
-    public Query InnerJoinAliasOn(Query query, string alias, Expression on, params QueryColumn[] columns)
+    public Query InnerJoinAliasOn(Query query, string? alias, Expression on, params QueryColumn[] columns)
     {
         return Join(new JoinSubQueryOn(query, alias, on, JoinType.Inner, columns));
     }
 
-    public string WhereExpression { get; set; }
+    public string? WhereExpression { get; set; }
 
     public Query Where(params object[] expressionParts)
     {
@@ -467,7 +462,7 @@ public class Query : QueryElement, IQuery
         {
             var sqlColumn = table.Columns[column.Value];
 
-            parameter = new SqlParameter(sqlColumn.Table.DatabaseDefinition)
+            parameter = new SqlParameter(sqlColumn.Table.DatabaseDefinition!)
             {
                 Name = column.Value
             };
@@ -476,7 +471,7 @@ public class Query : QueryElement, IQuery
         {
             var sqlColumn = view.Columns[column.Value];
 
-            parameter = new SqlParameter(sqlColumn.View.DatabaseDefinition)
+            parameter = new SqlParameter(sqlColumn.View.DatabaseDefinition!)
             {
                 Name = column.Value
             };

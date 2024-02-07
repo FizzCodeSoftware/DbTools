@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FizzCode.DbTools.DataDefinition.Base;
+﻿namespace FizzCode.DbTools.DataDefinition.Base;
 public abstract class SqlColumnBase : SqlElementWithNameAndType
 {
     /// <summary>

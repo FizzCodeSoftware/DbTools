@@ -7,13 +7,10 @@ using System.Text;
 using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.QueryBuilder;
-public class Expression : IEnumerable<object>
+public class Expression(params object[] expressionParts)
+    : IEnumerable<object>
 {
-    public List<object> Values { get; } = [];
-    public Expression(params object[] expressionParts)
-    {
-        Values = expressionParts.ToList();
-    }
+    public List<object> Values { get; } = expressionParts.ToList();
 
     /*public static implicit operator Expression(object[] expressionParts)
     {
@@ -31,10 +28,10 @@ public class Expression : IEnumerable<object>
         return Values.GetEnumerator();
     }
 
-    public static string GetExpression(IEnumerable<object> expressionParts, IEnumerable<QueryElement> queryElements, QueryElement mainQueryElement = null)
+    public static string GetExpression(IEnumerable<object> expressionParts, IEnumerable<QueryElement> queryElements, QueryElement? mainQueryElement = null)
     {
         var sb = new StringBuilder();
-        string previous = null;
+        string? previous = null;
 
         foreach (var obj in expressionParts)
         {
@@ -52,12 +49,9 @@ public class Expression : IEnumerable<object>
 
                     alias = table.GetAlias();
 
-                    if (alias is null)
-                    {
-                        alias = mainQueryElement?.Table.SchemaAndTableName == table.SchemaAndTableName
+                    alias ??= mainQueryElement?.Table.SchemaAndTableName == table.SchemaAndTableName
                         ? mainQueryElement.Table.GetAlias()
                         : queryElements.Single(qe => qe.Table.SchemaAndTableName == table.SchemaAndTableName).Table.GetAlias();
-                    }
 
                     sb.AppendSpace(alias);
                     sb.Append('.');

@@ -3,7 +3,7 @@
 namespace FizzCode.DbTools.QueryBuilder;
 public abstract class JoinBase : QueryElement
 {
-    protected JoinBase(SqlTableOrView table, string alias, JoinType joinType, params QueryColumn[] columns)
+    protected JoinBase(SqlTableOrView table, string? alias, JoinType joinType, params QueryColumn[] columns)
         : base(table, alias, columns)
     {
         JoinType = joinType;

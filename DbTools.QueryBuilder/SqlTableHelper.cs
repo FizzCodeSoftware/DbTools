@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Reflection;
+using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDefinition;
 using FizzCode.DbTools.DataDefinition.Base;
 
@@ -30,7 +31,7 @@ public static class SqlTableHelper
         aliasProperty.Alias = alias;
     }
 
-    public static string GetAlias(this SqlTableOrView sqlTableOrView)
+    public static string? GetAlias(this SqlTableOrView sqlTableOrView)
     {
         return sqlTableOrView switch
         {
@@ -40,13 +41,13 @@ public static class SqlTableHelper
         };
     }
 
-    public static string GetAlias(this SqlTable sqlTable)
+    public static string? GetAlias(this SqlTable sqlTable)
     {
         var aliasTableProperty = sqlTable.Properties.OfType<AliasTableProperty>().FirstOrDefault();
         return aliasTableProperty?.Alias;
     }
 
-    public static string GetAlias(this SqlView sqlTable)
+    public static string? GetAlias(this SqlView sqlTable)
     {
         var aliasProperty = sqlTable.Properties.OfType<AliasViewProperty>().FirstOrDefault();
         return aliasProperty?.Alias;
@@ -60,7 +61,7 @@ public static class SqlTableHelper
             return;
         }
 
-        var tableName = table.SchemaAndTableName.TableName;
+        var tableName = table.SchemaAndTableNameSafe.TableName;
         var capitals = new string(tableName.Where(c => char.IsUpper(c)).ToArray());
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
@@ -69,7 +70,7 @@ public static class SqlTableHelper
 #pragma warning restore CA1308 // Normalize strings to uppercase
     }
 
-    internal static void SetAlias(SqlView table, string alias)
+    internal static void SetAlias(SqlView table, string? alias)
     {
         if (!string.IsNullOrEmpty(alias))
         {
@@ -77,7 +78,7 @@ public static class SqlTableHelper
             return;
         }
 
-        var tableName = table.SchemaAndTableName.TableName;
+        var tableName = table.SchemaAndTableNameSafe.TableName;
         var capitals = new string(tableName.Where(c => char.IsUpper(c)).ToArray());
 
 #pragma warning disable CA1308 // Normalize strings to uppercase
@@ -102,7 +103,7 @@ public static class SqlTableHelper
 
         foreach (var property in properties)
         {
-            var column = (SqlColumn)property.GetValue(table);
+            var column = property.GetValueSafe<SqlColumn>(table);
             column.Name = property.Name;
             column.Table = table;
         }
@@ -118,7 +119,7 @@ public static class SqlTableHelper
 
         foreach (var property in properties)
         {
-            var fk = (ForeignKey)property.GetValue(table);
+            var fk = property.GetValueSafe<ForeignKey>(table);
 
             if (!property.Name.StartsWith('_'))
                 fk.Name = property.Name;
@@ -138,7 +139,7 @@ public static class SqlTableHelper
 
         foreach (var property in properties)
         {
-            var index = (Index)property.GetValue(table);
+            var index = property.GetValueSafe<Index>(table);
 
             if (!property.Name.StartsWith('_'))
                 index.Name = property.Name;
@@ -166,7 +167,7 @@ public static class SqlTableHelper
         // TODO ?
         foreach (var property in properties)
         {
-            var customProperty = (SqlTableCustomProperty)property.GetValue(table);
+            var customProperty = property.GetValueSafe<SqlTableCustomProperty>(table);
             customProperty.SqlTableOrView = table;
         }
     }

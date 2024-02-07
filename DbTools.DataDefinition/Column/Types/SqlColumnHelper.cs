@@ -1,4 +1,5 @@
-﻿using FizzCode.DbTools.DataDefinition.Base;
+﻿using FizzCode.DbTools.Common;
+using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.DataDefinition;
 public static class SqlColumnHelper
@@ -37,6 +38,9 @@ public static class SqlColumnHelper
 
         if (!column.Types.ContainsKey(GenericVersion.Generic1))
             return;
+
+        Throw.InvalidOperationExceptionIfNull(column.SqlTableOrView);
+        Throw.InvalidOperationExceptionIfNull(column.SqlTableOrView.DatabaseDefinition);
 
         var versions = column.SqlTableOrView.DatabaseDefinition.GetVersions();
 

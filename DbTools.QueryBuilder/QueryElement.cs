@@ -15,7 +15,7 @@ public abstract class QueryElement
         QueryColumns = columns.ToList();
     }
 
-    protected QueryElement(SqlTableOrView sqlTable, string alias, params QueryColumn[] columns)
+    protected QueryElement(SqlTableOrView sqlTable, string? alias, params QueryColumn[] columns)
         : this(sqlTable, columns)
     {
         if ((alias == null && Table.GetAlias() is null)
@@ -31,7 +31,7 @@ public abstract class QueryElement
         }
     }
 
-    public List<QueryColumn> GetColumns()
+    public List<QueryColumn>? GetColumns()
     {
         if (QueryColumns.Count == 1 && QueryColumns[0] is None)
             return null;
@@ -47,8 +47,9 @@ public abstract class QueryElement
                 return view.Columns.Select(c => (QueryColumn)c).ToList();
             }
             else
+            {
                 throw new ArgumentException("Unknown SqlTableOrView Type.");
-
+            }
         }
 
         return QueryColumns;

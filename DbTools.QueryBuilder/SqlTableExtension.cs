@@ -5,7 +5,7 @@ using FizzCode.DbTools.DataDefinition.Base;
 namespace FizzCode.DbTools.QueryBuilder;
 public static class SqlTableExtension
 {
-    public static T Alias<T>(this T table, string alias = null) where T : SqlTable, new()
+    public static T Alias<T>(this T table, string? alias) where T : SqlTable, new()
     {
         T newTable = new T
         {
@@ -25,9 +25,13 @@ public static class SqlTableExtension
 
         SqlTableHelper.SetAlias(newTable, alias);
         UpdateDeclaredColumns(newTable);
-        //SqlTableHelper.SetupDeclaredTable(newTable);
 
-
+        // TODO
+        /*
+        AddDeclaredForeignKeys(table);
+        UpdateDeclaredIndexes(table);
+        UpdateDeclaredCustomProperties(table);
+        */
 
         return newTable;
     }
@@ -56,7 +60,7 @@ public static class SqlTableExtension
         }
     }
 
-    public static T AliasView<T>(this T table, string alias = null) where T : SqlView, new()
+    public static T AliasView<T>(this T table, string? alias) where T : SqlView, new()
     {
         var newView = new T
         {
@@ -75,7 +79,8 @@ public static class SqlTableExtension
         }
 
         SqlTableHelper.SetAlias(newView, alias);
-        //SqlTableHelper.SetupDeclaredTable(newView);
+        
+        // TODO as above with table
 
         return newView;
     }

@@ -2,7 +2,7 @@
 
 public class JoinSubQueryOn : JoinOn
 {
-    public JoinSubQueryOn(Query query, string alias, Expression on, JoinType joinType, params QueryColumn[] columns)
+    public JoinSubQueryOn(Query query, string? alias, Expression on, JoinType joinType, params QueryColumn[] columns)
         : base(query.Table, null, on, joinType, columns)
     {
         SubQuery = query;
@@ -11,7 +11,7 @@ public class JoinSubQueryOn : JoinOn
 
     public Query SubQuery { get; set; }
 
-    public string Alias { get; set; }
+    public string? Alias { get; set; }
 
     public override string ToString()
     {
