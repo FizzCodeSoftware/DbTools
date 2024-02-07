@@ -1,11 +1,13 @@
-﻿using FizzCode.DbTools.DataDefinition.Base;
+﻿using System.Linq;
+using System.Reflection;
+using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.QueryBuilder;
 public static class SqlTableExtension
 {
     public static T Alias<T>(this T table, string alias = null) where T : SqlTable, new()
     {
-        var newTable = new T
+        T newTable = new T
         {
             DatabaseDefinition = table.DatabaseDefinition,
             SchemaAndTableName = table.SchemaAndTableName
@@ -22,9 +24,36 @@ public static class SqlTableExtension
         }
 
         SqlTableHelper.SetAlias(newTable, alias);
-        SqlTableHelper.SetupDeclaredTable(newTable);
+        UpdateDeclaredColumns(newTable);
+        //SqlTableHelper.SetupDeclaredTable(newTable);
+
+
 
         return newTable;
+    }
+
+    private static void UpdateDeclaredColumns<T>(T table) where T : SqlTable
+    {
+        var properties = table.GetType()
+           .GetProperties(BindingFlags.Public | BindingFlags.Instance)
+           .Where(pi => typeof(SqlColumn).IsAssignableFrom(pi.PropertyType) && !pi.GetIndexParameters().Any());
+
+        foreach (var property in properties)
+        {
+            var columnDeclared = (SqlColumn)property.GetValue(table);
+            var column = table[property.Name];
+
+            //column.CopyTo(columnDeclared);
+            columnDeclared.Name = column.Name;
+            
+            //Types.CopyTo(column.Types);
+            foreach (var kvp in column.Types)
+            {
+                columnDeclared.Types[kvp.Key] = (SqlType)kvp.Value.Copy();
+            }
+            columnDeclared.SqlTableOrView = column.SqlTableOrView;
+
+        }
     }
 
     public static T AliasView<T>(this T table, string alias = null) where T : SqlView, new()
@@ -46,7 +75,7 @@ public static class SqlTableExtension
         }
 
         SqlTableHelper.SetAlias(newView, alias);
-        // SqlTableHelper.SetupDeclaredTable(newView);
+        //SqlTableHelper.SetupDeclaredTable(newView);
 
         return newView;
     }
