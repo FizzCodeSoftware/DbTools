@@ -253,11 +253,11 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
 
             index.SqlTableOrView = table;
 
-            var registeredIdexes = index.SqlColumns.OfType<ColumnAndOrderRegistration>().ToList();
+            var registeredIdexes = index.SqlColumnRegistrations.ToList();
 
             foreach (var cr in registeredIdexes)
             {
-                index.SqlColumns.Remove(cr);
+                index.SqlColumnRegistrations.Remove(cr);
                 index.SqlColumns.Add(new ColumnAndOrder(table.Columns[cr.ColumnName], cr.Order));
             }
 

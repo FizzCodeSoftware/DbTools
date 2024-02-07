@@ -1,13 +1,8 @@
 ﻿namespace FizzCode.DbTools.DataDefinition.Base;
 
-public class UniqueConstraint : IndexBase<SqlTable>
+public class UniqueConstraint(SqlTable sqlTable, string? name) : IndexBase<SqlTable>(sqlTable, name, true)
 {
     public SqlTable SqlTable { get => SqlTableOrView; }
-
-    public UniqueConstraint(SqlTable sqlTable, string? name)
-        : base(sqlTable, name, true)
-    {
-    }
 
     public new bool Unique
     {

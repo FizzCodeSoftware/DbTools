@@ -145,12 +145,11 @@ public static class SqlTableHelper
 
             index.SqlTableOrView = table;
 
-            var registeredIdexes = index.SqlColumns.OfType<ColumnAndOrderRegistration>().ToList();
+            var registeredIdexes = index.SqlColumnRegistrations.ToList();
 
-            // TODO ?
             foreach (var cr in registeredIdexes)
             {
-                index.SqlColumns.Remove(cr);
+                index.SqlColumnRegistrations.Remove(cr);
                 index.SqlColumns.Add(new ColumnAndOrder(table.Columns[cr.ColumnName], cr.Order));
             }
         }

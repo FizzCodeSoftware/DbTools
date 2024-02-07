@@ -355,7 +355,7 @@ public static class MsSql2016
         var uc = new UniqueConstraint(table, null);
 
         foreach (var columnName in columnNames)
-            uc.SqlColumns.Add(new ColumnAndOrderRegistration(columnName, AscDesc.Asc));
+            uc.SqlColumnRegistrations.Add(new ColumnAndOrderRegistration(columnName, AscDesc.Asc));
 
         return uc;
     }

@@ -3,6 +3,8 @@ public abstract class IndexBase<T> : SqlTableOrViewPropertyBase<T> where T : Sql
 {
     public string? Name { get; set; }
 
+
+    public List<ColumnAndOrderRegistration> SqlColumnRegistrations { get; set; } = [];
     public List<ColumnAndOrder> SqlColumns { get; set; } = [];
 
     public bool Unique { get; set; }
@@ -20,6 +22,6 @@ public abstract class IndexBase<T> : SqlTableOrViewPropertyBase<T> where T : Sql
         if (withOrder)
             return string.Join(", ", SqlColumns);
 
-        return string.Join(", ", SqlColumns.Select(cao => cao.SqlColumn?.Name));
+        return string.Join(", ", SqlColumns.Select(cao => cao.SqlColumn.Name));
     }
 }

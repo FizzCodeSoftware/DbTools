@@ -223,7 +223,7 @@ public static class Generic1
         var index = new Index(table, null);
 
         foreach (var columnName in columnNames)
-            index.SqlColumns.Add(new ColumnAndOrderRegistration(columnName, AscDesc.Asc));
+            index.SqlColumnRegistrations.Add(new ColumnAndOrderRegistration(columnName, AscDesc.Asc));
 
         return index;
     }
@@ -234,7 +234,7 @@ public static class Generic1
         var index = new Index(table, null, unique);
 
         foreach (var columnName in columnNames)
-            index.SqlColumns.Add(new ColumnAndOrderRegistration(columnName, AscDesc.Asc));
+            index.SqlColumnRegistrations.Add(new ColumnAndOrderRegistration(columnName, AscDesc.Asc));
 
         return index;
     }
@@ -245,7 +245,7 @@ public static class Generic1
         var uc = new UniqueConstraint(table, null);
 
         foreach (var columnName in columnNames)
-            uc.SqlColumns.Add(new ColumnAndOrderRegistration(columnName, AscDesc.Asc));
+            uc.SqlColumnRegistrations.Add(new ColumnAndOrderRegistration(columnName, AscDesc.Asc));
 
         return uc;
     }
