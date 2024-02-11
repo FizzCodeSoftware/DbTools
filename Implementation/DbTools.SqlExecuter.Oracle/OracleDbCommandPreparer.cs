@@ -1,12 +1,18 @@
 ﻿using System;
 using System.Data.Common;
+using FizzCode.DbTools.Common;
 
 namespace FizzCode.DbTools.SqlExecuter.Oracle;
 public static class OracleDbCommandPreparer
 {
     public static DbCommand PrepareSqlCommand(DbCommand dbCommand)
     {
-        dbCommand.GetType().GetProperty("BindByName").SetValue(dbCommand, true, null);
+        // Binding query parameters by name with ODP.NET
+        var piBindByName = dbCommand.GetType().GetProperty("BindByName");
+        Throw.InvalidOperationExceptionIfNull(piBindByName, "Oracle OracleCommand (DbCommand) BindByName property.");
+
+        piBindByName.SetValue(dbCommand, true, null);
+
         ReplaceNamedParameterPrefixes(dbCommand);
         return dbCommand;
     }

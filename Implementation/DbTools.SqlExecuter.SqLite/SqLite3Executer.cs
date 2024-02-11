@@ -120,14 +120,16 @@ public class SqLite3Executer(ContextWithLogger context, NamedConnectionString co
 
     public override object ExecuteScalar(SqlStatementWithParameters sqlStatementWithParameters)
     {
+        object result;
+
         Log(LogSeverity.Verbose, "Executing scalar {Query}.", sqlStatementWithParameters.Statement);
 
         using (var command = PrepareSqlCommand(sqlStatementWithParameters))
         {
             try
             {
-                var result = command.ExecuteScalar();
-                return result;
+                var nullableResult = command.ExecuteScalar();
+                result = nullableResult is null ? "" : nullableResult;
             }
             catch (SQLiteException ex)
             {
@@ -135,6 +137,8 @@ public class SqLite3Executer(ContextWithLogger context, NamedConnectionString co
                 throw newEx;
             }
         }
+
+        return result;
     }
 
     public override string GetDatabase()

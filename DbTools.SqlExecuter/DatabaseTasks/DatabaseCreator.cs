@@ -3,7 +3,8 @@ using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.Interfaces;
 
 namespace FizzCode.DbTools.SqlExecuter;
-public class DatabaseCreator(IDatabaseDefinition databaseDefinition, ISqlStatementExecuter sqlExecuter) : DatabaseTask(sqlExecuter)
+public class DatabaseCreator(IDatabaseDefinition databaseDefinition, ISqlStatementExecuter sqlExecuter)
+    : DatabaseTask(sqlExecuter)
 {
     public IDatabaseDefinition DatabaseDefinition { get; } = databaseDefinition;
 
@@ -41,8 +42,11 @@ public class DatabaseCreator(IDatabaseDefinition databaseDefinition, ISqlStateme
             CreateDbDescriptions(sqlTable);
     }
 
-    private void CreateSchemas(IDatabaseDefinition databaseDefinition)
+    private void CreateSchemas(IDatabaseDefinition? databaseDefinition)
     {
+        if (databaseDefinition == null)
+            return;
+
         foreach (var schemaName in databaseDefinition.GetSchemaNames())
         {
             if (schemaName == Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema", null))

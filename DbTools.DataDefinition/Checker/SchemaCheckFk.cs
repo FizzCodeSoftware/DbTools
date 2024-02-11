@@ -3,7 +3,7 @@
 namespace FizzCode.DbTools.DataDefinition.Checker;
 public abstract class SchemaCheckFk : SchemaCheck
 {
-    public ForeignKey ForeignKey { get; set; }
+    public required ForeignKey ForeignKey { get; init; }
 
     public override string DisplayInfo => $"{ForeignKey}";
 

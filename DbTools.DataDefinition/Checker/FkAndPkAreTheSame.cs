@@ -5,8 +5,7 @@ public class FkAndPkAreTheSame : SchemaCheckFk
 {
     public override string DisplayName => "Fk and Pk columns are the same";
 
-    public PrimaryKey PrimaryKey { get; set; }
-    public string Comment { get; set; }
+    public required PrimaryKey PrimaryKey { get; init; }
 
     public override string DisplayInfo => $"FK: {ForeignKey}\r\nPK: {PrimaryKey}";
 

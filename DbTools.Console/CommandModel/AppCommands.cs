@@ -52,7 +52,7 @@ internal class AppCommands
         [Option('f', "flags")]
         List<string> flags)
     {
-        var version = SqlEngineVersions.GetVersion(sqlType);
+        var version = Throw.IfNull(SqlEngineVersions.GetVersion(sqlType));
 
         var connString = new NamedConnectionString(
             version.GetType().Name,
@@ -95,7 +95,7 @@ internal class AppCommands
         [Option('f', "flags")]
         List<string> flags)
     {
-        var version = SqlEngineVersions.GetVersion(sqlType);
+        var version = Throw.IfNull(SqlEngineVersions.GetVersion(sqlType));
 
         var connString = new NamedConnectionString(
             version.GetType().Name,
@@ -139,7 +139,7 @@ internal class AppCommands
         [Option('f', "flags")]
         List<string> flags)
     {
-        var version = SqlEngineVersions.GetVersion(sqlType);
+        var version = Throw.IfNull(SqlEngineVersions.GetVersion(sqlType));
 
         var connString = new NamedConnectionString(
             version.GetType().Name,
@@ -220,7 +220,7 @@ internal class AppCommands
         [Option('p', "patternFileName")]
         string patternFileName)
     {
-        var version = SqlEngineVersions.GetVersion(sqlType);
+        var version = Throw.IfNull(SqlEngineVersions.GetVersion(sqlType));
 
         var connString = new NamedConnectionString(
             version.GetType().Name,
@@ -252,7 +252,7 @@ internal class AppCommands
         [Option('f', "flags")]
         List<string> flags)
     {
-        var version = SqlEngineVersions.GetVersion(sqlType);
+        var version = Throw.IfNull(SqlEngineVersions.GetVersion(sqlType));
 
         var connString = new NamedConnectionString(
             version.GetType().Name,
@@ -390,7 +390,7 @@ internal class AppCommands
         string sqlType
         )
     {
-        var version = SqlEngineVersions.GetVersion(sqlType);
+        var version = Throw.IfNull(SqlEngineVersions.GetVersion(sqlType));
 
         var connString = new NamedConnectionString("", version.ProviderName, connectionString, version.VersionString);
 
