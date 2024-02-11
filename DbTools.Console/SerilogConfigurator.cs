@@ -10,7 +10,7 @@ using Serilog.Formatting.Compact;
 namespace FizzCode.DbTools.Console;
 internal static class SerilogConfigurator
 {
-    public static ILogger CreateLogger(LogConfiguration configuration)
+    public static ILogger CreateLogger(LogConfiguration? configuration)
     {
         var logsFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "log-dev");
 
@@ -96,7 +96,7 @@ internal static class SerilogConfigurator
         return config.CreateLogger();
     }
 
-    public static ILogger CreateOpsLogger(LogConfiguration configuration)
+    public static ILogger CreateOpsLogger(LogConfiguration? configuration)
     {
         var logsFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "log-ops");
 

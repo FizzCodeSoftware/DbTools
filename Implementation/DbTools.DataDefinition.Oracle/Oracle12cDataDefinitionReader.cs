@@ -8,7 +8,7 @@ using FizzCode.DbTools.SqlExecuter.Oracle;
 using FizzCode.LightWeight;
 
 namespace FizzCode.DbTools.DataDefinition.Oracle12c;
-public class Oracle12cDataDefinitionReader(NamedConnectionString connectionString, ContextWithLogger context, ISchemaNamesToRead schemaNames)
+public class Oracle12cDataDefinitionReader(NamedConnectionString connectionString, ContextWithLogger context, ISchemaNamesToRead? schemaNames)
     : GenericDataDefinitionReader(new Oracle12cExecuter(context, connectionString, new Oracle12cGenerator(context)), schemaNames)
 {
     public override DatabaseDefinition GetDatabaseDefinition()
@@ -46,7 +46,7 @@ public class Oracle12cDataDefinitionReader(NamedConnectionString connectionStrin
         return new OracleTablesReader(Executer, SchemaNames).GetSchemaAndTableNames();
     }
 
-    private OracleTableReader12c _tableReader;
+    private OracleTableReader12c _tableReader = null!;
 
     private OracleTableReader12c TableReader => _tableReader ??= new OracleTableReader12c(Executer, SchemaNames);
 
@@ -75,7 +75,7 @@ public class Oracle12cDataDefinitionReader(NamedConnectionString connectionStrin
         return new OracleViewsReader(Executer, SchemaNames).GetSchemaAndTableNames();
     }
 
-    private OracleViewReader12c _viewReader;
+    private OracleViewReader12c _viewReader = null!;
 
     private OracleViewReader12c ViewReader => _viewReader ??= new OracleViewReader12c(Executer, SchemaNames);
 
@@ -83,7 +83,7 @@ public class Oracle12cDataDefinitionReader(NamedConnectionString connectionStrin
     {
         var sqlView = ViewReader.GetViewDefinition(schemaAndTableName);
 
-        sqlView.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlView.SchemaAndTableName, Executer.Context);
+        sqlView.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlView.SchemaAndTableNameSafe, Executer.Context);
         return sqlView;
     }
 }

@@ -8,10 +8,10 @@ using FizzCode.DbTools.SqlExecuter;
 namespace FizzCode.DbTools.DataDefinitionReader;
 public class MsSqlForeignKeyReader2016 : GenericDataDefinitionElementReader
 {
-    private RowSet _queryResult;
+    private RowSet _queryResult = null!;
     private RowSet QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement());
 
-    public MsSqlForeignKeyReader2016(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
+    public MsSqlForeignKeyReader2016(SqlStatementExecuter executer, ISchemaNamesToRead? schemaNames)
         : base(executer, schemaNames)
     {
     }
@@ -65,17 +65,17 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
 
         foreach (var row in rows)
         {
-            var fkColumn = table.Columns[row.GetAs<string>("FK_COLUMN_NAME")];
+            var fkColumn = table.Columns[row.GetAs<string>("FK_COLUMN_NAME")!];
 
             var referencedSchema = row.GetAs<string>("REFERENCED_CONSTRAINT_SCHEMA");
-            var referencedTable = row.GetAs<string>("REFERENCED_TABLE_NAME");
+            var referencedTable = row.GetAs<string>("REFERENCED_TABLE_NAME")!;
             var referencedSchemaAndTableName = new SchemaAndTableName(referencedSchema, referencedTable);
-            var referencedColumn = row.GetAs<string>("REFERENCED_COLUMN_NAME");
+            var referencedColumn = row.GetAs<string>("REFERENCED_COLUMN_NAME")!;
             var fkName = row.GetAs<string>("FK_CONSTRAINT_NAME");
 
             var referencedSqlTableSchemaAndTableNameAsToStore = GenericDataDefinitionReader.GetSchemaAndTableNameAsToStore(referencedSchemaAndTableName, Executer.Context);
 
-            var referencedSqlTable = table.DatabaseDefinition.GetTable(referencedSqlTableSchemaAndTableNameAsToStore);
+            var referencedSqlTable = table.DatabaseDefinition!.GetTable(referencedSqlTableSchemaAndTableNameAsToStore);
 
             ForeignKey fk;
 
@@ -91,7 +91,7 @@ INNER JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS KCU2
             }
             else
             {
-                fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
+                fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable!.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
             }
 
             var referencedSqlColumn = referencedSqlTable[referencedColumn];

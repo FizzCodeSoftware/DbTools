@@ -16,7 +16,7 @@ public abstract class OracleDataDefinitionElementReader : GenericDataDefinitionE
         if (SchemaNames?.AllDefault != false)
         {
             if (Executer.Context.Settings.Options.ShouldUseDefaultSchema)
-                schemaNames.Add(Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
+                schemaNames.Add(Executer.Generator.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema")!);
         }
         else
         {

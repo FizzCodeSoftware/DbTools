@@ -1,4 +1,5 @@
 ﻿using System;
+using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 using FizzCode.DbTools.DataDefinition.MsSql2016;
 using FizzCode.DbTools.DataDefinition.Oracle12c;
@@ -12,7 +13,7 @@ public class DataDefinitionReaderFactory(IContextFactory contextFactory) : IData
 
     public IDataDefinitionReader CreateDataDefinitionReader(NamedConnectionString connectionString, ISchemaNamesToRead? schemaNames)
     {
-        var sqlEngineVersion = connectionString.GetSqlEngineVersion();
+        var sqlEngineVersion = Throw.IfNull(connectionString.GetSqlEngineVersion());
         var context = _contextFactory.CreateContextWithLogger(sqlEngineVersion);
 
         if (sqlEngineVersion is MsSqlVersion)

@@ -5,7 +5,7 @@ using Serilog.Exceptions;
 namespace FizzCode.DbTools.TestBase;
 internal static class SerilogConfigurator
 {
-    public static ILogger CreateLogger(LogConfiguration configuration)
+    public static ILogger CreateLogger(LogConfiguration? configuration)
     {
         var minimumLevel = configuration?.MinimumLogLevelOnDebug ?? LogEventLevel.Verbose;
 

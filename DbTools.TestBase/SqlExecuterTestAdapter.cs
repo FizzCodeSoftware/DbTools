@@ -52,7 +52,7 @@ public class SqlExecuterTestAdapter : ConfigurationBase
         if (connectionString is null)
             throw new InvalidOperationException($"No connection string is configured for {connectionStringKey}");
 
-        var sqlEngineVersion = connectionString.GetSqlEngineVersion();
+        var sqlEngineVersion = Throw.IfNull(connectionString.GetSqlEngineVersion());
 
         foreach(var dd in dds)
         {
@@ -103,11 +103,11 @@ public class SqlExecuterTestAdapter : ConfigurationBase
             throw new AggregateException(exceptions);
     }
 
-    public string ExecuteNonQuery(string connectionStringKey, string query)
+    public string? ExecuteNonQuery(string connectionStringKey, string query)
     {
         var connectionString = Initialize(connectionStringKey);
 
-        var sqlEngineVersion = connectionString.GetSqlEngineVersion();
+        var sqlEngineVersion = Throw.IfNull(connectionString.GetSqlEngineVersion());
 
         if (!TestHelper.ShouldRunIntegrationTest(sqlEngineVersion))
             return "Query execution is skipped, integration tests are not running.";
@@ -116,10 +116,9 @@ public class SqlExecuterTestAdapter : ConfigurationBase
         return null;
     }
 
-    public string ExecuteWithPrepareNonQuery(string connectionStringKey, string query)
+    public void ExecuteWithPrepareNonQuery(string connectionStringKey, string query)
     {
         sqlExecutersAndDialects[connectionStringKey].SqlExecuter.ExecuteNonQuery(PrepareSql(connectionStringKey, query));
-        return null;
     }
 
     public RowSet ExecuteWithPrepareQuery(string connectionStringKey, string query)

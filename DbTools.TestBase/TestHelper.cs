@@ -74,17 +74,20 @@ public static class TestHelper
         {
             var executingAssembly = Assembly.GetExecutingAssembly();
             var callerAssemblies = new StackTrace().GetFrames()
-                        .Select(f => f.GetMethod().ReflectedType?.Assembly).Distinct()
+                        .Select(f => f.GetMethod()?.ReflectedType?.Assembly).Distinct()
                         .Where(a => a != null && a.GetReferencedAssemblies().Any(a2 => a2.FullName == executingAssembly.FullName));
             var initialAssembly = callerAssemblies.Last();
 
-            var assemblyName = initialAssembly.GetName().Name;
-            if (assemblyName.StartsWith("FizzCode.DbTools.", StringComparison.InvariantCultureIgnoreCase))
+            var assemblyName = initialAssembly?.GetName().Name;
+            if (assemblyName is not null
+                && assemblyName.StartsWith("FizzCode.DbTools.", StringComparison.InvariantCultureIgnoreCase))
+            { 
                 assemblyName = assemblyName["FizzCode.DbTools.".Length..];
-
-            var schemaName = assemblyName.Replace(".", "_", StringComparison.InvariantCultureIgnoreCase);
-
-            settings.SqlVersionSpecificSettings["DefaultSchema"] = schemaName;
+            }
+            
+            var schemaName = assemblyName?.Replace(".", "_", StringComparison.InvariantCultureIgnoreCase);
+            if (schemaName is not null)
+                settings.SqlVersionSpecificSettings["DefaultSchema"] = schemaName;
         }
 
         return settings;
@@ -108,7 +111,7 @@ public static class TestHelper
             Assert.Inconclusive($"Test is skipped, .Net Framework Data Provider is not usabe for {version} engine version, provider name: {version.ProviderName}. No valid connection string is configured.");
     }
 
-    private static List<SqlEngineVersion> _sqlVersionsWithConfiguredConnectionStrting;
+    private static List<SqlEngineVersion>? _sqlVersionsWithConfiguredConnectionStrting;
 
     private static List<SqlEngineVersion> GetSqlVersionsWithConfiguredConnectionStrting(IEnumerable<NamedConnectionString> connectionStringCollection)
     {
@@ -118,7 +121,10 @@ public static class TestHelper
             foreach (var connectionString in connectionStringCollection)
             {
                 if (!string.IsNullOrEmpty(connectionString.ConnectionString))
-                    _sqlVersionsWithConfiguredConnectionStrting.Add(connectionString.GetSqlEngineVersion());
+                {
+                    var sqlEngineVersion = Throw.IfNull(connectionString.GetSqlEngineVersion());
+                    _sqlVersionsWithConfiguredConnectionStrting.Add(sqlEngineVersion);
+                }
             }
         }
 
@@ -145,7 +151,6 @@ public static class TestHelper
         var logger = new Logger();
 
         var configuration = ConfigurationLoader.LoadFromJsonFile("testconfig", true);
-
         var logConfiguration = configuration?.GetSection("Log").Get<LogConfiguration>();
 
         var iLogger = SerilogConfigurator.CreateLogger(logConfiguration);

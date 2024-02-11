@@ -63,7 +63,7 @@ WHERE type = '{typeFilter}'";
 
         AddSchemaNamesFilter(ref sqlStatement, "ss.name");
 
-        return Executer.ExecuteQuery(sqlStatement).ConvertAll(row => new SchemaAndTableName(row.GetAs<string>("schemaName"), row.GetAs<string>("tableName")))
+        return Executer.ExecuteQuery(sqlStatement).ConvertAll(row => new SchemaAndTableName(row.GetAs<string>("schemaName"), row.GetAs<string>("tableName")!))
 ;
     }
 
@@ -74,14 +74,14 @@ WHERE type = '{typeFilter}'";
         AddSchemaNamesFilter(ref sqlStatement, "ss.name");
 
         return Executer.ExecuteQuery(sqlStatement)
-            .ConvertAll(row => new SchemaAndTableName(row.GetAs<string>("schemaName"), row.GetAs<string>("tableName")))
+            .ConvertAll(row => new SchemaAndTableName(row.GetAs<string>("schemaName"), row.GetAs<string>("tableName")!))
 ;
     }
 
-    private MsSqlTableReader2016 _tableReader;
+    private MsSqlTableReader2016 _tableReader = null!;
     private MsSqlTableReader2016 TableReader => _tableReader ??= new MsSqlTableReader2016(Executer, SchemaNames);
 
-    private MsSqlColumnDocumentationReader2016 _columnDocumentationReader;
+    private MsSqlColumnDocumentationReader2016 _columnDocumentationReader = null!;
     private MsSqlColumnDocumentationReader2016 ColumnDocumentationReader => _columnDocumentationReader ??= new MsSqlColumnDocumentationReader2016(Executer);
 
     public override SqlView GetViewDefinition(SchemaAndTableName schemaAndTableName, bool fullDefinition = true)
@@ -97,7 +97,7 @@ WHERE type = '{typeFilter}'";
         // TODO
         // ColumnDocumentationReader.GetColumnDocumentation(sqlView);
 
-        sqlView.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlView.SchemaAndTableName, Executer.Context);
+        sqlView.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlView.SchemaAndTableNameSafe, Executer.Context);
         return sqlView;
     }
 
@@ -114,7 +114,7 @@ WHERE type = '{typeFilter}'";
 
         ColumnDocumentationReader.GetColumnDocumentation(sqlTable);
 
-        sqlTable.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlTable.SchemaAndTableName, Executer.Context);
+        sqlTable.SchemaAndTableName = GetSchemaAndTableNameAsToStore(sqlTable.SchemaAndTableNameSafe, Executer.Context);
         return (SqlTable)sqlTable;
     }
 
@@ -130,7 +130,7 @@ FROM
     public void AddTableDocumentation(SqlTable table)
     {
         var rowSet = Executer.ExecuteQuery(new SqlStatementWithParameters(
-        SqlGetTableDocumentation + " AND SCHEMA_NAME(t.schema_id) = @SchemaName AND t.name = @TableName", table.SchemaAndTableName.Schema, table.SchemaAndTableName.TableName));
+        SqlGetTableDocumentation + " AND SCHEMA_NAME(t.schema_id) = @SchemaName AND t.name = @TableName", table.SchemaAndTableNameSafe.Schema, table.SchemaAndTableNameSafe.TableName));
 
         foreach (var row in rowSet)
         {
@@ -161,7 +161,7 @@ FROM
         foreach (var row in rowSet)
         {
             // TODO SchemaAndTableName.Schema might be null on default schema?
-            var table = tables.Find(t => t.SchemaAndTableName.Schema == row.GetAs<string>("SchemaName") && t.SchemaAndTableName.TableName == row.GetAs<string>("TableName"));
+            var table = tables.Find(t => t.SchemaAndTableNameSafe.Schema == row.GetAs<string>("SchemaName") && t.SchemaAndTableNameSafe.TableName == row.GetAs<string>("TableName"));
             if (table != null)
             {
                 var description = row.GetAs<string>("Property");

@@ -283,7 +283,6 @@ internal class AppCommands
         var logger = new Logger();
 
         var logConfiguration = Program.Configuration.GetSection("Log").Get<LogConfiguration>();
-        Throw.InvalidOperationExceptionIfNull(logConfiguration, "Log in configuration");
 
         var iLogger = SerilogConfigurator.CreateLogger(logConfiguration);
         var iOpsLogger = SerilogConfigurator.CreateOpsLogger(logConfiguration);

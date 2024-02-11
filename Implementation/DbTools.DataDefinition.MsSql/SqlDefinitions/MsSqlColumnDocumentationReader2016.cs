@@ -8,10 +8,10 @@ using FizzCode.DbTools.SqlExecuter;
 namespace FizzCode.DbTools.DataDefinitionReader;
 public class MsSqlColumnDocumentationReader2016 : GenericDataDefinitionElementReader
 {
-    private ILookup<string, Row> _queryResult;
-    private ILookup<string, Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement()).ToLookup(x => x.GetAs<string>("SchemaAndTableName"));
+    private ILookup<string, Row> _queryResult = null!;
+    private ILookup<string, Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement()).ToLookup(x => x.GetAs<string>("SchemaAndTableName")!);
 
-    public MsSqlColumnDocumentationReader2016(SqlStatementExecuter executer, SchemaNamesToRead schemaNames = null)
+    public MsSqlColumnDocumentationReader2016(SqlStatementExecuter executer, SchemaNamesToRead? schemaNames = null)
         : base(executer, schemaNames)
     {
     }
@@ -19,12 +19,12 @@ public class MsSqlColumnDocumentationReader2016 : GenericDataDefinitionElementRe
     public void GetColumnDocumentation(SqlTable table)
     {
         var defaultSchema = Executer.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
-        var schemaAndTableName = (table.SchemaAndTableName.Schema ?? defaultSchema) + "." + table.SchemaAndTableName.TableName;
+        var schemaAndTableName = (table.SchemaAndTableNameSafe.Schema ?? defaultSchema) + "." + table.SchemaAndTableNameSafe.TableName;
         var rows = QueryResult[schemaAndTableName];
 
         foreach (var row in rows)
         {
-            var columnName = row.GetAs<string>("ColumnName");
+            var columnName = row.GetAs<string>("ColumnName")!;
             if (table.Columns.TryGetValue(columnName, out var column))
             {
                 var description = row.GetAs<string>("Property");

@@ -5,6 +5,7 @@ using FizzCode.DbTools.SqlExecuter.Oracle;
 using FizzCode.DbTools.SqlExecuter.SqLite3;
 using FizzCode.DbTools.Factory.Interfaces;
 using FizzCode.DbTools.Interfaces;
+using FizzCode.DbTools.Common;
 
 namespace FizzCode.DbTools.DataDefinition.Factory;
 public class SqlExecuterFactory : ISqlExecuterFactory
@@ -20,7 +21,7 @@ public class SqlExecuterFactory : ISqlExecuterFactory
 
     protected ISqlStatementExecuter CreateSqlExecuter(NamedConnectionString connectionString, ISqlGenerator sqlGenerator)
     {
-        var sqlEngineVersion = connectionString.GetSqlEngineVersion();
+        var sqlEngineVersion = Throw.IfNull(connectionString.GetSqlEngineVersion());
         var context = _contextFactory.CreateContextWithLogger(sqlEngineVersion);
 
         if (sqlEngineVersion == SqLiteVersion.SqLite3)
@@ -37,7 +38,7 @@ public class SqlExecuterFactory : ISqlExecuterFactory
 
     public ISqlStatementExecuter CreateSqlExecuter(NamedConnectionString connectionString)
     {
-        var sqlEngineVersion = connectionString.GetSqlEngineVersion();
+        var sqlEngineVersion = Throw.IfNull(connectionString.GetSqlEngineVersion());
 
         var generator =_sqlGeneratorFactory.CreateSqlGenerator(sqlEngineVersion);
 

@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 using FizzCode.DbTools.DataDefinition.Factory;
 using FizzCode.DbTools.Factory.Interfaces;
 using FizzCode.DbTools.QueryBuilder;
+using Google.Protobuf.Compiler;
 
 namespace FizzCode.DbTools.TestBase;
 public class TestFactoryContainer : IFactoryContainer
@@ -38,14 +41,17 @@ public class TestFactoryContainer : IFactoryContainer
             return (T)creator.Invoke();
         }
 
-        Type factoryType = null;
+        Type? factoryType = null;
         if (RegisteredTypes.ContainsKey(typeof(T)))
             factoryType = RegisteredTypes[typeof(T)];
         
         if (factoryType is null)
             return (T)RegisteredInstances[typeof(T)];
 
-        var instance = (T)Activator.CreateInstance(factoryType);
+        var instanceObject = Activator.CreateInstance(factoryType);
+        Throw.InvalidOperationExceptionIfNull(instanceObject, message: $"Cannot create instance of {typeof(T).GetFriendlyTypeName()}.");
+        var instance = (T)instanceObject;
+
         return instance;
     }
 
@@ -65,11 +71,14 @@ public class TestFactoryContainer : IFactoryContainer
     public void RegisterCreator<T>(Func<T> creator)
     {
         var creatorObj = creator as Func<object>;
-        RegisteredCreators.Add(typeof(T), creatorObj);
+        RegisteredCreators.Add(typeof(T), creatorObj!);
     }
 
-    public bool TryGet<TFactory>(out TFactory factory) where TFactory : class
+    public bool TryGet<TFactory>([MaybeNullWhen(false)] out TFactory factory) where TFactory : class
     {
+        var d = new Dictionary<string, string>();
+        d.TryGetValue("x", out var res);
+
         if (!RegisteredTypes.ContainsKey(typeof(TFactory))
             && !RegisteredInstances.ContainsKey(typeof(TFactory)))
         {
