@@ -63,6 +63,8 @@ public abstract class SqlStatementExecuter : ISqlStatementExecuter
             var dbParameter = command.CreateParameter();
             dbParameter.ParameterName = parameter.Key;
             dbParameter.Value = parameter.Value;
+            if (parameter.Value is null)
+                dbParameter.Value = DBNull.Value;
             command.Parameters.Add(dbParameter);
         }
 

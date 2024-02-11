@@ -26,7 +26,7 @@ public abstract class AbstractSqlGeneratorBase : ISqlGeneratorBase
 
     public string GetSimplifiedSchemaAndTableName(SchemaAndTableName schemaAndTableName)
     {
-        var schema = GetSchema(schemaAndTableName.Schema);
+        var schema = schemaAndTableName.Schema;
         var tableName = schemaAndTableName.TableName;
 
         var defaultSchema = Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema", null);
@@ -44,13 +44,8 @@ public abstract class AbstractSqlGeneratorBase : ISqlGeneratorBase
         return GuardKeywords(tableName);
     }
 
-    public string GetSchema(SqlTable table)
+    public string? GetSchema(SqlTable table)
     {
-        return GetSchema(table.SchemaAndTableName.Schema);
-    }
-
-    public virtual string GetSchema(string schema)
-    {
-        return schema;
+        return table.SchemaAndTableName?.Schema;
     }
 }

@@ -9,7 +9,7 @@ public interface ISqlGenerator : ISqlGeneratorBase
 
     string CreateTable(SqlTable table);
 
-    string CreateForeignKeys(SqlTable table);
+    string? CreateForeignKeys(SqlTable table);
 
     string CreateForeignKey(ForeignKey fk);
 
@@ -20,8 +20,8 @@ public interface ISqlGenerator : ISqlGeneratorBase
     string CreateStoredProcedure(StoredProcedure sp);
     string CreateView(SqlView view);
 
-    SqlStatementWithParameters CreateDbTableDescription(SqlTable table);
-    SqlStatementWithParameters CreateDbColumnDescription(SqlColumn column);
+    SqlStatementWithParameters? CreateDbTableDescription(SqlTable table);
+    SqlStatementWithParameters? CreateDbColumnDescription(SqlColumn column);
 
     string DropTable(SqlTable table);
 

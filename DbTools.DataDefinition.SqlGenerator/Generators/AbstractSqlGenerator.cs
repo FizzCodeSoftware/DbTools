@@ -29,7 +29,7 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
     public virtual SqlStatementWithParameters CreateSchema(string schemaName)
     {
         if (!string.IsNullOrEmpty(schemaName))
-            return $"CREATE SCHEMA {GetSchema(schemaName)}";
+            return $"CREATE SCHEMA {schemaName}";
 
         return "";
     }
@@ -38,7 +38,7 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
     {
         var sb = new StringBuilder();
         sb.Append("CREATE TABLE ")
-            .Append(GetSimplifiedSchemaAndTableName(table.SchemaAndTableName))
+            .Append(GetSimplifiedSchemaAndTableName(table.SchemaAndTableNameSafe))
             .AppendLine(" (");
 
         var idx = 0;
@@ -61,7 +61,7 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
         return sb.ToString();
     }
 
-    public virtual SqlStatementWithParameters CreateDbColumnDescription(SqlColumn column)
+    public virtual SqlStatementWithParameters? CreateDbColumnDescription(SqlColumn column)
     {
         var sqlColumnDescription = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
         if (sqlColumnDescription is null)
@@ -70,14 +70,14 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
         var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=@SchemaName, @level1type=N'TABLE', @level1name = @TableName, @level2type=N'COLUMN', @level2name= @ColumnName");
 
         sqlStatementWithParameters.Parameters.Add("@Description", sqlColumnDescription.Description);
-        sqlStatementWithParameters.Parameters.Add("@SchemaName", column.Table.SchemaAndTableName.Schema);
-        sqlStatementWithParameters.Parameters.Add("@TableName", column.Table.SchemaAndTableName.TableName);
+        sqlStatementWithParameters.Parameters.Add("@SchemaName", column.Table.SchemaAndTableName!.Schema);
+        sqlStatementWithParameters.Parameters.Add("@TableName", column.Table.SchemaAndTableName!.TableName);
         sqlStatementWithParameters.Parameters.Add("@ColumnName", column.Name);
 
         return sqlStatementWithParameters;
     }
 
-    public virtual SqlStatementWithParameters CreateDbTableDescription(SqlTable table)
+    public virtual SqlStatementWithParameters? CreateDbTableDescription(SqlTable table)
     {
         var sqlTableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
         if (sqlTableDescription is null)
@@ -86,8 +86,8 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
         var sqlStatementWithParameters = new SqlStatementWithParameters("EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value = @Description, @level0type=N'SCHEMA', @level0name=@SchemaName, @level1type=N'TABLE', @level1name = @TableName");
 
         sqlStatementWithParameters.Parameters.Add("@Description", sqlTableDescription.Description);
-        sqlStatementWithParameters.Parameters.Add("@SchemaName", table.SchemaAndTableName.Schema);
-        sqlStatementWithParameters.Parameters.Add("@TableName", table.SchemaAndTableName.TableName);
+        sqlStatementWithParameters.Parameters.Add("@SchemaName", table.SchemaAndTableName!.Schema);
+        sqlStatementWithParameters.Parameters.Add("@TableName", table.SchemaAndTableName!.TableName);
 
         return sqlStatementWithParameters;
     }
@@ -114,11 +114,11 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
             .Append(index.Unique ? "UNIQUE " : "")
             .Append(clusteredPrefix)
             .Append("INDEX ")
-            .Append(GuardKeywords(index.Name))
+            .Append(GuardKeywords(index.Name!))
             .Append(" ON ")
-            .Append(GetSimplifiedSchemaAndTableName(index.SqlTable.SchemaAndTableName))
+            .Append(GetSimplifiedSchemaAndTableName(index.SqlTable.SchemaAndTableName!))
             .AppendLine(" (")
-            .AppendJoin(", \r\n", index.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)} {c.OrderAsKeyword}")).AppendLine() // Index column list + asc desc
+            .AppendJoin(", \r\n", index.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name!)} {c.OrderAsKeyword}")).AppendLine() // Index column list + asc desc
             .AppendLine(");");
 
         return sb.ToString();
@@ -138,15 +138,15 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
             : null;
 
         sb.Append(", CONSTRAINT ")
-            .Append(GuardKeywords(pk.Name))
+            .Append(GuardKeywords(pk.Name!))
             .Append(" PRIMARY KEY ")
             .AppendLine(clusteredPrefix)
             .AppendLine("(")
-            .AppendJoin(", \r\n", pk.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)} {c.OrderAsKeyword}")).AppendLine() // PK column list + asc desc
+            .AppendJoin(", \r\n", pk.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name!)} {c.OrderAsKeyword}")).AppendLine() // PK column list + asc desc
             .Append(')');
     }
 
-    public virtual string CreateForeignKeys(SqlTable table)
+    public virtual string? CreateForeignKeys(SqlTable table)
     {
         var allFks = table.Properties.OfType<ForeignKey>().ToList();
 
@@ -170,15 +170,15 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
         var sb = new StringBuilder();
 
         sb.Append("CONSTRAINT ")
-            .Append(GuardKeywords(fk.Name))
+            .Append(GuardKeywords(fk.Name!))
             .Append(" FOREIGN KEY ")
             .Append('(')
-            .AppendJoin(", \r\n", fk.ForeignKeyColumns.Select(fkc => $"{GuardKeywords(fkc.ForeignKeyColumn.Name)}"))
+            .AppendJoin(", \r\n", fk.ForeignKeyColumns.Select(fkc => $"{GuardKeywords(fkc.ForeignKeyColumn.Name!)}"))
             .Append(')')
             .Append(" REFERENCES ")
-            .Append(GetSimplifiedSchemaAndTableName(fk.ReferredTable.SchemaAndTableName))
+            .Append(GetSimplifiedSchemaAndTableName(fk.ReferredTable!.SchemaAndTableName!))
             .Append(" (")
-            .AppendJoin(", \r\n", fk.ForeignKeyColumns.Select(pkc => $"{GuardKeywords(pkc.ReferredColumn.Name)}"))
+            .AppendJoin(", \r\n", fk.ForeignKeyColumns.Select(pkc => $"{GuardKeywords(pkc.ReferredColumn.Name!)}"))
             .Append(')');
 
         return sb.ToString();
@@ -221,14 +221,14 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
 
         var sb = new StringBuilder();
         sb.Append("ALTER TABLE ")
-            .Append(GetSimplifiedSchemaAndTableName(uniqueConstraint.SqlTable.SchemaAndTableName))
+            .Append(GetSimplifiedSchemaAndTableName(uniqueConstraint.SqlTable.SchemaAndTableName!))
             .Append(" ADD CONSTRAINT ")
-            .Append(GuardKeywords(uniqueConstraint.Name))
+            .Append(GuardKeywords(uniqueConstraint.Name!))
             .Append(" UNIQUE ")
             .Append(clusteredPrefix)
 
             .AppendLine(" (")
-            .AppendJoin(", \r\n", uniqueConstraint.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name)}")).AppendLine() // Index column list
+            .AppendJoin(", \r\n", uniqueConstraint.SqlColumns.Select(c => $"{GuardKeywords(c.SqlColumn.Name!)}")).AppendLine() // Index column list
             .AppendLine(");");
 
         return sb.ToString();
@@ -236,7 +236,7 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
 
     public string DropTable(SqlTable table)
     {
-        return $"DROP TABLE {GetSimplifiedSchemaAndTableName(table.SchemaAndTableName)}";
+        return $"DROP TABLE {GetSimplifiedSchemaAndTableName(table.SchemaAndTableName!)}";
     }
 
     public string GenerateCreateColumn(SqlColumn column)
@@ -244,7 +244,7 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
         var type = column.Types[SqlVersion];
 
         var sb = new StringBuilder();
-        sb.Append(GuardKeywords(column.Name))
+        sb.Append(GuardKeywords(column.Name!))
             .Append(' ');
 
         sb.Append(GenerateType(type));
@@ -320,7 +320,7 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
     {
         var sb = new StringBuilder();
         sb.Append("CREATE PROCEDURE ")
-            .AppendLine(GetSimplifiedSchemaAndTableName(sp.SchemaAndSpName));
+            .AppendLine(GetSimplifiedSchemaAndTableName(sp.SchemaAndSpName!));
 
         var idx = 0;
         foreach (var p in sp.SpParameters)
@@ -331,7 +331,7 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
             sb.Append('@')
                 .Append(p.Name)
                 .Append(' ');
-            sb.Append(GenerateType(p.Type));
+            sb.Append(GenerateType(p.Type!));
         }
 
         // EXECUTE AS
@@ -347,7 +347,7 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
     {
         var sb = new StringBuilder();
         sb.Append("CREATE VIEW ")
-            .AppendLine(GetSimplifiedSchemaAndTableName(view.SchemaAndTableName));
+            .AppendLine(GetSimplifiedSchemaAndTableName(view.SchemaAndTableName!));
 
         sb.AppendLine();
         sb.AppendLine("AS");
@@ -369,6 +369,9 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
 
     public virtual SqlStatementWithParameters TableExists(SqlTable table)
     {
+        Throw.InvalidOperationExceptionIfNull(table.SchemaAndTableName);
+        Throw.InvalidOperationExceptionIfNull(table.SchemaAndTableName.Schema);
+
         return new SqlStatementWithParameters(@"
 SELECT
     CASE WHEN EXISTS(SELECT * FROM information_schema.tables WHERE table_schema = @ShemaName AND table_name = @TableName)
@@ -397,14 +400,9 @@ SELECT
         return SqlGeneratorBase.GetSimplifiedSchemaAndTableName(schemaAndTableName);
     }
 
-    public string GetSchema(SqlTable table)
+    public string? GetSchema(SqlTable table)
     {
-        return SqlGeneratorBase.GetSchema(table.SchemaAndTableName.Schema);
-    }
-
-    public virtual string GetSchema(string schema)
-    {
-        return SqlGeneratorBase.GetSchema(schema);
+        return SqlGeneratorBase.GetSchema(table);
     }
 
     public string GuardKeywords(string name)

@@ -9,6 +9,6 @@ public interface ISqlGeneratorBase
     string GuardKeywordsImplementation(string name);
     Context Context { get; }
     string GetSimplifiedSchemaAndTableName(SchemaAndTableName schemaAndTableName);
-    string GetSchema(SqlTable table);
-    string GetSchema(string schema);
+    string? GetSchema(SqlTable table);
+
 }

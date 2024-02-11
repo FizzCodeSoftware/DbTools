@@ -6,7 +6,7 @@ namespace FizzCode.DbTools.Common;
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class SqlStatementWithParameters
 {
-    public SqlStatementWithParameters(string statement, params object[] paramValues)
+    public SqlStatementWithParameters(string statement, params object?[] paramValues)
     {
         Statement = statement;
 
@@ -19,14 +19,14 @@ public class SqlStatementWithParameters
         }
     }
 
-    public SqlStatementWithParameters(string statement, Dictionary<string, object> parameters)
+    public SqlStatementWithParameters(string statement, Dictionary<string, object?> parameters)
     {
         Statement = statement;
         Parameters = parameters;
     }
 
     public string Statement { get; set; }
-    public Dictionary<string, object> Parameters { get; } = [];
+    public Dictionary<string, object?> Parameters { get; } = [];
 
     public static implicit operator SqlStatementWithParameters(string statement)
     {
