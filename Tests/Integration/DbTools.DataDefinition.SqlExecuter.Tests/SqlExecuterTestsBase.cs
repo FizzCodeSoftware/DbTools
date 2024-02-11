@@ -1,5 +1,4 @@
-﻿using FizzCode.DbTools.DataDefinition;
-using FizzCode.DbTools.TestBase;
+﻿using FizzCode.DbTools.TestBase;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 // Ensure no in-assembly parallel execution of tests (“IAP”) is happening

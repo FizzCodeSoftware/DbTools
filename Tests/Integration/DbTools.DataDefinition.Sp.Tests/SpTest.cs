@@ -22,7 +22,7 @@ public class SpTest : SpTestsBase
     public class DbWithSp : DatabaseDeclaration
     {
         public DbWithSp()
-            : base(new TestFactoryContainer(), MsSqlVersion.MsSql2016, new SqlEngineVersion[] { OracleVersion.Oracle12c })
+            : base(new TestFactoryContainer(), MsSqlVersion.MsSql2016, [OracleVersion.Oracle12c])
         {
         }
 

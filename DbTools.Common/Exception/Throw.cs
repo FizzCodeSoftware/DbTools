@@ -6,6 +6,12 @@ namespace FizzCode.DbTools.Common;
 
 public static class Throw
 {
+    public static T IfNull<T>(T? argument, [CallerArgumentExpression(nameof(argument))] string? paramName = null)
+    {
+        InvalidOperationExceptionIfNull(argument, paramName);
+        return argument;
+    }
+
     public static void InvalidOperationExceptionIfNull([NotNull] object? argument, [CallerArgumentExpression(nameof(argument))] string? paramName = null)
     {
         if (argument is null)

@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.TestBase;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

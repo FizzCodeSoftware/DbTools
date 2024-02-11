@@ -2,15 +2,10 @@
 using FizzCode.DbTools.Interfaces;
 
 namespace FizzCode.DbTools.SqlExecuter;
-public class DatabaseMigrator : DatabaseTask, IDatabaseMigrator
+public class DatabaseMigrator(ISqlStatementExecuter sqlExecuter, ISqlMigrationGenerator migrationGenerator)
+    : DatabaseTask(sqlExecuter), IDatabaseMigrator
 {
-    public DatabaseMigrator(ISqlStatementExecuter sqlExecuter, ISqlMigrationGenerator migrationGenerator)
-        : base(sqlExecuter)
-    {
-        MigrationGenerator = migrationGenerator;
-    }
-
-    protected ISqlMigrationGenerator MigrationGenerator { get; }
+    protected ISqlMigrationGenerator MigrationGenerator { get; } = migrationGenerator;
 
     public void NewTable(TableNew tableNew)
     {

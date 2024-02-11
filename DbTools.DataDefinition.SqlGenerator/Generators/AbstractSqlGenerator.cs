@@ -392,7 +392,7 @@ SELECT
 
     public string TableNotEmpty(SqlTable table)
     {
-        return $"SELECT COUNT(*) FROM (SELECT TOP 1 * FROM {GetSimplifiedSchemaAndTableName(table.SchemaAndTableName)}) t";
+        return $"SELECT COUNT(*) FROM (SELECT TOP 1 * FROM {GetSimplifiedSchemaAndTableName(table.SchemaAndTableNameSafe)}) t";
     }
 
     public string GetSimplifiedSchemaAndTableName(SchemaAndTableName schemaAndTableName)

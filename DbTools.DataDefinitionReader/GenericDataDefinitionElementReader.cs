@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using FizzCode.DbTools.Common;
 using FizzCode.DbTools.Common.Logger;
 using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 using FizzCode.DbTools.SqlExecuter;
@@ -27,7 +28,11 @@ public abstract class GenericDataDefinitionElementReader
         if (SchemaNames?.AllDefault != false)
         {
             if (Executer.Context.Settings.Options.ShouldUseDefaultSchema)
-                schemaNames.Add(Executer.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
+            {
+                schemaNames.Add(
+                    Throw.IfNull(Executer.Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"))
+                );
+            }
         }
         else if (!SchemaNames.All && SchemaNames.SchemaNames != null)
         {

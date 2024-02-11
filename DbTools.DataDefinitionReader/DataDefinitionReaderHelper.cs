@@ -9,13 +9,13 @@ public static class DataDefinitionReaderHelper
 
     public static bool SchemaAndTableNameEquals(Row row, SqlTable table)
     {
-        return row.GetAs<string>(DefaultTableNameColumn) == table.SchemaAndTableName.TableName
-            && (string.IsNullOrEmpty(table.SchemaAndTableName.Schema) || row.GetAs<string>(DefaultSchemaNameColumn) == table.SchemaAndTableName.Schema);
+        return row.GetAs<string>(DefaultTableNameColumn) == table.SchemaAndTableNameSafe.TableName
+            && (string.IsNullOrEmpty(table.SchemaAndTableNameSafe.Schema) || row.GetAs<string>(DefaultSchemaNameColumn) == table.SchemaAndTableNameSafe.Schema);
     }
 
     public static bool SchemaAndTableNameEquals(Row row, SqlTable table, string schemaNameColumn, string tableNameColumn)
     {
-        return row.GetAs<string>(tableNameColumn) == table.SchemaAndTableName.TableName
-            && (string.IsNullOrEmpty(table.SchemaAndTableName.Schema) || row.GetAs<string>(schemaNameColumn) == table.SchemaAndTableName.Schema);
+        return row.GetAs<string>(tableNameColumn) == table.SchemaAndTableNameSafe.TableName
+            && (string.IsNullOrEmpty(table.SchemaAndTableNameSafe.Schema) || row.GetAs<string>(schemaNameColumn) == table.SchemaAndTableNameSafe.Schema);
     }
 }
