@@ -83,11 +83,11 @@ public class SchemaChecker
     {
         var schemaChecks = new List<SchemaCheck>();
 
-        var selfReferencingFks = table.Properties.OfType<ForeignKey>().Where(fk => fk.SqlTable.SchemaAndTableName == fk.ReferredTable.SchemaAndTableName);
+        var selfReferencingFks = table.Properties.OfType<ForeignKey>().Where(fk => fk.SqlTable.SchemaAndTableName! == fk.ReferredTable!.SchemaAndTableName);
 
         foreach (var selfReferencingFkCandidate in selfReferencingFks)
         {
-            var pk = selfReferencingFkCandidate.ReferredTable.Properties.OfType<PrimaryKey>().FirstOrDefault();
+            var pk = selfReferencingFkCandidate.ReferredTable!.Properties.OfType<PrimaryKey>().FirstOrDefault();
             var uCs = selfReferencingFkCandidate.ReferredTable.Properties.OfType<UniqueConstraint>();
 
             var areReferencedAndReferredColumnsTheSame = false;

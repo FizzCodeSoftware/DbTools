@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using FizzCode.DbTools.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FizzCode.DbTools.TestBase;
@@ -16,7 +17,8 @@ public abstract class SqlVersionsBasAttribute : Attribute, ITestDataSource
         Versions = [];
         foreach (var versionType in versionTypes)
         {
-            var version = (SqlEngineVersion)Activator.CreateInstance(versionType);
+            var version = Activator.CreateInstance(versionType) as SqlEngineVersion;
+            Throw.InvalidOperationExceptionIfNull(version, message: $"Cannot create instance of {versionType.GetFriendlyTypeName()}.");
             if (!Versions.Contains(version))
                 Versions.Add(version);
         }

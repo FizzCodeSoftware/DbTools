@@ -39,7 +39,7 @@ public class SchemaCheckerDocumenter : DocumenterWriterBase
 
         var path = Context.DocumenterSettings?.WorkingDirectory;
 
-        Log(LogSeverity.Information, "Writing Document file {FileName} to folder {Folder}", "SchemaCheckerDocumenter", fileName, path);
+        Log(LogSeverity.Information, "Writing Document file {FileName} to folder {Folder}", "SchemaCheckerDocumenter", fileName, path ?? "");
 
         if (!string.IsNullOrEmpty(path))
         {

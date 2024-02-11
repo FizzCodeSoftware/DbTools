@@ -6,7 +6,7 @@ public abstract class SchemaCheck
     public abstract string DisplayName { get; }
     public abstract string DisplayInfo { get; }
 
-    public abstract string Schema { get; }
+    public abstract string? Schema { get; }
     public abstract string ElementName { get; }
 
     public virtual string Type => "Schema";

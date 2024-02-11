@@ -20,6 +20,6 @@ public class TableSingularNameConvention : Convention
 
     public override string DisplayInfo => $"TableName: {_schemaAndTableName.TableName}";
 
-    public override string Schema => _schemaAndTableName.Schema;
+    public override string? Schema => _schemaAndTableName.Schema;
     public override string ElementName => _schemaAndTableName.TableName;
 }

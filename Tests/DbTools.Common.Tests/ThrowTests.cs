@@ -31,4 +31,12 @@ public class ThrowTests
 
         var result = Throw.IfNull(row.GetAs<string>("ThisIsNull"));
     }
+
+    [TestMethod]
+    [ExpectedExceptionMessageStartsWith(typeof(InvalidOperationException), "nullString cannot be null. Additional message for nullString.")]
+    public void ThrowInvalidOperationExceptionIfNullWithMessage()
+    {
+        string? nullString = null;
+        Throw.InvalidOperationExceptionIfNull(nullString, message: "Additional message for nullString.");
+    }
 }
