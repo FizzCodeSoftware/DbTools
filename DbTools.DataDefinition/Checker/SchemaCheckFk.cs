@@ -7,6 +7,6 @@ public abstract class SchemaCheckFk : SchemaCheck
 
     public override string DisplayInfo => $"{ForeignKey}";
 
-    public override string Schema => ForeignKey.SqlTable.SchemaAndTableName.Schema;
-    public override string ElementName => ForeignKey.SqlTable.SchemaAndTableName.TableName;
+    public override string Schema => ForeignKey.SqlTable.SchemaAndTableNameSafe.Schema!;
+    public override string ElementName => ForeignKey.SqlTable.SchemaAndTableNameSafe.TableName;
 }

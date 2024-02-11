@@ -1,10 +1,6 @@
 ﻿using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.DataDefinition.Checker;
-public abstract class Convention : SchemaCheck
-{
-    public override string Type => "Convention";
-}
 
 public class TableSingularNameConvention : Convention
 {
@@ -20,7 +16,7 @@ public class TableSingularNameConvention : Convention
         _schemaAndTableName = schemaAndTableName;
     }
 
-    public override string DisplayName => "Table name should be singular.";
+    public override string DisplayName => "Table name should be singular";
 
     public override string DisplayInfo => $"TableName: {_schemaAndTableName.TableName}";
 

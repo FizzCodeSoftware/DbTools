@@ -69,10 +69,10 @@ public class SchemaChecker
     private IEnumerable<SchemaCheck> CheckTableSingularNameConvention(SqlTable table)
     {
         var schemaChecks = new List<SchemaCheck>();
-        if (!PluralChecker.CheckValidity(table.SchemaAndTableName.TableName))
+        if (!PluralChecker.CheckValidity(table.SchemaAndTableNameSafe.TableName))
         {
             schemaChecks.Add(
-                new TableSingularNameConvention(table.SchemaAndTableName)
+                new TableSingularNameConvention(table.SchemaAndTableNameSafe)
                 );
         }
 
