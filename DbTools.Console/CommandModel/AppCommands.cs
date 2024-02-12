@@ -287,8 +287,7 @@ internal class AppCommands
         var iLogger = SerilogConfigurator.CreateLogger(logConfiguration);
         var iOpsLogger = SerilogConfigurator.CreateOpsLogger(logConfiguration);
 
-        var consoleLogger = new ConsoleLogger();
-        consoleLogger.Init(iLogger, iOpsLogger);
+        var consoleLogger = new ConsoleLogger(iLogger, iOpsLogger);
 
         logger.LogEvent += consoleLogger.OnLog;
 

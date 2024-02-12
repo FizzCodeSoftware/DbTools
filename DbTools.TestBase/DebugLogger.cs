@@ -5,22 +5,18 @@ using Serilog;
 using Serilog.Events;
 
 namespace FizzCode.DbTools.TestBase;
-public class DebugLogger
+public class DebugLogger(ILogger logger)
 {
-    private ILogger _logger;
+    private readonly ILogger _logger = logger;
 
-    public void Init(ILogger logger)
-    {
-        _logger = logger;
-    }
-
-    public void OnLog(object sender, LogEventArgs args)
+    public void OnLog(object? sender, LogEventArgs args)
     {
         if (args.Exception != null)
             OnException(sender, args);
 
         var values = new List<object>();
-        values.AddRange(args.Arguments);
+        if(args.Arguments is not null)
+            values.AddRange(args.Arguments);
 
         _logger.Write(
             (LogEventLevel)args.Severity,
@@ -29,7 +25,7 @@ public class DebugLogger
             );
     }
 
-    private void OnException(object sender, LogEventArgs args)
+    private void OnException(object? sender, LogEventArgs args)
     {
         var opsErrors = new List<string>();
         GetOpsMessages(args.Exception, opsErrors);

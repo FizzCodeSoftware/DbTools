@@ -155,8 +155,7 @@ public static class TestHelper
 
         var iLogger = SerilogConfigurator.CreateLogger(logConfiguration);
 
-        var debugLogger = new DebugLogger();
-        debugLogger.Init(iLogger);
+        var debugLogger = new DebugLogger(iLogger);
 
         logger.LogEvent += debugLogger.OnLog;
 

@@ -5,18 +5,12 @@ using Serilog;
 using Serilog.Events;
 
 namespace FizzCode.DbTools.Console;
-public class ConsoleLogger
+public class ConsoleLogger(ILogger logger, ILogger opsLogger)
 {
-    private ILogger _logger;
-    private ILogger _opsLogger;
+    private readonly ILogger _logger = logger;
+    private readonly ILogger _opsLogger = opsLogger;
 
-    public void Init(ILogger logger, ILogger opsLogger)
-    {
-        _logger = logger;
-        _opsLogger = opsLogger;
-    }
-
-    public void OnLog(object sender, LogEventArgs args)
+    public void OnLog(object? sender, LogEventArgs args)
     {
         if (args.Exception != null)
             OnException(sender, args);
@@ -35,10 +29,10 @@ public class ConsoleLogger
             );
     }
 
-    private void OnException(object sender, LogEventArgs args)
+    private void OnException(object? sender, LogEventArgs args)
     {
         var opsErrors = new List<string>();
-        GetOpsMessages(args.Exception, opsErrors);
+        GetOpsMessages(args.Exception!, opsErrors);
         foreach (var opsError in opsErrors)
         {
             OnLog(sender, new LogEventArgs()
