@@ -13,7 +13,7 @@ public class PatternMatchingTableCustomizer : ITableCustomizer
         Patterns.Add(new PatternMatchingTableCustomizerItem(new SchemaAndTableName(patternSchema, patternTableName), new SchemaAndTableName(patternExceptSchema, patternExceptTableName), shouldSkip, category, backGroundColor));
     }
 
-    public string? BackGroundColor(SchemaAndTableName? tableName)
+    public string? BackGroundColor(SchemaAndTableName tableName)
     {
         var item = GetPatternMatching(tableName);
         return item?.BackGroundColorIfMatch;
@@ -31,39 +31,16 @@ public class PatternMatchingTableCustomizer : ITableCustomizer
         return item?.ShouldSkipIfMatch == true;
     }
 
-    public PatternMatchingTableCustomizerItem GetPatternMatching(SchemaAndTableName schemaAndTableName)
+    public PatternMatchingTableCustomizerItem? GetPatternMatching(SchemaAndTableName schemaAndTableName)
     {
-        PatternMatchingTableCustomizerItem matchingItem = null;
-        foreach (var item in Patterns)
-        {
-            var isPatternMatch = CheckMatch(schemaAndTableName, item.Pattern);
-            var isPatternExceptMatch = CheckMatch(schemaAndTableName, item.PatternExcept);
-
-            if (isPatternMatch && !isPatternExceptMatch)
-            {
-                if (IsRegex(item.Pattern.Schema) || IsRegex(item.Pattern.TableName))
-                {
-                    if (matchingItem != null)
-                        throw new ApplicationException($"Multiple patterns are matching for {schemaAndTableName.SchemaAndName}.");
-
-                    matchingItem = item;
-                }
-                else
-                {
-                    matchingItem = item;
-                    break;
-                }
-            }
-        }
-
-        return matchingItem;
+        return GetPatternMatching(schemaAndTableName, out var _);
     }
 
-    public PatternMatchingTableCustomizerItem GetPatternMatching(SchemaAndTableName schemaAndTableName, out bool isMatchWithException)
+    public PatternMatchingTableCustomizerItem? GetPatternMatching(SchemaAndTableName schemaAndTableName, out bool isMatchWithException)
     {
         isMatchWithException = false;
 
-        PatternMatchingTableCustomizerItem matchingItem = null;
+        PatternMatchingTableCustomizerItem? matchingItem = null;
         foreach (var item in Patterns)
         {
             var isPatternMatch = CheckMatch(schemaAndTableName, item.Pattern);
@@ -103,7 +80,7 @@ public class PatternMatchingTableCustomizer : ITableCustomizer
         if (schemaAndTableNamePattern.Schema is null)
             return isTableNameMatch;
 
-        var isSchemaMatch = CheckMatchRegexOrString(schemaAndTableNameActual.Schema, schemaAndTableNamePattern.Schema);
+        var isSchemaMatch = CheckMatchRegexOrString(schemaAndTableNameActual.Schema ?? "", schemaAndTableNamePattern.Schema);
 
         return isTableNameMatch && isSchemaMatch;
     }
@@ -113,9 +90,10 @@ public class PatternMatchingTableCustomizer : ITableCustomizer
         if (IsRegex(regexOrString))
         {
             var regexPattern = RegexFormFromWildCharForm(regexOrString);
-            if (regexPattern != null)
-                regexPattern = "^" + regexPattern;
+            if (regexPattern is null)
+                return false;
 
+            regexPattern = "^" + regexPattern;
             return Regex.Match(actual, regexPattern).Success;
         }
 
@@ -134,7 +112,7 @@ public class PatternMatchingTableCustomizer : ITableCustomizer
             + "$";
     }
 
-    private static bool IsRegex(string pattern)
+    private static bool IsRegex(string? pattern)
     {
         if (pattern is null)
             return false;

@@ -2,9 +2,10 @@
 
 public abstract class SqlTableOrViewPropertyBase<T> where T : SqlTableOrView
 {
-    public T SqlTableOrView { get; set; }
+    // Nullable for declaration (public SqlTableCustomProperty MyCustomProperty { get; } = new MyCustomProperty();)
+    public T? SqlTableOrView { get; set; }
 
-    protected SqlTableOrViewPropertyBase(T sqlTable)
+    protected SqlTableOrViewPropertyBase(T? sqlTable)
     {
         SqlTableOrView = sqlTable;
     }

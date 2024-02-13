@@ -7,7 +7,7 @@ using System.Linq;
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public partial class Documenter
 {
-    private void AddViews(List<KeyValuePair<string, SqlView>> _sqlViewsByCategory, List<KeyValuePair<string, SqlView>> _skippedSqlViewsByCategory, bool hasCategories)
+    private void AddViews(List<KeyValuePair<string?, SqlView>> _sqlViewsByCategory, List<KeyValuePair<string?, SqlView>> _skippedSqlViewsByCategory, bool hasCategories)
     {
         foreach (var viewKvp in _sqlViewsByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableName?.Schema).ThenBy(t => t.Value!.SchemaAndTableNameSafe.TableName))
         {

@@ -2,7 +2,7 @@
 
 public class UniqueConstraint(SqlTable sqlTable, string? name) : IndexBase<SqlTable>(sqlTable, name, true)
 {
-    public SqlTable SqlTable { get => SqlTableOrView; }
+    public SqlTable SqlTable { get => SqlTableOrView!; }
 
     public new bool Unique
     {
@@ -17,6 +17,6 @@ public class UniqueConstraint(SqlTable sqlTable, string? name) : IndexBase<SqlTa
 
     public override string ToString()
     {
-        return $"{GetColumnsInString()} on {SqlTableOrView.SchemaAndTableName}";
+        return $"{GetColumnsInString()} on {SqlTableOrView?.SchemaAndTableName}";
     }
 }

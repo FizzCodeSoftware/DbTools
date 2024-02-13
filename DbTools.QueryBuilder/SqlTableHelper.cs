@@ -12,11 +12,13 @@ public static class SqlTableHelper
         var aliasProperty = sqlTable.Properties.OfType<AliasTableProperty>().FirstOrDefault();
         if (aliasProperty is null)
         {
-            aliasProperty = new AliasTableProperty();
+            aliasProperty = new AliasTableProperty(alias);
             sqlTable.Properties.Add(aliasProperty);
         }
-
-        aliasProperty.Alias = alias;
+        else
+        { 
+            aliasProperty.Alias = alias;
+        }
     }
 
     internal static void SetAliasProperty(this SqlView sqlView, string alias)
@@ -24,11 +26,13 @@ public static class SqlTableHelper
         var aliasProperty = sqlView.Properties.OfType<AliasViewProperty>().FirstOrDefault();
         if (aliasProperty is null)
         {
-            aliasProperty = new AliasViewProperty();
+            aliasProperty = new AliasViewProperty(alias);
             sqlView.Properties.Add(aliasProperty);
         }
-
-        aliasProperty.Alias = alias;
+        else
+        { 
+            aliasProperty.Alias = alias;
+        }
     }
 
     public static string? GetAlias(this SqlTableOrView sqlTableOrView)

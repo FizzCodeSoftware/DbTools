@@ -8,15 +8,11 @@ using FizzCode.DbTools.QueryBuilder.Interfaces;
 using Microsoft.Extensions.Primitives;
 
 namespace FizzCode.DbTools.QueryBuilder;
-public class QueryBuilderSqlGeneratorBase : QueryBuilderBase, IQueryBuilder
+public class QueryBuilderSqlGeneratorBase(ISqlGeneratorBase sqlGeneratorBase)
+    : QueryBuilderBase, IQueryBuilder
 {
     protected int _level;
-    protected ISqlGeneratorBase SqlGeneratorBase { get; }
-
-    public QueryBuilderSqlGeneratorBase(ISqlGeneratorBase sqlGeneratorBase)
-    {
-        SqlGeneratorBase = sqlGeneratorBase;
-    }
+    protected ISqlGeneratorBase SqlGeneratorBase { get; } = sqlGeneratorBase;
 
     protected QueryBuilderSqlGeneratorBase CreateNewQueryBuilderSqlGenerator()
     {
@@ -51,7 +47,7 @@ public class QueryBuilderSqlGeneratorBase : QueryBuilderBase, IQueryBuilder
         sb.Append(AddJoinColumns());
         sb.AppendLine();
         sb.Append(_level, "FROM ");
-        sb.Append(SqlGeneratorBase.GetSimplifiedSchemaAndTableName(_query.Table.SchemaAndTableName));
+        sb.Append(SqlGeneratorBase.GetSimplifiedSchemaAndTableName(_query.Table.SchemaAndTableNameSafe));
         sb.Append(' ');
         sb.Append(_query.Table.GetAlias());
 
@@ -136,7 +132,7 @@ public class QueryBuilderSqlGeneratorBase : QueryBuilderBase, IQueryBuilder
                             sb.Append(" AS '");
                             if (_query.QueryColumnAliasStrategy == QueryColumnAliasStrategy.PrefixTableNameIfNeeded)
                             {
-                                sb.Append(SqlGeneratorBase.GetSimplifiedSchemaAndTableName(queryElement.Table.SchemaAndTableName));
+                                sb.Append(SqlGeneratorBase.GetSimplifiedSchemaAndTableName(queryElement.Table.SchemaAndTableNameSafe));
                             }
                             else // PrefixTableAliasIfNeeded
                             {
@@ -151,7 +147,7 @@ public class QueryBuilderSqlGeneratorBase : QueryBuilderBase, IQueryBuilder
                     else if (_query.QueryColumnAliasStrategy == QueryColumnAliasStrategy.PrefixTableNameAlways)
                     {
                         sb.Append(" AS '");
-                        sb.Append(SqlGeneratorBase.GetSimplifiedSchemaAndTableName(queryElement.Table.SchemaAndTableName));
+                        sb.Append(SqlGeneratorBase.GetSimplifiedSchemaAndTableName(queryElement.Table.SchemaAndTableNameSafe));
                         sb.Append(column.Value);
                         sb.Append('\'');
                     }
@@ -175,11 +171,13 @@ public class QueryBuilderSqlGeneratorBase : QueryBuilderBase, IQueryBuilder
     {
         var sb = new StringBuilder();
 
-        var queryTableProperties = (_query.Table as SqlTable).Properties;
+        var queryTableProperties = (_query.Table as SqlTable)?.Properties;
 
         if (join.ColumnSource == null && join.ColumnTarget is null)
         { // auto build JOIN ON
-            var fk = queryTableProperties.OfType<ForeignKey>().First(fk => fk.ForeignKeyColumns[0].ReferredColumn.Table.SchemaAndTableName == join.Table.SchemaAndTableName);
+            var fk = queryTableProperties?.OfType<ForeignKey>().First(fk => fk.ForeignKeyColumns[0].ReferredColumn.Table.SchemaAndTableName == join.Table.SchemaAndTableName);
+
+            Throw.InvalidOperationExceptionIfNull(fk, message: $"Cannot find ForeignKey for {join.Table} on {_query.Table}.");
 
             foreach (var fkm in fk.ForeignKeyColumns)
             {
@@ -204,8 +202,8 @@ public class QueryBuilderSqlGeneratorBase : QueryBuilderBase, IQueryBuilder
         }
         else if (join.ColumnSource == null && join.ColumnTarget != null)
         {
-            var joinTableProperties = (join.Table as SqlTable).Properties;
-            var pk = joinTableProperties.OfType<PrimaryKey>().FirstOrDefault();
+            var joinTableProperties = (join.Table as SqlTable)?.Properties;
+            var pk = joinTableProperties?.OfType<PrimaryKey>().FirstOrDefault();
             if (pk is null)
                 throw new ArgumentException($"Target Join table has no Primary Key. Table: {join.Table.SchemaAndTableName}, source column: {join.ColumnSource}.");
 
@@ -224,7 +222,7 @@ public class QueryBuilderSqlGeneratorBase : QueryBuilderBase, IQueryBuilder
         }
         else if (join.ColumnSource != null && join.ColumnTarget is null)
         {
-            var pk = queryTableProperties.OfType<PrimaryKey>().FirstOrDefault();
+            var pk = queryTableProperties?.OfType<PrimaryKey>().FirstOrDefault();
             if (pk is null)
                 throw new ArgumentException($"Target Join table has no Primary Key. Table: {join.Table.SchemaAndTableName}, source column: {join.ColumnSource}.");
 
@@ -250,13 +248,13 @@ public class QueryBuilderSqlGeneratorBase : QueryBuilderBase, IQueryBuilder
         if (!string.IsNullOrEmpty(_query.WhereExpression))
             return "\r\n" + StringBuilderExtensions.Spaces(_level) + "WHERE " + _query.WhereExpression;
 
-        return null;
+        return string.Empty;
     }
 
     protected string AddGroupBy(QueryElement queryElement)
     {
         if (_query.GroupByColumns.Count == 0)
-            return null;
+            return string.Empty;
 
         var sb = new StringBuilder();
 
@@ -289,7 +287,7 @@ public class QueryBuilderSqlGeneratorBase : QueryBuilderBase, IQueryBuilder
     private string AddFilters()
     {
         if (_query.Filters.Count == 0)
-            return null;
+            return string.Empty;
 
         var sb = new StringBuilder();
 
@@ -338,7 +336,7 @@ public class QueryBuilderSqlGeneratorBase : QueryBuilderBase, IQueryBuilder
         else
         {
             sb.Append(' ')
-                .Append(SqlGeneratorBase.GetSimplifiedSchemaAndTableName(join.Table.SchemaAndTableName))
+                .Append(SqlGeneratorBase.GetSimplifiedSchemaAndTableName(join.Table.SchemaAndTableNameSafe))
                 .Append(' ')
                 .Append(join.Table.GetAlias());
         }

@@ -50,7 +50,7 @@ public static class IndexHelper
         return table;
     }
 
-    public static SqlTable AddIndex(this SqlTable table, string[] columnNames, string[] includeColumns, bool unique = false, string indexName = null)
+    public static SqlTable AddIndex(this SqlTable table, string[] columnNames, string[] includeColumns, bool unique = false, string? indexName = null)
     {
         var index = new Index(table, indexName, unique);
 

@@ -185,23 +185,23 @@ public class DatabaseDefinitionCircularFKDetectionTests
         var aCFK = a.Properties.OfType<CircularFK>().First();
         var bCFK = b.Properties.OfType<CircularFK>().First();
 
-        Assert.AreEqual("A", aCFK.SqlTable.SchemaAndTableName.TableName);
-        Assert.AreEqual("B", bCFK.SqlTable.SchemaAndTableName.TableName);
+        Assert.AreEqual("A", aCFK.SqlTable.SchemaAndTableName!.TableName);
+        Assert.AreEqual("B", bCFK.SqlTable.SchemaAndTableName!.TableName);
 
         Assert.AreEqual(2, aCFK.ForeignKeyChain.Count);
         Assert.AreEqual(2, bCFK.ForeignKeyChain.Count);
 
-        Assert.AreEqual("A", aCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName.TableName);
-        Assert.AreEqual("B", aCFK.ForeignKeyChain.First().ReferredTable.SchemaAndTableName.TableName);
+        Assert.AreEqual("A", aCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName!.TableName);
+        Assert.AreEqual("B", aCFK.ForeignKeyChain.First().ReferredTable!.SchemaAndTableName!.TableName);
 
-        Assert.AreEqual("B", aCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName.TableName);
-        Assert.AreEqual("A", aCFK.ForeignKeyChain.Last().ReferredTable.SchemaAndTableName.TableName);
+        Assert.AreEqual("B", aCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName!.TableName);
+        Assert.AreEqual("A", aCFK.ForeignKeyChain.Last().ReferredTable!.SchemaAndTableName!.TableName);
 
-        Assert.AreEqual("B", bCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName.TableName);
-        Assert.AreEqual("A", bCFK.ForeignKeyChain.First().ReferredTable.SchemaAndTableName.TableName);
+        Assert.AreEqual("B", bCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName!.TableName);
+        Assert.AreEqual("A", bCFK.ForeignKeyChain.First().ReferredTable!.SchemaAndTableName!.TableName);
 
-        Assert.AreEqual("A", bCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName.TableName);
-        Assert.AreEqual("B", bCFK.ForeignKeyChain.Last().ReferredTable.SchemaAndTableName.TableName);
+        Assert.AreEqual("A", bCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName!.TableName);
+        Assert.AreEqual("B", bCFK.ForeignKeyChain.Last().ReferredTable!.SchemaAndTableName!.TableName);
     }
 
     [TestMethod]
@@ -217,22 +217,22 @@ public class DatabaseDefinitionCircularFKDetectionTests
         var bCFK = b.Properties.OfType<CircularFK>().First();
         var cCFK = c.Properties.OfType<CircularFK>().First();
 
-        Assert.AreEqual("A", aCFK.SqlTable.SchemaAndTableName.TableName);
-        Assert.AreEqual("B", bCFK.SqlTable.SchemaAndTableName.TableName);
-        Assert.AreEqual("C", cCFK.SqlTable.SchemaAndTableName.TableName);
+        Assert.AreEqual("A", aCFK.SqlTable.SchemaAndTableName!.TableName);
+        Assert.AreEqual("B", bCFK.SqlTable.SchemaAndTableName!.TableName);
+        Assert.AreEqual("C", cCFK.SqlTable.SchemaAndTableName!.TableName);
 
         Assert.AreEqual(3, aCFK.ForeignKeyChain.Count);
         Assert.AreEqual(3, bCFK.ForeignKeyChain.Count);
         Assert.AreEqual(3, cCFK.ForeignKeyChain.Count);
 
-        Assert.AreEqual("A", aCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName.TableName);
-        Assert.AreEqual("C", aCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName.TableName);
+        Assert.AreEqual("A", aCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName!.TableName);
+        Assert.AreEqual("C", aCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName!.TableName);
 
-        Assert.AreEqual("B", bCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName.TableName);
-        Assert.AreEqual("A", bCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName.TableName);
+        Assert.AreEqual("B", bCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName!.TableName);
+        Assert.AreEqual("A", bCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName!.TableName);
 
-        Assert.AreEqual("C", cCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName.TableName);
-        Assert.AreEqual("B", cCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName.TableName);
+        Assert.AreEqual("C", cCFK.ForeignKeyChain.First().SqlTable.SchemaAndTableName!.TableName);
+        Assert.AreEqual("B", cCFK.ForeignKeyChain.Last().SqlTable.SchemaAndTableName!.TableName);
     }
 
     [TestMethod]
@@ -244,11 +244,11 @@ public class DatabaseDefinitionCircularFKDetectionTests
         var cfk = company.Properties.OfType<CircularFK>().First();
 
         Assert.AreEqual(1, cfk.ForeignKeyChain.Count);
-        Assert.AreEqual("Company", cfk.ForeignKeyChain.First().SqlTable.SchemaAndTableName.TableName);
+        Assert.AreEqual("Company", cfk.ForeignKeyChain.First().SqlTable.SchemaAndTableName!.TableName);
 
         var fk = company.Properties.OfType<ForeignKey>().First();
 
-        Assert.AreEqual("Company", fk.ReferredTable.SchemaAndTableName.TableName);
+        Assert.AreEqual("Company", fk.ReferredTable!.SchemaAndTableName!.TableName);
     }
 }
 #pragma warning restore RCS1077 // Optimize LINQ method call.

@@ -6,6 +6,7 @@ public class QueryColumn
 {
     public QueryColumn()
     {
+        Value = string.Empty;
     }
 
     public QueryColumn(QueryColumn column, string @as)
@@ -22,17 +23,17 @@ public class QueryColumn
         As = alias;
     }
 
-    public string Value { get; set; }
+    public string Value { get; init; }
 
     /// <summary>
     /// The name of the column, if different from Value (ex. ou.OrgUnitId AS 'MyId').
     /// </summary>
-    public string As { get; set; }
+    public string? As { get; set; }
 
     /// <summary>
     /// The alias for the table.
     /// </summary>
-    public string Alias { get; set; }
+    public string? Alias { get; set; }
 
     public bool IsDbColumn { get; set; }
 
@@ -40,7 +41,7 @@ public class QueryColumn
     {
         var queryColumn = new QueryColumn
         {
-            Value = column.Name,
+            Value = column.Name!,
             IsDbColumn = true,
         };
 
@@ -55,7 +56,7 @@ public class QueryColumn
     {
         var queryColumn = new QueryColumn
         {
-            Value = column.Name,
+            Value = column.Name!,
             IsDbColumn = true,
         };
 

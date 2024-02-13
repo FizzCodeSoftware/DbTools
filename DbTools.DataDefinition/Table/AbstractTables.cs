@@ -15,7 +15,7 @@ public abstract class AbstractTables<T> : ICollection<T> where T: SqlTableOrView
 
     public void Add(T item)
     {
-        byName.Add(item.SchemaAndTableName.SchemaAndName, item);
+        byName.Add(item.SchemaAndTableName!.SchemaAndName, item);
     }
 
     public void Clear()
@@ -48,7 +48,7 @@ public abstract class AbstractTables<T> : ICollection<T> where T: SqlTableOrView
     public bool Remove(T item)
     {
         _sorted.RemoveAt(_sorted.IndexOfValue(item));
-        return byName.Remove(item.SchemaAndTableName.SchemaAndName);
+        return byName.Remove(item.SchemaAndTableName!.SchemaAndName);
     }
 
     IEnumerator IEnumerable.GetEnumerator()

@@ -37,12 +37,12 @@ public static class CircularFKDetector
         visitedFks.Add(fk);
         visitedTables.Add(fk.SqlTable);
 
-        if (visitedTables.Contains(fk.ReferredTable))
+        if (visitedTables.Contains(fk.ReferredTable!))
         {
             return true;
         }
 
-        var nextFKs = fk.ReferredTable.Properties.OfType<ForeignKey>().ToList();
+        var nextFKs = fk.ReferredTable!.Properties.OfType<ForeignKey>().ToList();
 
         var any = false;
         foreach (var nextFk in nextFKs)

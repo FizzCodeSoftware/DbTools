@@ -160,7 +160,24 @@ public class PatternMatchingTableCustomizerTests
 
         var db = new TestDatabaseFks();
         var patternMatching = PatternMatchingTableCustomizerFromPatterns.FromCsv("TestDatabaseFks", null);
-        var documenter = new Documenter(DocumenterTestsHelper.CreateTestDocumenterContext(GenericVersion.Generic1, patternMatching), GenericVersion.Generic1, "TestDatabaseFks");
+        var documenter = new Documenter(DocumenterTestsHelper.CreateTestDocumenterContext(GenericVersion.Generic1, patternMatching), GenericVersion.Generic1, "TestDatabaseFks", "TestDatabaseFks_TableCustomizerFromCsv.xlsx");
+        documenter.Document(db);
+    }
+
+    [TestMethod]
+    public void TableCustomizerFromCsvNocategory()
+    {
+        using (var file =
+        new StreamWriter("TestDatabaseFks.DbTools.Patterns.csv"))
+        {
+            file.WriteLine("PatternSchema;PatternTableName;PatternExceptSchema;PatternExceptTableName;ShouldSkipIfMatch;CategoryIfMatch;BackGroundColorIfMatch");
+            file.WriteLine(";Parent;;;0;Parent;606060");
+            file.WriteLine(";Child;;;1");
+        }
+
+        var db = new TestDatabaseFks();
+        var patternMatching = PatternMatchingTableCustomizerFromPatterns.FromCsv("TestDatabaseFks", null);
+        var documenter = new Documenter(DocumenterTestsHelper.CreateTestDocumenterContext(GenericVersion.Generic1, patternMatching), GenericVersion.Generic1, "TestDatabaseFks", "TestDatabaseFks_TableCustomizerFromCsvNocategory.xlsx");
         documenter.Document(db);
     }
 

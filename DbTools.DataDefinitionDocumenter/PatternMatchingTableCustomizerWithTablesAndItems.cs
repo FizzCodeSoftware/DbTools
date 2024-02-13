@@ -13,7 +13,7 @@ public class PatternMatchingTableCustomizerWithTablesAndItems(PatternMatchingTab
 
     public PatternMatchingTableCustomizer PatternMatchingTableCustomizer { get; } = patternMatchingTableCustomizer;
 
-    protected PatternMatchingTableCustomizerItem GetPatternMatching(SchemaAndTableName schemaAndTableName)
+    protected PatternMatchingTableCustomizerItem? GetPatternMatching(SchemaAndTableName schemaAndTableName)
     {
         var item = PatternMatchingTableCustomizer.GetPatternMatching(schemaAndTableName, out var isMatchWithException);
 
@@ -34,11 +34,11 @@ public class PatternMatchingTableCustomizerWithTablesAndItems(PatternMatchingTab
 
         if (isMatchWithException)
         {
-            if (!MatchTablesWithException.ContainsKey(item))
-                MatchTablesWithException.Add(item, []);
+            if (!MatchTablesWithException.ContainsKey(item!))
+                MatchTablesWithException.Add(item!, []);
 
-            if (!MatchTablesWithException[item].Contains(schemaAndTableName))
-                MatchTablesWithException[item].Add(schemaAndTableName);
+            if (!MatchTablesWithException[item!].Contains(schemaAndTableName))
+                MatchTablesWithException[item!].Add(schemaAndTableName);
         }
 
         return item;

@@ -7,6 +7,7 @@ using FizzCode.DbTools.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FizzCode.DbTools.TestBase;
+
 public static class AssertRow
 {
     public static void AreEqual(Row expected, Row actual, SqlEngineVersion version)

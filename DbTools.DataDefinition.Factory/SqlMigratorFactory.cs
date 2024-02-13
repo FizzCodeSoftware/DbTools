@@ -1,4 +1,5 @@
-﻿using FizzCode.DbTools.Factory.Interfaces;
+﻿using FizzCode.DbTools.Common;
+using FizzCode.DbTools.Factory.Interfaces;
 using FizzCode.DbTools.Interfaces;
 using FizzCode.DbTools.SqlExecuter;
 using FizzCode.LightWeight;
@@ -17,7 +18,7 @@ public class SqlMigratorFactory : ISqlMigratorFactory
 
     public IDatabaseMigrator FromConnectionStringSettings(NamedConnectionString connectionString)
     {
-        var sqlEngineVersion = connectionString.GetSqlEngineVersion();
+        var sqlEngineVersion = Throw.IfNull(connectionString.GetSqlEngineVersion());
 
         var migrationGenerator = _sqlMigrationGeneratorFactory.CreateMigrationGenerator(sqlEngineVersion);
         var executer = _sqlExecuterFactory.CreateSqlExecuter(connectionString);

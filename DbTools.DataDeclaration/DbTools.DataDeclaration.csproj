@@ -1,19 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFramework>net8.0</TargetFramework>
-	<PackageId>FizzCode.DbTools.DataDeclaration</PackageId>
-	<Authors>FizzCode Ltd.</Authors>
-	<Product>FizzCode DbTools</Product>
-	<Description>Database declaration for Fizzcode DbTools project</Description>
-	<Copyright>Copyright © 2019-2024 FizzCode Ltd.</Copyright>
-	<RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
-	<Platforms>AnyCPU</Platforms>
-	<CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
-	<AssemblyName>FizzCode.DbTools.DataDeclaration</AssemblyName>
-	<RootNamespace>FizzCode.DbTools.DataDeclaration</RootNamespace>
-	<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	<NoWarn>CS1591</NoWarn>
+	  <TargetFramework>net8.0</TargetFramework>
+	  <PackageId>FizzCode.DbTools.DataDeclaration</PackageId>
+	  <Authors>FizzCode Ltd.</Authors>
+	  <Product>FizzCode DbTools</Product>
+	  <Description>Database declaration for Fizzcode DbTools project</Description>
+	  <Copyright>Copyright © 2019-2024 FizzCode Ltd.</Copyright>
+	  <RepositoryUrl>https://github.com/FizzcodeSoftware/DbTools</RepositoryUrl>
+	  <Platforms>AnyCPU</Platforms>
+	  <CodeAnalysisRuleSet>..\FizzCode.ruleset</CodeAnalysisRuleSet>
+	  <AssemblyName>FizzCode.DbTools.DataDeclaration</AssemblyName>
+	  <RootNamespace>FizzCode.DbTools.DataDeclaration</RootNamespace>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	  <NoWarn>CS1591</NoWarn>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>

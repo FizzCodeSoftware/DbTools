@@ -8,7 +8,7 @@ using System.Linq;
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public partial class Documenter
 {
-    private void AddTables(List<KeyValuePair<string, SqlTable>> _sqlTablesByCategory, List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategory, bool hasCategories)
+    private void AddTables(List<KeyValuePair<string?, SqlTable>> _sqlTablesByCategory, List<KeyValuePair<string?, SqlTable>> _skippedSqlTablesByCategory, bool hasCategories)
     {
         foreach (var tableKvp in _sqlTablesByCategory.OrderBy(kvp => kvp.Key).ThenBy(t => t.Value.SchemaAndTableNameSafe.Schema).ThenBy(t => t.Value.SchemaAndTableNameSafe.TableName))
         {
@@ -36,7 +36,7 @@ public partial class Documenter
         }
     }
 
-    protected void AddTableDetails(string category, SqlTable table, bool hasCategories)
+    protected void AddTableDetails(string? category, SqlTable table, bool hasCategories)
     {
         var pks = table.Properties.OfType<PrimaryKey>().ToList();
 

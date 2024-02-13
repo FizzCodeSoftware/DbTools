@@ -19,7 +19,7 @@ public abstract class DocumenterBase
         Helper = new DocumenterHelper(context.Settings);
     }
 
-    protected void Log(LogSeverity severity, string text, params object[] args)
+    protected void Log(LogSeverity severity, string text, params object?[] args)
     {
         Context.Logger.Log(severity, text, args);
     }

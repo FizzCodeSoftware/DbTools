@@ -5,7 +5,7 @@ public class Logger
 {
     public EventHandler<LogEventArgs>? LogEvent { get; set; }
 
-    public void Log(LogSeverity severity, string text, params object[] args)
+    public void Log(LogSeverity severity, string text, params object?[] args)
     {
         LogEvent?.Invoke(this, new LogEventArgs()
         {
@@ -15,7 +15,7 @@ public class Logger
         });
     }
 
-    public void LogOps(LogSeverity severity, string text, params object[] args)
+    public void LogOps(LogSeverity severity, string text, params object?[] args)
     {
         LogEvent?.Invoke(this, new LogEventArgs()
         {

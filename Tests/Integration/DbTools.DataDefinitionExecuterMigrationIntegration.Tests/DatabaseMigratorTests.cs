@@ -145,7 +145,10 @@ public class DatabaseMigratorTests : DatabaseMigratorTestsBase
     {
         var dds = Table_Remove_Dds(version);
         var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
+
+        Assert.IsInstanceOfType<TableDelete>(changes[0]);
         var first = changes[0] as TableDelete;
+        Assert.IsNotNull(first);
         databaseMigrator.DeleteTable(first);
     }
 
@@ -218,7 +221,9 @@ public class DatabaseMigratorTests : DatabaseMigratorTestsBase
     {
         var dds = Column_Remove_Dds(version);
         var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
+        Assert.IsInstanceOfType<ColumnDelete>(changes[0]);
         var first = changes[0] as ColumnDelete;
+        Assert.IsNotNull(first);
         databaseMigrator.DeleteColumns(first);
     }
 

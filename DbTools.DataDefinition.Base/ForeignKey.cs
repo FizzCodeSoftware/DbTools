@@ -10,7 +10,7 @@ public class ForeignKey(SqlTable table, SqlTable? referredTable, string? name)
 
     public SqlTable? ReferredTable { get; } = referredTable;
 
-    public SqlTable SqlTable { get => SqlTableOrView; }
+    public SqlTable SqlTable { get => SqlTableOrView!; }
 
     public override string ToString()
     {
