@@ -51,7 +51,7 @@ public class DatabaseMigratorTests : DatabaseMigratorTestsBase
         /* var databaseMigrator = */
         ProcessAndGetMigrator(version, dds, out var changes);
 
-        var _ = changes[0] as ForeignKeyDelete;
+        var _ = Assert.That.CheckAndReturnInstanceOfType<ForeignKeyDelete>(changes[0]);
 
         // TODO remove FK
         // databaseMigrator.
@@ -135,7 +135,7 @@ public class DatabaseMigratorTests : DatabaseMigratorTestsBase
     {
         var dds = Table_Add_Dds(version);
         var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
-        var first = changes[0] as TableNew;
+        var first = Assert.That.CheckAndReturnInstanceOfType<TableNew>(changes[0]);
         databaseMigrator.NewTable(first);
     }
 
@@ -160,7 +160,7 @@ public class DatabaseMigratorTests : DatabaseMigratorTestsBase
 
         var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
 
-        var primaryKeyNew = changes[0] as PrimaryKeyNew;
+        var primaryKeyNew = Assert.That.CheckAndReturnInstanceOfType<PrimaryKeyNew>(changes[0]);
         databaseMigrator.NewPrimaryKey(primaryKeyNew);
 
         var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], SchemaNamesToRead.ToSchemaNames(dds.Original.GetSchemaNames()));
@@ -221,9 +221,13 @@ public class DatabaseMigratorTests : DatabaseMigratorTestsBase
     {
         var dds = Column_Remove_Dds(version);
         var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
+
+        /*ColumnDelete? x = null;
+        Assert.IsInstanceOfType<ColumnDelete>(x);*/
+
         Assert.IsInstanceOfType<ColumnDelete>(changes[0]);
-        var first = changes[0] as ColumnDelete;
-        Assert.IsNotNull(first);
+        var first = Assert.That.CheckAndReturnInstanceOfType<ColumnDelete>(changes[0]);
+
         databaseMigrator.DeleteColumns(first);
     }
 
@@ -273,7 +277,7 @@ public class DatabaseMigratorTests : DatabaseMigratorTestsBase
     {
         var dds = Column_Add_Dds(version);
         var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
-        var first = changes[0] as ColumnNew;
+        var first = Assert.That.CheckAndReturnInstanceOfType<ColumnNew>(changes[0]);
         databaseMigrator.CreateColumns(first);
     }
 
@@ -295,7 +299,8 @@ public class DatabaseMigratorTests : DatabaseMigratorTestsBase
 
         var dds = Column_Change_Length_Dds(version);
         var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
-        var first = changes[0] as ColumnChange;
+        var first = Assert.That.CheckAndReturnInstanceOfType<ColumnChange>(changes[0]);
+        
         databaseMigrator.ChangeColumns(first);
     }
 
@@ -305,7 +310,8 @@ public class DatabaseMigratorTests : DatabaseMigratorTestsBase
     {
         var dds = Column_Change_Nullable_Dds(version);
         var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
-        var first = changes[0] as ColumnChange;
+        var first = Assert.That.CheckAndReturnInstanceOfType<ColumnChange>(changes[0]);
+
         databaseMigrator.ChangeColumns(first);
     }
 
@@ -366,7 +372,7 @@ public class DatabaseMigratorTests : DatabaseMigratorTestsBase
     {
         var dds = Column_Change_DbType_Dds(version);
         var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
-        var first = changes[0] as ColumnChange;
+        var first = Assert.That.CheckAndReturnInstanceOfType<ColumnChange>(changes[0]);
         databaseMigrator.ChangeColumns(first);
     }
 
@@ -376,7 +382,7 @@ public class DatabaseMigratorTests : DatabaseMigratorTestsBase
     {
         var dds = Column_Change_DbTypeAndLengthAndIsNullable_Dds(version);
         var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
-        var first = changes[0] as ColumnChange;
+        var first = Assert.That.CheckAndReturnInstanceOfType<ColumnChange>(changes[0]);
         databaseMigrator.ChangeColumns(first);
     }
 

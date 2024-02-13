@@ -1,27 +1,17 @@
 ﻿using System;
-using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
-public class PatternMatchingTableCustomizerItem
+public class PatternMatchingTableCustomizerItem(SchemaAndTableNamePattern? pattern, SchemaAndTableNamePattern? patternExcept, bool shouldSkip, string? category, string? backGroundColor)
 {
-    public PatternMatchingTableCustomizerItem(SchemaAndTableName pattern, SchemaAndTableName patternExcept, bool shouldSkip, string category, string backGroundColor)
-    {
-        Pattern = pattern;
-        ShouldSkipIfMatch = shouldSkip;
-        CategoryIfMatch = category;
-        BackGroundColorIfMatch = backGroundColor;
-        PatternExcept = patternExcept;
-    }
+    public SchemaAndTableNamePattern? Pattern { get; set; } = pattern;
 
-    public SchemaAndTableName Pattern { get; set; }
+    public SchemaAndTableNamePattern? PatternExcept { get; set; } = patternExcept;
 
-    public SchemaAndTableName PatternExcept { get; set; }
+    public bool ShouldSkipIfMatch { get; set; } = shouldSkip;
 
-    public bool ShouldSkipIfMatch { get; set; }
+    public string? CategoryIfMatch { get; set; } = category;
 
-    public string CategoryIfMatch { get; set; }
-
-    public string BackGroundColorIfMatch { get; set; }
+    public string? BackGroundColorIfMatch { get; set; } = backGroundColor;
 
     public override string ToString()
     {
@@ -33,8 +23,8 @@ public class PatternMatchingTableCustomizerItem
         if (obj is not PatternMatchingTableCustomizerItem item)
             return false;
 
-        return ((item.Pattern == null && Pattern is null) || item.Pattern.Equals(Pattern))
-            && ((item.PatternExcept == null && PatternExcept is null) || item.PatternExcept.Equals(PatternExcept))
+        return ((item.Pattern == null && Pattern is null) || (item.Pattern is not null && item.Pattern.Equals(Pattern))
+            && ((item.PatternExcept == null && PatternExcept is null) || (item.PatternExcept is not null && item.PatternExcept.Equals(PatternExcept))))
             && item.ShouldSkipIfMatch == ShouldSkipIfMatch
             && item.CategoryIfMatch == CategoryIfMatch
             && item.BackGroundColorIfMatch == BackGroundColorIfMatch;

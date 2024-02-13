@@ -421,7 +421,7 @@ internal class AppCommands
         [Option('f', "flags")]
         List<string> flags)
     {
-        var versionOriginal = SqlEngineVersions.GetVersion(sqlTypeOriginal);
+        var versionOriginal = Throw.IfNull(SqlEngineVersions.GetVersion(sqlTypeOriginal));
 
         var contextOriginal = CreateContext(versionOriginal);
 
@@ -447,7 +447,7 @@ internal class AppCommands
         if (flags != null)
             SetSettingsFromFlags(flags, changeDocumenterContext.DocumenterSettings);
 
-        var versionNew = SqlEngineVersions.GetVersion(sqlTypeNew);
+        var versionNew = Throw.IfNull(SqlEngineVersions.GetVersion(sqlTypeNew));
 
         var contextNew = CreateContext(versionNew);
 

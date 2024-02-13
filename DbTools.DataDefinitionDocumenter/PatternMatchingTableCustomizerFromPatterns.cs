@@ -4,7 +4,7 @@ using System.IO;
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public static class PatternMatchingTableCustomizerFromPatterns
 {
-    public static PatternMatchingTableCustomizer FromCsv(string fileName, DocumenterSettings documenterSettings)
+    public static PatternMatchingTableCustomizer? FromCsv(string fileName, DocumenterSettings? documenterSettings)
     {
         var customizer = new PatternMatchingTableCustomizer();
 
@@ -25,14 +25,15 @@ public static class PatternMatchingTableCustomizerFromPatterns
             while (!reader.EndOfStream)
             {
                 var line = reader.ReadLine();
-                ProcessPatternContentLine(customizer, line);
+                if (line is not null)
+                    ProcessPatternContentLine(customizer, line);
             }
         }
 
         return customizer;
     }
 
-    private static string EmptyStringAsNull(string value)
+    private static string? EmptyStringAsNull(string value)
     {
         return value.Length == 0 ? null : value;
     }
@@ -46,8 +47,8 @@ public static class PatternMatchingTableCustomizerFromPatterns
         var patternExceptSchema = EmptyStringAsNull(values[2]);
         var patternExceptTableName = EmptyStringAsNull(values[3]);
         var shouldSkip = values[4] != "0";
-        string category = null;
-        string backgroundColor = null;
+        string? category = null;
+        string? backgroundColor = null;
 
         if (values.Length >= 6)
             category = values[5];

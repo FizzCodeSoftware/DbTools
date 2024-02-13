@@ -10,7 +10,7 @@ namespace FizzCode.DbTools.TestBase;
 
 public static class AssertRow
 {
-    public static void AreEqual(Row expected, Row actual, SqlEngineVersion version)
+    public static void AreEqual(Row expected, Row actual, SqlEngineVersion? version)
     {
         if (!Compare(expected, actual, version, out var message))
         { 
@@ -18,7 +18,7 @@ public static class AssertRow
         }
     }
 
-    public static bool Compare(Row expected, Row actual, SqlEngineVersion version, out string message)
+    public static bool Compare(Row expected, Row actual, SqlEngineVersion? version, out string message)
     {
         var sb = new StringBuilder("First difference is on row number ");
 
@@ -44,7 +44,8 @@ public static class AssertRow
                 bool isNotEqual;
 
 #pragma warning disable IDE0045 // Convert to conditional expression
-                if (version is SqLiteVersion
+                if (version is not null
+                    && version is SqLiteVersion
                     && expectedValue.GetType() != actualValue.GetType())
                 {
                     isNotEqual = !expectedValue.Equals(Convert.ChangeType(actualValue, expectedValue.GetType()));
@@ -80,7 +81,7 @@ public static class AssertRow
 
         if (isEqualSoFar && missingKeys.Count == 0 && additionalKeys.Count == 0)
         {
-            message = null;
+            message = string.Empty;
             return true;
         }
 

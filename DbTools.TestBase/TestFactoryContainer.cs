@@ -6,7 +6,6 @@ using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 using FizzCode.DbTools.DataDefinition.Factory;
 using FizzCode.DbTools.Factory.Interfaces;
 using FizzCode.DbTools.QueryBuilder;
-using Google.Protobuf.Compiler;
 
 namespace FizzCode.DbTools.TestBase;
 public class TestFactoryContainer : IFactoryContainer

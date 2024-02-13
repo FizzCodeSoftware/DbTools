@@ -4,13 +4,19 @@ using System.Text.RegularExpressions;
 using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
+
+public class SchemaAndTableNamePattern(string? schema, string? tableName) : SchemaAndTableName(schema, string.Empty)
+{
+    public new string? TableName { get; } = tableName;
+}
+
 public class PatternMatchingTableCustomizer : ITableCustomizer
 {
     public List<PatternMatchingTableCustomizerItem> Patterns { get; } = [];
 
-    public void AddPattern(string patternSchema, string patternTableName, string patternExceptSchema, string patternExceptTableName, bool shouldSkip, string category, string backGroundColor)
+    public void AddPattern(string? patternSchema, string? patternTableName, string? patternExceptSchema, string? patternExceptTableName, bool shouldSkip, string? category, string? backGroundColor)
     {
-        Patterns.Add(new PatternMatchingTableCustomizerItem(new SchemaAndTableName(patternSchema, patternTableName), new SchemaAndTableName(patternExceptSchema, patternExceptTableName), shouldSkip, category, backGroundColor));
+        Patterns.Add(new PatternMatchingTableCustomizerItem(new SchemaAndTableNamePattern(patternSchema, patternTableName), new SchemaAndTableNamePattern(patternExceptSchema, patternExceptTableName), shouldSkip, category, backGroundColor));
     }
 
     public string? BackGroundColor(SchemaAndTableName tableName)
@@ -51,7 +57,8 @@ public class PatternMatchingTableCustomizer : ITableCustomizer
 
             if (isPatternMatch && !isPatternExceptMatch)
             {
-                if (IsRegex(item.Pattern.Schema) || IsRegex(item.Pattern.TableName))
+                if (item.Pattern is not null
+                    && (IsRegex(item.Pattern.Schema) || IsRegex(item.Pattern.TableName)))
                 {
                     if (matchingItem != null)
                         throw new ApplicationException($"Multiple patterns are matching for {schemaAndTableName.SchemaAndName}.");
@@ -69,8 +76,11 @@ public class PatternMatchingTableCustomizer : ITableCustomizer
         return matchingItem;
     }
 
-    private static bool CheckMatch(SchemaAndTableName schemaAndTableNameActual, SchemaAndTableName schemaAndTableNamePattern)
+    private static bool CheckMatch(SchemaAndTableName schemaAndTableNameActual, SchemaAndTableNamePattern? schemaAndTableNamePattern)
     {
+        if (schemaAndTableNamePattern is null)
+            return false;
+
         if (schemaAndTableNamePattern.TableName == null && schemaAndTableNamePattern.Schema is null)
             return false;
 

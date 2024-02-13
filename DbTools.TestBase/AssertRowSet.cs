@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace FizzCode.DbTools.TestBase;
 public static class AssertRowSet
 {
-    public static void AreEqual(RowSet expected, RowSet actual, SqlEngineVersion version)
+    public static void AreEqual(RowSet expected, RowSet actual, SqlEngineVersion? version)
     {
         var sb = new StringBuilder();
         var isEqual = true;

@@ -23,4 +23,22 @@ public static class TypeHelper
 
         return type.Name;
     }
+
+    public static string GetFriendlyTypeFullName(this Type? type, bool includeNameSpace = false)
+    {
+        if (type == null)
+            return "<unknown type>";
+
+        if (type.IsArray)
+            return GetFriendlyTypeFullName(type.GetElementType()) + "[]";
+
+        if (type.IsGenericType)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "{0}<{1}>",
+                type.Name[..type.Name.LastIndexOf("`", StringComparison.InvariantCultureIgnoreCase)],
+                string.Join(", ", type.GetGenericArguments().Select(x => x.GetFriendlyTypeFullName(false))));
+        }
+
+        return type.Name;
+    }
 }
