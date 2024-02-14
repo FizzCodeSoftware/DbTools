@@ -5,9 +5,9 @@ public class PrimaryKeyNamingDefaultStrategy : IPrimaryKeyNamingStrategy
 {
     public void SetPrimaryKeyName(PrimaryKey pk)
     {
-        if (pk.SqlTableOrView.SchemaAndTableName?.TableName is null)
+        if (pk.SqlTableOrView!.SchemaAndTableName?.TableName is null)
             return;
 
-        pk.Name = $"PK_{pk.SqlTable.SchemaAndTableName.TableName}";
+        pk.Name = $"PK_{pk.SqlTable.SchemaAndTableName!.TableName}";
     }
 }

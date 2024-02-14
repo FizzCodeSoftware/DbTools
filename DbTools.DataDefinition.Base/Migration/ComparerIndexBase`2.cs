@@ -30,7 +30,7 @@ public abstract class ComparerIndexBase<TIndex, TMigration>
 
                 // compare referred tables
                 // compare columns
-                if (indexOriginal.SqlTableOrView.SchemaAndTableName != indexNew.SqlTableOrView.SchemaAndTableName)
+                if (indexOriginal.SqlTableOrView!.SchemaAndTableName != indexNew.SqlTableOrView!.SchemaAndTableName)
                     indexChanged = true;
 
                 if (!CompareIndexColumns(indexOriginal, indexNew))

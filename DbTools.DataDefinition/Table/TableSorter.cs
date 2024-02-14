@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.DataDefinition;
@@ -7,12 +8,12 @@ internal static class TableSorter
 {
     private class SqlTableDependency
     {
-        public SqlTable SqlTable;
-        public List<SqlTable> Parents;
+        public required SqlTable SqlTable;
+        public required List<SqlTable> Parents = [];
 
         public override string ToString()
         {
-            return SqlTable.SchemaAndTableName.SchemaAndName;
+            return SqlTable.SchemaAndTableName?.ToString() ?? "";
         }
     }
 
@@ -30,9 +31,14 @@ internal static class TableSorter
 
         foreach (var sqlTable in sqlTables)
         {
-            var parents = sqlTable.Properties.OfType<ForeignKey>().Select(fk => fk.ReferredTable).Where(t => t != null).Distinct().ToList();
+            var parents = sqlTable.Properties
+                .OfType<ForeignKey>()
+                .Select(fk => fk.ReferredTable)
+                .WhereNotNull()
+                .Distinct()
+                .ToList();
 
-            sqlTableDependencies.Add(new SqlTableDependency() { SqlTable = sqlTable, Parents = parents });
+            sqlTableDependencies.Add(new SqlTableDependency() { SqlTable = sqlTable, Parents = parents ?? [] });
         }
 
         return sqlTableDependencies;

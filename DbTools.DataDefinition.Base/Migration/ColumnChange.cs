@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
 namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public class ColumnChange : ColumnMigration

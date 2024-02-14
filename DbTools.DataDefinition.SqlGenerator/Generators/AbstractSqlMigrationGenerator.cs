@@ -41,7 +41,7 @@ public abstract class AbstractSqlMigrationGenerator : ISqlMigrationGenerator
     {
         var tableName = CheckSameTable(columnDeletes);
 
-        var columnsToDelete = columnDeletes.Select(c => Generator.GuardKeywords(c.Name)).ToList();
+        var columnsToDelete = columnDeletes.Select(c => Generator.GuardKeywords(c.Name!)).ToList();
         return @$"
 ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}
 DROP COLUMN { string.Join(", ", columnsToDelete) }";
@@ -74,7 +74,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
         // TODO asc desc in MsSql
         var pkColumnsList = primaryKeyNew.PrimaryKey.SqlColumns.ConvertAll(c => "\"" + c.SqlColumn.Name + "\"");
         var pkColumns = string.Join(", ", pkColumnsList);
-        return $"ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(primaryKeyNew.PrimaryKey.SqlTable.SchemaAndTableName)} ADD CONSTRAINT {primaryKeyNew.PrimaryKey.Name} PRIMARY KEY ({pkColumns})";
+        return $"ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(primaryKeyNew.PrimaryKey.SqlTable.SchemaAndTableName!)} ADD CONSTRAINT {primaryKeyNew.PrimaryKey.Name} PRIMARY KEY ({pkColumns})";
     }
 
     protected static SchemaAndTableName CheckSameTable(ColumnMigration[] columnNews)
@@ -84,7 +84,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
         if (tableNames.Count() != 1)
             throw new ArgumentOutOfRangeException(nameof(columnNews), "All columns should be on the same table.");
 
-        return tableNames.First();
+        return tableNames.First()!;
     }
 
     public virtual SqlStatementWithParameters ChangeColumns(params ColumnChange[] columnChanges)
@@ -95,7 +95,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
         {
             return $@"
 ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}
-ALTER COLUMN {Generator.GenerateCreateColumn(columnChanges[0].NewNameAndType)}";
+ALTER COLUMN {Generator.GenerateCreateColumn(columnChanges[0].NewNameAndType!)}";
         }
 
         var sbStatements = new StringBuilder();
