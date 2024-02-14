@@ -12,7 +12,7 @@ public class DatabaseDefinitionTests
     {
         var tables = new TestDatabaseSimple().GetTables();
         Assert.AreEqual(1, tables.Count);
-        Assert.AreEqual("Company", tables[0].SchemaAndTableName.TableName);
+        Assert.AreEqual("Company", tables[0].SchemaAndTableName!.TableName);
     }
 
     [TestMethod]
@@ -26,7 +26,7 @@ public class DatabaseDefinitionTests
 
     protected static void CheckFK(IList<SqlTable> tables, string childName, string fkColumnName)
     {
-        var child = tables.First(t => t.SchemaAndTableName.TableName == childName);
+        var child = tables.First(t => t.SchemaAndTableName!.TableName == childName);
         var fk = child.Properties.OfType<ForeignKey>().First();
 
         // TODO CheckFK if there are more Columns

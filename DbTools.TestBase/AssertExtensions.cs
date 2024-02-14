@@ -19,4 +19,20 @@ public static class AssertExtensions
 
         return (T)value;
     }
+
+#pragma warning disable CS8777 // Parameter must have a non-null value when exiting.
+    public static void AreNotNulls(this Assert assert, [NotNull] object? value1, [NotNull] object? value2) => AreNotNulls(value1, value2);
+
+    public static void AreNotNulls(this Assert assert, [NotNull] object? value1, [NotNull] object? value2, [NotNull] object? value3) => AreNotNulls(value1, value2, value3);
+
+    public static void AreNotNulls(this Assert assert, [NotNull] object? value1, [NotNull] object? value2, [NotNull] object? value3, [NotNull] object? value4) => AreNotNulls(value1, value2, value3, value4);
+
+    public static void AreNotNulls(this Assert assert, [NotNull] object? value1, [NotNull] object? value2, [NotNull] object? value3, [NotNull] object? value4, [NotNull] object? value5) => AreNotNulls(value1, value2, value3, value4, value5);
+#pragma warning restore CS8777 // Parameter must have a non-null value when exiting.
+
+    private static void AreNotNulls([NotNull] params object?[] values)
+    {
+        foreach ( var value in values)
+            Assert.IsNotNull(value);
+    }
 }
