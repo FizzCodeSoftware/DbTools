@@ -16,11 +16,11 @@ public abstract class AbstractCSharpGenerator : DocumenterBase
     private readonly string _namespace;
     protected AbstractCSharpWriterBase Writer { get; }
 
-    public string[] AdditionalNamespaces { get; set; }
-    public Func<SqlTable, string> OnTableComment { get; set; }
-    public Func<SqlTable, string> OnTableAnnotation { get; set; }
-    public Func<SqlColumn, string> OnColumnAnnotation { get; set; }
-    public Func<SqlColumn, string> OnColumnComment { get; set; }
+    public string[] AdditionalNamespaces { get; set; } = [];
+    public Func<SqlTable, string>? OnTableComment { get; set; }
+    public Func<SqlTable, string>? OnTableAnnotation { get; set; }
+    public Func<SqlColumn, string>? OnColumnAnnotation { get; set; }
+    public Func<SqlColumn, string>? OnColumnComment { get; set; }
 
     protected AbstractCSharpGenerator(AbstractCSharpWriterBase writer, SqlEngineVersion version, string databaseName, string @namespace)
         : base(writer.GeneratorContext, version, databaseName)
@@ -41,18 +41,18 @@ public abstract class AbstractCSharpGenerator : DocumenterBase
         Directory.CreateDirectory(folder);
         File.WriteAllText(Path.Combine(folder, DatabaseName + ".cs"), sb.ToString(), Encoding.UTF8);
 
-        var sqlTablesByCategory = new List<KeyValuePair<string, SqlTable>>();
+        var sqlTablesByCategory = new List<KeyValuePair<string?, SqlTable>>();
         foreach (var table in databaseDefinition.GetTables())
         {
-            if (!Context.Customizer.ShouldSkip(table.SchemaAndTableName))
+            if (!Context.Customizer.ShouldSkip(table.SchemaAndTableName!))
             {
-                sqlTablesByCategory.Add(new KeyValuePair<string, SqlTable>(Context.Customizer.Category(table.SchemaAndTableName), table));
+                sqlTablesByCategory.Add(new KeyValuePair<string?, SqlTable>(Context.Customizer.Category(table.SchemaAndTableName!), table));
             }
         }
 
         var tables = sqlTablesByCategory
             .OrderBy(kvp => kvp.Key)
-            .ThenBy(t => t.Value.SchemaAndTableName.SchemaAndName);
+            .ThenBy(t => t.Value.SchemaAndTableName!.SchemaAndName);
 
         foreach (var tableKvp in tables)
         {
@@ -73,7 +73,7 @@ public abstract class AbstractCSharpGenerator : DocumenterBase
 
             folder = Path.Combine(Context.GeneratorSettings.WorkingDirectory ?? @".\", DatabaseName, categoryInPath);
 
-            var fileName = Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, ".") + ".cs";
+            var fileName = Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName!, ".") + ".cs";
 
             Context.Logger.Log(LogSeverity.Information, "Writing Document file {FileName} to folder {Folder}", "Documenter", fileName, folder);
 
@@ -90,9 +90,9 @@ public abstract class AbstractCSharpGenerator : DocumenterBase
 
         var tables = databaseDefinition
             .GetTables()
-            .Where(x => Context.Customizer?.ShouldSkip(x.SchemaAndTableName) != true)
-            .OrderBy(x => x.SchemaAndTableName.Schema)
-            .ThenBy(x => x.SchemaAndTableName.TableName).ToList();
+            .Where(x => Context.Customizer?.ShouldSkip(x.SchemaAndTableName!) != true)
+            .OrderBy(x => x.SchemaAndTableName!.Schema)
+            .ThenBy(x => x.SchemaAndTableName!.TableName).ToList();
 
         WriteSingleFileHeader(sb, tables, partialClass);
 

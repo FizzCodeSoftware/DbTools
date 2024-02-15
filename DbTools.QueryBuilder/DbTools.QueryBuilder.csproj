@@ -14,6 +14,7 @@
     <RootNamespace>FizzCode.DbTools.QueryBuilder</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NoWarn>CS1591</NoWarn>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

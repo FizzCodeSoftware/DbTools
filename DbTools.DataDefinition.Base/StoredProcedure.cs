@@ -13,6 +13,11 @@ public class StoredProcedure
         SpParameters = sqlParameters.ToList();
     }
 
+    protected StoredProcedure(params SqlParameter[] sqlParameters)
+    {
+        SpParameters = sqlParameters.ToList();
+    }
+
     public StoredProcedureBodies StoredProcedureBodies { get; } = [];
 
     public IDatabaseDefinition? DatabaseDefinition { get; set; }

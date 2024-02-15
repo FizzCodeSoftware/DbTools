@@ -354,7 +354,7 @@ public class MigrationComparerTests : ComparerTestsBase
 
         Assert.AreEqual(2, fkDelete.ForeignKey.ForeignKeyColumns.Count);
 
-        var fkNew = Assert.That.CheckAndReturnInstanceOfType<ForeignKeyDelete>(changes[1]);
+        var fkNew = Assert.That.CheckAndReturnInstanceOfType<ForeignKeyNew>(changes[1]);
         Assert.AreEqual("Top2A", fkNew.ForeignKey.ForeignKeyColumns[0].ForeignKeyColumn.Name);
         Assert.AreEqual("Top2B", fkNew.ForeignKey.ForeignKeyColumns[1].ForeignKeyColumn.Name);
         Assert.AreEqual("Top2C", fkNew.ForeignKey.ForeignKeyColumns[2].ForeignKeyColumn.Name);

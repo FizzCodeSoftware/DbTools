@@ -3,11 +3,11 @@
 namespace FizzCode.DbTools.QueryBuilder;
 public class Filter
 {
-    public SqlTableOrView Table { get; set; }
-    public QueryColumn Column { get; set; }
-    public FilterType Type { get; set; }
+    public required SqlTableOrView Table { get; init; }
+    public required QueryColumn Column { get; init; }
+    public FilterType Type { get; init; }
 
-    public SqlParameter Parameter { get; set; }
+    public required SqlParameter Parameter { get; init; }
 }
 
 public class FilterExpression

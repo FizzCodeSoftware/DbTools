@@ -103,7 +103,7 @@ public class QueryBuilderSqlGeneratorBase(ISqlGeneratorBase sqlGeneratorBase)
             }
             else if (useAlias)
             {
-                if (_query.QueryColumnAliasStrategy != QueryColumnAliasStrategy.EnableDuplicates)
+                if (_query!.QueryColumnAliasStrategy != QueryColumnAliasStrategy.EnableDuplicates)
                 {
                     if (_query.QueryColumnAliasStrategy == QueryColumnAliasStrategy.PrefixTableAliasAlways)
                     {
@@ -171,7 +171,7 @@ public class QueryBuilderSqlGeneratorBase(ISqlGeneratorBase sqlGeneratorBase)
     {
         var sb = new StringBuilder();
 
-        var queryTableProperties = (_query.Table as SqlTable)?.Properties;
+        var queryTableProperties = (_query!.Table as SqlTable)?.Properties;
 
         if (join.ColumnSource == null && join.ColumnTarget is null)
         { // auto build JOIN ON
@@ -245,7 +245,7 @@ public class QueryBuilderSqlGeneratorBase(ISqlGeneratorBase sqlGeneratorBase)
 
     protected string AddWhere()
     {
-        if (!string.IsNullOrEmpty(_query.WhereExpression))
+        if (!string.IsNullOrEmpty(_query!.WhereExpression))
             return "\r\n" + StringBuilderExtensions.Spaces(_level) + "WHERE " + _query.WhereExpression;
 
         return string.Empty;
@@ -253,7 +253,7 @@ public class QueryBuilderSqlGeneratorBase(ISqlGeneratorBase sqlGeneratorBase)
 
     protected string AddGroupBy(QueryElement queryElement)
     {
-        if (_query.GroupByColumns.Count == 0)
+        if (_query!.GroupByColumns.Count == 0)
             return string.Empty;
 
         var sb = new StringBuilder();
@@ -286,14 +286,14 @@ public class QueryBuilderSqlGeneratorBase(ISqlGeneratorBase sqlGeneratorBase)
 
     private string AddFilters()
     {
-        if (_query.Filters.Count == 0)
+        if (_query!.Filters.Count == 0)
             return string.Empty;
 
         var sb = new StringBuilder();
 
         sb.AppendLine("\r\n");
 
-        if (string.IsNullOrEmpty(_query.WhereExpression))
+        if (string.IsNullOrEmpty(_query!.WhereExpression))
             sb.Append(_level, "WHERE ");
 
         foreach (var filter in _query.Filters)

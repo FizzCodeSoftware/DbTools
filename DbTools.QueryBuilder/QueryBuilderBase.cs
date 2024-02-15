@@ -4,7 +4,7 @@ using System.Text;
 namespace FizzCode.DbTools.QueryBuilder;
 public abstract class QueryBuilderBase
 {
-    protected Query _query;
+    protected Query? _query;
 
     protected bool HasColumnWithSameName(QueryElement queryElement, QueryColumn queryColumn)
     {
@@ -19,7 +19,7 @@ public abstract class QueryBuilderBase
     {
         var sb = new StringBuilder();
 
-        for (var i = 0; i < _query.Joins.Count; i++)
+        for (var i = 0; i < _query!.Joins.Count; i++)
         {
             if (i == 0 && _query.QueryColumns.Count == 1 && _query.QueryColumns[0] is None)
                 sb.Append(AddQueryElementColumns(_query.Joins[i], true));
@@ -34,7 +34,7 @@ public abstract class QueryBuilderBase
     {
         var sb = new StringBuilder();
 
-        foreach (var join in _query.Joins)
+        foreach (var join in _query!.Joins)
             sb.Append(AddJoin(join));
 
         return sb.ToString();
@@ -42,7 +42,7 @@ public abstract class QueryBuilderBase
 
     protected string AddJoinOn(JoinOn joinOn)
     {
-        return Expression.GetExpression(joinOn.OnExpression, _query.QueryElements, joinOn);
+        return Expression.GetExpression(joinOn.OnExpression, _query!.QueryElements, joinOn);
     }
 
     protected abstract string AddQueryElementColumns(QueryElement queryElement, bool useAlias = false);
