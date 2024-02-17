@@ -3,6 +3,7 @@ using FizzCode.DbTools.DataDeclaration;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.DataDefinition.Factory;
 using FizzCode.DbTools.DataDefinition.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FizzCode.DbTools.DataDefinition.Tests;
 public abstract class ComparerTestsBase
@@ -150,7 +151,8 @@ public abstract class ComparerTestsBase
 
         var ddFkChanged = new TestDatabaseFk();
         ddFkChanged.SetVersions(version);
-        ddFkChanged.GetTable("Foreign")["PrimaryId"].Type.IsNullable = true;
+        Assert.IsNotNull(ddFkChanged.GetTable("Foreign")["PrimaryId"].Type);
+        ddFkChanged.GetTable("Foreign")["PrimaryId"].Type!.IsNullable = true;
 
         return new DatabaseDefinitions(ddOriginal, ddFkChanged, "ForeignKeyComposite", "ForeignKeyComposite2_Column_Change_NotNullableToNullable_WithFk");
     }
@@ -255,7 +257,8 @@ public abstract class ComparerTestsBase
         ddOriginal.SetVersions(version);
         var ddColumnLengthChanged = new TestDatabaseSimple();
         ddColumnLengthChanged.SetVersions(version);
-        ddColumnLengthChanged.GetTable("Company")["Name"].Type.Length += 1;
+        Assert.IsNotNull(ddColumnLengthChanged.GetTable("Company")["Name"].Type);
+        ddColumnLengthChanged.GetTable("Company")["Name"].Type!.Length += 1;
 
         return new DatabaseDefinitions(ddOriginal, ddColumnLengthChanged, "TestDatabaseSimple", "TestDatabaseSimple_Column_Change_Length");
     }
@@ -270,8 +273,10 @@ public abstract class ComparerTestsBase
         var ddColumnLengthsChanged = new TestDatabaseSimple();
         ddColumnLengthsChanged.SetVersions(version);
         ddColumnLengthsChanged.GetTable("Company").AddNVarChar("Name2", 100);
-        ddColumnLengthsChanged.GetTable("Company")["Name"].Type.Length += 1;
-        ddColumnLengthsChanged.GetTable("Company")["Name2"].Type.Length += 1;
+        Assert.IsNotNull(ddColumnLengthsChanged.GetTable("Company")["Name"].Type);
+        ddColumnLengthsChanged.GetTable("Company")["Name"].Type!.Length += 1;
+        Assert.IsNotNull(ddColumnLengthsChanged.GetTable("Company")["Name2"].Type);
+        ddColumnLengthsChanged.GetTable("Company")["Name2"].Type!.Length += 1;
 
         return new DatabaseDefinitions(ddOriginal, ddColumnLengthsChanged, "TestDatabaseSimple", "TestDatabaseSimple_Column_Change2_Length");
     }
@@ -284,7 +289,9 @@ public abstract class ComparerTestsBase
 
         var ddNullableChanged = new TestDatabaseSimple();
         ddNullableChanged.SetVersions(version);
-        ddNullableChanged.GetTable("Company")["Name"].Type.IsNullable = !ddOriginal.GetTable("Company")["Name"].Type.IsNullable;
+        Assert.IsNotNull(ddNullableChanged.GetTable("Company")["Name"].Type);
+        Assert.IsNotNull(ddOriginal.GetTable("Company")["Name"].Type);
+        ddNullableChanged.GetTable("Company")["Name"].Type!.IsNullable = !ddOriginal.GetTable("Company")["Name"].Type!.IsNullable;
 
         return new DatabaseDefinitions(ddOriginal, ddNullableChanged, "TestDatabaseSimple", "TestDatabaseSimple_Column_Change_Nullable");
     }
@@ -298,10 +305,12 @@ public abstract class ComparerTestsBase
         var ddDbTypeChanged = new TestDatabaseSimple();
         ddDbTypeChanged.SetVersions(version);
 
+        Assert.IsNotNull(ddDbTypeChanged.GetTable("Company")["Name"].Type);
+
         if (version == MsSqlVersion.MsSql2016)
-            ddDbTypeChanged.GetTable("Company")["Name"].Type.SqlTypeInfo = MsSqlType2016.NChar;
+            ddDbTypeChanged.GetTable("Company")["Name"].Type!.SqlTypeInfo = MsSqlType2016.NChar;
         else if (version == OracleVersion.Oracle12c)
-            ddDbTypeChanged.GetTable("Company")["Name"].Type.SqlTypeInfo = OracleType12c.NChar;
+            ddDbTypeChanged.GetTable("Company")["Name"].Type!.SqlTypeInfo = OracleType12c.NChar;
 
         return new DatabaseDefinitions(ddOriginal, ddDbTypeChanged, "TestDatabaseSimple", "TestDatabaseSimple_Column_Change_DbType");
     }
@@ -312,18 +321,20 @@ public abstract class ComparerTestsBase
         var ddOriginal = new TestDatabaseSimple();
         ddOriginal.SetVersions(version);
 
-        var ddddDbTypeAndLengthChanged = new TestDatabaseSimple();
-        ddddDbTypeAndLengthChanged.SetVersions(version);
+        var ddDbTypeAndLengthChanged = new TestDatabaseSimple();
+        ddDbTypeAndLengthChanged.SetVersions(version);
+
+        Assert.IsNotNull(ddDbTypeAndLengthChanged.GetTable("Company")["Name"].Type);
 
         if (version == MsSqlVersion.MsSql2016)
-            ddddDbTypeAndLengthChanged.GetTable("Company")["Name"].Type.SqlTypeInfo = MsSqlType2016.NChar;
+            ddDbTypeAndLengthChanged.GetTable("Company")["Name"].Type!.SqlTypeInfo = MsSqlType2016.NChar;
         else if (version == OracleVersion.Oracle12c)
-            ddddDbTypeAndLengthChanged.GetTable("Company")["Name"].Type.SqlTypeInfo = OracleType12c.NChar;
+            ddDbTypeAndLengthChanged.GetTable("Company")["Name"].Type!.SqlTypeInfo = OracleType12c.NChar;
 
-        ddddDbTypeAndLengthChanged.GetTable("Company")["Name"].Type.Length += 1;
-        ddddDbTypeAndLengthChanged.GetTable("Company")["Name"].Type.IsNullable = !ddddDbTypeAndLengthChanged.GetTable("Company")["Name"].Type.IsNullable;
+        ddDbTypeAndLengthChanged.GetTable("Company")["Name"].Type!.Length += 1;
+        ddDbTypeAndLengthChanged.GetTable("Company")["Name"].Type!.IsNullable = !ddDbTypeAndLengthChanged.GetTable("Company")["Name"].Type!.IsNullable;
 
-        return new DatabaseDefinitions(ddOriginal, ddddDbTypeAndLengthChanged, "TestDatabaseSimple", "TestDatabaseSimple_Column_Change_DbTypeAndLengthAndIsNullable");
+        return new DatabaseDefinitions(ddOriginal, ddDbTypeAndLengthChanged, "TestDatabaseSimple", "TestDatabaseSimple_Column_Change_DbTypeAndLengthAndIsNullable");
     }
 
     public abstract void Index_Add(SqlEngineVersion version);

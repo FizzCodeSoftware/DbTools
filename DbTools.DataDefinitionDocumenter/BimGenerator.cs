@@ -13,14 +13,10 @@ using FizzCode.DbTools.DataDefinitionDocumenter.BimDTO;
 using FizzCode.DbTools.Tabular;
 
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
-public class BimGenerator : DocumenterBase
+public class BimGenerator(DocumenterContextBase context, SqlEngineVersion version, string databaseName)
+    : DocumenterBase(context, version, databaseName)
 {
     protected new GeneratorContext Context => (GeneratorContext)base.Context;
-
-    public BimGenerator(DocumenterContextBase context, SqlEngineVersion version, string databaseName)
-        : base(context, version, databaseName)
-    {
-    }
 
     public void Generate(IDatabaseDefinition databaseDefinition)
     {
@@ -38,8 +34,8 @@ public class BimGenerator : DocumenterBase
 
         foreach (var sqlTable in databaseDefinition.GetTables())
         {
-            if (!Context.Customizer.ShouldSkip(sqlTable.SchemaAndTableName)
-                && !DocumenterWriterBase.ShouldSkipKnownTechnicalTable(sqlTable.SchemaAndTableName)
+            if (!Context.Customizer.ShouldSkip(sqlTable.SchemaAndTableName!)
+                && !DocumenterWriterBase.ShouldSkipKnownTechnicalTable(sqlTable.SchemaAndTableName!)
                 )
             {
                 root.Model.Tables.Add(GenerateTable(sqlTable));
@@ -86,14 +82,14 @@ public class BimGenerator : DocumenterBase
                 //   if NO other reference exists (without RelationshipIdentifier or any other RelationshipIdentifier)
 
                 // same target on this table
-                if (!toTables.ContainsKey(rr.ToKey))
+                if (!toTables.TryGetValue(rr.ToKey, out var value))
                 {
                     toTables.Add(rr.ToKey, 1);
                 }
                 else
                 {
-                    toTables[rr.ToKey]++;
-                    var numberOfReferencesToTheSameTable = toTables[rr.ToKey];
+                    toTables[rr.ToKey] = ++value;
+                    var numberOfReferencesToTheSameTable = value;
                     if (numberOfReferencesToTheSameTable > 1)
                         CreateTableCopyForReference(rr, model, numberOfReferencesToTheSameTable);
                 }
@@ -106,15 +102,15 @@ public class BimGenerator : DocumenterBase
     private void CreateTableCopyForReference(BimRelationship rr, BimGeneratorModel model, int i)
     {
         var dd = rr.FromColumn.Table.DatabaseDefinition;
-        var toSqlTable = dd.GetTable(rr.ToTableSchemaAndTableName);
+        var toSqlTable = dd!.GetTable(rr.ToTableSchemaAndTableName);
 
         var suffix = " " + i.ToString("D", CultureInfo.InvariantCulture);
         if (rr.RelationshipIdentifier != null)
             suffix = " " + rr.RelationshipIdentifier;
 
-        var copyTableName = GetBimTableName(toSqlTable.SchemaAndTableName) + suffix;
+        var copyTableName = GetBimTableName(toSqlTable.SchemaAndTableName!) + suffix;
 
-        var copySchemaAndTableName = new SchemaAndTableName(toSqlTable.SchemaAndTableName.Schema, toSqlTable.SchemaAndTableName.TableName + suffix);
+        var copySchemaAndTableName = new SchemaAndTableName(toSqlTable.SchemaAndTableName!.Schema, toSqlTable.SchemaAndTableName.TableName + suffix);
         rr.ToTableSchemaAndTableName = copySchemaAndTableName;
 
         if (!model.Tables.Any(t => t.Name == copyTableName))
@@ -129,7 +125,7 @@ public class BimGenerator : DocumenterBase
         var relation = new Relationship
         {
             FromTable = GetBimTableName(rr.FromTableSchemaAndTableName),
-            FromColumn = rr.FromColumn.Name,
+            FromColumn = rr.FromColumn.Name!,
             ToTable = GetBimTableName(rr.ToTableSchemaAndTableName),
             ToColumn = rr.ToColumnName,
             Name = Guid.NewGuid().ToString()
@@ -146,13 +142,13 @@ public class BimGenerator : DocumenterBase
         {
             var firstColumnMap = fk.ForeignKeyColumns[0];
 
-            var bimRelationship = new BimRelationship(firstColumnMap.ForeignKeyColumn, firstColumnMap.ReferredColumn.Table.SchemaAndTableName, firstColumnMap.ReferredColumn.Name);
+            var bimRelationship = new BimRelationship(firstColumnMap.ForeignKeyColumn, firstColumnMap.ReferredColumn.Table.SchemaAndTableName!, firstColumnMap.ReferredColumn.Name!);
 
             if (relationShipRegistrations.Contains(bimRelationship))
                 continue;
 
-            relationShipRegistrations.Add(new BimRelationship(firstColumnMap.ForeignKeyColumn, firstColumnMap.ReferredColumn.Table.SchemaAndTableName, firstColumnMap.ReferredColumn.Name));
-            GatherReferencedTablesByFK(relationShipRegistrations, fk.ReferredTable);
+            relationShipRegistrations.Add(new BimRelationship(firstColumnMap.ForeignKeyColumn, firstColumnMap.ReferredColumn.Table.SchemaAndTableName!, firstColumnMap.ReferredColumn.Name!));
+            GatherReferencedTablesByFK(relationShipRegistrations, fk.ReferredTable!);
         }
     }
 
@@ -165,24 +161,22 @@ public class BimGenerator : DocumenterBase
         return schemaAndTableName.Schema + " " + schemaAndTableName.TableName;
     }
 
-    private Table GenerateTable(SqlTable sqlTable, string overrideName = null)
+    private Table GenerateTable(SqlTable sqlTable, string? overrideName = null)
     {
         var table = new Table
         {
-            Name = GetBimTableName(sqlTable.SchemaAndTableName)
+            Name = overrideName is null ? GetBimTableName(sqlTable.SchemaAndTableName!) : overrideName
         };
 
-        if (overrideName != null)
-            table.Name = overrideName;
 
         foreach (var sqlColumn in sqlTable.Columns)
         {
             var column = new Column
             {
                 // TODO mapping
-                Name = sqlColumn.Name,
+                Name = sqlColumn.Name!,
                 DataType = sqlColumn.Types[Version].SqlTypeInfo.SqlDataType,
-                SourceColumn = sqlColumn.Name
+                SourceColumn = sqlColumn.Name!
             };
 
             table.Columns.Add(column);

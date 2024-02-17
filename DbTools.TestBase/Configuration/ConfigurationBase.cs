@@ -1,14 +1,16 @@
-﻿using FizzCode.LightWeight.AdoNet;
+﻿using System.Diagnostics.CodeAnalysis;
+using FizzCode.LightWeight.AdoNet;
 using FizzCode.LightWeight.Configuration;
 using Microsoft.Extensions.Configuration;
 
 namespace FizzCode.DbTools.TestBase;
 public class ConfigurationBase
 {
-    public ConfigurationBase()
+    
+    /*public ConfigurationBase()
     {
         Initialize();
-    }
+    }*/
 
     public ConfigurationBase(string configurationFileName)
     {
@@ -16,13 +18,15 @@ public class ConfigurationBase
         Initialize();
     }
 
+    //[MemberNotNull(nameof(ConfigurationFileName))]
+    [MemberNotNull(nameof(Configuration))]
     private void Initialize()
     {
         Configuration = ConfigurationLoader.LoadFromJsonFile(ConfigurationFileName);
         ConnectionStrings.LoadFromConfiguration(Configuration);
     }
 
-    public virtual string ConfigurationFileName { get; }
+    public string ConfigurationFileName { get; }
 
     public IConfigurationRoot Configuration { get; private set; }
 

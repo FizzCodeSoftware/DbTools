@@ -16,12 +16,10 @@ public class SqlExecuterTestAdapter : ConfigurationBase
 
     private readonly Dictionary<SqlConnectionKeyAndDatabaseDefinitionTypeAsKey, DatabaseDefinition> _dds = [];
 
-    public override string ConfigurationFileName => "testconfig";
-
     private readonly ISqlExecuterFactory _sqlExecuterFactory;
     private readonly IFactoryContainer _root;
 
-    public SqlExecuterTestAdapter()
+    public SqlExecuterTestAdapter() : base("testconfig")
     {
         _root = new TestFactoryContainer();
         _sqlExecuterFactory = _root.Get<ISqlExecuterFactory>();
@@ -47,10 +45,7 @@ public class SqlExecuterTestAdapter : ConfigurationBase
 
     private NamedConnectionString Initialize(string connectionStringKey, bool shouldCreate, params DatabaseDefinition[] dds)
     {
-        var connectionString = ConnectionStrings[connectionStringKey];
-
-        if (connectionString is null)
-            throw new InvalidOperationException($"No connection string is configured for {connectionStringKey}");
+        var connectionString = Throw.IfNull(ConnectionStrings[connectionStringKey], $"No connection string is configured for {connectionStringKey}");
 
         var sqlEngineVersion = Throw.IfNull(connectionString.GetSqlEngineVersion());
 

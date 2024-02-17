@@ -22,47 +22,47 @@ public class BimGeneratorModel
 public class DataSource
 {
     public string Type { get; set; } = "structured";
-    public string Name { get; set; }
-    public ConnectionDetails ConnectionDetails { get; set; }
-    public Credential Credential { get; set; }
+    public required string Name { get; init; }
+    public required ConnectionDetails ConnectionDetails { get; init; }
+    public required Credential Credential { get; init; }
 }
 
 public class ConnectionDetails
 {
     public string Protocol { get; set; } = "tds";
-    public Address Address { get; set; }
-    public string Authentication { get; set; }
-    public string Query { get; set; }
+    public required Address Address { get; init; }
+    public string? Authentication { get; set; }
+    public string? Query { get; set; }
 }
 
 public class Address
 {
     public string Server { get; set; } = "localhost";
-    public string Database { get; set; }
+    public required string Database { get; init; }
 }
 
 public class Credential
 {
     public string AuthenticationKind { get; set; } = "UsernamePassword";
     public string Kind { get; set; } = "SQL";
-    public string Path { get; set; }
-    public string Username { get; set; }
+    public required string Path { get; init; }
+    public required string Username { get; init; }
     public bool EncryptConnection { get; set; }
 }
 
 public class Annotation
 {
-    public string Name { get; set; }
-    public string Value { get; set; }
+    public required string Name { get; init; }
+    public required string Value { get; init; }
 }
 
 public class Relationship
 {
-    public string Name { get; set; }
-    public string FromTable { get; set; }
-    public string FromColumn { get; set; }
-    public string ToTable { get; set; }
-    public string ToColumn { get; set; }
+    public required string Name { get; init; }
+    public required string FromTable { get; init; }
+    public required string FromColumn { get; init; }
+    public required string ToTable { get; init; }
+    public required string ToColumn { get; init; }
     public bool IsActive { get; set; }
 
     public override string ToString()

@@ -10,7 +10,7 @@ public static class Program
 {
     public static bool Terminated { get; set; }
 
-    public static IConfigurationRoot Configuration { get; private set; }
+    public static IConfigurationRoot? Configuration { get; private set; }
 
     public static void Main(string[] args)
     {
@@ -46,7 +46,7 @@ public static class Program
         }
     }
 
-    internal static void DisplayHelp(string command = null)
+    internal static void DisplayHelp(string? command = null)
     {
         var runner = new AppRunner<AppCommands>(GetAppSettings());
 
