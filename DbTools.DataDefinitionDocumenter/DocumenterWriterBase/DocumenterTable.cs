@@ -3,6 +3,7 @@ using FizzCode.DbTools.DataDefinition;
 using System.Linq;
 using System.Collections.Generic;
 using System.Globalization;
+using FizzCode.DbTools.Common;
 
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public abstract partial class DocumenterWriterBase
@@ -40,7 +41,7 @@ public abstract partial class DocumenterWriterBase
 
         var tableColumns = new List<string>();
 
-        tableColumns.AddRange(new[] { "Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Scale", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key Name", "Referenced Table", "Link", "Referenced Column" });
+        tableColumns.AddRange(tableColumns);
 
         if (Context.DocumenterSettings.NoInternalDataTypes)
             tableColumns.Remove("Data Type (DbTools)");
@@ -48,48 +49,50 @@ public abstract partial class DocumenterWriterBase
         WriteLine(schemaAndTableName, tableColumns.ToArray());
     }
 
+    private static readonly string[] tableColumns = ["Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Scale", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key Name", "Referenced Table", "Link", "Referenced Column"];
+
     protected void AddColumnsToTableSheet(SqlColumn column, ColumnDocumentInfo columnDocumentInfo, string? firstColumn = null)
     {
         var table = column.Table;
-        var sqlType = column.Type;
+        var sqlType = Throw.IfNull(column.Type);
 
         if (firstColumn != null)
-            Write(table.SchemaAndTableName, firstColumn);
+            Write(table.SchemaAndTableName!, firstColumn);
 
         if (!Context.DocumenterSettings.NoInternalDataTypes)
-            Write(table.SchemaAndTableName, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
+            Write(table.SchemaAndTableName!, column.Name, sqlType.SqlTypeInfo.SqlDataType, sqlType.SqlTypeInfo.SqlDataType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
         else
-            Write(table.SchemaAndTableName, column.Name, sqlType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
+            Write(table.SchemaAndTableName!, column.Name, sqlType, sqlType.Length, sqlType.Scale, sqlType.IsNullable);
 
         if (columnDocumentInfo.IsPk)
-            Write(table.SchemaAndTableName, true);
+            Write(table.SchemaAndTableName!, true);
         else
-            Write(table.SchemaAndTableName, "");
+            Write(table.SchemaAndTableName!, "");
 
         if (columnDocumentInfo.Identity != null)
-            Write(table.SchemaAndTableName, $"IDENTITY ({columnDocumentInfo.Identity.Seed.ToString("D", CultureInfo.InvariantCulture)}, {columnDocumentInfo.Identity.Increment.ToString("D", CultureInfo.InvariantCulture)})");
+            Write(table.SchemaAndTableName!, $"IDENTITY ({columnDocumentInfo.Identity.Seed.ToString("D", CultureInfo.InvariantCulture)}, {columnDocumentInfo.Identity.Increment.ToString("D", CultureInfo.InvariantCulture)})");
         else
-            Write(table.SchemaAndTableName, "");
+            Write(table.SchemaAndTableName!, "");
 
         if (columnDocumentInfo.DefaultValue != null)
-            Write(table.SchemaAndTableName, columnDocumentInfo.DefaultValue);
+            Write(table.SchemaAndTableName!, columnDocumentInfo.DefaultValue);
         else
-            Write(table.SchemaAndTableName, "");
+            Write(table.SchemaAndTableName!, "");
 
-        Write(table.SchemaAndTableName, columnDocumentInfo.Description.Trim());
+        Write(table.SchemaAndTableName!, columnDocumentInfo.Description?.Trim());
 
         // "Foreign Key Name", "Referenced Table", "Link", "Referenced Column"
         var fkOnColumn = table.Properties.OfType<ForeignKey>().FirstOrDefault(fk => fk.ForeignKeyColumns.Any(fkc => fkc.ForeignKeyColumn.Name == column.Name));
 
         if (fkOnColumn != null)
         {
-            Write(table.SchemaAndTableName, fkOnColumn.Name);
-            Write(table.SchemaAndTableName,
-                Helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName));
-            WriteLink(table.SchemaAndTableName, "link", fkOnColumn.ReferredTable.SchemaAndTableName);
-            Write(table.SchemaAndTableName, fkOnColumn.ForeignKeyColumns.First(fkc => fkc.ForeignKeyColumn.Name == column.Name).ReferredColumn.Name);
+            Write(table.SchemaAndTableName!, fkOnColumn.Name);
+            Write(table.SchemaAndTableName!,
+                Helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable));
+            WriteLink(table.SchemaAndTableName!, "link", fkOnColumn.ReferredTable!.SchemaAndTableName!);
+            Write(table.SchemaAndTableName!, fkOnColumn.ForeignKeyColumns.First(fkc => fkc.ForeignKeyColumn.Name == column.Name).ReferredColumn.Name);
         }
 
-        WriteLine(table.SchemaAndTableName);
+        WriteLine(table.SchemaAndTableName!);
     }
 }

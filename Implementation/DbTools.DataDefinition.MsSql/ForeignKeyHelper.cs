@@ -15,7 +15,7 @@ public static class ForeignKeyHelper
     /// <param name="referredColumnName">The name of the referred column.</param>
     /// <param name="fkName"></param>
     /// <returns>The original <paramref name="singleFkColumn"/>.</returns>
-    public static SqlColumn SetForeignKeyToColumnNoCheck(this SqlColumn singleFkColumn, string referredTableName, string referredColumnName, string fkName = null)
+    public static SqlColumn SetForeignKeyToColumnNoCheck(this SqlColumn singleFkColumn, string referredTableName, string referredColumnName, string? fkName = null)
     {
         var property = new SqlEngineVersionSpecificProperty(MsSqlVersion.MsSql2016, "Nocheck", "true");
         return singleFkColumn.SetForeignKeyToColumn(referredTableName, referredColumnName, property, fkName);

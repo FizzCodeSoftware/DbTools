@@ -26,7 +26,7 @@ public class OracleIndexReader12c : OracleDataDefinitionElementReader
 
     public void GetIndex(SqlTable table)
     {
-        Index index = null;
+        Index index = null!;
         var rows = _queryResult
             .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table, "TABLE_OWNER", "TABLE_NAME")).OrderBy(row => row.GetAs<string>("INDEX_NAME")).ThenBy(row => row.GetAs<decimal>("COLUMN_POSITION"))
             .ToList();
@@ -43,7 +43,7 @@ public class OracleIndexReader12c : OracleDataDefinitionElementReader
                 table.Properties.Add(index);
             }
 
-            var column = table.Columns[row.GetAs<string>("COLUMN_NAME")];
+            var column = table.Columns[Throw.IfNull(row.GetAs<string>("COLUMN_NAME"))];
 
             index.SqlColumns.Add(new ColumnAndOrder(column, AscDesc.Asc));
         }

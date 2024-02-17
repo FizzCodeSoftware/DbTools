@@ -27,7 +27,7 @@ public abstract class AbstractCSharpTypedWriter : AbstractCSharpWriterBase
         return "";
     }
 
-    public override string GetColumnCreation(SqlColumn column, DocumenterHelper helper, string extraAnnotation, string comment)
+    public override string GetColumnCreation(SqlColumn column, DocumenterHelper helper, string? extraAnnotation, string? comment)
     {
         var sb = new StringBuilder();
 
@@ -100,7 +100,7 @@ public abstract class AbstractCSharpTypedWriter : AbstractCSharpWriterBase
             .Append(" { get; } = ")
             .Append(Version)
             .Append(".SetForeignKeyTo(nameof(")
-            .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
+            .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
             .Append("), ")
             .AppendLine("new []")
             .AppendLine("#pragma warning restore IDE1006 // Naming Styles")
@@ -112,7 +112,7 @@ public abstract class AbstractCSharpTypedWriter : AbstractCSharpWriterBase
                 .Append("nameof(")
                 .Append(fkColumnMap.ForeignKeyColumn.Name)
                 .Append("), nameof(")
-                .Append(fkColumnMap.ReferredColumn.Table.SchemaAndTableName)
+                .Append(fkColumnMap.ReferredColumn.Table.SchemaAndTableName!)
                 .Append('.')
                 .Append(fkColumnMap.ReferredColumn.Name)
                 .AppendLine(")),");

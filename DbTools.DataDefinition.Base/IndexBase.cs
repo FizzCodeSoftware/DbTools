@@ -8,7 +8,7 @@ public abstract class IndexBase<T> : SqlTableOrViewPropertyBase<T> where T : Sql
     public List<ColumnAndOrder> SqlColumns { get; set; } = [];
 
     public bool Unique { get; set; }
-    public bool? Clustered { get; set; }
+    public bool? Clustered { get; init; }
 
     protected IndexBase(T sqlTable, string? name, bool unique = false)
         : base(sqlTable)

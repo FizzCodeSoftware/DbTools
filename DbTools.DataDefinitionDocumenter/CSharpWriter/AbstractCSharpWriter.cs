@@ -14,7 +14,7 @@ public abstract class AbstractCSharpWriter : AbstractCSharpWriterBase
     {
     }
 
-    public override string GetColumnCreation(SqlColumn column, DocumenterHelper helper, string extraAnnotation, string comment)
+    public override string GetColumnCreation(SqlColumn column, DocumenterHelper helper, string? extraAnnotation, string? comment)
     {
         var sb = new StringBuilder();
 
@@ -78,7 +78,7 @@ public abstract class AbstractCSharpWriter : AbstractCSharpWriterBase
     {
         sb.AppendLine(";")
             .Append(3, "table.SetForeignKeyTo(nameof(")
-            .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
+            .Append(helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
             .AppendLine("), ");
 
         sb.Append("new []")

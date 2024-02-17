@@ -2,17 +2,21 @@
 using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
-public class DocumenterHelper
+public class DocumenterHelper(Settings settings)
 {
-    protected Settings Settings { get; set; }
+    protected Settings Settings { get; set; } = settings;
 
-    public DocumenterHelper(Settings settings)
+    public string GetSimplifiedSchemaAndTableName(SqlTable? sqlTable, string? separator = ".")
     {
-        Settings = settings;
+        Throw.InvalidOperationExceptionIfNull(sqlTable);
+
+        return GetSimplifiedSchemaAndTableName(sqlTable.SchemaAndTableName, separator);
     }
 
-    public string GetSimplifiedSchemaAndTableName(SchemaAndTableName schemaAndTableName, string separator = ".")
+    public string GetSimplifiedSchemaAndTableName(SchemaAndTableName? schemaAndTableName, string? separator = ".")
     {
+        Throw.InvalidOperationExceptionIfNull(schemaAndTableName);
+
         var schema = schemaAndTableName.Schema;
         var tableName = schemaAndTableName.TableName;
 

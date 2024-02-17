@@ -20,7 +20,7 @@ public abstract class AbstractCSharpWriterBase
         DatabaseName = databaseName;
     }
 
-    public abstract string GetColumnCreation(SqlColumn column, DocumenterHelper helper, string extraAnnotation, string comment);
+    public abstract string GetColumnCreation(SqlColumn column, DocumenterHelper helper, string? extraAnnotation, string? comment);
 
     public virtual string GetSqlTypeNamespace()
     {

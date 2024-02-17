@@ -2,6 +2,6 @@
 
 public class ChangeDocumenterContext : DocumenterContext
 {
-    public ITableCustomizer CustomizerOriginal { get; set; }
-    public ITableCustomizer CustomizerNew { get; set; }
+    public required ITableCustomizer CustomizerOriginal { get; init; }
+    public required ITableCustomizer CustomizerNew { get; init; }
 }

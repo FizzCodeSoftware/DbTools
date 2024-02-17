@@ -17,7 +17,7 @@ public partial class Documenter : DocumenterWriterBase
 
             foreach (var item in items)
             {
-                WriteLine("Patt.ma.-tables", schemaAndTableName.Schema, schemaAndTableName.TableName, item.Pattern.ToString(), item.PatternExcept.ToString(), item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);
+                WriteLine("Patt.ma.-tables", schemaAndTableName.Schema, schemaAndTableName.TableName, item.Pattern?.ToString(), item.PatternExcept?.ToString(), item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);
             }
         }
 
@@ -29,7 +29,7 @@ public partial class Documenter : DocumenterWriterBase
 
             foreach (var schemaAndTableName in schemaAndTableNames)
             {
-                WriteLine("Patt.ma.-patterns", item.Pattern.ToString(), item.PatternExcept.ToString(), schemaAndTableName.Schema, schemaAndTableName.TableName, item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);
+                WriteLine("Patt.ma.-patterns", item.Pattern?.ToString(), item.PatternExcept?.ToString(), schemaAndTableName.Schema, schemaAndTableName.TableName, item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);
             }
         }
 
@@ -41,7 +41,7 @@ public partial class Documenter : DocumenterWriterBase
 
             foreach (var schemaAndTableName in schemaAndTableNames)
             {
-                WriteLine("Patt.ma.-ma.s w exceptions", item.Pattern.ToString(), item.PatternExcept.ToString(), schemaAndTableName.Schema, schemaAndTableName.TableName, item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);
+                WriteLine("Patt.ma.-ma.s w exceptions", item.Pattern?.ToString(), item.PatternExcept?.ToString(), schemaAndTableName.Schema, schemaAndTableName.TableName, item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);
             }
         }
     }
@@ -63,7 +63,7 @@ public partial class Documenter : DocumenterWriterBase
             if (customizer.MatchTablesWithException.ContainsKey(item))
                 continue;
 
-            WriteLine("Patt.ma.-no matches (unused)", item.Pattern.ToString(), item.PatternExcept.ToString(), item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);
+            WriteLine("Patt.ma.-no matches (unused)", item.Pattern?.ToString(), item.PatternExcept?.ToString(), item.ShouldSkipIfMatch, item.CategoryIfMatch, item.BackGroundColorIfMatch);
         }
     }
 }

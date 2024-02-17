@@ -11,7 +11,7 @@ public class ForeignKeyNamingMsSqlDefaultStrategy : ForeignKeyNamingDefaultStrat
 
     public override void SetFKName(ForeignKey fk)
     {
-        if (fk.SqlTable.SchemaAndTableName == null || fk.ReferredTable.SchemaAndTableName is null)
+        if (fk.SqlTable.SchemaAndTableName == null || fk.ReferredTable?.SchemaAndTableName is null)
             return;
 
         var fkName = fk.SqlTable.SchemaAndTableName.TableName + "__" + fk.ReferredTable.SchemaAndTableName.TableName;

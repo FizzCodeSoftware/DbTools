@@ -6,15 +6,11 @@ using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.SqlExecuter;
 
 namespace FizzCode.DbTools.DataDefinitionReader;
-public class MsSqlColumnDocumentationReader2016 : GenericDataDefinitionElementReader
+public class MsSqlColumnDocumentationReader2016(SqlStatementExecuter executer, SchemaNamesToRead? schemaNames = null)
+    : GenericDataDefinitionElementReader(executer, schemaNames)
 {
     private ILookup<string, Row> _queryResult = null!;
     private ILookup<string, Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement()).ToLookup(x => x.GetAs<string>("SchemaAndTableName")!);
-
-    public MsSqlColumnDocumentationReader2016(SqlStatementExecuter executer, SchemaNamesToRead? schemaNames = null)
-        : base(executer, schemaNames)
-    {
-    }
 
     public void GetColumnDocumentation(SqlTable table)
     {

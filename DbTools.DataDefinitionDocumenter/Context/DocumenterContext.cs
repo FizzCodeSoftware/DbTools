@@ -1,11 +1,13 @@
-﻿namespace FizzCode.DbTools.DataDefinitionDocumenter;
+﻿using FizzCode.DbTools.Common;
+
+namespace FizzCode.DbTools.DataDefinitionDocumenter;
 
 public class DocumenterContext : DocumenterContextBase
 {
-    public DocumenterSettings DocumenterSettings { get; set; }
+    public required DocumenterSettings DocumenterSettings { get; init; }
 
     public override T GetDocumenterSettings<T>()
     {
-        return DocumenterSettings as T;
+        return Throw.IfNull(DocumenterSettings as T);
     }
 }

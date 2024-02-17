@@ -7,13 +7,9 @@ using FizzCode.DbTools.DataDefinition;
 using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
-public class CSharpTypedGenerator : AbstractCSharpGenerator
+public class CSharpTypedGenerator(AbstractCSharpTypedWriter writer, SqlEngineVersion version, string databaseName, string @namespace)
+    : AbstractCSharpGenerator(writer, version, databaseName, @namespace)
 {
-    public CSharpTypedGenerator(AbstractCSharpTypedWriter writer, SqlEngineVersion version, string databaseName, string @namespace)
-        : base(writer, version, databaseName, @namespace)
-    {
-    }
-
     protected override void GenerateTable(StringBuilder sb, SqlTable table)
     {
         var tableName = Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));

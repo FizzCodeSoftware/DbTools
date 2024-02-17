@@ -18,7 +18,7 @@ public class Oracle12cMigrationGenerator(ContextWithLogger context)
         if (tableNames.Count() != 1)
             throw new ArgumentOutOfRangeException(nameof(columnNews), "All columns should be on the same table.");
 
-        var tableName = tableNames.First();
+        var tableName = tableNames.First()!;
 
         var columnsToAdd = columnNews.Select(c => c.Name).ToList();
 
@@ -47,9 +47,9 @@ public class Oracle12cMigrationGenerator(ContextWithLogger context)
         if (tableNames.Count() != 1)
             throw new ArgumentOutOfRangeException(nameof(columnDeletes), "All columns should be on the same table.");
 
-        var tableName = tableNames.First();
+        var tableName = tableNames.First()!;
 
-        var columnsToDelete = columnDeletes.Select(c => Generator.GuardKeywords(c.Name)).ToList();
+        var columnsToDelete = columnDeletes.Select(c => Generator.GuardKeywords(c.Name!)).ToList();
 
         var sb = new StringBuilder();
         sb.Append("ALTER TABLE ").AppendLine(Generator.GetSimplifiedSchemaAndTableName(tableName));
@@ -85,7 +85,7 @@ public class Oracle12cMigrationGenerator(ContextWithLogger context)
         {
             return $@"
 ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}
-MODIFY {GenerateColumnChange(columnChanges[0].SqlColumn, columnChanges[0].NewNameAndType)}";
+MODIFY {GenerateColumnChange(columnChanges[0].SqlColumn, columnChanges[0].NewNameAndType!)}";
         }
 
         var sbStatements = new StringBuilder();
@@ -106,7 +106,7 @@ MODIFY {GenerateColumnChange(columnChanges[0].SqlColumn, columnChanges[0].NewNam
         var typeNew = columnNew.Types[OracleVersion.Oracle12c];
 
         var sb = new StringBuilder();
-        sb.Append(Generator.GuardKeywords(columnOriginal.Name));
+        sb.Append(Generator.GuardKeywords(columnOriginal.Name!));
 
         if ((typeOld.SqlTypeInfo.HasLength && typeOld.Length != typeNew.Length)
             || (typeOld.SqlTypeInfo.HasScale && typeOld.Scale != typeNew.Scale))

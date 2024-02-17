@@ -21,11 +21,11 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
     {
     }
 
-    private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategoryOrignal = [];
-    private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategoryOriginal = [];
+    private readonly List<KeyValuePair<string?, SqlTable>> _sqlTablesByCategoryOrignal = [];
+    private readonly List<KeyValuePair<string?, SqlTable>> _skippedSqlTablesByCategoryOriginal = [];
 
-    //private readonly List<KeyValuePair<string, SqlTable>> _sqlTablesByCategoryNew = new List<KeyValuePair<string, SqlTable>>();
-    //private readonly List<KeyValuePair<string, SqlTable>> _skippedSqlTablesByCategoryNew = new List<KeyValuePair<string, SqlTable>>();
+    //private readonly List<KeyValuePair<string?, SqlTable>> _sqlTablesByCategoryNew = new List<KeyValuePair<string, SqlTable>>();
+    //private readonly List<KeyValuePair<string?, SqlTable>> _skippedSqlTablesByCategoryNew = new List<KeyValuePair<string, SqlTable>>();
 
     public void Document(IDatabaseDefinition originalDd, IDatabaseDefinition newDd)
     {
@@ -36,9 +36,9 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
         foreach (var table in tablesOriginal)
         {
             if (!Context.CustomizerOriginal.ShouldSkip(table.SchemaAndTableName!))
-                _sqlTablesByCategoryOrignal.Add(new KeyValuePair<string, SqlTable>(Context.CustomizerOriginal.Category(table.SchemaAndTableName!), table));
+                _sqlTablesByCategoryOrignal.Add(new KeyValuePair<string?, SqlTable>(Context.CustomizerOriginal.Category(table.SchemaAndTableName!), table));
             else
-                _skippedSqlTablesByCategoryOriginal.Add(new KeyValuePair<string, SqlTable>(Context.CustomizerOriginal.Category(table.SchemaAndTableName!), table));
+                _skippedSqlTablesByCategoryOriginal.Add(new KeyValuePair<string?, SqlTable>(Context.CustomizerOriginal.Category(table.SchemaAndTableName!), table));
         }
 
         var tablesNew = RemoveKnownTechnicalTables(newDd.GetTables());
@@ -46,9 +46,9 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
         foreach (var table in tablesNew)
         {
             if (!Context.CustomizerNew.ShouldSkip(table.SchemaAndTableName!))
-                _sqlTablesByCategoryOrignal.Add(new KeyValuePair<string, SqlTable>(Context.CustomizerNew.Category(table.SchemaAndTableName!), table));
+                _sqlTablesByCategoryOrignal.Add(new KeyValuePair<string?, SqlTable>(Context.CustomizerNew.Category(table.SchemaAndTableName!), table));
             else
-                _skippedSqlTablesByCategoryOriginal.Add(new KeyValuePair<string, SqlTable>(Context.CustomizerNew.Category(table.SchemaAndTableName!), table));
+                _skippedSqlTablesByCategoryOriginal.Add(new KeyValuePair<string?, SqlTable>(Context.CustomizerNew.Category(table.SchemaAndTableName!), table));
         }
 
         WriteLine("Database", "", "Original", "New");
@@ -71,13 +71,13 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
         foreach (var tableDelete in changes.OfType<TableDelete>())
         {
             if (!Context.CustomizerOriginal.ShouldSkip(tableDelete.SchemaAndTableName!))
-                WriteLine("Tables", tableDelete.SchemaAndTableName.Schema, tableDelete.SchemaAndTableName.TableName, "Deleted");
+                WriteLine("Tables", tableDelete.SchemaAndTableName!.Schema, tableDelete.SchemaAndTableName.TableName, "Deleted");
         }
 
         foreach (var tableNew in changes.OfType<TableNew>())
         {
             if (!Context.CustomizerNew.ShouldSkip(tableNew.SchemaAndTableName!))
-                WriteLine("Tables", tableNew.SchemaAndTableName.Schema, tableNew.SchemaAndTableName.TableName, "Added");
+                WriteLine("Tables", tableNew.SchemaAndTableName!.Schema, tableNew.SchemaAndTableName.TableName, "Added");
         }
 
         var processedTables = new List<SchemaAndTableName>();
@@ -106,7 +106,7 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
                     }
                 case ColumnChange column:
                     {
-                        if (Context.CustomizerNew.ShouldSkip(column.NewNameAndType.Table.SchemaAndTableName!))
+                        if (Context.CustomizerNew.ShouldSkip(column.NewNameAndType!.Table.SchemaAndTableName!))
                             continue;
 
                         ProcessColumnMigration(processedTables, column.SqlColumn, "Original");
@@ -128,7 +128,7 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
                 {
                     case ForeignKeyNew fkNew:
                         {
-                            if (Context.CustomizerNew.ShouldSkip(fkNew.ForeignKey.ReferredTable.SchemaAndTableName!))
+                            if (Context.CustomizerNew.ShouldSkip(fkNew.ForeignKey.ReferredTable!.SchemaAndTableName!))
                                 continue;
 
                             ProcessForeignKey(processedFKs, fkNew.ForeignKey, "New");
@@ -136,7 +136,7 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
                         }
                     case ForeignKeyDelete fkDelete:
                         {
-                            if (Context.CustomizerOriginal.ShouldSkip(fkDelete.ForeignKey.ReferredTable.SchemaAndTableName!))
+                            if (Context.CustomizerOriginal.ShouldSkip(fkDelete.ForeignKey.ReferredTable!.SchemaAndTableName!))
                                 continue;
 
                             ProcessForeignKey(processedFKs, fkDelete.ForeignKey, "Delete");
@@ -145,7 +145,7 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
                         }
                     case ForeignKeyChange fkChange:
                         {
-                            if (Context.CustomizerNew.ShouldSkip(fkChange.NewForeignKey.ReferredTable.SchemaAndTableName!))
+                            if (Context.CustomizerNew.ShouldSkip(fkChange.NewForeignKey.ReferredTable!.SchemaAndTableName!))
                                 continue;
 
                             ProcessForeignKey(processedFKs, fkChange.ForeignKey, "Original");
@@ -163,13 +163,13 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
 
             foreach (var change in changes.OfType<IndexMigration>())
             {
-                ProcessTable(processedTables, change.Index.SqlTableOrView); // Ensure table header
+                ProcessTable(processedTables, change.Index.SqlTableOrView!); // Ensure table header
 
                 switch (change)
                 {
                     case IndexNew indexNew:
                         {
-                            if (Context.CustomizerNew.ShouldSkip(indexNew.Index.SqlTableOrView.SchemaAndTableName!))
+                            if (Context.CustomizerNew.ShouldSkip(indexNew.Index.SqlTableOrView!.SchemaAndTableName!))
                                 continue;
 
                             ProcessIndex(processedIndexes, indexNew.Index, "New");
@@ -177,7 +177,7 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
                         }
                     case IndexDelete indexDelete:
                         {
-                            if (Context.CustomizerOriginal.ShouldSkip(indexDelete.Index.SqlTableOrView.SchemaAndTableName!))
+                            if (Context.CustomizerOriginal.ShouldSkip(indexDelete.Index.SqlTableOrView!.SchemaAndTableName!))
                                 continue;
 
                             ProcessIndex(processedIndexes, indexDelete.Index, "Delete");
@@ -186,7 +186,7 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
                         }
                     case IndexChange indexChange:
                         {
-                            if (Context.CustomizerNew.ShouldSkip(indexChange.NewIndex.SqlTableOrView.SchemaAndTableName!))
+                            if (Context.CustomizerNew.ShouldSkip(indexChange.NewIndex.SqlTableOrView!.SchemaAndTableName!))
                                 continue;
 
                             ProcessIndex(processedIndexes, indexChange.Index, "Original");
@@ -204,13 +204,13 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
 
             foreach (var change in changes.OfType<UniqueConstraintMigration>())
             {
-                ProcessTable(processedTables, change.UniqueConstraint.SqlTableOrView); // Ensure table header
+                ProcessTable(processedTables, change.UniqueConstraint.SqlTableOrView!); // Ensure table header
 
                 switch (change)
                 {
                     case UniqueConstraintNew ucNew:
                         {
-                            if (Context.CustomizerNew.ShouldSkip(ucNew.UniqueConstraint.SqlTableOrView.SchemaAndTableNameSafe))
+                            if (Context.CustomizerNew.ShouldSkip(ucNew.UniqueConstraint.SqlTableOrView!.SchemaAndTableNameSafe))
                                 continue;
 
                             ProcessUniqueConstraint(processedUniqueConsreaints, ucNew.UniqueConstraint, "New");
@@ -218,7 +218,7 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
                         }
                     case UniqueConstraintDelete ucDelete:
                         {
-                            if (Context.CustomizerOriginal.ShouldSkip(ucDelete.UniqueConstraint.SqlTableOrView.SchemaAndTableNameSafe))
+                            if (Context.CustomizerOriginal.ShouldSkip(ucDelete.UniqueConstraint.SqlTableOrView!.SchemaAndTableNameSafe))
                                 continue;
 
                             ProcessUniqueConstraint(processedUniqueConsreaints, ucDelete.UniqueConstraint, "Delete");
@@ -227,7 +227,7 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
                         }
                     case UniqueConstraintChange ucChange:
                         {
-                            if (Context.CustomizerNew.ShouldSkip(ucChange.NewUniqueConstraint.SqlTableOrView.SchemaAndTableNameSafe))
+                            if (Context.CustomizerNew.ShouldSkip(ucChange.NewUniqueConstraint.SqlTableOrView!.SchemaAndTableNameSafe))
                                 continue;
 
                             ProcessUniqueConstraint(processedUniqueConsreaints, ucChange.UniqueConstraint, "Original");
@@ -268,11 +268,11 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
 
             WriteLine(fk.SqlTable.SchemaAndTableName!);
 
-            WriteAndMerge(fk.SqlTable.SchemaAndTableName, mergeAmount, "Foreign keys");
+            WriteAndMerge(fk.SqlTable.SchemaAndTableName!, mergeAmount, "Foreign keys");
             WriteLine(fk.SqlTable.SchemaAndTableName!);
 
             // TODO allow nulls. Check / other properties?
-            WriteLine(fk.SqlTable.SchemaAndTableName, "Event", "Foreign key name", "Column", "Referenced Table", "link", "Referenced Column", "Properties");
+            WriteLine(fk.SqlTable.SchemaAndTableName!, "Event", "Foreign key name", "Column", "Referenced Table", "link", "Referenced Column", "Properties");
         }
 
         AddForeignKey(fk, firstColumn);
@@ -280,7 +280,7 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
 
     private void ProcessIndex(List<SchemaAndTableName> procssedIndexes, Index index, string firstColumn)
     {
-        if (!procssedIndexes.Contains(index.SqlTableOrView.SchemaAndTableNameSafe))
+        if (!procssedIndexes.Contains(index.SqlTableOrView!.SchemaAndTableNameSafe))
         {
             procssedIndexes.Add(index.SqlTableOrView.SchemaAndTableName!);
 
@@ -288,10 +288,10 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
 
             WriteLine(index.SqlTableOrView.SchemaAndTableName!);
 
-            WriteAndMerge(index.SqlTableOrView.SchemaAndTableName, mergeAmount, "Indexes");
+            WriteAndMerge(index.SqlTableOrView!.SchemaAndTableName!, mergeAmount, "Indexes");
             WriteLine(index.SqlTableOrView.SchemaAndTableName!);
 
-            WriteLine(index.SqlTableOrView.SchemaAndTableName, "Event", "Index name", "Column", "Order", "Include");
+            WriteLine(index.SqlTableOrView!.SchemaAndTableName!, "Event", "Index name", "Column", "Order", "Include");
         }
 
         AddIndex(index, firstColumn);
@@ -299,7 +299,7 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
 
     private void ProcessUniqueConstraint(List<SchemaAndTableName> procssedUniqueConstraints, UniqueConstraint uniqueConstraint, string firstColumn)
     {
-        if (!procssedUniqueConstraints.Contains(uniqueConstraint.SqlTableOrView.SchemaAndTableNameSafe))
+        if (!procssedUniqueConstraints.Contains(uniqueConstraint.SqlTableOrView!.SchemaAndTableName!))
         {
             procssedUniqueConstraints.Add(uniqueConstraint.SqlTableOrView.SchemaAndTableName!);
 
@@ -307,10 +307,10 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
 
             WriteLine(uniqueConstraint.SqlTableOrView.SchemaAndTableName!);
 
-            WriteAndMerge(uniqueConstraint.SqlTableOrView.SchemaAndTableName, mergeAmount, "Unique constraints");
+            WriteAndMerge(uniqueConstraint.SqlTableOrView.SchemaAndTableName!, mergeAmount, "Unique constraints");
             WriteLine(uniqueConstraint.SqlTableOrView.SchemaAndTableName!);
 
-            WriteLine(uniqueConstraint.SqlTableOrView.SchemaAndTableName, "Unique constraint name", "Column");
+            WriteLine(uniqueConstraint.SqlTableOrView.SchemaAndTableName!, "Unique constraint name", "Column");
         }
 
         AddUniqueConstraint(uniqueConstraint, firstColumn);

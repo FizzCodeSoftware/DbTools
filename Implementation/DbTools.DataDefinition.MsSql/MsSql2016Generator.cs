@@ -95,7 +95,7 @@ FOR XML path(''));
 EXEC sp_executesql @sql";
     }
 
-    public override SqlStatementWithParameters CreateDbTableDescription(SqlTable table)
+    public override SqlStatementWithParameters? CreateDbTableDescription(SqlTable table)
     {
         var sqlTableDescription = table.Properties.OfType<SqlTableDescription>().FirstOrDefault();
         if (sqlTableDescription is null)
@@ -107,13 +107,13 @@ EXEC sp_executesql @sql";
 
         sqlStatementWithParameters.Parameters.Add("@Description", sqlTableDescription.Description);
 
-        sqlStatementWithParameters.Parameters.Add("@SchemaName", table.SchemaAndTableName.Schema ?? Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
+        sqlStatementWithParameters.Parameters.Add("@SchemaName", table.SchemaAndTableName!.Schema ?? Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema"));
         sqlStatementWithParameters.Parameters.Add("@TableName", table.SchemaAndTableName.TableName);
 
         return sqlStatementWithParameters;
     }
 
-    public override SqlStatementWithParameters CreateDbColumnDescription(SqlColumn column)
+    public override SqlStatementWithParameters? CreateDbColumnDescription(SqlColumn column)
     {
         var sqlColumnDescription = column.Properties.OfType<SqlColumnDescription>().FirstOrDefault();
         if (sqlColumnDescription is null)
@@ -124,7 +124,7 @@ EXEC sp_executesql @sql";
         var defaultSchema = Context.Settings.SqlVersionSpecificSettings.GetAs<string>("DefaultSchema");
 
         sqlStatementWithParameters.Parameters.Add("@Description", sqlColumnDescription.Description);
-        sqlStatementWithParameters.Parameters.Add("@SchemaName", column.Table.SchemaAndTableName.Schema ?? defaultSchema);
+        sqlStatementWithParameters.Parameters.Add("@SchemaName", column.Table.SchemaAndTableName!.Schema ?? defaultSchema);
         sqlStatementWithParameters.Parameters.Add("@TableName", column.Table.SchemaAndTableName.TableName);
         sqlStatementWithParameters.Parameters.Add("@ColumnName", column.Name);
 
@@ -142,7 +142,7 @@ EXEC sp_executesql @sql";
         var sb = new StringBuilder();
 
         sb.Append("ALTER TABLE ")
-            .Append(GetSimplifiedSchemaAndTableName(fk.SqlTable.SchemaAndTableName));
+            .Append(GetSimplifiedSchemaAndTableName(fk.SqlTable.SchemaAndTableName!));
         if (fk.SqlEngineVersionSpecificProperties.Contains(SqlVersion, "Nocheck") && fk.SqlEngineVersionSpecificProperties[SqlVersion, "Nocheck"] == "true")
             sb.Append(" WITH NOCHECK ADD ");
         else
@@ -150,13 +150,13 @@ EXEC sp_executesql @sql";
 
         sb.AppendLine(FKConstraint(fk))
         .Append("ALTER TABLE ")
-        .Append(GetSimplifiedSchemaAndTableName(fk.SqlTable.SchemaAndTableName));
+        .Append(GetSimplifiedSchemaAndTableName(fk.SqlTable.SchemaAndTableName!));
         if (fk.SqlEngineVersionSpecificProperties.Contains(SqlVersion, "Nocheck") && fk.SqlEngineVersionSpecificProperties[SqlVersion, "Nocheck"] == "true")
             sb.Append(" NOCHECK CONSTRAINT ");
         else
             sb.Append(" CHECK CONSTRAINT ");
 
-        sb.AppendLine(GuardKeywords(fk.Name));
+        sb.AppendLine(GuardKeywords(fk.Name!));
 
         return sb.ToString();
     }

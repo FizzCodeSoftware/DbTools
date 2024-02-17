@@ -333,7 +333,7 @@ public static class MsSql2016
         return Add(sqlType);
     }
 
-    public static SqlColumn SetForeignKeyTo(string referredTableName, string fkName = null)
+    public static SqlColumn SetForeignKeyTo(string referredTableName, string? fkName = null)
     {
         var referredTableNameWithSchema = new SchemaAndTableName(referredTableName);
 

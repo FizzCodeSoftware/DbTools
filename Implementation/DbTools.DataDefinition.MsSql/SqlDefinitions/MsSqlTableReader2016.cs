@@ -8,8 +8,8 @@ using FizzCode.DbTools.SqlExecuter;
 namespace FizzCode.DbTools.DataDefinitionReader;
 public class MsSqlTableReader2016 : GenericDataDefinitionElementReader
 {
-    private ILookup<string, Row> _queryResult;
-    private ILookup<string, Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement()).ToLookup(x => x.GetAs<string>("SchemaAndTableName"));
+    private ILookup<string, Row> _queryResult = null!;
+    private ILookup<string, Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement()).ToLookup(x => x.GetAs<string>("SchemaAndTableName")!);
 
     protected MsSql2016TypeMapper TypeMapper { get; } = new MsSql2016TypeMapper();
 
@@ -36,7 +36,7 @@ public class MsSqlTableReader2016 : GenericDataDefinitionElementReader
             column.Types.Add(Executer.Generator.SqlVersion, sqlType);
             column.Name = row.GetAs<string>("COLUMN_NAME");
 
-            sqlView.Columns.Add(column.Name, column);
+            sqlView.Columns.Add(column.Name!, column);
         }
 
         return sqlView;
@@ -60,7 +60,7 @@ public class MsSqlTableReader2016 : GenericDataDefinitionElementReader
             column.Types.Add(Executer.Generator.SqlVersion, sqlType);
             column.Name = row.GetAs<string>("COLUMN_NAME");
 
-            sqlTable.Columns.Add(column.Name, column);
+            sqlTable.Columns.Add(column.Name!, column);
         }
 
         return sqlTable;
@@ -68,7 +68,7 @@ public class MsSqlTableReader2016 : GenericDataDefinitionElementReader
 
     private SqlType GetSqlTypeFromRow(Row row)
     {
-        var type = row.GetAs<string>("DATA_TYPE");
+        var type = Throw.IfNull(row.GetAs<string>("DATA_TYPE"));
 
         var numericPrecision = row.GetAs<byte?>("NUMERIC_PRECISION") ?? 0;
         var numericScale = row.GetAs<int?>("NUMERIC_SCALE") ?? 0;

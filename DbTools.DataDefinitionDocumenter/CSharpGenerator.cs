@@ -7,13 +7,9 @@ using FizzCode.DbTools.DataDefinition;
 using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
-public class CSharpGenerator : AbstractCSharpGenerator
+public class CSharpGenerator(AbstractCSharpWriter writer, SqlEngineVersion version, string databaseName, string @namespace)
+    : AbstractCSharpGenerator(writer, version, databaseName, @namespace)
 {
-    public CSharpGenerator(AbstractCSharpWriter writer, SqlEngineVersion version, string databaseName, string @namespace)
-        : base(writer, version, databaseName, @namespace)
-    {
-    }
-
     protected override void GenerateTable(StringBuilder sb, SqlTable table)
     {
         var pks = table.Properties.OfType<PrimaryKey>().ToList();
@@ -30,7 +26,7 @@ public class CSharpGenerator : AbstractCSharpGenerator
 
         sb
             .Append(2, "public SqlTable ")
-            .Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
+            .Append(Helper.GetSimplifiedSchemaAndTableName(table.SchemaAndTableName!, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture)))
             .AppendLine(" { get; } = AddTable(table =>")
             .AppendLine(2, "{");
 

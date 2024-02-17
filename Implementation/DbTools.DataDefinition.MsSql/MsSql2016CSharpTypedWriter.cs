@@ -6,13 +6,9 @@ using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.DataDefinitionDocumenter;
 
 namespace FizzCode.DbTools.DataDefinition.MsSql2016;
-public class MsSql2016CSharpTypedWriter : AbstractCSharpTypedWriter
+public class MsSql2016CSharpTypedWriter(GeneratorContext context, Type typeMapperType, string databaseName)
+    : AbstractCSharpTypedWriter(context, MsSqlVersion.MsSql2016, typeMapperType, databaseName)
 {
-    public MsSql2016CSharpTypedWriter(GeneratorContext context, Type typeMapperType, string databaseName)
-        : base(context, MsSqlVersion.MsSql2016, typeMapperType, databaseName)
-    {
-    }
-
     protected override string GetColumnCreationMethod(SqlColumn column)
     {
         var type = column.Types[Version];

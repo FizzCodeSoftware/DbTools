@@ -5,7 +5,7 @@ using System.Text;
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public abstract partial class DocumenterWriterBase
 {
-    protected void AddForeignKey(ForeignKey fk, string firstColumn = null)
+    protected void AddForeignKey(ForeignKey fk, string? firstColumn = null)
     {
         var countToMerge = 0;
         var table = fk.SqlTable;
@@ -13,11 +13,11 @@ public abstract partial class DocumenterWriterBase
         foreach (var fkColumn in fk.ForeignKeyColumns)
         {
             if (firstColumn != null)
-                Write(table.SchemaAndTableName, firstColumn);
+                Write(table.SchemaAndTableName!, firstColumn);
 
-            Write(table.SchemaAndTableName, fk.Name, fkColumn.ForeignKeyColumn.Name, Helper.GetSimplifiedSchemaAndTableName(fk.ReferredTable.SchemaAndTableName));
-            WriteLink(table.SchemaAndTableName, "link", Helper.GetSimplifiedSchemaAndTableName(fk.ReferredTable.SchemaAndTableName), GetColor(fk.ReferredTable.SchemaAndTableName));
-            Write(table.SchemaAndTableName, fkColumn.ReferredColumn.Name);
+            Write(table.SchemaAndTableName!, fk.Name, fkColumn.ForeignKeyColumn.Name, Helper.GetSimplifiedSchemaAndTableName(fk.ReferredTable));
+            WriteLink(table.SchemaAndTableName!, "link", Helper.GetSimplifiedSchemaAndTableName(fk.ReferredTable), GetColor(fk.ReferredTable!.SchemaAndTableName!));
+            Write(table.SchemaAndTableName!, fkColumn.ReferredColumn.Name);
 
             if (fk.SqlEngineVersionSpecificProperties.Any())
             {
@@ -31,11 +31,11 @@ public abstract partial class DocumenterWriterBase
                         .AppendLine(sqlEngineVersionSpecificProperty.Value);
                 }
 
-                WriteLine(table.SchemaAndTableName, propertySb.ToString());
+                WriteLine(table.SchemaAndTableName!, propertySb.ToString());
             }
             else
             {
-                WriteLine(table.SchemaAndTableName);
+                WriteLine(table.SchemaAndTableName!);
             }
 
             countToMerge++;
@@ -43,7 +43,7 @@ public abstract partial class DocumenterWriterBase
 
         if (countToMerge > 1)
         {
-            MergeUpFromPreviousRow(table.SchemaAndTableName, countToMerge - 1);
+            MergeUpFromPreviousRow(table.SchemaAndTableName!, countToMerge - 1);
         }
     }
 }
