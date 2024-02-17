@@ -2,7 +2,7 @@
 
 public abstract class DocumenterSettingsBase
 {
-    public string WorkingDirectory { get; set; }
+    public string? WorkingDirectory { get; set; }
 
     public bool NoForeignKeys { get; set; }
 

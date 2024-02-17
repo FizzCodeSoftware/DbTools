@@ -18,8 +18,11 @@ public static class Features
 
     public static FeatureSupport GetSupport(SqlEngineVersion version, string name)
     {
-        if (_features.ContainsKey(name) && _features[name].Support.ContainsKey(version))
-            return _features[name].Support[version];
+        if (_features.TryGetValue(name, out var feature)
+            && feature.Support.TryGetValue(version, out var value))
+        {
+            return value;
+        }
 
         return new FeatureSupport(Support.Unknown, $"The support for the feature {name} for {version} is unknown.");
     }

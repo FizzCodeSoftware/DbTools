@@ -1,10 +1,7 @@
 ﻿using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.DataDefinition;
-public class SqlColumnCustomProperty : SqlColumnProperty
+public class SqlColumnCustomProperty(SqlColumn sqlColumn)
+    : SqlColumnProperty(sqlColumn)
 {
-    public SqlColumnCustomProperty(SqlColumn sqlColumn)
-        : base(sqlColumn)
-    {
-    }
 }

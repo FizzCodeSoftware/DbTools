@@ -6,17 +6,13 @@ using FizzCode.DbTools.DataDefinition.MsSql2016;
 using FizzCode.DbTools.SqlExecuter;
 
 namespace FizzCode.DbTools.DataDefinitionReader;
-public class MsSqlTableReader2016 : GenericDataDefinitionElementReader
+public class MsSqlTableReader2016(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
+    : GenericDataDefinitionElementReader(executer, schemaNames)
 {
     private ILookup<string, Row> _queryResult = null!;
     private ILookup<string, Row> QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement()).ToLookup(x => x.GetAs<string>("SchemaAndTableName")!);
 
     protected MsSql2016TypeMapper TypeMapper { get; } = new MsSql2016TypeMapper();
-
-    public MsSqlTableReader2016(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
-        : base(executer, schemaNames)
-    {
-    }
 
     public SqlView GetViewDefinition(SchemaAndTableName schemaAndTableName)
     {

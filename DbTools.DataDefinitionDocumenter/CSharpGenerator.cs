@@ -74,8 +74,11 @@ public class CSharpGenerator(AbstractCSharpWriter writer, SqlEngineVersion versi
         sb.Append(3, "table.AddIndexWithName(");
         if (index.Includes.Count == 0)
         {
-            sb.Append(index.Clustered.ToString().ToLowerInvariant())
-                .Append(", ");
+            if (index.Clustered != null)
+            {
+                sb.Append(index.Clustered.ToString()!.ToLowerInvariant())
+                    .Append(", ");
+            }
 
             sb.Append('"')
                 .Append(index.Name)
@@ -85,8 +88,11 @@ public class CSharpGenerator(AbstractCSharpWriter writer, SqlEngineVersion versi
         }
         else
         {
-            sb.Append(index.Clustered.ToString().ToLowerInvariant())
-                .Append(", ");
+            if (index.Clustered != null)
+            {
+                sb.Append(index.Clustered.ToString()!.ToLowerInvariant())
+                    .Append(", ");
+            }
 
             sb.Append('"')
                 .Append(index.Name)

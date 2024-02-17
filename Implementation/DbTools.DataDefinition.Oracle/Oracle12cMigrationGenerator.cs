@@ -152,6 +152,7 @@ MODIFY {GenerateColumnChange(columnChanges[0].SqlColumn, columnChanges[0].NewNam
         var defaultValueNew = columnNew.Properties.OfType<DefaultValue>().FirstOrDefault();
         if (defaultValueOld != defaultValueNew)
         {
+            // TODO clenup default change, add tests
             sb.Append(" DEFAULT(")
                 .Append(defaultValueNew.Value)
                 .Append(')');

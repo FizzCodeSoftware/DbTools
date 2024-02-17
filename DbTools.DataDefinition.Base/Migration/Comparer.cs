@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using FizzCode.DbTools.Common;
+﻿using FizzCode.DbTools.Common;
 
 namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public class Comparer
@@ -87,7 +86,7 @@ public class Comparer
 
                 var propertyChanges = ComparerIdentity.CompareIdentity(columnOriginal, columnNew);
 
-                if (propertyChanges.Any()
+                if (propertyChanges.Count != 0
                     || ColumnChanged(columnNew, columnOriginal))
                 {
                     columnChange.NewNameAndType = columnNew.CopyTo(new SqlColumn());
