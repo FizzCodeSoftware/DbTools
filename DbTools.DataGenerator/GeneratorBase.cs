@@ -13,7 +13,7 @@ public abstract class GeneratorBase
     {
     }
 
-    public GeneratorContext Context { get; protected set; }
+    public GeneratorContext? Context { get; protected set; }
 
     public void SetContext(GeneratorContext context)
     {

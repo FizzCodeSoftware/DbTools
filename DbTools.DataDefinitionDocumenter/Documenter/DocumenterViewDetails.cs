@@ -37,7 +37,7 @@ public partial class Documenter
         }
     }
 
-    protected void AddViewDetails(string category, SqlView view, bool hasCategories)
+    protected void AddViewDetails(string? category, SqlView view, bool hasCategories)
     {
         foreach (var column in view.Columns)
         {

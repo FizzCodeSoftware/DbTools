@@ -20,7 +20,7 @@ public class ConsoleLogger(ILogger logger, ILogger opsLogger)
             : _logger;
 
         var values = new List<object>();
-        values.AddRange(args.Arguments);
+        values.AddRange(args.Arguments!);
 
         logger.Write(
             (LogEventLevel)args.Severity,

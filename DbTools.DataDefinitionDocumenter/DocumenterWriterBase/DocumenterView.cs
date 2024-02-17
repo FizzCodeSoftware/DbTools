@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace FizzCode.DbTools.DataDefinitionDocumenter;
 public abstract partial class DocumenterWriterBase
 {
-    protected void AddViewHeader(bool hasCategories, string category, SqlView view, string? firstColumn = null)
+    protected void AddViewHeader(bool hasCategories, string? category, SqlView view, string? firstColumn = null)
     {
         var mergeAmount = !Context.DocumenterSettings.NoInternalDataTypes ? 4 : 3;
         mergeAmount += firstColumn == null ? 0 : 1;

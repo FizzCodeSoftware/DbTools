@@ -27,7 +27,7 @@ public class OraclePrimaryKeyReader12c : OracleDataDefinitionElementReader
 
     public void GetPrimaryKey(SqlTable table)
     {
-        PrimaryKey pk = null;
+        PrimaryKey pk = null!;
 
         var rows = _queryResult
             .Where(row => DataDefinitionReaderHelper.SchemaAndTableNameEquals(row, table, "SCHEMA_NAME", "TABLE_NAME"))
@@ -42,7 +42,7 @@ public class OraclePrimaryKeyReader12c : OracleDataDefinitionElementReader
                 table.Properties.Add(pk);
             }
 
-            var column = table.Columns[row.GetAs<string>("COLUMN_NAME")];
+            var column = table.Columns[Throw.IfNull(row.GetAs<string>("COLUMN_NAME"))];
 
             var ascDesc = AscDesc.Asc;
 

@@ -30,9 +30,9 @@ public class MsSqlTableReader2016(SqlStatementExecuter executer, ISchemaNamesToR
                 SqlTableOrView = sqlView
             };
             column.Types.Add(Executer.Generator.SqlVersion, sqlType);
-            column.Name = row.GetAs<string>("COLUMN_NAME");
+            column.Name = Throw.IfNull(row.GetAs<string>("COLUMN_NAME"));
 
-            sqlView.Columns.Add(column.Name!, column);
+            sqlView.Columns.Add(column.Name, column);
         }
 
         return sqlView;

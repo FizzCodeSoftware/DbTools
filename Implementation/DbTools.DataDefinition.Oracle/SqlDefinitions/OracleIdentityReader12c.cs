@@ -32,7 +32,7 @@ public class OracleIdentityReader12c : OracleDataDefinitionElementReader
 
         foreach (var row in rows)
         {
-            var column = table.Columns[row.GetAs<string>("COLUMN_NAME")];
+            var column = table.Columns[Throw.IfNull(row.GetAs<string>("COLUMN_NAME"))];
             column.Properties.Add(new Identity(column));
         }
     }

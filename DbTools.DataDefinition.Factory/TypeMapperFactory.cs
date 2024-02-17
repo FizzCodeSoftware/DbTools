@@ -1,4 +1,5 @@
-﻿using FizzCode.DbTools.DataDefinition.Base.Interfaces;
+﻿using System;
+using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 using FizzCode.DbTools.DataDefinition.MsSql2016;
 using FizzCode.DbTools.DataDefinition.Oracle12c;
 using FizzCode.DbTools.DataDefinition.SqLite3;
@@ -20,6 +21,6 @@ public class TypeMapperFactory : ITypeMapperFactory
         if (version == GenericVersion.Generic1)
             return new Generic1TypeMapper();
 
-        return null;
+        throw new NotImplementedException($"Not implemented {version}.");
     }
 }

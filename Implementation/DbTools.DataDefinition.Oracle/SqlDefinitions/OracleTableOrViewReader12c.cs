@@ -8,7 +8,7 @@ using FizzCode.DbTools.SqlExecuter;
 namespace FizzCode.DbTools.DataDefinitionReader;
 public abstract class OracleTableOrViewReader12c : OracleDataDefinitionElementReader
 {
-    protected ILookup<string, Row> QueryResult;
+    protected ILookup<string, Row> QueryResult = null!;
     protected Oracle12cTypeMapper TypeMapper { get; } = new Oracle12cTypeMapper();
 
     protected OracleTableOrViewReader12c(SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
@@ -20,7 +20,7 @@ public abstract class OracleTableOrViewReader12c : OracleDataDefinitionElementRe
     {
         // char_col_decl_length
 
-        var type = row.GetAs<string>("DATA_TYPE");
+        var type = Throw.IfNull(row.GetAs<string>("DATA_TYPE"));
         var dataPrecisionDecimal = row.GetAs<decimal?>("DATA_PRECISION");
         var dataScaleDecimal = row.GetAs<decimal?>("DATA_SCALE");
         var dataPrecision = (int?)dataPrecisionDecimal;

@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 using FizzCode.DbTools.SqlExecuter;
@@ -11,7 +12,7 @@ public class OracleViewReader12c : OracleTableOrViewReader12c
     {
         var sqlStatement = GetStatement();
         AddSchemaNamesFilter(ref sqlStatement, "all_tab_columns.owner");
-        QueryResult = Executer.ExecuteQuery(sqlStatement).ToLookup(x => x.GetAs<string>("SCHEMAANDTABLENAME"));
+        QueryResult = Executer.ExecuteQuery(sqlStatement).ToLookup(x => x.GetAs<string>("SCHEMAANDTABLENAME")!);
     }
 
     public SqlView GetViewDefinition(SchemaAndTableName schemaAndTableName)
@@ -29,7 +30,7 @@ public class OracleViewReader12c : OracleTableOrViewReader12c
                 SqlTableOrView = sqlView
             };
             column.Types.Add(Executer.Generator.SqlVersion, sqlType);
-            column.Name = row.GetAs<string>("COLUMN_NAME");
+            column.Name = Throw.IfNull(row.GetAs<string>("COLUMN_NAME"));
 
             sqlView.Columns.Add(column.Name, column);
         }

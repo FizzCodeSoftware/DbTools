@@ -47,7 +47,7 @@ public class MsSql2016CSharpTypedWriter(GeneratorContext context, Type typeMappe
 
     protected override void AddForeignKeySettingsSingleColumn(StringBuilder sb, DocumenterHelper helper, ForeignKey fkOnColumn)
     {
-        var tableName = helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
+        var tableName = helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
 
         if (fkOnColumn.SqlEngineVersionSpecificProperties.Count() == 1
             && fkOnColumn.SqlEngineVersionSpecificProperties.First().Name == "Nocheck"

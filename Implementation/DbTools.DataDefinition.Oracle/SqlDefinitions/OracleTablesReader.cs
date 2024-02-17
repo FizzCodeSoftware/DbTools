@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
+using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 using FizzCode.DbTools.DataDefinitionReader;
 
 namespace FizzCode.DbTools.DataDefinition.Oracle12c;
-public class OracleTablesReader : OracleDataDefinitionElementReader
+public class OracleTablesReader(SqlExecuter.SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
+    : OracleDataDefinitionElementReader(executer, schemaNames)
 {
-    public OracleTablesReader(SqlExecuter.SqlStatementExecuter executer, ISchemaNamesToRead schemaNames)
-        : base(executer, schemaNames)
-    {
-    }
-
     public List<SchemaAndTableName> GetSchemaAndTableNames()
     {
         var sqlStatement = @"
@@ -21,6 +18,9 @@ WHERE t.owner = u.username";
         AddSchemaNamesFilter(ref sqlStatement, "t.owner");
 
         return Executer.ExecuteQuery(sqlStatement)
-            .ConvertAll(row => new SchemaAndTableName(row.GetAs<string>("SCHEMANAME"), row.GetAs<string>("TABLENAME")));
+            .ConvertAll(row => new SchemaAndTableName(
+                row.GetAs<string>("SCHEMANAME"),
+                Throw.IfNull(row.GetAs<string>("TABLENAME"))
+            ));
     }
 }

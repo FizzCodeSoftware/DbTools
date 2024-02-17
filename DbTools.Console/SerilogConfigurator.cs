@@ -12,7 +12,7 @@ internal static class SerilogConfigurator
 {
     public static ILogger CreateLogger(LogConfiguration? configuration)
     {
-        var logsFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "log-dev");
+        var logsFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "log-dev");
 
         var config = new LoggerConfiguration()
             .Enrich.WithExceptionDetails()
@@ -98,7 +98,7 @@ internal static class SerilogConfigurator
 
     public static ILogger CreateOpsLogger(LogConfiguration? configuration)
     {
-        var logsFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "log-ops");
+        var logsFolder = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!, "log-ops");
 
         var loggerConfig = new LoggerConfiguration()
             .WriteTo.File(Path.Combine(logsFolder, "2-info-.txt"),

@@ -66,7 +66,7 @@ GRANT UNLIMITED TABLESPACE TO ""{schemaName}""");
 
         sb.Append(GrantReferenceAcrossSchemas(fk));
         sb.Append("ALTER TABLE ")
-            .Append(GetSimplifiedSchemaAndTableName(fk.SqlTable.SchemaAndTableName))
+            .Append(GetSimplifiedSchemaAndTableName(fk.SqlTable.SchemaAndTableName!))
             .Append(" ADD ")
             .Append(FKConstraint(fk))
             .AppendLine(";");
@@ -74,9 +74,9 @@ GRANT UNLIMITED TABLESPACE TO ""{schemaName}""");
         return sb.ToString();
     }
 
-    private string GrantReferenceAcrossSchemas(ForeignKey fk)
+    private string? GrantReferenceAcrossSchemas(ForeignKey fk)
     {
-        if (fk.SqlTable.SchemaAndTableName.Schema != fk.ReferredTable.SchemaAndTableName.Schema)
+        if (fk.SqlTable.SchemaAndTableName!.Schema != fk.ReferredTable!.SchemaAndTableName!.Schema)
         {
             return $"GRANT REFERENCES ON {GetSimplifiedSchemaAndTableName(fk.ReferredTable.SchemaAndTableName)} TO \"{fk.SqlTable.SchemaAndTableName.Schema}\";";
         }

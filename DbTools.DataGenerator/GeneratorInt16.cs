@@ -14,7 +14,7 @@ public class GeneratorInt16 : GeneratorMinMax<short>
 
     public override object Get()
     {
-        var value = Context.Random.Next(Min, Max + 1);
+        var value = Context!.Random.Next(Min, Max + 1);
         return (short)value;
     }
 }

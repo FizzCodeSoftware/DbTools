@@ -6,7 +6,7 @@ using Serilog.Events;
 namespace FizzCode.DbTools.Console.ConsoleSink;
 internal static class ValueFormatter
 {
-    public static void Format(LogEvent logEvent, LogEventPropertyValue value, TextWriter builder, string format, string propertyName)
+    public static void Format(LogEvent logEvent, LogEventPropertyValue value, TextWriter builder, string? format, string propertyName)
     {
         switch (value)
         {
@@ -44,7 +44,7 @@ internal static class ValueFormatter
         ColorCodeContext.WriteOverridden(builder, logEvent, ColorCode.Value, "]");
     }
 
-    public static void FormatScalarValue(LogEvent logEvent, TextWriter builder, ScalarValue value, string format, string propertyName)
+    public static void FormatScalarValue(LogEvent logEvent, TextWriter builder, ScalarValue value, string? format, string propertyName)
     {
         switch (value.Value)
         {

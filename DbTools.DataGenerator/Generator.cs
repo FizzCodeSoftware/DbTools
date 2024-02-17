@@ -5,18 +5,12 @@ using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDefinition.Base;
 
 namespace FizzCode.DbTools.DataGenerator;
-public class Generator
+public class Generator(GeneratorContext context)
 {
-    private readonly GeneratorContext Context;
+    private readonly GeneratorContext Context = context;
 
     // TODO
-    private readonly SqlEngineVersion Version;
-
-    public Generator(GeneratorContext context)
-    {
-        Context = context;
-        Version = GenericVersion.Generic1;
-    }
+    private readonly SqlEngineVersion Version = GenericVersion.Generic1;
 
     // Get a SqlTable
     // * generate rows
@@ -62,7 +56,7 @@ public class Generator
         if (generator != null)
         {
             generator.SetContext(Context);
-            row.Add(column.Name, generator.Get());
+            row.Add(column.Name!, generator.Get());
         }
     }
 
@@ -71,9 +65,9 @@ public class Generator
         var type = column.Types[Version];
         return type.SqlTypeInfo switch
         {
-            DataDefinition.Generic.SqlNVarChar _ => new GeneratorString(1, type.Length.Value + 1),
-            DataDefinition.MsSql2016.SqlNVarChar _ => new GeneratorString(1, type.Length.Value + 1),
-            DataDefinition.Oracle12c.SqlNVarChar2 _ => new GeneratorString(1, type.Length.Value + 1),
+            DataDefinition.Generic.SqlNVarChar _ => new GeneratorString(1, type.Length!.Value + 1),
+            DataDefinition.MsSql2016.SqlNVarChar _ => new GeneratorString(1, type.Length!.Value + 1),
+            DataDefinition.Oracle12c.SqlNVarChar2 _ => new GeneratorString(1, type.Length!.Value + 1),
 
             DataDefinition.Generic.SqlInt32 _ => new GeneratorInt32(),
             DataDefinition.MsSql2016.SqlInt _ => new GeneratorInt32(),

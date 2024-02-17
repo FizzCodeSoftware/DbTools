@@ -15,10 +15,10 @@ public class GeneratorDateTimeMinMax : GeneratorDateMinMax
 
     public override object Get()
     {
-        var hours = Context.Random.Next(0, 24);
-        var minutes = Context.Random.Next(0, 60);
-        var seconds = Context.Random.Next(0, 60);
-        var milliSeconds = Context.Random.Next(0, 1000);
+        var hours = Context!.Random.Next(0, 24);
+        var minutes = Context!.Random.Next(0, 60);
+        var seconds = Context!.Random.Next(0, 60);
+        var milliSeconds = Context!.Random.Next(0, 1000);
 
         var dateTime = (DateTime)base.Get();
         return dateTime.AddHours(hours)

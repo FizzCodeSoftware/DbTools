@@ -147,7 +147,7 @@ public partial class Documenter(IDocumenterWriter documenterWriter, DocumenterCo
         DocumenterWriter.WriteLine("Tables");
     }
 
-    protected void AddViewToViewList(string category, SqlView view, bool hasCategories)
+    protected void AddViewToViewList(string? category, SqlView view, bool hasCategories)
     {
         if (hasCategories)
         {

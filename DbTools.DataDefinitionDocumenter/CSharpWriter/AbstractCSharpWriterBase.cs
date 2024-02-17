@@ -34,7 +34,7 @@ public abstract class AbstractCSharpWriterBase
         if (fkOnColumn is null)
             return false;
 
-        return GeneratorContext.Customizer.ShouldSkip(fkOnColumn.ReferredTable.SchemaAndTableName);
+        return GeneratorContext.Customizer.ShouldSkip(fkOnColumn.ReferredTable!.SchemaAndTableName!);
     }
 
     protected virtual string IsNullable(SqlColumn column)
@@ -47,7 +47,7 @@ public abstract class AbstractCSharpWriterBase
 
     protected virtual void AddForeignKeySettingsSingleColumn(StringBuilder sb, DocumenterHelper helper, ForeignKey fkOnColumn)
     {
-        var tableName = helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable.SchemaAndTableName, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
+        var tableName = helper.GetSimplifiedSchemaAndTableName(fkOnColumn.ReferredTable, DatabaseDeclarationConst.SchemaTableNameSeparator.ToString(CultureInfo.InvariantCulture));
 
         sb.Append(".SetForeignKeyToColumn(nameof(")
             .Append(DatabaseName)
@@ -124,7 +124,7 @@ public abstract class AbstractCSharpWriterBase
         if (fkOnColumn != null)
         {
             if (GeneratorContext.GeneratorSettings.ShouldCommentOutFkReferences
-                && GeneratorContext.Customizer?.ShouldSkip(fkOnColumn.ReferredTable.SchemaAndTableName) == true)
+                && GeneratorContext.Customizer?.ShouldSkip(fkOnColumn.ReferredTable!.SchemaAndTableName!) == true)
             {
                 sb.Append("; //");
             }

@@ -59,7 +59,7 @@ public class SqLite3Generator(Context context)
         // TODO make a setting for use or omit of AUTOINCREMENT
         // see https://www.sqlite.org/autoinc.html
 
-        var sqlTable = (SqlTable)identity.SqlColumn.SqlTableOrView;
+        var sqlTable = (SqlTable)identity.SqlColumn.SqlTableOrView!;
         var pk = sqlTable.Properties.OfType<PrimaryKey>().FirstOrDefault();
 
         // TODO validate beforehand?

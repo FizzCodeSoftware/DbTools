@@ -163,7 +163,7 @@ internal class ConsoleSink : ILogEventSink
         }
     }
 
-    private static void WriteTimeStamp(LogEvent logEvent, TextWriter builder, string format)
+    private static void WriteTimeStamp(LogEvent logEvent, TextWriter builder, string? format)
     {
         using (ColorCodeContext.StartOverridden(builder, logEvent, ColorCode.TimeStamp_Property_Exception))
         {
@@ -188,7 +188,7 @@ internal class ConsoleSink : ILogEventSink
         ValueFormatter.FormatStructureValue(logEvent, builder, new StructureValue(properties));
     }
 
-    private static void WriteProperty(LogEvent logEvent, TextWriter builder, string propertyName, string format)
+    private static void WriteProperty(LogEvent logEvent, TextWriter builder, string propertyName, string? format)
     {
         if (!logEvent.Properties.TryGetValue(propertyName, out var propertyValue))
             return;

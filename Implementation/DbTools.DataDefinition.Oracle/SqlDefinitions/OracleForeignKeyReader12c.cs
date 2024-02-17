@@ -63,7 +63,7 @@ SELECT
 
     public void GetUniqueConstraints(SqlTable table)
     {
-        UniqueConstraint uniqueConstraint = null;
+        UniqueConstraint uniqueConstraint = null!;
         var rows = _queryResult
             .Where(r => DataDefinitionReaderHelper.SchemaAndTableNameEquals(r, table, "OWNER", "TABLE_NAME") && r.GetAs<string>("CONSTRAINT_TYPE") == "U")
             .ToList();
@@ -76,7 +76,7 @@ SELECT
                 table.Properties.Add(uniqueConstraint);
             }
 
-            var column = table.Columns[row.GetAs<string>("COLUMN_NAME")];
+            var column = table.Columns[Throw.IfNull(row.GetAs<string>("COLUMN_NAME"))];
             uniqueConstraint.SqlColumns.Add(new ColumnAndOrder(column, AscDesc.Asc));
         }
     }
@@ -89,27 +89,27 @@ SELECT
 
         foreach (var row in rows)
         {
-            var fkColumn = table.Columns[row.GetAs<string>("COLUMN_NAME")];
+            var fkColumn = table.Columns[Throw.IfNull(row.GetAs<string>("COLUMN_NAME"))];
 
             // TODO how to query reference in a nother schema?
             var referencedSchema = row.GetAs<string>("R_OWNER");
-            var referencedTable = row.GetAs<string>("REF_TABLE_NAME");
+            var referencedTable = Throw.IfNull(row.GetAs<string>("REF_TABLE_NAME"));
             var referencedSchemaAndTableName = new SchemaAndTableName(referencedSchema, referencedTable);
-            var referencedColumn = row.GetAs<string>("REF_COLUMN_NAME");
+            var referencedColumn = Throw.IfNull(row.GetAs<string>("REF_COLUMN_NAME"));
             var fkName = row.GetAs<string>("CONSTRAINT_NAME");
 
             var referencedSqlTableSchemaAndTableNameAsToStore = GenericDataDefinitionReader.GetSchemaAndTableNameAsToStore(referencedSchemaAndTableName, Executer.Context);
 
-            var referencedSqlTable = table.DatabaseDefinition.GetTable(referencedSqlTableSchemaAndTableNameAsToStore);
+            var referencedSqlTable = table.DatabaseDefinition!.GetTable(referencedSqlTableSchemaAndTableNameAsToStore);
 
-            if (!table.Properties.OfType<ForeignKey>().Any(fk => fk.SqlTable.SchemaAndTableName == table.SchemaAndTableName && fk.ReferredTable.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk.Name == fkName))
+            if (!table.Properties.OfType<ForeignKey>().Any(fk => fk.SqlTable.SchemaAndTableName == table.SchemaAndTableName && fk.ReferredTable!.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk.Name == fkName))
             {
                 table.Properties.Add(new ForeignKey(table, referencedSqlTable, fkName));
             }
 
             var referencedSqlColumn = referencedSqlTable[referencedColumn];
 
-            var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
+            var fk = table.Properties.OfType<ForeignKey>().First(fk1 => fk1.ReferredTable!.SchemaAndTableName == referencedSqlTableSchemaAndTableNameAsToStore && fk1.Name == fkName);
             fk.ForeignKeyColumns.Add(new ForeignKeyColumnMap(fkColumn, referencedSqlColumn));
         }
     }

@@ -18,7 +18,7 @@ public class ViewTest : DataDefinitionReaderTests
         var dd = ReadDd(version, new TestDatabaseSimpleWithView().GetSchemaNames());
 
         var views = dd.GetViews();
-        var viewCompanyView = views.Single(v => v.SchemaAndTableName.TableName == "CompanyView");
+        var viewCompanyView = views.Single(v => v.SchemaAndTableName!.TableName == "CompanyView");
 
         Assert.AreEqual(2, viewCompanyView.Columns.Count);
 

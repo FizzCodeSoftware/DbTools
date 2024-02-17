@@ -14,7 +14,7 @@ public class DebugLogger(ILogger logger)
         if (args.Exception != null)
             OnException(sender, args);
 
-        var values = new List<object>();
+        var values = new List<object?>();
         if(args.Arguments is not null)
             values.AddRange(args.Arguments);
 
@@ -28,7 +28,7 @@ public class DebugLogger(ILogger logger)
     private void OnException(object? sender, LogEventArgs args)
     {
         var opsErrors = new List<string>();
-        GetOpsMessages(args.Exception, opsErrors);
+        GetOpsMessages(args.Exception!, opsErrors);
         foreach (var opsError in opsErrors)
         {
             OnLog(sender, new LogEventArgs()

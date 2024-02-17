@@ -4,10 +4,11 @@ using System.IO;
 using Serilog.Events;
 
 namespace FizzCode.DbTools.Console.ConsoleSink;
-internal struct ColorCodeContext : IDisposable
+internal struct ColorCodeContext(TextWriter builder)
+    : IDisposable
 {
 #pragma warning disable IDE0069 // Disposable fields should be disposed
-    private readonly TextWriter _builder;
+    private readonly TextWriter _builder = builder;
 #pragma warning restore IDE0069 // Disposable fields should be disposed
 
     private static readonly IDictionary<ColorCode, string> _colorCodeValues = new Dictionary<ColorCode, string>
@@ -40,12 +41,7 @@ internal struct ColorCodeContext : IDisposable
 
     private const string ResetColorCodeValue = "\x1b[0m";
 
-    public ColorCodeContext(TextWriter builder)
-    {
-        _builder = builder;
-    }
-
-    public void Dispose()
+    public readonly void Dispose()
     {
         _builder.Write(ResetColorCodeValue);
     }
@@ -61,7 +57,7 @@ internal struct ColorCodeContext : IDisposable
         return new ColorCodeContext(builder);
     }
 
-    internal static void Write(TextWriter builder, ColorCode colorCode, string text)
+    internal static void Write(TextWriter builder, ColorCode colorCode, string? text)
     {
         if (_colorCodeValues.TryGetValue(colorCode, out var value))
         {
