@@ -46,7 +46,7 @@ public abstract partial class DocumenterWriterBase
         WriteLine(schemaAndTableName, viewColums.ToArray());
     }
 
-    private static readonly string[] viewColumnNames = ["Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Scale"];
+    private static readonly string[] viewColumnNames = ["Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Scale", "Allow Nulls"];
 
     protected void AddColumnsToViewSheet(SqlViewColumn column, string? firstColumn = null)
     {

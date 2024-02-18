@@ -41,7 +41,7 @@ public abstract partial class DocumenterWriterBase
 
         var tableColumns = new List<string>();
 
-        tableColumns.AddRange(tableColumns);
+        tableColumns.AddRange(tableColumnNames);
 
         if (Context.DocumenterSettings.NoInternalDataTypes)
             tableColumns.Remove("Data Type (DbTools)");
@@ -49,11 +49,11 @@ public abstract partial class DocumenterWriterBase
         WriteLine(schemaAndTableName, tableColumns.ToArray());
     }
 
-    private static readonly string[] tableColumns = ["Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Scale", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key Name", "Referenced Table", "Link", "Referenced Column"];
+    private static readonly string[] tableColumnNames = ["Column Name", "Data Type (DbTools)", "Data Type", "Column Length", "Column Scale", "Allow Nulls", "Primary Key", "Identity", "Default Value", "Description", "Foreign Key Name", "Referenced Table", "Link", "Referenced Column"];
 
     protected void AddColumnsToTableSheet(SqlColumn column, ColumnDocumentInfo columnDocumentInfo, string? firstColumn = null)
     {
-        var table = column.Table;
+        var table = column.Table; 
         var sqlType = Throw.IfNull(column.Type);
 
         if (firstColumn != null)
