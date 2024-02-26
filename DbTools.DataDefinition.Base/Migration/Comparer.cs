@@ -84,7 +84,10 @@ public class Comparer
                     NewNameAndType = columnNew
                 };
 
-                var propertyChanges = ComparerIdentity.CompareIdentity(columnOriginal, columnNew);
+                var propertyChanges = new List<SqlColumnPropertyMigration>();
+
+                propertyChanges.AddRange(ComparerIdentity.CompareIdentity(columnOriginal, columnNew));
+                propertyChanges.AddRange(ComparerDefaultValue.CompareDefaultValue(columnOriginal, columnNew));
 
                 if (propertyChanges.Count != 0
                     || ColumnChanged(columnNew, columnOriginal))

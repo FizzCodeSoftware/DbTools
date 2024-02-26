@@ -34,7 +34,7 @@ public class TestDatabaseIndexMultiColumnAndInclude : TestDatabaseDeclaration
         table.AddNVarChar("Name2", 100);
         table.AddNVarChar("Description1", 100);
         table.AddNVarChar("Description2", 100);
-        table.AddIndex(new[] { "Name1", "Name2" }, new[] { "Description1", "Description2" });
+        table.AddIndex(["Name1", "Name2"], ["Description1", "Description2"]);
         table.Properties.OfType<Index>().First().SqlColumns[1].Order = AscDesc.Desc;
     });
 }

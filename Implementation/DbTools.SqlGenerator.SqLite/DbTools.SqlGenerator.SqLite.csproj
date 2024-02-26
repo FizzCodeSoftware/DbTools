@@ -13,8 +13,8 @@
     <AssemblyName>FizzCode.DbTools.SqlGenerator.SqLite</AssemblyName>
     <RootNamespace>FizzCode.DbTools.SqlGenerator.SqLite</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-	<ImplicitUsings>disable</ImplicitUsings>
-    <Nullable>enable</Nullable>	
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>enable</Nullable>
     <NoWarn>CS1591</NoWarn>
   </PropertyGroup>
 

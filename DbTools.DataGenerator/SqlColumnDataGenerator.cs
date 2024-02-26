@@ -6,13 +6,7 @@ namespace FizzCode.DbTools.DataGenerator;
 /// Column Property containing information about how to generate data for the column.
 /// <see cref="Generator"/> holds a reference to the data generator.
 /// </summary>
-public class SqlColumnDataGenerator : SqlColumnCustomProperty
+public class SqlColumnDataGenerator(SqlColumn sqlColumn, GeneratorBase generator) : SqlColumnCustomProperty(sqlColumn)
 {
-    public GeneratorBase Generator { get; }
-
-    public SqlColumnDataGenerator(SqlColumn sqlColumn, GeneratorBase generator)
-        : base(sqlColumn)
-    {
-        Generator = generator;
-    }
+    public GeneratorBase Generator { get; } = generator;
 }

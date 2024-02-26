@@ -408,4 +408,16 @@ public abstract class ComparerTestsBase
 
         return new DatabaseDefinitions(ddOriginal, ddUcChanged, "TestDatabaseUniqueConstraint", "TestDatabaseUniqueConstraint2_Change_NewColumn_UcName_Dds");
     }
+
+    public abstract void DefaultValue_Remove(SqlEngineVersion version);
+    protected static DatabaseDefinitions DefaultValue_Remove_Dds(SqlEngineVersion version)
+    {
+        var ddOriginal = new TestDatabaseSimple();
+        ddOriginal.SetVersions(version);
+        ddOriginal.GetTable("Company")["Name"].AddDefaultValue("'apple'");
+
+        var ddDvRemoved = new TestDatabaseSimple();
+        ddDvRemoved.SetVersions(version);
+        return new DatabaseDefinitions(ddOriginal, ddDvRemoved, "TestDatabaseSimpleDefaultValue", "TestDatabaseSimple");
+    }
 }

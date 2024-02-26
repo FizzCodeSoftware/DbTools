@@ -3,8 +3,9 @@ using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.Interfaces;
 
 namespace FizzCode.DbTools.SqlExecuter;
+
 public class DatabaseCreator(IDatabaseDefinition databaseDefinition, ISqlStatementExecuter sqlExecuter)
-    : DatabaseTask(sqlExecuter)
+    : DatabaseCreatorAll(sqlExecuter)
 {
     public IDatabaseDefinition DatabaseDefinition { get; } = databaseDefinition;
 
@@ -96,24 +97,6 @@ public class DatabaseCreator(IDatabaseDefinition databaseDefinition, ISqlStateme
             if (sqlStatementWithParameters != null)
                 Executer.ExecuteNonQuery(sqlStatementWithParameters);
         }
-    }
-
-    public void DropAllViews()
-    {
-        var sql = Executer.Generator.DropAllViews();
-        Executer.ExecuteNonQuery(sql);
-    }
-
-    public void DropAllForeignKeys()
-    {
-        var sql = Executer.Generator.DropAllForeignKeys();
-        Executer.ExecuteNonQuery(sql);
-    }
-
-    public void DropAllTables()
-    {
-        var sql = Executer.Generator.DropAllTables();
-        Executer.ExecuteNonQuery(sql);
     }
 
     public void DropAllSchemas()

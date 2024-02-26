@@ -17,7 +17,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FizzCode.DbTools.DataDefinitionExecuterMigrationIntegration.Tests;
 [TestClass]
-public class DatabaseMigratorTests : DatabaseMigratorTestsBase
+public partial class DatabaseMigratorTests : DatabaseMigratorTestsBase
 {
     private readonly IContextFactory _contextFactory;
     private readonly ISqlMigrationGeneratorFactory _sqlMigrationGeneratorFactory;
@@ -178,11 +178,12 @@ public class DatabaseMigratorTests : DatabaseMigratorTestsBase
     {
         var dds = Identity_Change_Dds(version);
 
-        /* var databaseMigrator = */
-        ProcessAndGetMigrator(version, dds, out var changes);
+        var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
 
-        var _ = changes[0] as ColumnChange;
-        // databaseMigrator.;
+        var change = Assert.That.CheckAndReturnInstanceOfType<ColumnChange>(changes[0]);
+        var columnPorepertyMigration = Assert.That.CheckAndReturnInstanceOfType<IdentityChange>(change.SqlColumnPropertyMigrations[0]);
+        
+        databaseMigrator.ChangeColumns(change);
     }
 
     private DatabaseMigrator ProcessAndGetMigrator(SqlEngineVersion version, DatabaseDefinitions dds, out List<IMigration> changes)

@@ -393,7 +393,7 @@ internal class AppCommands
         var connString = new NamedConnectionString("", version.ProviderName, connectionString, version.VersionString);
 
         var executer = _sqlExecuterFactory.CreateSqlExecuter(connString);
-        var dc = new DatabaseCreator(null, executer);
+        var dc = new DatabaseCreatorAll(executer);
 
         dc.DropAllViews();
         dc.DropAllForeignKeys();

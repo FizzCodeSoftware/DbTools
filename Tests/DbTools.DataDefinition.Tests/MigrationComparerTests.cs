@@ -419,4 +419,18 @@ public class MigrationComparerTests : ComparerTestsBase
         var columnChange = (ColumnChange)changes[0];
         var _ = columnChange.SqlColumnPropertyMigrations[0] as IdentityChange;
     }
+
+    [TestMethod]
+    [LatestSqlVersions(true)]
+    public override void DefaultValue_Remove(SqlEngineVersion version)
+    {
+        var dds = DefaultValue_Remove_Dds(version);
+        var changes = Compare(version, dds);
+
+        Assert.AreEqual(1, changes.Count);
+        var columnChange = (ColumnChange)changes[0];
+        //var _ = columnChange.SqlColumnPropertyMigrations[0] as IdentityChange;
+
+        throw new System.NotImplementedException();
+    }
 }

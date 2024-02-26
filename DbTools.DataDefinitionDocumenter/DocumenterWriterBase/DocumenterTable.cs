@@ -75,7 +75,7 @@ public abstract partial class DocumenterWriterBase
             Write(table.SchemaAndTableName!, "");
 
         if (columnDocumentInfo.DefaultValue != null)
-            Write(table.SchemaAndTableName!, columnDocumentInfo.DefaultValue);
+            Write(table.SchemaAndTableName!, columnDocumentInfo.DefaultValue.Value);
         else
             Write(table.SchemaAndTableName!, "");
 

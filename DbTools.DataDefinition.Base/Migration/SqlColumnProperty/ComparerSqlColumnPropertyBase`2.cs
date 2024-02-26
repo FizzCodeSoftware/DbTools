@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public abstract class ComparerSqlColumnPropertyBase<TProperty, TMigration>
     where TProperty : SqlColumnProperty
     where TMigration : SqlColumnPropertyMigration
@@ -26,17 +24,11 @@ public abstract class ComparerSqlColumnPropertyBase<TProperty, TMigration>
             }
             else
             {
-                var indexChanged = false;
-                var indexChange = CreateChange(propertyOriginal, propertyNew);
+                var change = CreateChange(propertyOriginal, propertyNew);
 
                 if (!ComparePropertiesInternal(propertyOriginal, propertyNew))
-                {
-                    indexChanged = true;
-                    //IndexChange. = new ForeignKeyInternalColumnChanges();
-                }
-
-                if (indexChanged)
-                    changes.Add(indexChange);
+                    changes.Add(change);
+                    
             }
         }
 

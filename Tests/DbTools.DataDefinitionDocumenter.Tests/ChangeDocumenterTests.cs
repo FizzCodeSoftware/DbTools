@@ -229,4 +229,12 @@ public class ChangeDocumenterTests : ComparerTestsBase
         var dds = Index_Change_Dds(version);
         Document(version, dds);
     }
+
+    [TestMethod]
+    [LatestSqlVersions]
+    public override void DefaultValue_Remove(SqlEngineVersion version)
+    {
+        var dds = DefaultValue_Remove_Dds(version);
+        Document(version, dds);
+    }
 }
