@@ -31,7 +31,7 @@ namespace FizzCode.DbTools.DataDefinition.Tests
 
 # DbTools.Console usage
 Build, and run FizzCode.DbTools.Console.exe
-(DbTools\DbTools.Console\bin\Release\net6.0\FizzCode.DbTools.Console.exe)
+(DbTools\artifacts\bin\DbTools.Console\debug\FizzCode.DbTools.Console.exe)
 
 Option examples:
 

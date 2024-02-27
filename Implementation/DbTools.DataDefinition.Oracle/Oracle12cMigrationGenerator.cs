@@ -96,7 +96,7 @@ public class Oracle12cMigrationGenerator(ContextWithLogger context)
         }
 
         // TODO not possible to remove identity in Oracle and MS SQL
-        
+
         var identity = columnChange.SqlColumnChanged.Properties.OfType<Identity>().FirstOrDefault();
         if (identity != null)
         {
