@@ -3,7 +3,7 @@ public abstract class ComparerSqlColumnPropertyBase<TProperty, TMigration>
     where TProperty : SqlColumnProperty
     where TMigration : SqlColumnPropertyMigration
 {
-    public List<TMigration> CompareProperties(SqlColumn columnOriginal, SqlColumn columnNew)
+    protected List<TMigration> CompareProperties(SqlColumn columnOriginal, SqlColumn columnNew)
     {
         var changes = new List<TMigration>();
 
@@ -26,7 +26,7 @@ public abstract class ComparerSqlColumnPropertyBase<TProperty, TMigration>
             {
                 var change = CreateChange(propertyOriginal, propertyNew);
 
-                if (!ComparePropertiesInternal(propertyOriginal, propertyNew))
+                if (!CompareProperties(propertyOriginal, propertyNew))
                     changes.Add(change);
                     
             }
@@ -35,7 +35,7 @@ public abstract class ComparerSqlColumnPropertyBase<TProperty, TMigration>
         return changes;
     }
 
-    protected abstract bool ComparePropertiesInternal(TProperty propertyOriginal, TProperty propertyNew);
+    public abstract bool CompareProperties(TProperty propertyOriginal, TProperty propertyNew);
 
     public abstract TMigration CreateDelete(TProperty originalProperty);
 

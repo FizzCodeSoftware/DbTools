@@ -110,6 +110,13 @@ public class DatabaseDeclaration : DatabaseDefinition, IDatabaseDeclaration
             {
                 NamingStrategies.ForeignKey.SetFKName(fk);
             }
+
+            foreach (var column in sqlTable.Columns)
+            {
+                var defaultValue = column.Properties.OfType<DefaultValue>().Where(dv => string.IsNullOrEmpty(dv.Name)).FirstOrDefault();
+                if (defaultValue is not null)
+                    NamingStrategies.DefaultValue.SetDefaultValueName(defaultValue);
+            }
         }
     }
 

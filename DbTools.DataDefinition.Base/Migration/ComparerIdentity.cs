@@ -33,7 +33,7 @@ public class ComparerIdentity : ComparerSqlColumnPropertyBase<Identity, Identity
         };
     }
 
-    protected override bool ComparePropertiesInternal(Identity propertyOriginal, Identity propertyNew)
+    public override bool CompareProperties(Identity propertyOriginal, Identity propertyNew)
     {
         return propertyOriginal.Seed == propertyNew.Seed
             && propertyOriginal.Increment == propertyNew.Increment;

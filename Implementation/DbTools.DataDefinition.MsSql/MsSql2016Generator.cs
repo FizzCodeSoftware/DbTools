@@ -160,4 +160,20 @@ EXEC sp_executesql @sql";
 
         return sb.ToString();
     }
+
+    public override string GenerateDefault(SqlColumn column)
+    {
+        var sb = new StringBuilder();
+        var defaultValue = column.Properties.OfType<DefaultValue>().FirstOrDefault();
+        if (defaultValue != null)
+        {
+            sb.Append(" CONSTRAINT ");
+            sb.Append(defaultValue.Name);
+            sb.Append(" DEFAULT(")
+                .Append(defaultValue.Value)
+                .Append(')');
+        }
+
+        return sb.ToString();
+    }
 }

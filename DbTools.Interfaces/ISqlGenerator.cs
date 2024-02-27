@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDefinition.Base;
+using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 
 namespace FizzCode.DbTools.Interfaces;
 public interface ISqlGenerator : ISqlGeneratorBase
@@ -34,4 +35,6 @@ public interface ISqlGenerator : ISqlGeneratorBase
     string TableNotEmpty(SqlTable table);
 
     string GenerateCreateColumn(SqlColumn column);
+
+    string GenerateType(ISqlType type);
 }

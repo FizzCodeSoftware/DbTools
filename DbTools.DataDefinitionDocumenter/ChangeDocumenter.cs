@@ -106,11 +106,11 @@ public class ChangeDocumenter(IDocumenterWriter documenterWriter, ChangeDocument
                     }
                 case ColumnChange column:
                     {
-                        if (Context.CustomizerNew.ShouldSkip(column.NewNameAndType!.Table.SchemaAndTableName!))
+                        if (Context.CustomizerNew.ShouldSkip(column.SqlColumnChanged!.Table.SchemaAndTableName!))
                             continue;
 
                         ProcessColumnMigration(processedTables, column.SqlColumn, "Original");
-                        ProcessColumnMigration(processedTables, column.NewNameAndType, "Changed to");
+                        ProcessColumnMigration(processedTables, column.SqlColumnChanged, "Changed to");
                         break;
                     }
             }

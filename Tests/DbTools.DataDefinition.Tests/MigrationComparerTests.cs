@@ -102,11 +102,11 @@ public class MigrationComparerTests : ComparerTestsBase
         Assert.AreEqual(1, changes.Count);
         var first = Assert.That.CheckAndReturnInstanceOfType<ColumnChange>(changes[0]);
 
-        Assert.That.AreNotNulls(dds.Original.GetTable("Company")["Name"].Type, first.SqlColumn.Type, first.NewNameAndType, first.NewNameAndType!.Type);
+        Assert.That.AreNotNulls(dds.Original.GetTable("Company")["Name"].Type, first.SqlColumn.Type, first.SqlColumnChanged, first.SqlColumnChanged!.Type);
 
         Assert.AreEqual(100, dds.Original.GetTable("Company")["Name"].Type!.Length);
         Assert.AreEqual(100, first.SqlColumn.Type.Length);
-        Assert.AreEqual(101, first.NewNameAndType.Type.Length);
+        Assert.AreEqual(101, first.SqlColumnChanged.Type.Length);
     }
 
     [TestMethod]
@@ -120,11 +120,11 @@ public class MigrationComparerTests : ComparerTestsBase
 
         var first = Assert.That.CheckAndReturnInstanceOfType<ColumnChange>(changes[0]);
 
-        Assert.That.AreNotNulls(dds.Original.GetTable("Company")["Name"].Type, first.SqlColumn.Type, first.NewNameAndType, first.NewNameAndType!.Type);
+        Assert.That.AreNotNulls(dds.Original.GetTable("Company")["Name"].Type, first.SqlColumn.Type, first.SqlColumnChanged, first.SqlColumnChanged!.Type);
 
         Assert.AreEqual(false, dds.Original.GetTable("Company")["Name"].Type!.IsNullable);
         Assert.AreEqual(false, first.SqlColumn.Type.IsNullable);
-        Assert.AreEqual(true, first.NewNameAndType.Type.IsNullable);
+        Assert.AreEqual(true, first.SqlColumnChanged.Type.IsNullable);
     }
 
     [TestMethod]
@@ -139,16 +139,16 @@ public class MigrationComparerTests : ComparerTestsBase
         Assert.AreEqual(2, changes.Count);
         var first = Assert.That.CheckAndReturnInstanceOfType<ColumnChange>(changes[0]);
 
-        Assert.That.AreNotNulls(dds.Original.GetTable("Company")["Name"].Type, first.SqlColumn.Type, first.NewNameAndType, first.NewNameAndType!.Type);
+        Assert.That.AreNotNulls(dds.Original.GetTable("Company")["Name"].Type, first.SqlColumn.Type, first.SqlColumnChanged, first.SqlColumnChanged!.Type);
 
         Assert.AreEqual(100, dds.Original.GetTable("Company")["Name"].Type!.Length);
         Assert.AreEqual(100, first.SqlColumn.Type.Length);
-        Assert.AreEqual(101, first.NewNameAndType.Type.Length);
+        Assert.AreEqual(101, first.SqlColumnChanged.Type.Length);
 
         var second = Assert.That.CheckAndReturnInstanceOfType<ColumnChange>(changes[1]);
-        Assert.That.AreNotNulls(second.SqlColumn.Type, second.NewNameAndType, second.NewNameAndType!.Type);
+        Assert.That.AreNotNulls(second.SqlColumn.Type, second.SqlColumnChanged, second.SqlColumnChanged!.Type);
         Assert.AreEqual(100, second.SqlColumn.Type.Length);
-        Assert.AreEqual(101, second.NewNameAndType.Type.Length);
+        Assert.AreEqual(101, second.SqlColumnChanged.Type.Length);
     }
 
     [TestMethod]
@@ -165,21 +165,21 @@ public class MigrationComparerTests : ComparerTestsBase
         Assert.AreEqual(1, changes.Count);
         var first = Assert.That.CheckAndReturnInstanceOfType<ColumnChange>(changes[0]);
 
-        Assert.That.AreNotNulls(dds.Original.GetTable("Company")["Name"].Type, dds.New.GetTable("Company")["Name"].Type, first.SqlColumn.Type, first.NewNameAndType, first.NewNameAndType!.Type);
+        Assert.That.AreNotNulls(dds.Original.GetTable("Company")["Name"].Type, dds.New.GetTable("Company")["Name"].Type, first.SqlColumn.Type, first.SqlColumnChanged, first.SqlColumnChanged!.Type);
 
         if (version == MsSqlVersion.MsSql2016)
         {
             Assert.IsTrue(dds.Original.GetTable("Company")["Name"].Type!.SqlTypeInfo is MsSql2016.SqlNVarChar);
             Assert.IsTrue(dds.New.GetTable("Company")["Name"].Type!.SqlTypeInfo is MsSql2016.SqlNChar);
             Assert.IsTrue(first.SqlColumn.Type.SqlTypeInfo is MsSql2016.SqlNVarChar);
-            Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is MsSql2016.SqlNChar);
+            Assert.IsTrue(first.SqlColumnChanged.Type.SqlTypeInfo is MsSql2016.SqlNChar);
         }
         else if (version == OracleVersion.Oracle12c)
         {
             Assert.IsTrue(dds.Original.GetTable("Company")["Name"].Type!.SqlTypeInfo is Oracle12c.SqlNVarChar2);
             Assert.IsTrue(dds.New.GetTable("Company")["Name"].Type!.SqlTypeInfo is Oracle12c.SqlNChar);
             Assert.IsTrue(first.SqlColumn.Type.SqlTypeInfo is Oracle12c.SqlNVarChar2);
-            Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is Oracle12c.SqlNChar);
+            Assert.IsTrue(first.SqlColumnChanged.Type.SqlTypeInfo is Oracle12c.SqlNChar);
         }
     }
 
@@ -197,31 +197,31 @@ public class MigrationComparerTests : ComparerTestsBase
         Assert.AreEqual(1, changes.Count);
         var first = Assert.That.CheckAndReturnInstanceOfType<ColumnChange>(changes[0]);
 
-        Assert.That.AreNotNulls(dds.Original.GetTable("Company")["Name"].Type, dds.New.GetTable("Company")["Name"].Type, first.SqlColumn.Type, first.NewNameAndType, first.NewNameAndType!.Type);
+        Assert.That.AreNotNulls(dds.Original.GetTable("Company")["Name"].Type, dds.New.GetTable("Company")["Name"].Type, first.SqlColumn.Type, first.SqlColumnChanged, first.SqlColumnChanged!.Type);
 
         if (version == MsSqlVersion.MsSql2016)
         {
             Assert.IsTrue(dds.Original.GetTable("Company")["Name"].Type!.SqlTypeInfo is MsSql2016.SqlNVarChar);
             Assert.IsTrue(dds.New.GetTable("Company")["Name"].Type!.SqlTypeInfo is MsSql2016.SqlNChar);
             Assert.IsTrue(first.SqlColumn.Type.SqlTypeInfo is MsSql2016.SqlNVarChar);
-            Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is MsSql2016.SqlNChar);
+            Assert.IsTrue(first.SqlColumnChanged.Type.SqlTypeInfo is MsSql2016.SqlNChar);
         }
         else if (version == OracleVersion.Oracle12c)
         {
             Assert.IsTrue(dds.Original.GetTable("Company")["Name"].Type!.SqlTypeInfo is Oracle12c.SqlNVarChar2);
             Assert.IsTrue(dds.New.GetTable("Company")["Name"].Type!.SqlTypeInfo is Oracle12c.SqlNChar);
             Assert.IsTrue(first.SqlColumn.Type.SqlTypeInfo is Oracle12c.SqlNVarChar2);
-            Assert.IsTrue(first.NewNameAndType.Type.SqlTypeInfo is Oracle12c.SqlNChar);
+            Assert.IsTrue(first.SqlColumnChanged.Type.SqlTypeInfo is Oracle12c.SqlNChar);
         }
 
         Assert.AreEqual(100, dds.Original.GetTable("Company")["Name"].Type!.Length);
         Assert.AreEqual(101, dds.New.GetTable("Company")["Name"].Type!.Length);
         Assert.AreEqual(100, first.SqlColumn.Type.Length);
-        Assert.AreEqual(101, first.NewNameAndType.Type.Length);
+        Assert.AreEqual(101, first.SqlColumnChanged.Type.Length);
         Assert.AreEqual(false, dds.Original.GetTable("Company")["Name"].Type!.IsNullable);
         Assert.AreEqual(true, dds.New.GetTable("Company")["Name"].Type!.IsNullable);
         Assert.AreEqual(false, first.SqlColumn.Type.IsNullable);
-        Assert.AreEqual(true, first.NewNameAndType.Type.IsNullable);
+        Assert.AreEqual(true, first.SqlColumnChanged.Type.IsNullable);
     }
 
     [TestMethod]
@@ -422,15 +422,27 @@ public class MigrationComparerTests : ComparerTestsBase
 
     [TestMethod]
     [LatestSqlVersions(true)]
+    public override void DefaultValue_Add(SqlEngineVersion version)
+    {
+        var dds = DefaultValue_Add_Dds(version);
+        var changes = Compare(version, dds);
+
+        Assert.AreEqual(1, changes.Count);
+        var columnChange = Assert.That.CheckAndReturnInstanceOfType<ColumnChange>(changes[0]);
+        var defaultValueNew = Assert.That.CheckAndReturnInstanceOfType<DefaultValueNew>(columnChange.SqlColumnPropertyMigrations[0]);
+    }
+
+    [TestMethod]
+    [LatestSqlVersions(true)]
     public override void DefaultValue_Remove(SqlEngineVersion version)
     {
         var dds = DefaultValue_Remove_Dds(version);
         var changes = Compare(version, dds);
 
         Assert.AreEqual(1, changes.Count);
-        var columnChange = (ColumnChange)changes[0];
-        //var _ = columnChange.SqlColumnPropertyMigrations[0] as IdentityChange;
-
-        throw new System.NotImplementedException();
+        var columnChange = Assert.That.CheckAndReturnInstanceOfType<ColumnChange>(changes[0]);
+        var defaultValueDelete = Assert.That.CheckAndReturnInstanceOfType<DefaultValueDelete>(columnChange.SqlColumnPropertyMigrations[0]);
     }
+
+    
 }

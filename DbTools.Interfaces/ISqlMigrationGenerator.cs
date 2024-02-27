@@ -1,4 +1,5 @@
 ﻿using FizzCode.DbTools.Common;
+using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.DataDefinition.Base.Migration;
 
 namespace FizzCode.DbTools.Interfaces;
@@ -14,4 +15,6 @@ public interface ISqlMigrationGenerator
     SqlStatementWithParameters ChangeColumns(params ColumnChange[] columnChanges);
 
     string CreatePrimaryKey(PrimaryKeyNew primaryKeyNew);
+
+    string GenerateColumnChange(SqlColumn columnOriginal, SqlColumn columnNew);
 }

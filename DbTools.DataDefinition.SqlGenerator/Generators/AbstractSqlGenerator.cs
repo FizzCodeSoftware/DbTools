@@ -255,13 +255,7 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
             GenerateCreateColumnIdentity(sb, identity);
         }
 
-        var defaultValue = column.Properties.OfType<DefaultValue>().FirstOrDefault();
-        if (defaultValue != null)
-        {
-            sb.Append(" DEFAULT(")
-                .Append(defaultValue.Value)
-                .Append(')');
-        }
+        sb.Append(GenerateDefault(column));
 
         if (type.IsNullable)
             sb.Append(" NULL");
@@ -271,7 +265,21 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
         return sb.ToString();
     }
 
-    protected virtual string GenerateType(ISqlType type)
+    public virtual string GenerateDefault(SqlColumn column)
+    {
+        var sb = new StringBuilder();
+        var defaultValue = column.Properties.OfType<DefaultValue>().FirstOrDefault();
+        if (defaultValue != null)
+        {
+            sb.Append(" DEFAULT(")
+                .Append(defaultValue.Value)
+                .Append(')');
+        }
+
+        return sb.ToString();
+    }
+
+    public virtual string GenerateType(ISqlType type)
     {
         var sb = new StringBuilder();
         sb.Append(type.SqlTypeInfo.SqlDataType);
@@ -307,7 +315,7 @@ public abstract class AbstractSqlGenerator : ISqlGenerator
         return sb.ToString();
     }
 
-    protected virtual void GenerateCreateColumnIdentity(StringBuilder sb, Identity identity)
+    public virtual void GenerateCreateColumnIdentity(StringBuilder sb, Identity identity)
     {
         sb.Append(" IDENTITY(")
             .Append(identity.Seed)

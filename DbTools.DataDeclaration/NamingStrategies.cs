@@ -6,4 +6,5 @@ public class NamingStrategies
     public IForeignKeyNamingStrategy ForeignKey { get; set; } = new ForeignKeyNamingDefaultStrategy();
     public IIndexNamingStrategy Index { get; set; } = new IndexNamingDefaultStrategy();
     public IUniqueConstraintNamingStrategy UniqueConstraint { get; set; } = new UniqueConstraintNamingDefaultStrategy();
+    public IDefaultValueNamingStrategy DefaultValue { get; set; } = new DefaultValueNamingDefaultStrategy();
 }

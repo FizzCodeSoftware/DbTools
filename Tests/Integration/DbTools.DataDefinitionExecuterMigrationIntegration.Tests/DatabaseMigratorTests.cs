@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using FizzCode.DbTools.DataDeclaration;
 using FizzCode.DbTools.DataDefinition;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.DataDefinition.Base.Interfaces;
 using FizzCode.DbTools.DataDefinition.Base.Migration;
 using FizzCode.DbTools.DataDefinition.Factory;
-using FizzCode.DbTools.DataDefinition.Generic;
 using FizzCode.DbTools.DataDefinition.Tests;
 using FizzCode.DbTools.DataDefinitionReader;
 using FizzCode.DbTools.Factory.Interfaces;
@@ -201,19 +199,15 @@ public partial class DatabaseMigratorTests : DatabaseMigratorTestsBase
         return databaseMigrator;
     }
 
-    private static void AddTable(DatabaseDefinition dd)
+    protected IDatabaseDefinition ReadDd(SqlEngineVersion version, IEnumerable<string>? schemaNames = null)
     {
-        var newTable = new SqlTable
-        {
-            SchemaAndTableName = "NewTableToMigrate"
-        };
-        newTable.AddInt32("Id", false).SetPK().SetIdentity();
+        var schemaNamesToRead = SchemaNamesToRead.ToSchemaNames(schemaNames);
+        var ddlReader = _dataDefinitionReaderFactory.CreateDataDefinitionReader(SqlExecuterTestAdapter.ConnectionStrings[version.UniqueName], schemaNamesToRead);
 
-        new PrimaryKeyNamingDefaultStrategy().SetPrimaryKeyName(newTable.Properties.OfType<PrimaryKey>().First());
+        var dd = new DatabaseDefinition(new TestFactoryContainer(), version, GenericVersion.Generic1);
+        var db = ddlReader.GetDatabaseDefinition(dd);
 
-        newTable.AddNVarChar("Name", 100);
-
-        dd.AddTable(newTable);
+        return db;
     }
 
     [TestMethod]

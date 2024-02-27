@@ -27,7 +27,7 @@ GRANT UNLIMITED TABLESPACE TO ""{schemaName}""");
         return sqlStatementWithParameters;
     }
 
-    protected override void GenerateCreateColumnIdentity(StringBuilder sb, Identity identity)
+    public override void GenerateCreateColumnIdentity(StringBuilder sb, Identity identity)
     {
         // TODO REVERSE index
         sb.Append(" GENERATED ALWAYS AS IDENTITY START WITH ")

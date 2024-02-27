@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using FizzCode.DbTools.Common;
@@ -77,66 +76,23 @@ public class Oracle12cMigrationGenerator(ContextWithLogger context)
         return sb.ToString();
     }
 
-    public override SqlStatementWithParameters ChangeColumns(params ColumnChange[] columnChanges)
-    {
-        var tableName = CheckSameTable(columnChanges);
-
-        if (columnChanges.Length == 1)
-        {
-            return $@"
-ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}
-MODIFY {GenerateColumnChange(columnChanges[0].SqlColumn, columnChanges[0].NewNameAndType!)}";
-        }
-
-        var sbStatements = new StringBuilder();
-        // TODO Options ShouldMigrateColumnChangesAllAtOnce
-        // TODO multiple -> temp table
-        // TODO drop constraints then re add them
-        foreach (var columnChange in columnChanges)
-        {
-            sbStatements.AppendLine(ChangeColumns(columnChange).Statement);
-        }
-
-        return new SqlStatementWithParameters(sbStatements.ToString());
-    }
-
-    public string GenerateColumnChange(SqlColumn columnOriginal, SqlColumn columnNew)
+    public override string GenerateColumnChange(SqlColumn columnOriginal, SqlColumn columnNew)
     {
         var typeOld = columnOriginal.Types[OracleVersion.Oracle12c];
         var typeNew = columnNew.Types[OracleVersion.Oracle12c];
 
         var sb = new StringBuilder();
+        sb.Append("MODIFY ");
         sb.Append(Generator.GuardKeywords(columnOriginal.Name!));
 
-        if ((typeOld.SqlTypeInfo.HasLength && typeOld.Length != typeNew.Length)
-            || (typeOld.SqlTypeInfo.HasScale && typeOld.Scale != typeNew.Scale))
-        {
-            sb.Append(' ')
-            .Append(typeNew.SqlTypeInfo.SqlDataType);
+        var defaultValueOld = columnOriginal.Properties.OfType<DefaultValue>().FirstOrDefault();
+        var defaultValueNew = columnNew.Properties.OfType<DefaultValue>().FirstOrDefault();
+        var isDefaultValueChange = defaultValueOld != defaultValueNew;
 
-            if (typeNew.Scale.HasValue)
-            {
-                if (typeNew.Length != null)
-                {
-                    sb.Append('(')
-                        .Append(typeNew.Length?.ToString("D", CultureInfo.InvariantCulture))
-                        .Append(", ")
-                        .Append(typeNew.Scale?.ToString("D", CultureInfo.InvariantCulture))
-                        .Append(')');
-                }
-                else
-                {
-                    sb.Append('(')
-                        .Append(typeNew.Scale?.ToString("D", CultureInfo.InvariantCulture))
-                        .Append(')');
-                }
-            }
-            else if (typeNew.Length.HasValue)
-            {
-                sb.Append('(')
-                    .Append(typeNew.Length?.ToString("D", CultureInfo.InvariantCulture))
-                    .Append(')');
-            }
+        if (Comparer.ColumnChanged(columnNew, columnOriginal)
+            || isDefaultValueChange)
+        {
+            Generator.GenerateType(typeNew);
         }
 
         // TODO not possible to remove identity in Oracle and MS SQL
@@ -147,15 +103,26 @@ MODIFY {GenerateColumnChange(columnChanges[0].SqlColumn, columnChanges[0].NewNam
         {
             GenerateCreateColumnIdentity(sb, identityNew);
         }*/
-
-        var defaultValueOld = columnOriginal.Properties.OfType<DefaultValue>().FirstOrDefault();
-        var defaultValueNew = columnNew.Properties.OfType<DefaultValue>().FirstOrDefault();
-        if (defaultValueOld != defaultValueNew)
+        var identity = columnNew.Properties.OfType<Identity>().FirstOrDefault();
+        if (identity != null)
         {
-            // TODO clenup default change, add tests
-            sb.Append(" DEFAULT(")
-                .Append(defaultValueNew.Value)
-                .Append(')');
+            ((Oracle12cGenerator)Generator).GenerateCreateColumnIdentity(sb, identity);
+        }
+
+        if (isDefaultValueChange)
+        {
+            if (!(defaultValueOld is not null && defaultValueNew is null))
+            {
+                Throw.InvalidOperationExceptionIfNull(defaultValueNew);
+                // TODO clenup default change, add tests
+                sb.Append(" DEFAULT(")
+                    .Append(defaultValueNew.Value)
+                    .Append(')');
+            }
+            else
+            {
+                sb.Append(" DEFAULT NULL");
+            }
         }
 
         if (typeOld.IsNullable != typeNew.IsNullable)

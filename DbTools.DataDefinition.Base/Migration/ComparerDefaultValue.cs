@@ -1,4 +1,6 @@
-﻿namespace FizzCode.DbTools.DataDefinition.Base.Migration;
+﻿using FizzCode.DbTools.Common;
+
+namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public class ComparerDefaultValue : ComparerSqlColumnPropertyBase<DefaultValue, DefaultValueMigration>
 {
     public static List<DefaultValueMigration> CompareDefaultValue(SqlColumn columnOriginal, SqlColumn columnNew)
@@ -33,8 +35,25 @@ public class ComparerDefaultValue : ComparerSqlColumnPropertyBase<DefaultValue, 
         };
     }
 
-    protected override bool ComparePropertiesInternal(DefaultValue propertyOriginal, DefaultValue propertyNew)
+    public override bool CompareProperties(DefaultValue propertyOriginal, DefaultValue propertyNew)
     {
+        Throw.InvalidOperationExceptionIfNull(propertyOriginal.SqlColumn.SqlTableOrView);
+        Throw.InvalidOperationExceptionIfNull(propertyOriginal.SqlColumn.SqlTableOrView.DatabaseDefinition);
+        var version = propertyOriginal.SqlColumn.SqlTableOrView.DatabaseDefinition.MainVersion;
+
+        // TODO engine specific comparison move to Implementation
+        if (propertyOriginal.Value == propertyNew.Value)
+            return true;
+
+        if (propertyNew.Value.StartsWith("((") && propertyNew.Value.EndsWith("))"))
+            return propertyOriginal.Value == propertyNew.Value.Substring(2, propertyNew.Value.Length - 4);
+
+        if (propertyNew.Value.StartsWith('(') && propertyNew.Value.EndsWith(')'))
+            return propertyOriginal.Value == propertyNew.Value.Substring(1, propertyNew.Value.Length - 2);
+
+        if (propertyNew.Value.StartsWith('(') && propertyNew.Value.EndsWith(") ")) // ora spec
+            return propertyOriginal.Value == propertyNew.Value.Substring(1, propertyNew.Value.Length - 3);
+
         return propertyOriginal.Value == propertyNew.Value;
     }
 }

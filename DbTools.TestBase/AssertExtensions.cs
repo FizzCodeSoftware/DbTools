@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using FizzCode.DbTools.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -34,5 +35,11 @@ public static class AssertExtensions
     {
         foreach ( var value in values)
             Assert.IsNotNull(value);
+    }
+
+    public static void IsFalse(this Assert assert, bool value, [CallerArgumentExpression(nameof(value))] string? paramName = null)
+    {
+        if (value)
+            throw new AssertFailedException($"AssertExtensions.IsFalse failed, {paramName} is false.");
     }
 }

@@ -54,7 +54,7 @@ public class SqLite3Generator(Context context)
         return "";
     }
 
-    protected override void GenerateCreateColumnIdentity(StringBuilder sb, Identity identity)
+    public override void GenerateCreateColumnIdentity(StringBuilder sb, Identity identity)
     {
         // TODO make a setting for use or omit of AUTOINCREMENT
         // see https://www.sqlite.org/autoinc.html

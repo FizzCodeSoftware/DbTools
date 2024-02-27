@@ -237,4 +237,10 @@ public class ChangeDocumenterTests : ComparerTestsBase
         var dds = DefaultValue_Remove_Dds(version);
         Document(version, dds);
     }
+
+    public override void DefaultValue_Add(SqlEngineVersion version)
+    {
+        var dds = DefaultValue_Add_Dds(version);
+        Document(version, dds);
+    }
 }

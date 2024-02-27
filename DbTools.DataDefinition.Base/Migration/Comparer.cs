@@ -81,7 +81,7 @@ public class Comparer
                 var columnChange = new ColumnChange()
                 {
                     SqlColumn = columnOriginal,
-                    NewNameAndType = columnNew
+                    SqlColumnChanged = columnNew
                 };
 
                 var propertyChanges = new List<SqlColumnPropertyMigration>();
@@ -92,7 +92,8 @@ public class Comparer
                 if (propertyChanges.Count != 0
                     || ColumnChanged(columnNew, columnOriginal))
                 {
-                    columnChange.NewNameAndType = columnNew.CopyTo(new SqlColumn());
+                    //columnChange.SqlColumnChanged = columnNew.CopyTo(new SqlColumn());
+                    columnChange.SqlColumnChanged = columnNew;
                     columnChange.SqlColumnPropertyMigrations.AddRange(propertyChanges);
                     changes.Add(columnChange);
                 }

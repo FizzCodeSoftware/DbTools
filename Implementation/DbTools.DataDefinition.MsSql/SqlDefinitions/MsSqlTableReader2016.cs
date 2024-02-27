@@ -55,6 +55,7 @@ public class MsSqlTableReader2016(SqlStatementExecuter executer, ISchemaNamesToR
             };
             column.Types.Add(Executer.Generator.SqlVersion, sqlType);
             column.Name = row.GetAs<string>("COLUMN_NAME");
+            AddDefaultValue(column, row);
 
             sqlTable.Columns.Add(column.Name!, column);
         }
@@ -77,13 +78,25 @@ public class MsSqlTableReader2016(SqlStatementExecuter executer, ISchemaNamesToR
         return sqlType;
     }
 
+    private void AddDefaultValue(SqlColumn column, Row row)
+    {
+        var value = row.GetAs<string>("COLUMN_DEFAULT");
+        if (value is not null)
+        { 
+            var name = Throw.IfNull(row.GetAs<string>("Constraint_Name"));
+            column.Properties.Add(new DefaultValue(column, value, name));
+        }
+    }
+
     private static string GetStatement()
     {
         return @"
 SELECT
     CONCAT(TABLE_SCHEMA, '.', TABLE_NAME) SchemaAndTableName,
-    ORDINAL_POSITION, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE, IS_NULLABLE, DATETIME_PRECISION
+    ORDINAL_POSITION, COLUMN_NAME, DATA_TYPE, CHARACTER_MAXIMUM_LENGTH, NUMERIC_PRECISION, NUMERIC_SCALE, IS_NULLABLE, DATETIME_PRECISION, COLUMN_DEFAULT, dc.Name as Constraint_Name
 FROM
-    INFORMATION_SCHEMA.COLUMNS";
+    INFORMATION_SCHEMA.COLUMNS c
+LEFT JOIN sys.default_constraints dc ON dc.parent_object_id = OBJECT_ID(c. TABLE_SCHEMA + '.' + c.TABLE_NAME) 
+AND c.COLUMN_DEFAULT = dc.definition";
     }
 }
