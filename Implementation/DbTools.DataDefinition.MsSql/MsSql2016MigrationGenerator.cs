@@ -9,39 +9,51 @@ namespace FizzCode.DbTools.DataDefinition.MsSql2016;
 public class MsSql2016MigrationGenerator(ContextWithLogger context)
     : AbstractSqlMigrationGenerator(context, new MsSql2016Generator(context))
 {
-    public override string GenerateColumnChange(SqlColumn columnOriginal, SqlColumn columnNew)
+    public override string GenerateColumnChange(ColumnChange columnChange)
     {
-        var typeOld = columnOriginal.Types[MsSqlVersion.MsSql2016];
-        var typeNew = columnNew.Types[MsSqlVersion.MsSql2016];
-        
+        var typeOld = columnChange.SqlColumn.Types[MsSqlVersion.MsSql2016];
+        var typeNew = columnChange.SqlColumnChanged.Types[MsSqlVersion.MsSql2016];
+
         var sb = new StringBuilder();
 
-        var defaultValueOld = columnOriginal.Properties.OfType<DefaultValue>().FirstOrDefault();
-        var defaultValueNew = columnNew.Properties.OfType<DefaultValue>().FirstOrDefault();
-        var isDefaultValueChange = defaultValueOld != defaultValueNew;
+        var isDefaultValueChange = columnChange.SqlColumnPropertyMigrations.OfType<DefaultValueMigration>().Any();
+        var isIdentityChange = columnChange.SqlColumnPropertyMigrations.OfType<IdentityMigration>().Any();
 
-        if (Comparer.ColumnChanged(columnNew, columnOriginal))
+        if (Comparer.ColumnChanged(columnChange.SqlColumnChanged, columnChange.SqlColumn)
+            || isIdentityChange)
         {
             sb.Append("ALTER COLUMN ");
 
-            sb.Append(Generator.GuardKeywords(columnNew.Name!))
+            sb.Append(Generator.GuardKeywords(columnChange.SqlColumnChanged.Name!))
                 .Append(' ');
 
-            sb.Append(Generator.GenerateType(typeNew));
+            if (!isIdentityChange)
+                sb.Append(Generator.GenerateType(typeNew));
         }
 
-        // TODO remove identity?
-        var identity = columnNew.Properties.OfType<Identity>().FirstOrDefault();
-        if (identity != null)
+        if (isIdentityChange)
         {
-           ((MsSql2016Generator)Generator).GenerateCreateColumnIdentity(sb, identity);
+            // var identityOld = columnChange.SqlColumn.Properties.OfType<Identity>().FirstOrDefault();
+            var identityNew = columnChange.SqlColumnChanged.Properties.OfType<Identity>().FirstOrDefault();
+
+            if (identityNew is not null)
+                ((MsSql2016Generator)Generator).GenerateCreateColumnIdentity(sb, identityNew);
+
+            if (identityNew is null)
+            {
+                // TODO drop and recreate
+                throw new System.NotImplementedException("Cannot remove identity constraint.");
+            }
         }
 
         if (isDefaultValueChange)
         {
+            var defaultValueOld = columnChange.SqlColumn.Properties.OfType<DefaultValue>().FirstOrDefault();
+            var defaultValueNew = columnChange.SqlColumnChanged.Properties.OfType<DefaultValue>().FirstOrDefault();
+
             if (!(defaultValueOld is not null && defaultValueNew is null))
             {
-                sb.Append(((MsSql2016Generator)Generator).GenerateDefault(columnNew));
+                sb.Append(((MsSql2016Generator)Generator).GenerateDefault(columnChange.SqlColumnChanged));
 
                 if (typeNew.IsNullable)
                     sb.Append(" NULL");

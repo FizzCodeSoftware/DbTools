@@ -76,34 +76,28 @@ public class Oracle12cMigrationGenerator(ContextWithLogger context)
         return sb.ToString();
     }
 
-    public override string GenerateColumnChange(SqlColumn columnOriginal, SqlColumn columnNew)
+    public override string GenerateColumnChange(ColumnChange columnChange)
     {
-        var typeOld = columnOriginal.Types[OracleVersion.Oracle12c];
-        var typeNew = columnNew.Types[OracleVersion.Oracle12c];
+        var typeOld = columnChange.SqlColumn.Types[OracleVersion.Oracle12c];
+        var typeNew = columnChange.SqlColumnChanged.Types[OracleVersion.Oracle12c];
 
         var sb = new StringBuilder();
         sb.Append("MODIFY ");
-        sb.Append(Generator.GuardKeywords(columnOriginal.Name!));
+        sb.Append(Generator.GuardKeywords(columnChange.SqlColumn.Name!));
 
-        var defaultValueOld = columnOriginal.Properties.OfType<DefaultValue>().FirstOrDefault();
-        var defaultValueNew = columnNew.Properties.OfType<DefaultValue>().FirstOrDefault();
+        var defaultValueOld = columnChange.SqlColumn.Properties.OfType<DefaultValue>().FirstOrDefault();
+        var defaultValueNew = columnChange.SqlColumnChanged.Properties.OfType<DefaultValue>().FirstOrDefault();
         var isDefaultValueChange = defaultValueOld != defaultValueNew;
 
-        if (Comparer.ColumnChanged(columnNew, columnOriginal)
+        if (Comparer.ColumnChanged(columnChange.SqlColumn, columnChange.SqlColumnChanged)
             || isDefaultValueChange)
         {
             Generator.GenerateType(typeNew);
         }
 
         // TODO not possible to remove identity in Oracle and MS SQL
-        /*var identityOld = columnNew.Properties.OfType<Identity>().FirstOrDefault();
-        var identityNew = columnNew.Properties.OfType<Identity>().FirstOrDefault();
-
-        if (identityNew != identityOld && identityNew != null)
-        {
-            GenerateCreateColumnIdentity(sb, identityNew);
-        }*/
-        var identity = columnNew.Properties.OfType<Identity>().FirstOrDefault();
+        
+        var identity = columnChange.SqlColumnChanged.Properties.OfType<Identity>().FirstOrDefault();
         if (identity != null)
         {
             ((Oracle12cGenerator)Generator).GenerateCreateColumnIdentity(sb, identity);

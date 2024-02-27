@@ -43,7 +43,7 @@ public class TestFactoryContainer : IFactoryContainer
         Type? factoryType = null;
         if (RegisteredTypes.ContainsKey(typeof(T)))
             factoryType = RegisteredTypes[typeof(T)];
-        
+
         if (factoryType is null)
             return (T)RegisteredInstances[typeof(T)];
 

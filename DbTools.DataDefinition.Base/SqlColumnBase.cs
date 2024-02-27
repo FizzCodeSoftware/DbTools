@@ -22,7 +22,7 @@ public abstract class SqlColumnBase : SqlElementWithNameAndType
         column.SqlTableOrView = SqlTableOrView;
         return column;
     }
-    
+
     public bool HasProperty<T>()
         where T : SqlColumnProperty
     {

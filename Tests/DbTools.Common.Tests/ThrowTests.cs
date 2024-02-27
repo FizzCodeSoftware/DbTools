@@ -16,7 +16,7 @@ public class ThrowTests
             ["ThisIsNull"] = null
         };
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
-        
+
         var result = Throw.IfNull(row.GetAs<string>("ThisIsNull"));
     }
 

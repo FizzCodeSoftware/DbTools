@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.DataDefinition.MsSql2016;
 using FizzCode.DbTools.DataDefinition.Oracle12c;
@@ -101,7 +102,7 @@ public class ChangeDocumenterTests : ComparerTestsBase
     [LatestSqlVersions]
     public override void Column_Change_Length(SqlEngineVersion version)
     {
-        TestHelper.CheckFeature(version, "ColumnLength");
+        TestHelper.CheckFeature(version, Features.ColumnLength);
 
         var dds = Column_Change_Length_Dds(version);
         Document(version, dds);
@@ -119,7 +120,7 @@ public class ChangeDocumenterTests : ComparerTestsBase
     [LatestSqlVersions]
     public override void Column_Change2_Length(SqlEngineVersion version)
     {
-        TestHelper.CheckFeature(version, "ColumnLength");
+        TestHelper.CheckFeature(version, Features.ColumnLength);
 
         var dds = Column_Change2_Length_Dds(version);
         Document(version, dds);

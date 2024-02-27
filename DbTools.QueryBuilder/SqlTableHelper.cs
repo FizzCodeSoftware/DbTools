@@ -16,7 +16,7 @@ public static class SqlTableHelper
             sqlTable.Properties.Add(aliasProperty);
         }
         else
-        { 
+        {
             aliasProperty.Alias = alias;
         }
     }
@@ -30,7 +30,7 @@ public static class SqlTableHelper
             sqlView.Properties.Add(aliasProperty);
         }
         else
-        { 
+        {
             aliasProperty.Alias = alias;
         }
     }

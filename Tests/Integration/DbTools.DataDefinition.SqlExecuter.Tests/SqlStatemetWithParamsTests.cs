@@ -19,7 +19,7 @@ public class SqlStatemetWithParamsTests : SqlExecuterTestsBase
             + (version is MsSqlVersion
                 || version is SqLiteVersion ? "" : "FROM dual ")
             + "WHERE @var = 1";
-        
+
         var sqlStatement = new SqlStatementWithParameters(sql, 1);
         var result = executer.ExecuteQuery(sqlStatement);
 

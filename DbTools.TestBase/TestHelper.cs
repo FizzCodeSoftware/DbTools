@@ -75,16 +75,15 @@ public static class TestHelper
             var executingAssembly = Assembly.GetExecutingAssembly();
             var callerAssemblies = new StackTrace().GetFrames()
                         .Select(f => f.GetMethod()?.ReflectedType?.Assembly).Distinct()
-                        .Where(a => a != null && a.GetReferencedAssemblies().Any(a2 => a2.FullName == executingAssembly.FullName));
+                        .Where(a => a?.GetReferencedAssemblies().Any(a2 => a2.FullName == executingAssembly.FullName) == true);
             var initialAssembly = callerAssemblies.Last();
 
             var assemblyName = initialAssembly?.GetName().Name;
-            if (assemblyName is not null
-                && assemblyName.StartsWith("FizzCode.DbTools.", StringComparison.InvariantCultureIgnoreCase))
-            { 
+            if (assemblyName?.StartsWith("FizzCode.DbTools.", StringComparison.InvariantCultureIgnoreCase) == true)
+            {
                 assemblyName = assemblyName["FizzCode.DbTools.".Length..];
             }
-            
+
             var schemaName = assemblyName?.Replace(".", "_", StringComparison.InvariantCultureIgnoreCase);
             if (schemaName is not null)
                 settings.SqlVersionSpecificSettings["DefaultSchema"] = schemaName;
@@ -93,14 +92,15 @@ public static class TestHelper
         return settings;
     }
 
-    public static void CheckFeature(SqlEngineVersion version, string feature)
+    public static void CheckFeature(SqlEngineVersion version, string feature, string? message = null)
     {
+        var additionalMessage = message == null ? null : " " + message;
         var featureSupport = Features.GetSupport(version, feature);
         if (featureSupport.Support == Support.NotSupported)
-            Assert.Inconclusive($"Test is skipped, feature {feature} is not supported. ({featureSupport.Description})");
+            Assert.Inconclusive($"Test is skipped, feature {feature} is not supported. ({featureSupport.Description}){additionalMessage}");
 
         if (featureSupport.Support == Support.NotImplementedYet)
-            Assert.Inconclusive($"Test is skipped, feature {feature} is not implemented (yet). ({featureSupport.Description})");
+            Assert.Inconclusive($"Test is skipped, feature {feature} is not implemented (yet). ({featureSupport.Description}){additionalMessage}");
     }
 
     public static void CheckProvider(SqlEngineVersion version, IEnumerable<NamedConnectionString> connectionStrings)

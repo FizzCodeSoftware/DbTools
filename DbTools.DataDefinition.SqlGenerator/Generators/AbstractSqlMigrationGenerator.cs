@@ -95,7 +95,7 @@ DROP COLUMN { string.Join(", ", columnsToDelete) }";
         {
             return $@"
 ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}
- {GenerateColumnChange(columnChanges[0].SqlColumn, columnChanges[0].SqlColumnChanged!)}";
+ {GenerateColumnChange(columnChanges[0])}";
         }
 
         var sbStatements = new StringBuilder();
@@ -110,5 +110,5 @@ ALTER TABLE {Generator.GetSimplifiedSchemaAndTableName(tableName)}
         return new SqlStatementWithParameters(sbStatements.ToString());
     }
 
-    public abstract string GenerateColumnChange(SqlColumn columnOriginal, SqlColumn columnNew);
+    public abstract string GenerateColumnChange(ColumnChange columnChange);
 }

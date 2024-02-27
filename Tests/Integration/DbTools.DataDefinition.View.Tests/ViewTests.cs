@@ -22,7 +22,7 @@ public class ViewTests : ViewTestsBase
 
         Assert.AreEqual(2, result.Count);
 
-        var expected = new RowSet() { 
+        var expected = new RowSet() {
             new Row() { { "Id", 1 }, { "Name", "FirstCompanyName" } },
             new Row() { { "Id", 2 }, { "Name", "SecondCompanyName" } },
             };

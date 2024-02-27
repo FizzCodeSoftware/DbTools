@@ -65,10 +65,10 @@ public class Row : Dictionary<string, object>
             sb.Append(", ");
         }
         var result = sb.ToString();
-        
+
         if (result != "")
             result = result.Substring(0, result.Length - 2);
-        
+
         return result;
     }
 }

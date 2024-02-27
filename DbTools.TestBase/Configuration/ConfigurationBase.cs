@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 namespace FizzCode.DbTools.TestBase;
 public class ConfigurationBase
 {
-    
+
     /*public ConfigurationBase()
     {
         Initialize();

@@ -28,7 +28,7 @@ public abstract class ComparerSqlColumnPropertyBase<TProperty, TMigration>
 
                 if (!CompareProperties(propertyOriginal, propertyNew))
                     changes.Add(change);
-                    
+
             }
         }
 

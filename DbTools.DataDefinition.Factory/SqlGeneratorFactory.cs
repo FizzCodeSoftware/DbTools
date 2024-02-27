@@ -27,5 +27,4 @@ public class SqlGeneratorFactory(IContextFactory contextFactory)
         throw new NotImplementedException($"Not implemented {version}.");
     }
 
-    
 }

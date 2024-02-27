@@ -92,8 +92,8 @@ public class Comparer
                 if (propertyChanges.Count != 0
                     || ColumnChanged(columnNew, columnOriginal))
                 {
-                    //columnChange.SqlColumnChanged = columnNew.CopyTo(new SqlColumn());
-                    columnChange.SqlColumnChanged = columnNew;
+                    // columnChange.SqlColumnChanged = columnNew.CopyTo(new SqlColumn());
+                    // columnChange.SqlColumnChanged = columnNew;
                     columnChange.SqlColumnPropertyMigrations.AddRange(propertyChanges);
                     changes.Add(columnChange);
                 }

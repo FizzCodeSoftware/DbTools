@@ -10,7 +10,7 @@ public class MsSqlIdentityReader2016(SqlStatementExecuter executer, ISchemaNames
     : GenericDataDefinitionElementReader(executer, schemaNames)
 {
     private RowSet _queryResult = null!;
-    
+
     private RowSet QueryResult => _queryResult ??= Executer.ExecuteQuery(GetStatement());
 
     public void GetIdentity(DatabaseDefinition dd)

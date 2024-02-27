@@ -3,7 +3,7 @@
 namespace FizzCode.DbTools.DataDefinition.Base.Migration;
 public class ColumnChange : ColumnMigration
 {
-    public SqlColumn? SqlColumnChanged { get; set; }
+    public required SqlColumn SqlColumnChanged { get; init; }
 
     public override string ToString()
     {

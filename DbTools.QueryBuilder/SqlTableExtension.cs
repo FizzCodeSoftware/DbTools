@@ -50,7 +50,7 @@ public static class SqlTableExtension
 
             //column.CopyTo(columnDeclared);
             columnDeclared.Name = column.Name;
-            
+
             //Types.CopyTo(column.Types);
             foreach (var kvp in column.Types)
             {
@@ -80,7 +80,7 @@ public static class SqlTableExtension
         }
 
         SqlTableHelper.SetAlias(newView, alias);
-        
+
         // TODO as above with table
 
         return newView;

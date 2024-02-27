@@ -8,7 +8,7 @@ public class CircularFK(SqlTable sqlTable)
     : SqlTableOrViewPropertyBase<SqlTable>(sqlTable)
 {
     public List<ForeignKey> ForeignKeyChain { get; set; } = [];
-    
+
     public SqlTable SqlTable { get => SqlTableOrView!; }
 
     public override string ToString()

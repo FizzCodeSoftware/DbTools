@@ -37,7 +37,7 @@ public partial class DatabaseMigratorTests : DatabaseMigratorTestsBase
             Assert.AreEqual("NULL", defaultValue.Value);
         }
         else
-        { 
+        {
             Assert.That.IsFalse(
                 ddInDb.GetTable("Company").Columns["Name"].HasProperty<DefaultValue>()
                 );

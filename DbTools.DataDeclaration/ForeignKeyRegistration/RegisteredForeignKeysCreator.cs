@@ -18,7 +18,7 @@ internal static class RegisteredForeignKeysCreator
         var pkColumnBase = referredUniqueKey.SqlColumns[0].SqlColumn;
         // TODO 
         // While Index is possible on view, in this case for FKs only SqlTable and SqlIndex
-        var pkColumn = (SqlColumn)pkColumnBase; 
+        var pkColumn = (SqlColumn)pkColumnBase;
 
         var col = new SqlColumn();
         pkColumn.CopyTo(col);

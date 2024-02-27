@@ -66,7 +66,7 @@ public class SqLite3Generator(Context context)
         // TODO give descriptive message including column names, identity and PK declarations
 
         if (!(pk == null && (bool)Context.Settings.SqlVersionSpecificSettings["ShouldCreateAutoincrementAsPrimaryKey"]))
-        { 
+        {
             if (pk == null || pk.SqlColumns.Count == 0)
                 throw new InvalidOperationException("Identity (AUTOINCREMENT) is only supported with Primary Key.");
             else if (pk.SqlColumns.Count > 1)

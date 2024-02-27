@@ -10,7 +10,7 @@ public abstract class GenericDataDefinitionElementReader
     protected GenericDataDefinitionElementReader(SqlStatementExecuter executer, ISchemaNamesToRead? schemaNames)
     {
         Executer = executer;
-        
+
         schemaNames ??= new SchemaNamesToRead(true);
 
         SchemaNames = schemaNames;

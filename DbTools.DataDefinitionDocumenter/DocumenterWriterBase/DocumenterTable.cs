@@ -53,7 +53,7 @@ public abstract partial class DocumenterWriterBase
 
     protected void AddColumnsToTableSheet(SqlColumn column, ColumnDocumentInfo columnDocumentInfo, string? firstColumn = null)
     {
-        var table = column.Table; 
+        var table = column.Table;
         var sqlType = Throw.IfNull(column.Type);
 
         if (firstColumn != null)

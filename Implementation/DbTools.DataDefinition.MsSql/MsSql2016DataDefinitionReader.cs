@@ -17,36 +17,36 @@ public class MsSql2016DataDefinitionReader(NamedConnectionString connectionStrin
         return GetDatabaseDefinition(new DatabaseDefinition(MsSqlVersion.MsSql2016, GenericVersion.Generic1));
     }
 
-    public override DatabaseDefinition GetDatabaseDefinition(IDatabaseDefinition idd)
+    public override DatabaseDefinition GetDatabaseDefinition(IDatabaseDefinition dd)
     {
-        var dd = (DatabaseDefinition)idd;
+        var dd2 = (DatabaseDefinition)dd;
         Log(LogSeverity.Debug, "Reading table definitions from database.");
 
         var module = "Reader/" + Executer.Generator.SqlVersion.UniqueName;
         var logTimer = new LogTimer(Logger, LogSeverity.Debug, "Reading definitions from database.", module);
 
         foreach (var schemaAndTableName in GetSchemaAndTableNames())
-            dd.AddTable(GetTableDefinition(schemaAndTableName, false));
+            dd2.AddTable(GetTableDefinition(schemaAndTableName, false));
 
         Log(LogSeverity.Debug, "Reading table documentation from database.");
-        AddTableDocumentation(dd);
+        AddTableDocumentation(dd2);
         Log(LogSeverity.Debug, "Reading table identities from database.");
-        new MsSqlIdentityReader2016(Executer, SchemaNames).GetIdentity(dd);
+        new MsSqlIdentityReader2016(Executer, SchemaNames).GetIdentity(dd2);
         Log(LogSeverity.Debug, "Reading table indexes including primary keys and unique constraints from database.");
-        new MsSqlIndexReader2016(Executer, SchemaNames).GetIndexes(dd);
+        new MsSqlIndexReader2016(Executer, SchemaNames).GetIndexes(dd2);
         Log(LogSeverity.Debug, "Reading table foreign keys from database.", "Reader");
-        new MsSqlForeignKeyReader2016(Executer, SchemaNames).GetForeignKeys(dd);
+        new MsSqlForeignKeyReader2016(Executer, SchemaNames).GetForeignKeys(dd2);
 
         Log(LogSeverity.Debug, "Reading views from database.");
         foreach (var schemaAndTableName in GetViews())
-            dd.AddView(GetViewDefinition(schemaAndTableName, false));
+            dd2.AddView(GetViewDefinition(schemaAndTableName, false));
 
         Log(LogSeverity.Debug, "Reading view indexes from database.");
-        new MsSqlViewIndexReader2016(Executer, SchemaNames).GetIndexes(dd);
+        new MsSqlViewIndexReader2016(Executer, SchemaNames).GetIndexes(dd2);
 
         logTimer.Done();
 
-        return dd;
+        return dd2;
     }
 
     private static string SqlTables(char typeFilter)

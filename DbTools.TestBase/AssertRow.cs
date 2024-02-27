@@ -13,7 +13,7 @@ public static class AssertRow
     public static void AreEqual(Row expected, Row actual, SqlEngineVersion? version)
     {
         if (!Compare(expected, actual, version, out var message))
-        { 
+        {
             throw new AssertFailedException("AssertRow.AreEqual failed. " + message.ToString());
         }
     }

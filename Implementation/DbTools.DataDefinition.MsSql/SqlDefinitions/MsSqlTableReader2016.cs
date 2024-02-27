@@ -82,7 +82,7 @@ public class MsSqlTableReader2016(SqlStatementExecuter executer, ISchemaNamesToR
     {
         var value = row.GetAs<string>("COLUMN_DEFAULT");
         if (value is not null)
-        { 
+        {
             var name = Throw.IfNull(row.GetAs<string>("Constraint_Name"));
             column.Properties.Add(new DefaultValue(column, value, name));
         }

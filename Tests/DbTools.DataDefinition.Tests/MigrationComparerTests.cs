@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDeclaration;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.DataDefinition.Base.Migration;
@@ -94,7 +95,7 @@ public class MigrationComparerTests : ComparerTestsBase
     [LatestSqlVersions(true)]
     public override void Column_Change_Length(SqlEngineVersion version)
     {
-        TestHelper.CheckFeature(version, "ColumnLength");
+        TestHelper.CheckFeature(version, Features.ColumnLength);
 
         var dds = Column_Change_Length_Dds(version);
         var changes = Compare(version, dds);
@@ -131,7 +132,7 @@ public class MigrationComparerTests : ComparerTestsBase
     [LatestSqlVersions(true)]
     public override void Column_Change2_Length(SqlEngineVersion version)
     {
-        TestHelper.CheckFeature(version, "ColumnLength");
+        TestHelper.CheckFeature(version, Features.ColumnLength);
 
         var dds = Column_Change2_Length_Dds(version);
         var changes = Compare(version, dds);
@@ -443,6 +444,4 @@ public class MigrationComparerTests : ComparerTestsBase
         var columnChange = Assert.That.CheckAndReturnInstanceOfType<ColumnChange>(changes[0]);
         var defaultValueDelete = Assert.That.CheckAndReturnInstanceOfType<DefaultValueDelete>(columnChange.SqlColumnPropertyMigrations[0]);
     }
-
-    
 }

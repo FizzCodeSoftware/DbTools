@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using FizzCode.DbTools.Common;
 using FizzCode.DbTools.DataDefinition;
 using FizzCode.DbTools.DataDefinition.Base;
 using FizzCode.DbTools.DataDefinition.Base.Interfaces;
@@ -174,13 +175,16 @@ public partial class DatabaseMigratorTests : DatabaseMigratorTestsBase
     [LatestSqlVersions]
     public override void Identity_Change(SqlEngineVersion version)
     {
+        if (version is MsSqlVersion)
+            TestHelper.CheckFeature(version, Features.TableRecreation, "MsSql cannot modify Identity, only through table drop and recreate.");
+
         var dds = Identity_Change_Dds(version);
 
         var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
 
         var change = Assert.That.CheckAndReturnInstanceOfType<ColumnChange>(changes[0]);
         var columnPorepertyMigration = Assert.That.CheckAndReturnInstanceOfType<IdentityChange>(change.SqlColumnPropertyMigrations[0]);
-        
+
         databaseMigrator.ChangeColumns(change);
     }
 
@@ -290,12 +294,12 @@ public partial class DatabaseMigratorTests : DatabaseMigratorTestsBase
     [LatestSqlVersions]
     public override void Column_Change_Length(SqlEngineVersion version)
     {
-        TestHelper.CheckFeature(version, "ColumnLength");
+        TestHelper.CheckFeature(version, Features.ColumnLength);
 
         var dds = Column_Change_Length_Dds(version);
         var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);
         var first = Assert.That.CheckAndReturnInstanceOfType<ColumnChange>(changes[0]);
-        
+
         databaseMigrator.ChangeColumns(first);
     }
 
@@ -325,7 +329,7 @@ public partial class DatabaseMigratorTests : DatabaseMigratorTestsBase
     [LatestSqlVersions]
     public override void Column_Change2_Length(SqlEngineVersion version)
     {
-        TestHelper.CheckFeature(version, "ColumnLength");
+        TestHelper.CheckFeature(version, Features.ColumnLength);
 
         var dds = Column_Change2_Length_Dds(version);
         var databaseMigrator = ProcessAndGetMigrator(version, dds, out var changes);

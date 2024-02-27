@@ -80,7 +80,7 @@ public sealed class SqlVersionsAttribute : SqlVersionsBasAttribute
         }
 
         if (Versions.Count == 0)
-        { 
+        {
             Debug.WriteLine("No SqlEngineVersion was found, falling back to SqLiteVersion.SqLite3. Probable reason is missing test configuration with a connectionstring with a given sql type.");
             Versions.Add(SqLiteVersion.SqLite3);
         }

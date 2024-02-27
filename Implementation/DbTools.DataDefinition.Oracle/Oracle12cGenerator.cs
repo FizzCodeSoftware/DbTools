@@ -16,11 +16,13 @@ public class Oracle12cGenerator(Context context)
     public override SqlStatementWithParameters CreateSchema(string schemaName)
     {
         // TODO password
-        var sqlStatementWithParameters = new SqlStatementWithParameters(@$"
-CREATE USER ""{schemaName}"" IDENTIFIED BY sa123;
-GRANT CONNECT, DBA TO ""{schemaName}"";
-GRANT CREATE SESSION TO ""{schemaName}"";
-GRANT UNLIMITED TABLESPACE TO ""{schemaName}""");
+        var sqlStatementWithParameters = new SqlStatementWithParameters($"""
+
+CREATE USER "{schemaName}" IDENTIFIED BY sa123;
+GRANT CONNECT, DBA TO "{schemaName}";
+GRANT CREATE SESSION TO "{schemaName}";
+GRANT UNLIMITED TABLESPACE TO "{schemaName}"
+""");
 
         //sqlStatementWithParameters.Parameters.Add("@schemaName", schemaName);
 

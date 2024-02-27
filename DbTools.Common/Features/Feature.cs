@@ -1,16 +1,10 @@
 ﻿using System.Collections.Generic;
 
 namespace FizzCode.DbTools.Common;
-public class Feature
+public class Feature(string name)
 {
-    public Feature(string name)
-    {
-        Name = name;
-        Support = [];
-    }
-
-    public string Name { get; set; }
-    public FeatureSupports Support { get; set; }
+    public string Name { get; set; } = name;
+    public FeatureSupports Support { get; set; } = [];
 
     public void Add(SqlEngineVersion version, Support support, string description)
     {
